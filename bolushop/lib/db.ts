@@ -33,26 +33,39 @@ export interface Order {
 
 // Ensure data dir exists
 if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+    try {
+        fs.mkdirSync(DATA_DIR, { recursive: true });
+    } catch (e) {
+        console.warn("⚠️ Could not create data directory (expected on Vercel):", e);
+    }
 }
 
 // Helpers
 function readJson<T>(file: string, defaultData: T): T {
     if (!fs.existsSync(file)) {
-        fs.writeFileSync(file, JSON.stringify(defaultData, null, 2));
+        try {
+            fs.writeFileSync(file, JSON.stringify(defaultData, null, 2));
+        } catch (e) {
+            console.warn(`⚠️ Could not write default data to ${file} (expected on Vercel)`);
+        }
         return defaultData;
     }
     try {
         const data = fs.readFileSync(file, 'utf-8');
         return JSON.parse(data);
     } catch (e) {
-        console.error(`Error reading ${file}`, e);
+        console.error(`❌ Error reading ${file}:`, e);
         return defaultData;
     }
 }
 
 function writeJson(file: string, data: any) {
-    fs.writeFileSync(file, JSON.stringify(data, null, 2));
+    try {
+        fs.writeFileSync(file, JSON.stringify(data, null, 2));
+    } catch (e) {
+        console.error(`❌ Error writing to ${file} (expected on Vercel):`, e);
+        // We don't throw here to avoid crashing the whole request
+    }
 }
 
 // Products API
