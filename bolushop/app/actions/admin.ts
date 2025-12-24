@@ -7,7 +7,10 @@ import { v4 as uuidv4 } from 'uuid';
 export async function deleteProductAction(id: string) {
     const products = getAllProducts();
     const newProducts = products.filter(p => p.id !== id);
-    saveProducts(newProducts);
+    const success = saveProducts(newProducts);
+
+    if (!success) return { success: false, error: "Vercel no permite borrar archivos en tiempo real. Esto solo funciona localmente." };
+
     revalidatePath("/admin/products");
     revalidatePath("/admin");
     revalidatePath("/");
@@ -15,7 +18,10 @@ export async function deleteProductAction(id: string) {
 }
 
 export async function deleteAllProductsAction() {
-    saveProducts([]); // Clear all
+    const success = saveProducts([]); // Clear all
+
+    if (!success) return { success: false, error: "Vercel no permite borrar archivos en tiempo real. Esto solo funciona localmente." };
+
     revalidatePath("/admin/products");
     revalidatePath("/admin");
     revalidatePath("/");
@@ -25,7 +31,10 @@ export async function deleteAllProductsAction() {
 export async function deleteMultipleProductsAction(idsToDelete: string[]) {
     const products = getAllProducts();
     const newProducts = products.filter(p => !idsToDelete.includes(p.id));
-    saveProducts(newProducts);
+    const success = saveProducts(newProducts);
+
+    if (!success) return { success: false, error: "Vercel no permite borrar archivos en tiempo real. Esto solo funciona localmente." };
+
     revalidatePath("/admin/products");
     revalidatePath("/admin");
     revalidatePath("/");
@@ -38,7 +47,9 @@ export async function updateProductAction(updatedProduct: Product) {
 
     if (index !== -1) {
         products[index] = updatedProduct;
-        saveProducts(products);
+        const success = saveProducts(products);
+        if (!success) return { success: false, error: "Vercel no permite editar archivos en tiempo real. Esto solo funciona localmente." };
+
         revalidatePath("/admin/products");
         revalidatePath("/admin");
         revalidatePath("/");
@@ -50,7 +61,7 @@ export async function updateProductAction(updatedProduct: Product) {
 
 export async function importProductsAction(rawProducts: any[], source: string) {
     try {
-        let mappedProducts: Product[] = [];
+        let mappedProducts: (Product | null)[] = [];
 
         if (source === 'dropers-csv') {
             mappedProducts = rawProducts.map((row: any) => {
@@ -104,19 +115,20 @@ export async function importProductsAction(rawProducts: any[], source: string) {
                     category: category,
                     description: description,
                     features: features
-                };
+                } as Product;
             });
         }
 
-        mappedProducts = mappedProducts.filter(p => p !== null && p.name && p.name !== 'Sin Nombre' && p.price > 0);
+        const validProducts = (mappedProducts.filter(p => p !== null && p.name && p.name !== 'Sin Nombre' && p.price > 0) as Product[]);
 
-        if (mappedProducts.length > 0) {
-            saveProducts(mappedProducts);
+        if (validProducts.length > 0) {
+            const success = saveProducts(validProducts);
+            if (!success) return { success: false, error: "Vercel no permite crear archivos en tiempo real. Subí tus productos al GitHub para que aparezcan." };
 
             revalidatePath("/admin/products");
             revalidatePath("/admin");
             revalidatePath("/");
-            return { success: true, count: mappedProducts.length };
+            return { success: true, count: validProducts.length };
         }
 
         return { success: false, error: "No se encontraron productos validos" };

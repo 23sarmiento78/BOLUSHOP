@@ -21,15 +21,23 @@ export default function ProductsTable({ initialProducts }: Props) {
 
     const handleDelete = async (id: string) => {
         if (!confirm("¿Seguro que querés eliminar este producto?")) return;
-        await deleteProductAction(id);
-        handleRefresh();
+        const result = await deleteProductAction(id);
+        if (result && !result.success) {
+            alert(result.error);
+        } else {
+            handleRefresh();
+        }
     };
 
     const handleDeleteAll = async () => {
         if (confirm("⚠ ¡ATENCIÓN! ⚠\n\n¿Estás seguro de que querés borrar TODOS los productos de la base de datos?\n\nEsta acción no se puede deshacer.")) {
             if (confirm("Confirmación final: ¿Borrar TODO?")) {
-                await deleteAllProductsAction();
-                handleRefresh();
+                const result = await deleteAllProductsAction();
+                if (result && !result.success) {
+                    alert(result.error);
+                } else {
+                    handleRefresh();
+                }
             }
         }
     }
@@ -38,18 +46,26 @@ export default function ProductsTable({ initialProducts }: Props) {
         if (selectedIds.size === 0) return;
         if (!confirm(`¿Borrar los ${selectedIds.size} productos seleccionados?`)) return;
 
-        await deleteMultipleProductsAction(Array.from(selectedIds));
-        setSelectedIds(new Set());
-        handleRefresh();
+        const result = await deleteMultipleProductsAction(Array.from(selectedIds));
+        if (result && !result.success) {
+            alert(result.error);
+        } else {
+            setSelectedIds(new Set());
+            handleRefresh();
+        }
     }
 
     const handleSaveEdit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!editingProduct) return;
 
-        updateProductAction(editingProduct).then(() => {
-            setEditingProduct(null);
-            window.location.reload();
+        updateProductAction(editingProduct).then((result) => {
+            if (result && !result.success) {
+                alert(result.error);
+            } else {
+                setEditingProduct(null);
+                window.location.reload();
+            }
         });
     };
 

@@ -22,6 +22,24 @@ export async function POST(req: NextRequest) {
         // Recalculate shipping logic: Universal absorption (shipping is already in product price)
         const shippingCost = 0;
 
+        const total = items.reduce((sum: number, i: any) => sum + (i.price * i.quantity), 0);
+
+        // BP: If total is 0 (Test Product), bypass MP and go straight to success
+        if (total === 0) {
+            createOrder({
+                id: orderId,
+                date: new Date().toISOString(),
+                status: 'paid', // Mark as paid immediately since it's free
+                items,
+                total: 0,
+                payer,
+                paymentId: 'FREE-ORDER-' + orderId
+            });
+            return NextResponse.json({
+                init_point: `${req.nextUrl.origin}/checkout/success?orderId=${orderId}&status=approved`
+            });
+        }
+
         const result = await preference.create({
             body: {
                 external_reference: orderId, // Link MP to our Order ID

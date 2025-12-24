@@ -7,20 +7,41 @@ export default function CheckoutPage() {
     const { items, total } = useCart();
     const [loading, setLoading] = useState(false);
 
+    const [formData, setFormData] = useState({
+        name: '',
+        lastname: '',
+        address: '',
+        city: '', // Optional but good
+        email: '',
+        phone: ''
+    });
+
     const handlePayment = async () => {
+        if (!formData.name || !formData.address || !formData.email) {
+            alert("Por favor completá los datos de envío.");
+            return;
+        }
+
         setLoading(true);
         try {
             const response = await fetch('/api/checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ items }),
+                body: JSON.stringify({
+                    items,
+                    payer: {
+                        name: `${formData.name} ${formData.lastname}`,
+                        email: formData.email,
+                        address: formData.address,
+                        phone: formData.phone
+                    }
+                }),
             });
             const data = await response.json();
             if (data.init_point) {
                 window.location.href = data.init_point;
             } else {
-                alert('Error al iniciar el pago. Revisá la consola.');
-                console.error(data);
+                alert('Error al iniciar el pago: ' + (data.details || 'Desconocido'));
                 setLoading(false);
             }
         } catch (error) {
@@ -39,27 +60,65 @@ export default function CheckoutPage() {
                 </h1>
 
                 <div className="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100">
-                    {/* Mock Form */}
                     <div className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
-                                <input type="text" className="w-full border-gray-300 rounded-lg p-3 bg-gray-50 focus:ring-2 focus:ring-primary outline-none" placeholder="Juan" />
+                                <input
+                                    type="text"
+                                    required
+                                    value={formData.name}
+                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                    className="w-full border-gray-300 rounded-lg p-3 bg-gray-50 focus:ring-2 focus:ring-primary outline-none"
+                                    placeholder="Juan"
+                                />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Apellido</label>
-                                <input type="text" className="w-full border-gray-300 rounded-lg p-3 bg-gray-50 focus:ring-2 focus:ring-primary outline-none" placeholder="Pérez" />
+                                <input
+                                    type="text"
+                                    value={formData.lastname}
+                                    onChange={(e) => setFormData({ ...formData, lastname: e.target.value })}
+                                    className="w-full border-gray-300 rounded-lg p-3 bg-gray-50 focus:ring-2 focus:ring-primary outline-none"
+                                    placeholder="Pérez"
+                                />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Dirección de Envío</label>
-                            <input type="text" className="w-full border-gray-300 rounded-lg p-3 bg-gray-50 focus:ring-2 focus:ring-primary outline-none" placeholder="Av. Corrientes 1234, CABA" />
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Dirección Completa (Calle, Altura, Ciudad)</label>
+                            <input
+                                type="text"
+                                required
+                                value={formData.address}
+                                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                className="w-full border-gray-300 rounded-lg p-3 bg-gray-50 focus:ring-2 focus:ring-primary outline-none"
+                                placeholder="Av. Corrientes 1234, CABA"
+                            />
                         </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                            <input type="email" className="w-full border-gray-300 rounded-lg p-3 bg-gray-50 focus:ring-2 focus:ring-primary outline-none" placeholder="juan@ejemplo.com" />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <input
+                                    type="email"
+                                    required
+                                    value={formData.email}
+                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                    className="w-full border-gray-300 rounded-lg p-3 bg-gray-50 focus:ring-2 focus:ring-primary outline-none"
+                                    placeholder="juan@ejemplo.com"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Celular / WhatsApp (Ej: 11 1234 5678)</label>
+                                <input
+                                    type="text"
+                                    value={formData.phone}
+                                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                    className="w-full border-gray-300 rounded-lg p-3 bg-gray-50 focus:ring-2 focus:ring-primary outline-none"
+                                    placeholder="11 1234 5678"
+                                />
+                            </div>
                         </div>
 
                         <div className="pt-6 border-t border-gray-100">
@@ -70,7 +129,7 @@ export default function CheckoutPage() {
 
                             <button
                                 onClick={handlePayment}
-                                disabled={loading}
+                                disabled={loading || items.length === 0}
                                 className="w-full bg-blue-500 text-white font-bold text-lg py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-blue-600 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {loading ? (
