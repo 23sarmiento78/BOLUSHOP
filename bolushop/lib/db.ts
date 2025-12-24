@@ -59,12 +59,13 @@ function readJson<T>(file: string, defaultData: T): T {
     }
 }
 
-function writeJson(file: string, data: any) {
+function writeJson(file: string, data: any): boolean {
     try {
         fs.writeFileSync(file, JSON.stringify(data, null, 2));
+        return true;
     } catch (e) {
         console.error(`❌ Error writing to ${file} (expected on Vercel):`, e);
-        // We don't throw here to avoid crashing the whole request
+        return false;
     }
 }
 
@@ -73,8 +74,8 @@ export function getAllProducts(): Product[] {
     return readJson<Product[]>(PRODUCTS_FILE, []);
 }
 
-export function saveProducts(products: Product[]) {
-    writeJson(PRODUCTS_FILE, products);
+export function saveProducts(products: Product[]): boolean {
+    return writeJson(PRODUCTS_FILE, products);
 }
 
 export function getProductBySlug(slug: string): Product | undefined {
@@ -91,6 +92,11 @@ export function createOrder(order: Order) {
     const orders = getAllOrders();
     orders.push(order);
     writeJson(ORDERS_FILE, orders);
+}
+
+export function getOrderById(id: string): Order | undefined {
+    const orders = getAllOrders();
+    return orders.find(o => o.id === id);
 }
 
 export function updateOrder(id: string, updates: Partial<Order>) {

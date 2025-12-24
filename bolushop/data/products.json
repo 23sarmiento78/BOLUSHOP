@@ -1,5 +1,18 @@
 [
   {
+    "id": "PRUEBA-001",
+    "name": "Producto de Prueba ($0)",
+    "slug": "producto-de-prueba-0",
+    "price": 0,
+    "image": "/bolushop.png",
+    "category": "test",
+    "description": "Producto ficticio para probar la pasarela de pago y notificaciones.",
+    "features": [
+      "Test Mode",
+      "Envío Gratis 🚚"
+    ]
+  },
+  {
     "id": "503616",
     "name": "Picadora Embutidora De Carne Con Ventosa Y Accesorios",
     "slug": "picadora-embutidora-de-carne-con-ventosa-y-accesorios",
@@ -15,31 +28,13 @@
     "id": "G-SACADORDIAM",
     "name": "Saca Corcho Automático A Pila ",
     "slug": "saca-corcho-automatico-a-pila-",
-    "price": 19892,
+    "price": 29792,
     "image": "/bolushop.png",
     "category": "aire-libre",
     "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Sacacorchos Automático Eléctrico Abridor de Vinos</br>\n</br>\nDiseño Ergonómico, adaptado a la palma de su mano, fácil de manejar y diseñado para botellas de vino tradicionales.</br>\n</br>\nCOLOR: NEGRO</br>\n</br>\n- Funciona con 4 pilas AA (NO INCLUIDAS)</br>\n- Botones de operación intuitiva</br>\n- Diseño Transparente</br>\n- Tornillo Apto Para Contacto con Alimentos</br>\n- Cuerpo de plástico y ABS</br></div>",
-    "features": []
-  },
-  {
-    "id": "G-550019",
-    "name": "Molde de Teflón Para Muffins x12",
-    "slug": "molde-de-teflon-para-muffins-x12",
-    "price": 9714,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Molde de muffins teflonado.<br/>\nDe alta calidad.<br/>\nTamaño: 6cm diámetro x 3cm altura.<br/>\n¡Hace tus muffins y que no se peguen!<br/></div>",
-    "features": []
-  },
-  {
-    "id": "503596",
-    "name": "Colador Oruga Para Coctelería Acero ",
-    "slug": "colador-oruga-para-cocteleria-acero-",
-    "price": 4068,
-    "image": "/bolushop.png",
-    "category": "varios",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Colador Oruga Profesional</br>\n</br>\nConstruido íntegramente en acero inoxidable</br>\n</br>\nMedidas: 15cm largo - 8.5cm de diametro</br>\n</br>\nExcelente calidad</br></div>",
-    "features": []
+    "features": [
+      "Envío Gratis 🚚"
+    ]
   },
   {
     "id": "G-550003",
@@ -54,184 +49,40 @@
     ]
   },
   {
-    "id": "G-14108",
-    "name": "Filtro Infusor de Hebras Acero Inoxidable",
-    "slug": "filtro-infusor-de-hebras-acero-inoxidable",
-    "price": 2261,
-    "image": "/bolushop.png",
-    "category": "varios",
-    "description": "",
-    "features": []
-  },
-  {
     "id": "G-MANDOLCOLADOR",
     "name": "Multi Rallador de Verduras",
     "slug": "multi-rallador-de-verduras",
-    "price": 17545,
+    "price": 27445,
     "image": "/bolushop.png",
     "category": "cocina",
     "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Multi rallador mandolina con 7 cuchillas </br>\n</br>\nIncluye: Taper - Colador rebatible - Pela papas</br>\n</br>\nMedidas: 22cm de diametro - 11cm de altura</br>\n</br>\nMedidas cuchillas: </br>\n- Rallador: 1 - 3 - 4 - 8mm</br>\n- Rebanador: 1.5 - 2.5mm</br>\n- Ondeador: 3mm</br></div>",
-    "features": []
-  },
-  {
-    "id": "G-550050",
-    "name": "Soplete Soldador Con Encendido Electrico",
-    "slug": "soplete-soldador-con-encendido-electrico",
-    "price": 5498,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">\n-Suelda, Flambea, Calienta.<br />\n- Flambeador Soplete de mano.<br />\n- Ideal para Repostería.<br />\n- Funciona con Mini Garrafa de Gas Butano (no incluida)<br />\n- Regulador de llama / POTENCIA<br />\n- Encendido Electrónico<br />\n- Usar con cartucho de 227 g.<br />\n<br />\n<br />\n\n* MATERIAL: Metal y Plástico<br />\n* COLOR: Naranja y Gris.<br />\n* PESO: 200 g. APROX<br />\n* TIPO DE GAS: Butano.</p></div>",
-    "features": []
-  },
-  {
-    "id": "G-PINCHACARNE",
-    "name": "Termómetro Digital Gastronómico",
-    "slug": "termometro-digital-gastronomico",
-    "price": 3599,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\"><p>Es un instrumento de medición muy útil para medir la temperatura interna de carnes, Pollos, u otros alimentos cocidos que son fáciles de obtener la lectura de la temperatura.<br />\nEn gran medida puede detectar la temperatura exacta y fácil de usar.<br />\nSerá una buena opción tanto para la cocina como para la repostería!<br />\nLa sonda del termómetro de carne hará la vida más conveniente, muy útil en la cocina!!<br />\n<br />\n\n- Voltaje: 1.5 V (pila no incluida AG13).<br />\n- Resolución De La Temperatura: 0.10/&deg; F.<br />\n- Rango: 0.0 &deg; C a + 80 &deg; C (&plusmn; $ NUMBER &deg; C o 2 &deg; F), otro rango (&plusmn; $ NUMBER &deg; C-10 &deg; C o 10 &deg; F-20 &deg; F).<br />\n- Medición de Frecuencia: 1 Seg, 10 seg, sueño, selección automática de - Encendido/apagado, &deg; C/y acirc; y botones de espera.<br />\n- Powered por 1 x batería AG13.<br />\n<br />\n\n- Rango De Medición:-50 &deg; C + 300 &deg; C (-58 &deg; F a + 572 &deg; F).<br />\n- &deg; C y &deg; F display seleccionable.<br />\n- Sensación de batería Baja y la pantalla.<br />\n- Memoria de la medida pasada.<br />\n- 15 minutos de apagado automático para ahorro de energía (opcional).<br />\n<br />\n</div>",
-    "features": []
-  },
-  {
-    "id": "G-HUMEDAD-HTC-1",
-    "name": "Despertador Digital con Medidor de Temperatura y Humedad",
-    "slug": "despertador-digital-con-medidor-de-temperatura-y-humedad",
-    "price": 10260,
-    "image": "/bolushop.png",
-    "category": "tech",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\"><p>Reloj digital temperatura y humedad con alarma<br />\n<br />\nCaracterísticas:<br />\n<br />\nGran pantalla LCD multi-función. 9 cm. x 5 cm.<br />\n<br />\nMuestra la temperatura , humedad interior y visualización de tiempo.<br />\n<br />\nMemoria de MAX y MIN del valor de medición.<br />\n<br />\n12 horas / 24 horas seleccionable por el sistema de visualización.<br />\n<br />\nFunción de reloj, fecha y calendario (mes y día).<br />\n<br />\nFunción de alarma.<br />\n<br />\nColocación de sobremesa o para colgar.<br />\n<br />\nMuy bajo consumo de energía.<br />\n<br />\nAlta estabilidad y precisión.<br />\n<br />\nEspecificaciones:<br />\n<br />\nColor del dispositivo: Blanco<br />\n<br />\nRango de temperatura: para interior y exterior: de - 50 a 70&ordm; C<br />\n<br />\nRango de humedad: de 10% a 99%<br />\n<br />\nAlimentación: 1 pila AAA 1.5V (NO incluída)<br />\n<br />\nMedidas: 10,5 x 9,8 x 2,4 cm<br />\n<br />\nPeso: 125 gramos</p>\n</div>",
-    "features": []
-  },
-  {
-    "id": "DL2032",
-    "name": "Afilador de Cuchillos 3 En 1 ",
-    "slug": "afilador-de-cuchillos-3-en-1-",
-    "price": 2145,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">• Fabricado en plástico inyectado duro.<br/>\n• Con apliques de goma roja antideslizante.<br/>\n• Etapas de afilado:<br/>\n1 - Piedra de afilado inicial.<br/>\n2 - Alisado de precisión cerámico.<br/>\n3 - Pulido cerámico.<br/>\n• Rápido y efectivo.<br/>\n• Base antideslizante.<br/>\n• Mango ergonómico.<br/>\n• Medidas 21.5 x 5 x 6cm.<br/>\n• Peso 150 gr.<br/></div>",
-    "features": []
-  },
-  {
-    "id": "G-550012-4CURVO",
-    "name": "Pack x4 Sorbetes de Acero Curvos con Cepillo",
-    "slug": "pack-x4-sorbetes-de-acero-curvos-con-cepillo",
-    "price": 2693,
-    "image": "/bolushop.png",
-    "category": "hogar",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\"><p>Juego de 4 sorbetes curvos de acero inoxidable</p>\n</p>\nIncluye cepillo para su limpieza incluido.</p>\n</p>\nMedidas: 22cm de largo</p></div>",
-    "features": []
+    "features": [
+      "Envío Gratis 🚚"
+    ]
   },
   {
     "id": "G-YG-712",
     "name": "Cortador De Vegetales Rotativo Manual 4 En 1",
     "slug": "cortador-de-vegetales-rotativo-manual-4-en-1",
-    "price": 17139,
+    "price": 27039,
     "image": "/bolushop.png",
     "category": "cocina",
     "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Cortador rotativo Multifuncional 4 en 1 manual multifuncional.<br/>\n<br/>\n*Cortador de frutas y verduras (Como zanahoria, papa, rallador cortador de queso).<br/>\n*En la parte inferior posee ventosa para evitar que el producto resbale durante su uso.<br/>\n*Posee 4 modelos de cuchillas intercambiables.<br/>\n*Cuchillas Intercambiables de Acero.<br/>\n<br/>\nCortes:<br/>\n*Rayado fino.<br/>\n*Rayado grueso.<br/>\n*Rodajas.<br/>\n*Rejilla.<br/></div>",
-    "features": []
-  },
-  {
-    "id": "G-NIV-TORT",
-    "name": "Nivelador de Cuchilla para Biscochuelos ",
-    "slug": "nivelador-de-cuchilla-para-biscochuelos-",
-    "price": 2917,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Nivelador de cortes para biscochuelos.</br>\n</br>\nTiene 5 niveles de altura.</br>\n</br>\nPack por 2 unidades.</br>\n</br>\nColores: Surtidos segun disponibilidad.</br>\n</br>\nMaterial: Plastico.</br></div>",
-    "features": []
-  },
-  {
-    "id": "G-PORTAPILETA",
-    "name": "Organizador de Bacha Ajustable",
-    "slug": "organizador-de-bacha-ajustable",
-    "price": 10098,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">- Esponja + estante para lavar platos en el fregadero para mantener la cocina organizada</br>\n- Hecho de buen plástico</br>\n- Apto para usar en el baño, fregadero Platos, fregaderos o cocinas</br>\n- usado para Guarde las esponjas para lavar los platos. Líquido lavavajillas y otros.</br>\nFuerte y duradero.</br>\nHay colgador de trapos. O varias cosas</br>\n: ayude a organizar varios dispositivos para que sean fácilmente accesibles. Cómodo de usar</br>\n</br>\nTamaño del producto</br>\n- Largo 36 cm., Extensible hasta 50 cm.</br>\n- Ancho 9 cm.</br>\n- Alto 23 cm.</br></div>",
-    "features": []
-  },
-  {
-    "id": "G-502020",
-    "name": "Rociador de Aceite Vidrio",
-    "slug": "rociador-de-aceite-vidrio",
-    "price": 6059,
-    "image": "/bolushop.png",
-    "category": "hogar",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\"><p>El dispensador de rociador de aceite tiene una capacidad de 100 ml, simplemente haga clic en la bomba de presión para rociar una niebla fina y uniforme, controle con precisión la cantidad de condimento<p>\n<p>\nVidrio de alta calidad, libre de BPA y ecológico, tapa de plástico, 100% de grado de seguridad alimentaria. \n<p>\n<p>Nuestros pulverizadores de aceite son de limpieza fácil y rápida, desenrosque la tapa, vierta agua caliente y detergente suave, agite un poco, atornille la tapa y agite.\n<p>\n-Colores: Surtido según disponibilidad</p></div>",
-    "features": []
-  },
-  {
-    "id": "G-YH720",
-    "name": "Cubetera Calavera Hielos Con Forma de Calavera Huesos",
-    "slug": "cubetera-calavera-hielos-con-forma-de-calavera-huesos",
-    "price": 6508,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-store=\"product-description-80953396\">CUBETERA CALAVERA </div>\n\n<div data-store=\"product-description-80953396\">Molde de 2 tapas para formar la calavera.</div>\n\n<div data-store=\"product-description-80953396\">Se llena por el agujero de la parte posterior.</div>\n\n<div data-store=\"product-description-80953396\"> </div>\n\n<div data-store=\"product-description-80953396\">CARACTERÍSTICAS:</div>\n\n<div data-store=\"product-description-80953396\">- Material: Silicona.</div>\n\n<div data-store=\"product-description-80953396\">- Medidas: 12 x 8 cm. Hielo: 5 x 3 cm.</div>\n\n<div> </div>\n",
-    "features": []
-  },
-  {
-    "id": "560455",
-    "name": "Cepillo Lava Vasos con Ventosas",
-    "slug": "cepillo-lava-vasos-con-ventosas",
-    "price": 5610,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Cepillo lavavasos doble </br>\n</br></br>\nLimpia por fuera y por dentro al mismo tiempo.</br>\n</br>\nSe puede adherir a la bacha, mesada o a la pared gracias a las sopapas en la base.</br>\n</br>\nEs Ideal para lavar vasos, copas y todo lo que necesites en la cocina.</br>\n</br>\nEs super práctico ya que se desarma con mucha facilidad.</br></div>",
-    "features": []
-  },
-  {
-    "id": "G-CHURRERAMANUA",
-    "name": "Churrera Artesanal Metalica",
-    "slug": "churrera-artesanal-metalica",
-    "price": 4432,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Esta herramienta es la que todos buscan para preparar unos deliciosos churros en poco tiempo.</BR>\n</BR>\nMaterial: Metalico</BR>\n</BR>\nMedidas:</BR>\n</BR>\n- Diametro: 6cm</BR>\n</BR>\n- Diametro de salida: 2cm</BR>\n</BR>\n- Largo cerrado: 23cm</BR>\n</BR>\n- Largo del recipiente: 21cm</BR>\n</BR>\n- Largo del empujador: 22cm</BR>\n</div>",
-    "features": []
+    "features": [
+      "Envío Gratis 🚚"
+    ]
   },
   {
     "id": "G-BOTETAPAROSCA",
     "name": "Botella Plegable de Silicona 500mL",
     "slug": "botella-plegable-de-silicona-500ml",
-    "price": 18260,
+    "price": 28160,
     "image": "/bolushop.png",
     "category": "cocina",
     "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Botella de agua plegable de grado alimenticio para exteriores, botella de agua deportiva plegable de 550ml</br>\n\n\nBotella de agua deportiva plegable de silicona a prueba de fugas</br>\n\nMaterial\tSilicona de calidad \t</br>\t\nTamaño\t(Desplegado) 7*24,5 cm; (plegado) 7*14cm</br>\nPeso\t165 g/unidad</br>\nColor: SUJETO A DISPONIBILIDAD\t\t</br>\t\t\nTemperatura\t-40 ~ 230 ℃\t</br>\t\nInstrucciones de cuidado</br>\t\t\n1. No corte ni se separe con instrumentos afilados.</br>\t\n2. No lo use cuando la forma esté rota o cuando la fibra interna aparezca expuesta.</br>\n3. Lavar en agua tibia antes de usar\t</br>\t\n4. Evite el uso de limpiadores abrasivos</br>\t\t\n5. No coloque silicona cerca de una llama desnuda o debajo de la parrilla</br>\nCaracterística\t</br>\t\t\n1. 100% silicona de calidad alimentaria y sin BPA</br>\t\t\n2. ℃ resistente al calor hasta 230: no se decolora, se deforma ni se derrite</br>\n3. Antiadherente, fácil de limpiar, no rayará ollas y sartenes.</br>\n4. Apto para microondas, congelador y lavavajillas</br>\t\n5. Duradero y portátil.\t</br></div>",
-    "features": []
-  },
-  {
-    "id": "G-BOTETAPACE550",
-    "name": "Botella Termica Plegable 550ml Tapa Acero",
-    "slug": "botella-termica-plegable-550ml-tapa-acero",
-    "price": 15035,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">– Incluye llavero mosqueton de metal de 4,5cm <P>\n– Alto: 24,5cm Diámetro: 7 cm aprox <P>\n– Material cuerpo: Silicona <P>\n– Material de la tapa: Plástico/Metal <P>\n– No tiene BPA <P>\n– Capacidad de 550ml <P>\n– Fácil de Plegar cuando se termina el liquido y poder transportarlo sin que ocupe demasiado lugar. <P>\n– Posee tapa rosca y el pico es flexible<P></div>",
-    "features": []
-  },
-  {
-    "id": "G-BOTETAPAPRESI",
-    "name": "Botella Plegable 500ml Tapa Plastica",
-    "slug": "botella-plegable-500ml-tapa-plastica",
-    "price": 12037,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">- Incluye llavero mosquetón de metal de 4,5cm <p>\n- Alto: 23,5cm Diámetro: 7cm aprox <p>\n- Material cuerpo: Silicona/Plastico <p>\n- Material de la tapa: Plástico <p>\n- No tiene BPA y FTALATOS <p>\n- Capacidad de 500ml <p>\n- Fácil de Plegar cuando se termina el liquido y poder transportarlo sin que ocupe demasiado lugar.<p>\n- En su lateral posee un gancho para poder colgarla de la mochila o agregarle una cinta y colgarla del cuello y llevarla!<p>\n- Posee tapa rigida a presion <p></div>",
-    "features": []
-  },
-  {
-    "id": "G-BOTETAPACE355",
-    "name": "Botella Silicona Plegable 355 Ml Tapa A Rosca ",
-    "slug": "botella-silicona-plegable-355-ml-tapa-a-rosca-",
-    "price": 15697,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">- Incluye llavero mosquetón de metal de 4,5cm <P>\n- Alto: 19.5 cm Diámetro: 7cm aprox <P>\n- Material cuerpo: Silicona/Plastico <P>\n- Material de la tapa: Plástico <P>\n- No tiene BPA y FTALATOS <P> \n- Fácil de Plegar cuando se termina el liquido y poder transportarlo sin que ocupe demasiado lugar.<P>\n- En su lateral posee un gancho para poder colgarla de la mochila o agregarle una cinta y colgarla del cuello y llevarla!<P>\n- Posee tapa rigida se gira para abrir y cerrar<P>\n- Capacidad de 355  ml<P></div>",
-    "features": []
+    "features": [
+      "Envío Gratis 🚚"
+    ]
   },
   {
     "id": "505384A",
@@ -258,46 +109,6 @@
     ]
   },
   {
-    "id": "G-550101",
-    "name": "Seca Platos de Silicona Plegable",
-    "slug": "seca-platos-de-silicona-plegable",
-    "price": 13240,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Ideal para platos, tenedores, cuchillos y mas!</br>\n</br>\nPlegable: Súper práctico para usarlo cuando lo necesites y luego guardarlo sin ocupar mucho espacio!</br>\n</br>\nMedidas Aprox:</br>\n36cm. de largo.</br>\n31 cm. de ancho.</br>\n12 cm. de alto.</br></div>",
-    "features": []
-  },
-  {
-    "id": "G-ESTUDENSD",
-    "name": "Estuche de Viaje Porta Cepillo",
-    "slug": "estuche-de-viaje-porta-cepillo",
-    "price": 4039,
-    "image": "/bolushop.png",
-    "category": "tech",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Organizador de cepillos de dientes y pasta de dientes es un gran estuche de embalaje y organización. Es perfecto para viajes al aire libre, camping, familia, escuela, viaje de negocios y también es ideal para regalos.</br>\n</br>\n- Resistente y limpio: duradero y la buena propiedad de sellado ayuda a proteger tu cepillo de dientes del polvo y los gérmenes.</br>\n</br>\n- Caja segura para cepillos de dientes y pasta de dientes: mejor que las fundas de tela</br>\neste soporte para cepillos de dientes cuenta con un diseño inteligente y fácil de girar y bloquear, y una correa para recoger en adicional.</br>\n</br>\n- Respetuoso con el medio ambiente y duradero: hecho de polipropileno plástico ecológico, no tóxico, degradable, inodoro, inofensivo y buen rendimiento a altas o bajas temperaturas.</br>\n</br>\nMedidas: 19,6 cm de altura x 6 cm de diámetro</br>\n</br>\nColores: Surtidos a disponibilidad</br>\n</div>",
-    "features": []
-  },
-  {
-    "id": "G-FAUCET1080",
-    "name": "Adaptador 360° para Canilla con Filtro ",
-    "slug": "adaptador-360%C2%B0-para-canilla-con-filtro-",
-    "price": 8415,
-    "image": "/bolushop.png",
-    "category": "hogar",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">- Extensión para pico de canilla</br>\n- Con aireador y adaptador de rosca</br>\n- Orientación de 1080º</br>\n- Se acomoda a la posición deseada</br>\n- Compatible con todas las canillas</br>\n- Rosca de 2.5cm + 2 adaptadores</br>\n- Roscas internas o externas</br></br>\n\nSeguro y confiable, con una estructura interna robusta resistente a la suciedad y al daño del agua.</br>\nUtilice un cartucho de filtro de agua segura. Filtre las impurezas, la arena y el barro del agua.</br></div>",
-    "features": []
-  },
-  {
-    "id": "G-HORNALLAX2NEG",
-    "name": "X4 Protector de Hornalla Antiadherente Negro",
-    "slug": "x4-protector-de-hornalla-antiadherente-negro",
-    "price": 6178,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Protectores de Hornallas.<br/>\n¡Mantenga su cocina y horno protegidos y no pierdas mas tiempo fregando!<br/>\n<br/>\n- Adaptable a las hornallas de todo tipo, eléctricas o de gas.<br/>\nMantenga limpia su cocina de derrames o grasa pegada.<br/>\nCon este paquete de protectores de hornallas puede cocinar una gran comida para la familia sin preocupaciones.<br/>\n- Fabricado a base de fibra de vidrio con un revestimiento de teflón resistente a altas temperaturas (300Cº).<br/>\nUn producto simple y de calidad que hará que tu cocina se vea mas elegante y ordenada.<br/>\n¡Los protectores son reutilizables, 100% antiadherentes y aptos para lavavajillas, de modo que cuando esté sucio simplemente límpielo con una esponja suave o metalo en el lavavajillas, y listo!<br/>\n- No más salpicaduras obstinadas y quemadas.<br/>\n<br/>\n¡Nuestros protectores atraparán todo el desorden por usted y pondrán fin a todas las cosas asquerosas que se pegan a su cocina!<br/>\n<br/>\n<br/>\nDATOS TECNICOS:<br/>\n<br/>\nMaterial: Teflonado.<br/>\nForma: Cuadrado.<br/>\nMedidas: 27 cm x 27 cm.<br/>\nDiámetro de orificio: hasta 11 cm.<br/>\nUnidades por paquete: 2 <br/>\nCantidad de paquetes: 2.<br/>\nColores: Negro <br/>\n</div>",
-    "features": []
-  },
-  {
     "id": "G-COFECUPSD",
     "name": "Vaso Térmico con Tapa Antiderrame Acero Inox",
     "slug": "vaso-termico-con-tapa-antiderrame-acero-inox",
@@ -320,16 +131,6 @@
     "features": [
       "Envío Gratis 🚚"
     ]
-  },
-  {
-    "id": "G-GRIFOTE",
-    "name": "Accesorio Para Canilla con 4 Tipos de Chorro",
-    "slug": "accesorio-para-canilla-con-4-tipos-de-chorro",
-    "price": 15315,
-    "image": "/bolushop.png",
-    "category": "hogar",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Características: rotación de agua/universal de 4 velocidades, ángulos ajustables de varias formas</br>\n</br>\nPrimera velocidad: Modo lluvia (ahorro de agua, ideal para lavar verduras y frutas)</br>\n</br>\nSegunda velocidad: Modo cascada (limpieza de áreas grandes, especialmente adecuado para lavar verduras)</br>\n</br>\nTercera velocidad: Modo burbuja anti-salpicaduras (flujo de agua suave sin salpicaduras)</br>\n</br>\nCuarta velocidad: Modo doble cuchilla (agua presurizada fuerte para una limpieza a fondo)</br></div>",
-    "features": []
   },
   {
     "id": "G-PORTAANAFE",
@@ -380,83 +181,39 @@
     ]
   },
   {
-    "id": "BWH0049-CE",
-    "name": "Vaso Termico Plegable Celeste",
-    "slug": "vaso-termico-plegable-celeste",
-    "price": 4447,
-    "image": "/bolushop.png",
-    "category": "aire-libre",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Mini Taza Plegable de Silicona: \n<br>\nDescubre la comodidad de llevar tu bebida favorita a donde quieras. Fabricada en silicona de alta calidad, esta taza retráctil es ligera, resistente y fácil de transportar.\n<br>\nCaracterísticas destacadas:\n<br>\n<br>\nSe pliega para ocupar el mínimo espacio en tu mochila o bolso.\n<br>\nSilicona libre de BPA, perfecta para usar con bebidas calientes y frías.\n<br>\nTapa a prueba de derrames, manteniendo tu bebida segura mientras te mueves.\n<br>\nIdeal para viajes, camping, senderismo o en la oficina.\n<br>\n\n</div>",
-    "features": []
-  },
-  {
-    "id": "BWH0050-RO",
-    "name": "Taza Termica Plegable de Silicona Rosa",
-    "slug": "taza-termica-plegable-de-silicona-rosa",
-    "price": 13232,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Para la mayoría de las ocasiones: la capacidad de la taza plegable de silicona es de 350ml, es la mejor capacidad disponible, adecuado para café, leche, cola, jugo, agua caliente, etc.<br>\nDoble a prueba de fugas: la taza de agua plegable tiene anillos de sellado de silicona para evitar fugas innecesarias y garantizar un sellado hermético cuando la boca de la botella está cerrada<br>\nPortátil y ligero: diseño plegable actualizado, ahorra espacio y solo 6/2.6 in cuando se pliega. Solo necesitas abrirlo con un poco de agua para lavarlo. Las superficies lisas no causarán manchas de alimentos.<br>\nMateriales de alta temperatura: la taza de viaje plegable está hecha de material de silicona de grado alimenticio, también puedes cocinar algunas bebidas calientes y calentar alimentos con un café plegable de silicona similar a una taza porque el material es resistente a altas temperaturas.<br>\nFácil de limpiar: la taza plegable hace que sea más duradera. Las tazas plegables de silicona son fáciles de limpiar, simplemente límpialas suavemente con agua, lo que las hace muy convenientes para nuestra limpieza diaria.<br>\n</div>",
-    "features": []
-  },
-  {
-    "id": "BWH0050-TU",
-    "name": "Taza Termica Plegable de Silicona Turquesa",
-    "slug": "taza-termica-plegable-de-silicona-turquesa",
-    "price": 13232,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Para la mayoría de las ocasiones: la capacidad de la taza plegable de silicona es de 350ml, es la mejor capacidad disponible, adecuado para café, leche, cola, jugo, agua caliente, etc.<br>\nDoble a prueba de fugas: la taza de agua plegable tiene anillos de sellado de silicona para evitar fugas innecesarias y garantizar un sellado hermético cuando la boca de la botella está cerrada<br>\nPortátil y ligero: diseño plegable actualizado, ahorra espacio y solo 6/2.6 in cuando se pliega. Solo necesitas abrirlo con un poco de agua para lavarlo. Las superficies lisas no causarán manchas de alimentos.<br>\nMateriales de alta temperatura: la taza de viaje plegable está hecha de material de silicona de grado alimenticio, también puedes cocinar algunas bebidas calientes y calentar alimentos con un café plegable de silicona similar a una taza porque el material es resistente a altas temperaturas.\nFácil de limpiar: la taza plegable hace que sea más duradera. Las tazas plegables de silicona son fáciles de limpiar, simplemente límpialas suavemente con agua, lo que las hace muy convenientes para nuestra limpieza diaria.<br>\n</div>",
-    "features": []
-  },
-  {
     "id": "WH-BWH0204-AZ",
     "name": "Lunchera 2 En 1 Hermética con Cubiertos Azul",
     "slug": "lunchera-2-en-1-hermetica-con-cubiertos-azul",
-    "price": 21896,
+    "price": 31796,
     "image": "/bolushop.png",
     "category": "cocina",
     "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">El diseño de partición construido mantiene el sabor original.<br>\nDiseño de aislamiento de calor de doble capa previene las manos calientes.<br>\nLos niños también pueden comer una dieta equilibrada cuando traen comidas o se conmutan por trabajar.<br>\nLa hebilla elegante te permite llevar comidas contigo cuando te abrojas.<br>\nAditable para uso familiar, escuela, picnics al aire libre.<br>\n<br>\nMaterial: Plástico polipropileno<br>\nForma: Rectangular<br>\nCapacidad en volumen: 800 mL<br>\nLargo x Ancho x Altura: 11.8 cm x 18 cm x 12 cm<br>\nEs hermético: Sí<br>\nEs apto para microondas: Sí<br>\nEs apto para lavavajillas: Sí<br>\nCon tapa: Sí<br>\nTipo de tapa: Hérmetica<br>\n\n</div>",
-    "features": []
+    "features": [
+      "Envío Gratis 🚚"
+    ]
   },
   {
     "id": "WH-BWH0204-TU",
     "name": "Lunchera 2 En 1 Hermética con Cubiertos Turquesa",
     "slug": "lunchera-2-en-1-hermetica-con-cubiertos-turquesa",
-    "price": 21896,
+    "price": 31796,
     "image": "/bolushop.png",
     "category": "cocina",
     "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">El diseño de partición construido mantiene el sabor original.<br>\nDiseño de aislamiento de calor de doble capa previene las manos calientes.<br>\nLos niños también pueden comer una dieta equilibrada cuando traen comidas o se conmutan por trabajar.<br>\nLa hebilla elegante te permite llevar comidas contigo cuando te abrojas.<br>\nAditable para uso familiar, escuela, picnics al aire libre.<br>\n<br>\nMaterial: Plástico polipropileno<br>\nForma: Rectangular<br>\nCapacidad en volumen: 800 mL<br>\nLargo x Ancho x Altura: 11.8 cm x 18 cm x 12 cm<br>\nEs hermético: Sí<br>\nEs apto para microondas: Sí<br>\nEs apto para lavavajillas: Sí<br>\nCon tapa: Sí<br>\nTipo de tapa: Hérmetica<br>\n\n</div>",
-    "features": []
+    "features": [
+      "Envío Gratis 🚚"
+    ]
   },
   {
     "id": "WH-BWH0204-VI",
     "name": "Lunchera 2 En 1 Hermética con Cubiertos Violeta",
     "slug": "lunchera-2-en-1-hermetica-con-cubiertos-violeta",
-    "price": 21896,
+    "price": 31796,
     "image": "/bolushop.png",
     "category": "cocina",
     "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">El diseño de partición construido mantiene el sabor original.<br>\nDiseño de aislamiento de calor de doble capa previene las manos calientes.<br>\nLos niños también pueden comer una dieta equilibrada cuando traen comidas o se conmutan por trabajar.<br>\nLa hebilla elegante te permite llevar comidas contigo cuando te abrojas.<br>\nAditable para uso familiar, escuela, picnics al aire libre.<br>\n<br>\nMaterial: Plástico polipropileno<br>\nForma: Rectangular<br>\nCapacidad en volumen: 800 mL<br>\nLargo x Ancho x Altura: 11.8 cm x 18 cm x 12 cm<br>\nEs hermético: Sí<br>\nEs apto para microondas: Sí<br>\nEs apto para lavavajillas: Sí<br>\nCon tapa: Sí<br>\nTipo de tapa: Hérmetica<br>\n\n</div>",
-    "features": []
-  },
-  {
-    "id": "G-HEL-001",
-    "name": "Cuchara Bochera para Helado Grande",
-    "slug": "cuchara-bochera-para-helado-grande",
-    "price": 5592,
-    "image": "/bolushop.png",
-    "category": "varios",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Herramienta indispensable para preparar cupcakes.<br/>\n<br/>\n\nCuchara de helado: Puede sonar raro pero es muy útil para echar porciones iguales de masa en cada cápsula o pirotin. De esta forma nos aseguramos de que todos los cupcakes tienen el mismo tamaño. <br/>\n<br/>\n\nDiametro: 6cm<br/>\n</div>",
-    "features": []
-  },
-  {
-    "id": "G-HEL-002",
-    "name": "Cuchara Bochera para Helado Chica",
-    "slug": "cuchara-bochera-para-helado-chica",
-    "price": 6283,
-    "image": "/bolushop.png",
-    "category": "varios",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Herramienta indispensable para preparar cupcakes.<br/>\n<br/>\n\nCuchara de helado: Puede sonar raro pero es muy útil para echar porciones iguales de masa en cada cápsula o pirotin. De esta forma nos aseguramos de que todos los cupcakes tienen el mismo tamaño.<br/>\n<br/>\nDiametro: 5cm<br/></div>",
-    "features": []
+    "features": [
+      "Envío Gratis 🚚"
+    ]
   }
 ]
