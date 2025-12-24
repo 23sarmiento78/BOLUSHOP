@@ -4,7 +4,9 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { useCart } from '@/lib/cart-context';
 
-export default function SuccessPage() {
+import { Suspense } from 'react';
+
+function SuccessContent() {
     const searchParams = useSearchParams();
     const paymentId = searchParams.get('payment_id');
     const { clearCart } = useCart();
@@ -25,5 +27,17 @@ export default function SuccessPage() {
                 Volver al inicio
             </Link>
         </div>
+    );
+}
+
+export default function SuccessPage() {
+    return (
+        <Suspense fallback={
+            <div className="container mx-auto px-4 py-20 text-center">
+                <p>Cargando resultado del pago...</p>
+            </div>
+        }>
+            <SuccessContent />
+        </Suspense>
     );
 }
