@@ -59,8 +59,11 @@ export async function POST(req: NextRequest) {
         });
 
         return NextResponse.json({ init_point: result.init_point });
-    } catch (error) {
-        console.error(error);
-        return NextResponse.json({ error: 'Error creating preference' }, { status: 500 });
+    } catch (error: any) {
+        console.error("❌ Checkout Error:", error);
+        return NextResponse.json({
+            error: 'Error creating checkout session',
+            details: error.message || String(error)
+        }, { status: 500 });
     }
 }
