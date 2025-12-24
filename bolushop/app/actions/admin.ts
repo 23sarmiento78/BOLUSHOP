@@ -69,19 +69,17 @@ export async function importProductsAction(rawProducts: any[], source: string) {
                 if (isNaN(price)) price = 0;
 
                 const SHIPPING_COST = 9000;
-                const ABSORB_THRESHOLD = 20000; // Products above $20k absorb shipping
+                const MIN_BASE_PRICE = 15000;
                 let features = [];
 
                 if (price > 0) {
-                    if (price >= ABSORB_THRESHOLD) {
-                        // Strategy: Absorb shipping, mark as Free Shipping
-                        // Formula: (Base + Shipping) + 10% Profit
-                        price = Math.round((price + SHIPPING_COST) * 1.10);
-                        features.push("Envío Gratis 🚚");
-                    } else {
-                        // Strategy: Low cost item, just 10% Profit. Shipping paid by customer.
-                        price = Math.round(price * 1.10);
-                    }
+                    // Business Rule: Skip products below $15,000 base price
+                    if (price < MIN_BASE_PRICE) return null;
+
+                    // Universal Strategy: Every product includes shipping and 10% profit
+                    // Formula: (Base + Shipping) + 10% Profit
+                    price = Math.round((price + SHIPPING_COST) * 1.10);
+                    features.push("Envío Gratis 🚚");
                 }
 
                 const description = row['Descripción'] || '';
@@ -110,7 +108,7 @@ export async function importProductsAction(rawProducts: any[], source: string) {
             });
         }
 
-        mappedProducts = mappedProducts.filter(p => p.name && p.name !== 'Sin Nombre' && p.price > 0);
+        mappedProducts = mappedProducts.filter(p => p !== null && p.name && p.name !== 'Sin Nombre' && p.price > 0);
 
         if (mappedProducts.length > 0) {
             saveProducts(mappedProducts);
