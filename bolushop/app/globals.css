@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+:root {
+  /* Tropical Theme */
+  --tropical-green: #00A86B;
+  --sun-yellow: #FFB800;
+  --ocean-blue: #0077BE;
+  --sand-white: #F9FAFB;
+  --text-main: #1F2937;
+  
+  --background: var(--sand-white);
+  --foreground: var(--text-main);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--tropical-green);
+  --color-secondary: var(--sun-yellow);
+  --color-accent: var(--ocean-blue);
+  
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
