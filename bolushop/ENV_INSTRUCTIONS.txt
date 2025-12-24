@@ -1,0 +1,6 @@
+# Mercado Pago Credentials
+# Conseguilas en: https://www.mercadopago.com.ar/developers/panel
+# Usá las "Test" para probar y las "Production" para vender de verdad.
+
+MP_ACCESS_TOKEN=TEST-00000000-0000-0000-0000-000000000000
+NEXT_PUBLIC_MP_PUBLIC_KEY=TEST-0000-0000-0000-0000
