@@ -19,10 +19,8 @@ export default function CartPage() {
         );
     }
 
-    // Shipping Logic: If ANY item has free shipping, the whole order is free.
-    // Otherwise, flat rate of $9000.
-    const hasFreeShippingItem = items.some(i => i.features && i.features.includes("Envío Gratis 🚚"));
-    const shippingCost = hasFreeShippingItem ? 0 : 9000;
+    // Shipping Logic: Universal absorption (already included in product prices)
+    const shippingCost = 0;
     const finalTotal = total + shippingCost;
 
     return (
@@ -59,9 +57,7 @@ export default function CartPage() {
                                     </div>
                                     <span className="text-gray-400 text-xs">x ${item.price.toLocaleString('es-AR')}</span>
                                 </div>
-                                {item.features?.includes("Envío Gratis 🚚") && (
-                                    <div className="text-green-600 text-xs font-bold mt-1">Envío GRATIS</div>
-                                )}
+                                <div className="text-green-600 text-xs font-bold mt-1">✓ Envío Incluido</div>
                             </div>
                             <div className="text-right">
                                 <div className="font-bold text-lg">${(item.price * item.quantity).toLocaleString('es-AR')}</div>
@@ -86,26 +82,17 @@ export default function CartPage() {
                         </div>
                         <div className="flex justify-between mb-4 font-medium">
                             <span>Envío</span>
-                            {shippingCost === 0 ? (
-                                <span className="text-green-600">GRATIS 🚚</span>
-                            ) : (
-                                <span>${shippingCost.toLocaleString('es-AR')}</span>
-                            )}
+                            <span className="text-green-600 font-bold uppercase">Gratis</span>
                         </div>
                         <div className="border-t border-gray-100 pt-4 flex justify-between mb-6">
                             <span className="font-bold text-xl text-gray-900">Total</span>
                             <span className="font-bold text-xl text-primary">${finalTotal.toLocaleString('es-AR')}</span>
                         </div>
 
-                        {shippingCost === 0 ? (
-                            <div className="bg-yellow-50 text-yellow-800 text-sm p-3 rounded-lg mb-6">
-                                😉 <strong>¡Buena elección!</strong> El envío ya está bonificado.
-                            </div>
-                        ) : (
-                            <div className="bg-gray-50 text-gray-600 text-sm p-3 rounded-lg mb-6">
-                                💡 Agregá un producto de más de $20.000 para tener <strong>Envío Gratis</strong> en toda la orden.
-                            </div>
-                        )}
+                        <div className="bg-emerald-50 text-emerald-800 text-sm p-3 rounded-lg mb-6 flex items-start gap-2">
+                            <span className="text-lg">🚚</span>
+                            <p>¡Buenas noticias! Todos nuestros productos incluyen el **envío bonificado** a todo el país.</p>
+                        </div>
 
                         <Link href="/checkout" className="block w-full bg-primary text-white text-center font-bold py-4 rounded-xl hover:bg-emerald-600 transition-colors shadow-lg">
                             Finalizar Compra

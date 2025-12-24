@@ -19,9 +19,8 @@ export async function POST(req: NextRequest) {
         // Create an internal Order ID
         const orderId = uuidv4();
 
-        // Recalculate shipping logic on server side for security
-        const hasFreeShippingItem = items.some((i: any) => i.features && i.features.includes("Envío Gratis 🚚"));
-        const shippingCost = hasFreeShippingItem ? 0 : 9000;
+        // Recalculate shipping logic: Universal absorption (shipping is already in product price)
+        const shippingCost = 0;
 
         const result = await preference.create({
             body: {

@@ -34,15 +34,9 @@ export default async function ProductPage({
                 <div className="flex flex-col">
                     <h1 className="text-3xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 leading-tight">{product.name}</h1>
                     <div className="flex items-center gap-2 mb-6">
-                        {product.features?.includes("Envío Gratis 🚚") ? (
-                            <span className="text-sm bg-green-100 text-green-800 px-2 py-1 rounded font-bold">
-                                ⚡ Envío GRATIS
-                            </span>
-                        ) : (
-                            <span className="text-sm bg-gray-100 text-gray-600 px-2 py-1 rounded font-bold border border-gray-200">
-                                📦 Envío a cargo del comprador
-                            </span>
-                        )}
+                        <span className="text-sm bg-green-100 text-green-800 px-2 py-1 rounded font-bold">
+                            ⚡ Envío GRATIS (Incluido)
+                        </span>
                         <span className="text-sm bg-yellow-100 text-yellow-800 px-2 py-1 rounded font-bold">Stock Disponible</span>
                     </div>
 

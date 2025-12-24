@@ -50,15 +50,13 @@ export default function ProductCard({ product }: { product: Product }) {
                         <h3 className="font-medium text-gray-900 line-clamp-2 mb-1 group-hover:text-primary transition-colors">{product.name}</h3>
                         <div className="mt-auto">
                             <div className="text-primary font-bold text-lg">${product.price.toLocaleString('es-AR')}</div>
-                            {product.features?.includes("Envío Gratis 🚚") && (
-                                <div className="text-green-600 text-xs font-semibold mt-1 flex items-center gap-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-                                        <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
-                                        <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a2.5 2.5 0 014.9 0H16a1 1 0 001-1V4a1 1 0 00-1-1h-3.141a1 1 0 00-1.618-1.554l-5.381 2.441a1 1 0 00.38 1.838L8.71 4H3z" />
-                                    </svg>
-                                    Envío GRATIS
-                                </div>
-                            )}
+                            <div className="text-green-600 text-xs font-bold mt-1 flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                                    <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a2.5 2.5 0 014.9 0H16a1 1 0 001-1V4a1 1 0 00-1-1h-3.141a1 1 0 00-1.618-1.554l-5.381 2.441a1 1 0 00.38 1.838L8.71 4H3z" />
+                                </svg>
+                                Envío GRATIS
+                            </div>
                         </div>
                     </div>
                 </div>

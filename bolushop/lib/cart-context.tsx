@@ -47,10 +47,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     };
 
     const updateQuantity = (id: string, delta: number) => {
-        console.log("Updating Quantity for:", id, "Delta:", delta);
         setItems(prev => {
             const currentTotal = prev.reduce((sum, item) => sum + item.quantity, 0);
-            console.log("Current Total:", currentTotal);
 
             // Check limits if adding
             if (delta > 0 && currentTotal + delta > 15) {
@@ -61,7 +59,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
             return prev.map(item => {
                 if (item.id === id) {
                     const newQuantity = Math.max(1, item.quantity + delta);
-                    console.log("New Quantity:", newQuantity);
                     return { ...item, quantity: newQuantity };
                 }
                 return item;
