@@ -1,8 +1,25 @@
 import { getAllProducts } from '@/lib/db'; // Direct DB access for Server Component
 import ProductCard from '@/components/ProductCard';
 import Link from 'next/link';
+import { Metadata } from 'next';
+import { SITE_NAME } from '@/lib/constants';
 
 export const dynamic = 'force-dynamic';
+
+type Props = {
+    searchParams: Promise<{ cat?: string }>;
+};
+
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+    const { cat } = await searchParams;
+    const activeCategoryName = cat ? decodeURIComponent(cat) : 'Todos los Productos';
+
+    return {
+        title: activeCategoryName,
+        description: `Explorá nuestra selección de ${activeCategoryName.toLowerCase()} en ${SITE_NAME}. Calidad garantizada y envíos gratis.`,
+    };
+}
+
 
 export default async function CategoriesPage({
     searchParams,

@@ -3,6 +3,51 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import ProductActions from '@/components/ProductActions';
+import { Metadata } from 'next';
+import { SITE_URL, SITE_NAME } from '@/lib/constants';
+
+type Props = {
+    params: Promise<{ slug: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { slug } = await params;
+    const product = getProductBySlug(slug);
+
+    if (!product) return {};
+
+    const url = `${SITE_URL}/producto/${slug}`;
+    const description = product.description.replace(/<[^>]*>?/gm, '').slice(0, 160) + '...';
+
+    return {
+        title: product.name,
+        description: description,
+        alternates: {
+            canonical: url,
+        },
+        openGraph: {
+            title: `${product.name} | ${SITE_NAME}`,
+            description: description,
+            url: url,
+            type: 'article',
+            images: [
+                {
+                    url: product.image,
+                    width: 800,
+                    height: 800,
+                    alt: product.name,
+                },
+            ],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: product.name,
+            description: description,
+            images: [product.image],
+        },
+    };
+}
+
 
 export default async function ProductPage({
     params,
@@ -16,8 +61,32 @@ export default async function ProductPage({
         notFound();
     }
 
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": product.name,
+        "image": product.image,
+        "description": product.description.replace(/<[^>]*>?/gm, ''),
+        "brand": {
+            "@type": "Brand",
+            "name": SITE_NAME
+        },
+        "offers": {
+            "@type": "Offer",
+            "url": `${SITE_URL}/producto/${slug}`,
+            "priceCurrency": "ARS",
+            "price": product.price,
+            "availability": "https://schema.org/InStock",
+            "itemCondition": "https://schema.org/NewCondition"
+        }
+    };
+
     return (
         <div className="container mx-auto px-4 py-8 pb-24">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
                 {/* Image */}
                 <div className="relative aspect-square rounded-2xl overflow-hidden bg-gray-50 border border-gray-100">
