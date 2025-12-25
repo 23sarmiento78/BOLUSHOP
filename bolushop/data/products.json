@@ -1,9 +1,9 @@
 [
   {
     "id": "PRUEBA-001",
-    "name": "Producto de Prueba ($0)",
+    "name": "Producto de Prueba ($100)",
     "slug": "producto-de-prueba-0",
-    "price": 0,
+    "price": 100,
     "image": "/bolushop.png",
     "category": "test",
     "description": "Producto ficticio para probar la pasarela de pago y notificaciones.",
