@@ -24,31 +24,6 @@ export async function POST(req: NextRequest) {
 
         const total = items.reduce((sum: number, i: any) => sum + (i.price * i.quantity), 0);
 
-        // BP: If total is 0 (Test Product), bypass MP and go straight to success
-        if (total === 0) {
-            const dataParam = encodeURIComponent(JSON.stringify({
-                id: orderId,
-                total: 0,
-                payer,
-                items
-            }));
-
-            // Still try to save for local dev
-            createOrder({
-                id: orderId,
-                date: new Date().toISOString(),
-                status: 'paid',
-                items,
-                total: 0,
-                payer,
-                paymentId: 'FREE-ORDER-' + orderId
-            });
-
-            return NextResponse.json({
-                init_point: `${req.nextUrl.origin}/checkout/success?orderId=${orderId}&status=approved&data=${dataParam}`
-            });
-        }
-
         const result = await preference.create({
             body: {
                 external_reference: orderId, // Link MP to our Order ID
