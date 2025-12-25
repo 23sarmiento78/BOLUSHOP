@@ -18,15 +18,30 @@ function SuccessContent() {
 
     useEffect(() => {
         clearCart();
+
+        // 1. Try to get order from DB
         if (orderId) {
             getOrderAction(orderId).then(res => {
-                if (res.success) setOrder(res.order);
+                if (res.success) {
+                    setOrder(res.order);
+                } else {
+                    // 2. Fallback: Try to get order from URL data param
+                    const dataParam = searchParams.get('data');
+                    if (dataParam) {
+                        try {
+                            const decodedOrder = JSON.parse(dataParam);
+                            setOrder(decodedOrder);
+                        } catch (e) {
+                            console.error("Failed to parse order data from URL", e);
+                        }
+                    }
+                }
                 setLoading(false);
             });
         } else {
             setLoading(false);
         }
-    }, [clearCart, orderId]);
+    }, [clearCart, orderId, searchParams]);
 
     const sendWhatsApp = () => {
         if (!order) return;
