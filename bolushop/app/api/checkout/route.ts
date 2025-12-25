@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
                     mode: 'not_specified',
                 },
                 back_urls: {
-                    success: `${req.nextUrl.origin}/checkout/success?orderId=${orderId}&data=${encodeURIComponent(JSON.stringify({ id: orderId, total, payer, items }))}`,
+                    success: `${req.nextUrl.origin}/checkout/success?orderId=${orderId}`,
                     failure: `${req.nextUrl.origin}/checkout/failure?orderId=${orderId}`,
                     pending: `${req.nextUrl.origin}/checkout/pending?orderId=${orderId}`,
                 },
@@ -59,7 +59,10 @@ export async function POST(req: NextRequest) {
             paymentId: result.id
         });
 
-        return NextResponse.json({ init_point: result.init_point });
+        return NextResponse.json({
+            init_point: result.init_point,
+            orderId: orderId
+        });
     } catch (error: any) {
         console.error("❌ Checkout Error:", error);
         return NextResponse.json({

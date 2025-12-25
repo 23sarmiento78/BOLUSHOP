@@ -25,14 +25,14 @@ function SuccessContent() {
                 if (res.success) {
                     setOrder(res.order);
                 } else {
-                    // 2. Fallback: Try to get order from URL data param
-                    const dataParam = searchParams.get('data');
-                    if (dataParam) {
+                    // 2. Fallback: Try to get order from localStorage
+                    const localData = localStorage.getItem(`order_${orderId}`);
+                    if (localData) {
                         try {
-                            const decodedOrder = JSON.parse(dataParam);
+                            const decodedOrder = JSON.parse(localData);
                             setOrder(decodedOrder);
                         } catch (e) {
-                            console.error("Failed to parse order data from URL", e);
+                            console.error("Failed to parse order from localStorage", e);
                         }
                     }
                 }
@@ -41,7 +41,7 @@ function SuccessContent() {
         } else {
             setLoading(false);
         }
-    }, [clearCart, orderId, searchParams]);
+    }, [clearCart, orderId]);
 
     const sendWhatsApp = () => {
         if (!order) return;
