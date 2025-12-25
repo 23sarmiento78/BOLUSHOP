@@ -26,17 +26,26 @@ export async function POST(req: NextRequest) {
 
         // BP: If total is 0 (Test Product), bypass MP and go straight to success
         if (total === 0) {
+            const dataParam = encodeURIComponent(JSON.stringify({
+                id: orderId,
+                total: 0,
+                payer,
+                items
+            }));
+
+            // Still try to save for local dev
             createOrder({
                 id: orderId,
                 date: new Date().toISOString(),
-                status: 'paid', // Mark as paid immediately since it's free
+                status: 'paid',
                 items,
                 total: 0,
                 payer,
                 paymentId: 'FREE-ORDER-' + orderId
             });
+
             return NextResponse.json({
-                init_point: `${req.nextUrl.origin}/checkout/success?orderId=${orderId}&status=approved`
+                init_point: `${req.nextUrl.origin}/checkout/success?orderId=${orderId}&status=approved&data=${dataParam}`
             });
         }
 
@@ -56,7 +65,7 @@ export async function POST(req: NextRequest) {
                     mode: 'not_specified',
                 },
                 back_urls: {
-                    success: `${req.nextUrl.origin}/checkout/success?orderId=${orderId}`,
+                    success: `${req.nextUrl.origin}/checkout/success?orderId=${orderId}&data=${encodeURIComponent(JSON.stringify({ id: orderId, total, payer, items }))}`,
                     failure: `${req.nextUrl.origin}/checkout/failure?orderId=${orderId}`,
                     pending: `${req.nextUrl.origin}/checkout/pending?orderId=${orderId}`,
                 },
