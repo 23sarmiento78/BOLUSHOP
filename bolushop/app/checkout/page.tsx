@@ -39,6 +39,21 @@ export default function CheckoutPage() {
             });
             const data = await response.json();
             if (data.init_point) {
+                // Save Order info in localStorage for Vercel/persistence fallback
+                const orderData = {
+                    id: data.orderId,
+                    items,
+                    payer: {
+                        name: `${formData.name} ${formData.lastname}`,
+                        email: formData.email,
+                        address: formData.address,
+                        phone: formData.phone
+                    },
+                    total: total,
+                    date: new Date().toISOString()
+                };
+                localStorage.setItem(`order_${data.orderId}`, JSON.stringify(orderData));
+
                 window.location.href = data.init_point;
             } else {
                 alert('Error al iniciar el pago: ' + (data.details || 'Desconocido'));
