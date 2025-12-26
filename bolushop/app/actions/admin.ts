@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { getAllProducts, saveProducts, Product } from "@/lib/db";
+import { getAllProducts, saveProducts, Product, getAllOrders, getSettings, getAllCollections, saveCollections, Collection } from "@/lib/db";
 import { v4 as uuidv4 } from 'uuid';
 
 export async function deleteProductAction(id: string) {
@@ -59,8 +59,33 @@ export async function updateProductAction(updatedProduct: Product) {
     return { success: false, error: "Producto no encontrado" };
 }
 
+export async function createProductAction(product: Omit<Product, 'id' | 'createdAt'>) {
+    const products = getAllProducts();
+    const newProduct: Product = {
+        ...product,
+        id: uuidv4(),
+        createdAt: new Date().toISOString(),
+        stock: product.stock || 0,
+        collections: product.collections || []
+    };
+
+    products.push(newProduct);
+    const success = saveProducts(products);
+
+    if (!success) return { success: false, error: "No se pudo guardar el producto." };
+
+    revalidatePath("/admin/products");
+    revalidatePath("/admin");
+    revalidatePath("/");
+    return { success: true, product: newProduct };
+}
+
 export async function importProductsAction(rawProducts: any[], source: string) {
     try {
+        const settings = getSettings();
+        const PROFIT_MARGIN = settings.profitMargin;
+        const SHIPPING_COST = settings.shippingCost;
+
         let mappedProducts: (Product | null)[] = [];
 
         if (source === 'dropers-csv') {
@@ -79,7 +104,6 @@ export async function importProductsAction(rawProducts: any[], source: string) {
                 }
                 if (isNaN(price)) price = 0;
 
-                const SHIPPING_COST = 9000;
                 const MIN_BASE_PRICE = 15000;
                 let features = [];
 
@@ -87,9 +111,8 @@ export async function importProductsAction(rawProducts: any[], source: string) {
                     // Business Rule: Skip products below $15,000 base price
                     if (price < MIN_BASE_PRICE) return null;
 
-                    // Universal Strategy: Every product includes shipping and 5% profit
-                    // Formula: (Base + Shipping) + 5% Profit
-                    price = Math.round((price + SHIPPING_COST) * 1.05);
+                    // Formula: (Base + Shipping) * Profit
+                    price = Math.round((price + SHIPPING_COST) * PROFIT_MARGIN);
                     features.push("Envío Gratis 🚚");
                 }
 
@@ -114,7 +137,10 @@ export async function importProductsAction(rawProducts: any[], source: string) {
                     image: image,
                     category: category,
                     description: description,
-                    features: features
+                    features: features,
+                    stock: 99, // Standard stock for imports
+                    createdAt: new Date().toISOString(),
+                    collections: []
                 } as Product;
             });
         }
@@ -136,4 +162,39 @@ export async function importProductsAction(rawProducts: any[], source: string) {
         console.error(e);
         return { success: false, error: "Error al procesar datos" };
     }
+}
+
+// Collection Actions
+export async function createCollectionAction(collection: Omit<Collection, 'id'>) {
+    const collections = getAllCollections();
+    const newCollection: Collection = {
+        ...collection,
+        id: uuidv4(),
+    };
+    collections.push(newCollection);
+    const success = saveCollections(collections);
+    if (!success) return { success: false, error: "Error al guardar colección" };
+    revalidatePath("/admin/collections");
+    return { success: true, collection: newCollection };
+}
+
+export async function deleteCollectionAction(id: string) {
+    const collections = getAllCollections();
+    const filtered = collections.filter(c => c.id !== id);
+    const success = saveCollections(filtered);
+    if (!success) return { success: false, error: "Error al borrar colección" };
+    revalidatePath("/admin/collections");
+    return { success: true };
+}
+
+export async function updateCollectionAction(updated: Collection) {
+    const collections = getAllCollections();
+    const index = collections.findIndex(c => c.id === updated.id);
+    if (index !== -1) {
+        collections[index] = updated;
+        saveCollections(collections);
+        revalidatePath("/admin/collections");
+        return { success: true };
+    }
+    return { success: false, error: "Colección no encontrada" };
 }

@@ -5,6 +5,16 @@ import path from 'path';
 const DATA_DIR = path.join(process.cwd(), 'data');
 const PRODUCTS_FILE = path.join(DATA_DIR, 'products.json');
 const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
+const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');
+const COLLECTIONS_FILE = path.join(DATA_DIR, 'collections.json');
+
+export interface Collection {
+    id: string;
+    name: string;
+    slug: string;
+    description: string;
+    image?: string;
+}
 
 // Types
 export interface Product {
@@ -16,13 +26,16 @@ export interface Product {
     category: string;
     description: string;
     features: string[];
+    stock: number;         // New field
+    collections?: string[]; // New field
+    createdAt: string;     // New field for sorting
 }
 
 export interface Order {
     id: string;
     date: string;
     status: 'pending' | 'paid' | 'shipped' | 'cancelled';
-    items: Product[];
+    items: (Product & { quantity: number })[];
     total: number;
     payer: {
         email?: string;
@@ -30,6 +43,22 @@ export interface Order {
     };
     paymentId?: string;
 }
+
+export interface Settings {
+    profitMargin: number;
+    shippingCost: number;
+    siteName: string;
+    siteDescription: string;
+    whatsappNumber: string;
+}
+
+const DEFAULT_SETTINGS: Settings = {
+    profitMargin: 1.05,
+    shippingCost: 5000,
+    siteName: "BoluShop",
+    siteDescription: "La mejor tienda de dropshipping en Argentina",
+    whatsappNumber: "5491122334455"
+};
 
 // Ensure data dir exists
 if (!fs.existsSync(DATA_DIR)) {
@@ -69,6 +98,15 @@ function writeJson(file: string, data: any): boolean {
     }
 }
 
+// Settings API
+export function getSettings(): Settings {
+    return readJson<Settings>(SETTINGS_FILE, DEFAULT_SETTINGS);
+}
+
+export function saveSettings(settings: Settings): boolean {
+    return writeJson(SETTINGS_FILE, settings);
+}
+
 // Products API
 export function getAllProducts(): Product[] {
     return readJson<Product[]>(PRODUCTS_FILE, []);
@@ -92,6 +130,11 @@ export function createOrder(order: Order) {
     const orders = getAllOrders();
     orders.push(order);
     writeJson(ORDERS_FILE, orders);
+
+    // Auto Subtract Stock
+    order.items.forEach(item => {
+        subtractStock(item.id, item.quantity || 1);
+    });
 }
 
 export function getOrderById(id: string): Order | undefined {
@@ -108,4 +151,24 @@ export function updateOrder(id: string, updates: Partial<Order>) {
         return orders[index];
     }
     return null;
+}
+
+export function subtractStock(productId: string, quantity: number) {
+    const products = getAllProducts();
+    const index = products.findIndex(p => p.id === productId);
+    if (index !== -1) {
+        products[index].stock = Math.max(0, (products[index].stock || 0) - quantity);
+        saveProducts(products);
+        return true;
+    }
+    return false;
+}
+
+// Collections API
+export function getAllCollections(): Collection[] {
+    return readJson<Collection[]>(COLLECTIONS_FILE, []);
+}
+
+export function saveCollections(collections: Collection[]): boolean {
+    return writeJson(COLLECTIONS_FILE, collections);
 }

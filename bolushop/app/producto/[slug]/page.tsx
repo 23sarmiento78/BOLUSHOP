@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import ProductActions from '@/components/ProductActions';
 import { Metadata } from 'next';
-import { SITE_URL, SITE_NAME } from '@/lib/constants';
+import { getSettings } from '@/lib/db';
 
 type Props = {
     params: Promise<{ slug: string }>;
@@ -13,10 +13,12 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params;
     const product = getProductBySlug(slug);
+    const settings = getSettings();
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com.ar';
 
     if (!product) return {};
 
-    const url = `${SITE_URL}/producto/${slug}`;
+    const url = `${siteUrl}/producto/${slug}`;
     const cleanDescription = product.description.replace(/<[^>]*>?/gm, '');
     const description = cleanDescription.length > 160
         ? cleanDescription.substring(0, 157) + "..."
@@ -25,20 +27,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
         title: `${product.name} - Envíos a todo el país`,
         description: description,
-        keywords: `${product.name}, ${product.category}, comprar ${product.name}, envío gratis argentina, bolushop`,
+        keywords: `${product.name}, ${product.category}, comprar ${product.name}, envío gratis argentina, ${settings.siteName}`,
         alternates: {
             canonical: url,
         },
         openGraph: {
-            title: `${product.name} | ${SITE_NAME}`,
+            title: `${product.name} | ${settings.siteName}`,
             description: description,
             url: url,
             type: 'article',
-            siteName: SITE_NAME,
+            siteName: settings.siteName,
             locale: 'es_AR',
             images: [
                 {
-                    url: product.image.startsWith('http') ? product.image : `${SITE_URL}${product.image}`,
+                    url: product.image.startsWith('http') ? product.image : `${siteUrl}${product.image}`,
                     width: 1200,
                     height: 630,
                     alt: product.name,
@@ -49,7 +51,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             card: 'summary_large_image',
             title: product.name,
             description: description,
-            images: [product.image.startsWith('http') ? product.image : `${SITE_URL}${product.image}`],
+            images: [product.image.startsWith('http') ? product.image : `${siteUrl}${product.image}`],
             creator: '@bolushop.arg',
         },
     };
@@ -63,6 +65,8 @@ export default async function ProductPage({
 }) {
     const { slug } = await params;
     const product = getProductBySlug(slug);
+    const settings = getSettings();
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com.ar';
 
     if (!product) {
         notFound();
@@ -72,16 +76,16 @@ export default async function ProductPage({
         "@context": "https://schema.org",
         "@type": "Product",
         "name": product.name,
-        "image": product.image.startsWith('http') ? product.image : `${SITE_URL}${product.image}`,
+        "image": product.image.startsWith('http') ? product.image : `${siteUrl}${product.image}`,
         "description": product.description.replace(/<[^>]*>?/gm, ''),
         "brand": {
             "@type": "Brand",
-            "name": SITE_NAME
+            "name": settings.siteName
         },
         "sku": product.id,
         "offers": {
             "@type": "Offer",
-            "url": `${SITE_URL}/producto/${slug}`,
+            "url": `${siteUrl}/producto/${slug}`,
             "priceCurrency": "ARS",
             "price": product.price,
             "priceValidUntil": new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString().split('T')[0],
