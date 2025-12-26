@@ -213,6 +213,69 @@ export default function ProductsTable({ initialProducts }: Props) {
                                 />
                             </div>
                             <div>
+                                <label className="block text-sm text-gray-700 mb-2">Imagen del Producto</label>
+
+                                {editingProduct.image && (
+                                    <div className="mb-3 relative w-full aspect-video bg-gray-50 rounded-lg overflow-hidden border">
+                                        <img
+                                            src={editingProduct.image}
+                                            alt="Preview"
+                                            className="w-full h-full object-contain"
+                                        />
+                                    </div>
+                                )}
+
+                                <div className="space-y-2">
+                                    <input
+                                        type="text"
+                                        placeholder="URL de la imagen"
+                                        value={editingProduct.image}
+                                        onChange={(e) =>
+                                            setEditingProduct({ ...editingProduct, image: e.target.value })
+                                        }
+                                        className="w-full border p-2 rounded text-sm"
+                                    />
+
+                                    <div className="relative">
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={async (e) => {
+                                                const file = e.target.files?.[0];
+                                                if (!file) return;
+
+                                                const formData = new FormData();
+                                                formData.append('file', file);
+
+                                                try {
+                                                    const res = await fetch('/api/upload', {
+                                                        method: 'POST',
+                                                        body: formData,
+                                                    });
+                                                    const data = await res.json();
+                                                    if (data.success) {
+                                                        setEditingProduct({ ...editingProduct, image: data.url });
+                                                    } else {
+                                                        alert(data.error || 'Error al subir imagen');
+                                                    }
+                                                } catch (err) {
+                                                    alert('Error de conexión al subir imagen');
+                                                }
+                                            }}
+                                            className="hidden"
+                                            id="file-upload"
+                                        />
+                                        <label
+                                            htmlFor="file-upload"
+                                            className="block w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded cursor-pointer text-sm font-semibold transition-colors border border-dashed border-gray-400"
+                                        >
+                                            📁 Subir desde PC
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
                                 <label className="block text-sm text-gray-700">Descripción</label>
                                 <textarea
                                     value={editingProduct.description}
@@ -222,7 +285,7 @@ export default function ProductsTable({ initialProducts }: Props) {
                                             description: e.target.value,
                                         })
                                     }
-                                    className="w-full border p-2 rounded"
+                                    className="w-full border p-2 rounded h-24 text-sm"
                                 />
                             </div>
                             <div className="flex justify-end gap-2 mt-4">

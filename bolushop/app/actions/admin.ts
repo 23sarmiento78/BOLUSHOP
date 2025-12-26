@@ -87,9 +87,9 @@ export async function importProductsAction(rawProducts: any[], source: string) {
                     // Business Rule: Skip products below $15,000 base price
                     if (price < MIN_BASE_PRICE) return null;
 
-                    // Universal Strategy: Every product includes shipping and 10% profit
-                    // Formula: (Base + Shipping) + 10% Profit
-                    price = Math.round((price + SHIPPING_COST) * 1.10);
+                    // Universal Strategy: Every product includes shipping and 5% profit
+                    // Formula: (Base + Shipping) + 5% Profit
+                    price = Math.round((price + SHIPPING_COST) * 1.05);
                     features.push("Envío Gratis 🚚");
                 }
 
