@@ -2,9 +2,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '@/lib/cart-context';
+import { usePathname } from 'next/navigation';
 
 export default function Header() {
     const { count } = useCart();
+    const pathname = usePathname();
+
+    if (pathname.startsWith('/admin')) return null;
 
     return (
         <header className="sticky top-0 z-50 transition-all">
