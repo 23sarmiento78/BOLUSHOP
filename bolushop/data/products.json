@@ -1,217 +1,168 @@
 [
   {
-    "id": "PRUEBA-001",
-    "name": "Producto de Prueba ($100)",
-    "slug": "producto-de-prueba-0",
-    "price": 100,
-    "image": "/bolushop.png",
-    "category": "test",
-    "description": "Producto ficticio para probar la pasarela de pago y notificaciones.",
+    "id": "DL2034-BL",
+    "name": "Organizador Calzado Perchero Mediano BLANCO",
+    "slug": "organizador-calzado-perchero-mediano-blanco",
+    "price": 33390,
+    "image": "/products/d700d819-788d-4f31-b21d-52373f14f2c4-Organizador-Calzado-Perchero-Mediano-BLANCO.png",
+    "category": "hogar",
+    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Organizador Zapatos Perchero Metálico<p>\r\n4 Estantes 7 Percheros<p>\r\nMedidas: Ancho 60Cm X 1,72Mt Alto X 26Cm Profundidad<p>\r\nColores: Negro Y Blanco<p>\r\nSe Entrega Surtido<p></div>",
     "features": [
-      "Test Mode",
       "Envío Gratis 🚚"
     ]
   },
   {
-    "id": "503616",
-    "name": "Picadora Embutidora De Carne Con Ventosa Y Accesorios",
-    "slug": "picadora-embutidora-de-carne-con-ventosa-y-accesorios",
-    "price": 33586,
-    "image": "/bolushop.png",
+    "id": "DL2035-BL",
+    "name": "Organizador Calzado Perchero Grande BLANCO",
+    "slug": "organizador-calzado-perchero-grande-blanco",
+    "price": 37013,
+    "image": "/products/46eae8f8-f6bb-448b-87dd-1fdffb9b565c-Organizador-Calzado-Perchero-Mediano-BLANCO.png",
+    "category": "hogar",
+    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Organizador Zapatos Perchero Metálico<p>\r\n4 Estantes 7 Percheros<p>\r\nMedidas: Ancho 80Cm X 1,72Mt Alto X 26Cm Profundidad<p>\r\nColores: Negro Y Blanco<p>\r\nSe Entrega Surtido<p></div>",
+    "features": [
+      "Envío Gratis 🚚"
+    ]
+  },
+  {
+    "id": "DL2034-NE",
+    "name": "Organizador Calzado Perchero Mediano NEGRO",
+    "slug": "organizador-calzado-perchero-mediano-negro",
+    "price": 33390,
+    "image": "/products/97f5821f-d737-4fa9-b7b2-27e15ac34527-Organizador-Calzado-Perchero-Grande-negro.jpg",
+    "category": "hogar",
+    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Organizador Zapatos Perchero Metálico<p>\r\n4 Estantes 7 Percheros<p>\r\nMedidas: Ancho 60Cm X 1,72Mt Alto X 26Cm Profundidad<p>\r\nColores: Negro Y Blanco<p>\r\nSe Entrega Surtido<p></div>",
+    "features": [
+      "Envío Gratis 🚚"
+    ]
+  },
+  {
+    "id": "DL2035-NE",
+    "name": "Organizador Calzado Perchero Grande NEGRO",
+    "slug": "organizador-calzado-perchero-grande-negro",
+    "price": 37013,
+    "image": "/products/0e1204c3-d8cb-4e51-8017-8589f64ccd87-Organizador-Calzado-Perchero-Grande-negro.jpg",
+    "category": "hogar",
+    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Organizador Zapatos Perchero Metálico<p>\r\n4 Estantes 7 Percheros<p>\r\nMedidas: Ancho 80Cm X 1,72Mt Alto X 26Cm Profundidad<p>\r\nColores: Negro Y Blanco<p>\r\nSe Entrega Surtido<p></div>",
+    "features": [
+      "Envío Gratis 🚚"
+    ]
+  },
+  {
+    "id": "DL2018",
+    "name": "Carrito Organizador con Ruedas y 4 Estantes",
+    "slug": "carrito-organizador-con-ruedas-y-4-estantes",
+    "price": 53550,
+    "image": "/products/1c2b1575-d4f2-4f94-8162-1dc207707fe7-Carrito-Organizador-con-Ruedas-y-4-Estantes.png",
     "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Picadora y embutidora</br>\n</br>\n2 discos de picado</br>\n1 cuchilla acero inoxidable de autoafilado</br>\n1 accesorio de embutidos tipo embudo</br>\n1 presionador</br>\n</br>\nSirve para hacer papillas para bebe, picar granos y todo tipo de comidas.</br>\n</br>\nTrituradora de carne manual multifuncional para el hogar. También es amoladora de verduras, frutos secos, ajos, etc. como también procesa comida para bebés. Está compuesta de hoja de acero inoxidable que sirve para rellenar carne picada, salchichas, y cualquier embutido. Resulta ser portátil, rápida y fácil de limpiar. Las cuchillas de acero inoxidable están afiladas, potentes y sólidas, pueden picar diferentes alimentos en muy poco tiempo, ahorrando tiempo de corte. No necesita usar el cuchillo de cocina.</br>\n</div>",
+    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Estantería Carrito Con Rueda De 4 Estantes Para Organizar</br>\r\n</br>\r\nMaterial Plástico Alto Impacto</br>\r\n</br>\r\n Color Blanco.</br>\r\n</br>\r\nMedidas: 95Cm X 54Cm X 12,5Cm</br>\r\n</div>",
     "features": [
       "Envío Gratis 🚚"
     ]
   },
   {
-    "id": "G-SACADORDIAM",
-    "name": "Saca Corcho Automático A Pila ",
-    "slug": "saca-corcho-automatico-a-pila-",
-    "price": 29792,
-    "image": "/bolushop.png",
-    "category": "aire-libre",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Sacacorchos Automático Eléctrico Abridor de Vinos</br>\n</br>\nDiseño Ergonómico, adaptado a la palma de su mano, fácil de manejar y diseñado para botellas de vino tradicionales.</br>\n</br>\nCOLOR: NEGRO</br>\n</br>\n- Funciona con 4 pilas AA (NO INCLUIDAS)</br>\n- Botones de operación intuitiva</br>\n- Diseño Transparente</br>\n- Tornillo Apto Para Contacto con Alimentos</br>\n- Cuerpo de plástico y ABS</br></div>",
-    "features": [
-      "Envío Gratis 🚚"
-    ]
-  },
-  {
-    "id": "G-550003",
-    "name": "Rallador Manual de Verduras 3 Cuchillas de Acero ",
-    "slug": "rallador-manual-de-verduras-3-cuchillas-de-acero-",
-    "price": 33013,
-    "image": "/bolushop.png",
+    "id": "DL2017",
+    "name": "Carrito Organizador Con Ruedas  y 3 Estantes",
+    "slug": "carrito-organizador-con-ruedas--y-3-estantes",
+    "price": 44100,
+    "image": "/products/334d3133-7b50-4dd4-8d7e-884ce8d2f793-Carrito-Organizador-con-Ruedas-y-3-Estantes.png",
     "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">* Medidas: 24 cm. altura, Base de 12 cm. diámetro.<br/>\n*Colores: Surtido a disponibilidad.<br/>\n* Boca de acceso (para rallar) de 6 x 7 cm.<br/>\n* Materiales: Base y soporte Plástico. Ralladores y manija de Acero inoxidable.<br/>\n* Cuenta con Tres Ralladores Intercambiables para Rallado Fino, Rallado Grueso y Rebanador.\n* Base con Sopapa de agarre. Se adhiere firme a la mesa (para lograr el efecto es necesario mantener la Base apoyada a la mesa al momento de encastrar la parte superior).<br/>\n* Permite rallar con facilidad y rapidez Quesos Duros a diferencia de ralladores convencionales.<br/>\n* Ideal para rallar Hortalizas. Se pueden colocar varios Rabanitos y rallarlos todos al mismo tiempo.<br/>\n* Fácil Lavado, se puede limpiar los Ralladores, el Soporte, y el Cubo muy fácil en forma separada.<br/>\n* Ideal para armar ensaladas en pocos minutos.<br/></div>",
+    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Estantería Carrito Con Rueda De 3 Estantes Para Organizar</br>\r\n</br>\r\nMaterial Plastico Alto Impacto </br>\r\n</br>\r\nColor Blanco.</br>\r\n</br>\r\nMedidas: 70Cm X 54Cm X 12,5Cm</br>\r\n</div>",
     "features": [
       "Envío Gratis 🚚"
     ]
   },
   {
-    "id": "G-MANDOLCOLADOR",
-    "name": "Multi Rallador de Verduras",
-    "slug": "multi-rallador-de-verduras",
-    "price": 27445,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Multi rallador mandolina con 7 cuchillas </br>\n</br>\nIncluye: Taper - Colador rebatible - Pela papas</br>\n</br>\nMedidas: 22cm de diametro - 11cm de altura</br>\n</br>\nMedidas cuchillas: </br>\n- Rallador: 1 - 3 - 4 - 8mm</br>\n- Rebanador: 1.5 - 2.5mm</br>\n- Ondeador: 3mm</br></div>",
+    "id": "DL1203-2",
+    "name": "Silla de Oficina Ergonómica",
+    "slug": "silla-de-oficina-ergonomica",
+    "price": 110801,
+    "image": "/products/6d680410-a2c3-43bd-b734-63e81d43d174-Silla-de-Oficina-Ergonómica.jpg",
+    "category": "varios",
+    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Silla de oficina Ergonómica<p>\r\nMedidas: 107 x 64 cm<p>\r\nColor Negro<p></div>",
     "features": [
       "Envío Gratis 🚚"
     ]
   },
   {
-    "id": "G-YG-712",
-    "name": "Cortador De Vegetales Rotativo Manual 4 En 1",
-    "slug": "cortador-de-vegetales-rotativo-manual-4-en-1",
-    "price": 27039,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Cortador rotativo Multifuncional 4 en 1 manual multifuncional.<br/>\n<br/>\n*Cortador de frutas y verduras (Como zanahoria, papa, rallador cortador de queso).<br/>\n*En la parte inferior posee ventosa para evitar que el producto resbale durante su uso.<br/>\n*Posee 4 modelos de cuchillas intercambiables.<br/>\n*Cuchillas Intercambiables de Acero.<br/>\n<br/>\nCortes:<br/>\n*Rayado fino.<br/>\n*Rayado grueso.<br/>\n*Rodajas.<br/>\n*Rejilla.<br/></div>",
+    "id": "DL1183-L",
+    "name": "Puerta Para Mascotas Calidad Superior",
+    "slug": "puerta-para-mascotas-calidad-superior",
+    "price": 63000,
+    "image": "/products/67fbccb8-ed09-48c0-a12c-6eb20765b802-Puerta-Para-Mascotas-Calidad-Superior.jpg",
+    "category": "varios",
+    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Puerta para mascotas calidad superior<br>\r\nTamaño XL ( 25 x 23,5 x 5,3 cm )<br>\r\nColor: Blanco<br></div>",
     "features": [
       "Envío Gratis 🚚"
     ]
   },
   {
-    "id": "G-BOTETAPAROSCA",
-    "name": "Botella Plegable de Silicona 500mL",
-    "slug": "botella-plegable-de-silicona-500ml",
-    "price": 28160,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Botella de agua plegable de grado alimenticio para exteriores, botella de agua deportiva plegable de 550ml</br>\n\n\nBotella de agua deportiva plegable de silicona a prueba de fugas</br>\n\nMaterial\tSilicona de calidad \t</br>\t\nTamaño\t(Desplegado) 7*24,5 cm; (plegado) 7*14cm</br>\nPeso\t165 g/unidad</br>\nColor: SUJETO A DISPONIBILIDAD\t\t</br>\t\t\nTemperatura\t-40 ~ 230 ℃\t</br>\t\nInstrucciones de cuidado</br>\t\t\n1. No corte ni se separe con instrumentos afilados.</br>\t\n2. No lo use cuando la forma esté rota o cuando la fibra interna aparezca expuesta.</br>\n3. Lavar en agua tibia antes de usar\t</br>\t\n4. Evite el uso de limpiadores abrasivos</br>\t\t\n5. No coloque silicona cerca de una llama desnuda o debajo de la parrilla</br>\nCaracterística\t</br>\t\t\n1. 100% silicona de calidad alimentaria y sin BPA</br>\t\t\n2. ℃ resistente al calor hasta 230: no se decolora, se deforma ni se derrite</br>\n3. Antiadherente, fácil de limpiar, no rayará ollas y sartenes.</br>\n4. Apto para microondas, congelador y lavavajillas</br>\t\n5. Duradero y portátil.\t</br></div>",
-    "features": [
-      "Envío Gratis 🚚"
-    ]
-  },
-  {
-    "id": "505384A",
-    "name": "Lonchera Eléctrica 1.5L 12V para Auto",
-    "slug": "lonchera-electrica-1.5l-12v-para-auto",
-    "price": 40333,
-    "image": "/bolushop.png",
+    "id": "DL1255",
+    "name": "Reflector Linterna Led",
+    "slug": "reflector-linterna-led",
+    "price": 46699,
+    "image": "/products/0cfccb46-110b-4057-a6d5-d27e339b9505-Reflector-Linterna-Led.jpg",
     "category": "tech",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Lonchera electrica desmontable hermetica 12v</br>\n-1 Lonchera Eléctrica.</br>\n- Capacidad 1.05lt</br>\n- Medidas 180 x 115 x 247 mm.</br>\n- Potencia 40w.</br>\n- 1 Cuchara.</br>\n- 1 Cable cargador de 12v para el auto</div>",
+    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Reflector linterna led busca huella<br>\r\nModelo W5119<br>\r\nAlta potencia - Incluye trípode<br>\r\nRecargable USB<br>\r\nColor negro<br></div>",
     "features": [
       "Envío Gratis 🚚"
     ]
   },
   {
-    "id": "505384S",
-    "name": "Lonchera Eléctrica Acero Inoxidable 1.5L 12V para Auto ",
-    "slug": "lonchera-electrica-acero-inoxidable-1.5l-12v-para-auto-",
-    "price": 41412,
-    "image": "/bolushop.png",
+    "id": "DL1070",
+    "name": "Cama Catre Plegable 185x68",
+    "slug": "cama-catre-plegable-185x68",
+    "price": 180951,
+    "image": "/products/161dc3c2-f923-4074-8387-bed0d81e04d0-Cama-Catre-Plegable-185x68.png",
+    "category": "cocina",
+    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Cama catre plegable hogar camping<br>\r\nMedidas: 185 x 68 cm<br>\r\nMaterial soporte: Acero inoxidable<br>\r\nColor gris<br></div>",
+    "features": [
+      "Envío Gratis 🚚"
+    ]
+  },
+  {
+    "id": "DL1136GR",
+    "name": "Placa Piso De Goma Símil Madera 30X30 GRIS PACK X16",
+    "slug": "placa-piso-de-goma-simil-madera-30x30-gris-pack-x16",
+    "price": 48258,
+    "image": "/products/3a3c9aaa-82b7-4370-b057-5bc6f83fdd14-Placa-Piso-De-Goma-Símil-Madera-30X30-GRIS-PACK-X16.jpg",
+    "category": "cocina",
+    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Placa piso de goma símil madera<br>\r\nMedidas: 30 x 30 cm<br>\r\nMaterial: EVA<br>\r\nColor gris<br>\r\nIncluye bordes<br>\r\nPACK X16<br></div>",
+    "features": [
+      "Envío Gratis 🚚"
+    ]
+  },
+  {
+    "id": "DL1136CR",
+    "name": "Placa Piso De Goma Símil Madera 30X30 CRUDO PACK X16",
+    "slug": "placa-piso-de-goma-simil-madera-30x30-crudo-pack-x16",
+    "price": 48258,
+    "image": "/products/452f316c-88d8-4f84-80f1-7dd585fc2e99-Placa-Piso-De-Goma-Símil-Madera-30X30-CRUDO-PACK-X16.png",
+    "category": "cocina",
+    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Placa piso de goma símil madera<br>\r\nMedidas: 30 x 30 cm<br>\r\nMaterial: EVA<br>\r\nColor crudo<br>\r\nIncluye bordes<br>\r\nPACK X16<br></div>",
+    "features": [
+      "Envío Gratis 🚚"
+    ]
+  },
+  {
+    "id": "DL1203-9",
+    "name": "Silla de Oficina Ergonómica Lumbar",
+    "slug": "silla-de-oficina-ergonomica-lumbar",
+    "price": 77884,
+    "image": "/products/6bbb4003-79ce-411d-8be8-2c4ea0e1d864-Silla-de-Oficina-Ergonómica-Lumbar.png",
+    "category": "varios",
+    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Silla de oficina Ergonómica <p>\r\nBase cruceta plástico reforzado<p>\r\nMedidas: 100 x 50 cm<p>\r\nColor negro<p></div>",
+    "features": [
+      "Envío Gratis 🚚"
+    ]
+  },
+  {
+    "id": "DL1203-4",
+    "name": "Silla Ergonómica de Oficina",
+    "slug": "silla-ergonomica-de-oficina",
+    "price": 125528,
+    "image": "/products/730e7e94-a502-4985-be73-780abf3a3ab5-Silla-Ergonómica-de-Oficina.jpg",
     "category": "tech",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Lonchera electrica de acero inoxidable desmontable 12v</br>\n-1 Lonchera Eléctrica.</br>\n- Capacidad 1.05lt</br>\n- Medidas 180 x 115 x 247 mm.</br>\n- Potencia 40w.</br>\n- 1 Cuchara.</br>\n- 1 Cable cargador de 12v para el auto</br>\nCOLORES DISPONIBLES: ROSA, ROJO, VERDE, CELESTE</br></div>",
-    "features": [
-      "Envío Gratis 🚚"
-    ]
-  },
-  {
-    "id": "G-COFECUPSD",
-    "name": "Vaso Térmico con Tapa Antiderrame Acero Inox",
-    "slug": "vaso-termico-con-tapa-antiderrame-acero-inox",
-    "price": 35543,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Características: </BR>\n</BR>\nVaso de acero inoxidable seguro y de alta calidad: Este vaso en el interior está hecho de acero inoxidable SUS 304 de alta calidad, sin BPA y no tóxico. Además, el material de acero inoxidable lo hace suave y resistente a la corrosión, fácil de limpiar.</BR>\n</BR>\nTaza de viaje para la oficina en casa: Esta taza de café diferente a las demás está diseñada con una cuerda duradera para actividades al aire libre como viajes, viajes de negocios, deportes, natación, picnic, camping, barbacoa, escalar montañas y así sucesivamente, lo que le permite liberar nuestras manos para levantar su taza en la mochila.</BR>\nTaza de viaje de café con aislamiento y agua fría: el aislamiento de doble pared mantiene su agua o café puede mantener la temperatura caliente 8-12 horas o fría 12-24, puedes disfrutar de la agradable experiencia de casi todo el día, ideal para viajar.</BR>\n</BR>\nBuen vaso de sellado con tapa: El vaso de acero inoxidable viene con una tapa a prueba de fugas, hay un orificio para beber en la tapa para colocar una pajita o beber directamente. O puede abrir el labio para una gran boca bebiendo, la tapa tiene un sello de goma de silicona que garantiza un ajuste apretado.</BR></div>",
-    "features": [
-      "Envío Gratis 🚚"
-    ]
-  },
-  {
-    "id": "G-RACKVAJILLAS",
-    "name": "Secaplatos de Lujo Negro y Dorado Acero Inox",
-    "slug": "secaplatos-de-lujo-negro-y-dorado-acero-inox",
-    "price": 107595,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">\n– Modelo: MZY-1135A</br>\n– Color: Soportes y bandeja Negra y los 2 niveles en Dorado.</br>\n– Porta Cubiertos.</br>\n– Alta calidad.</br>\n– Fácil de montar, limpiar y mantener.</br>\n– Soporte para tazas y cubiertos de montaje lateral.</br>\n– Construcción metálica con atractivo cromado.</br>\n– Capacidad para hasta 15 platos.</br>\n– Soporte lateral para colocar tablas.</br>\nCaracterísticas;</br>\n- Es portátil y duradero</br>\n- Es cómodo de usar</br>\n- Es seguro de usar</br>\nEspecificaciones;</br>\n– Material: Metal</br>\n– Número de niveles: Dos</br>\n– Dimensiones: 53cm largo, 24.5cm profundidad, 36cm de alto.</br>\n– Peso del paquete; 2500g aprox.</br></div>",
-    "features": [
-      "Envío Gratis 🚚"
-    ]
-  },
-  {
-    "id": "G-PORTAANAFE",
-    "name": "Anafe Portatil con Maletin Transportador",
-    "slug": "anafe-portatil-con-maletin-transportador",
-    "price": 110880,
-    "image": "/bolushop.png",
-    "category": "aire-libre",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Calentador de Camping Portátil Color Negro con Maletín.</br>\n</br>\nTipo</br>\nA gas</br>\nTipo de combustible: Butano</br>\nCantidad de hornallas: 1</br>\nEs portátil: Sí</br>\nCon llama ajustable: Sí</br>\nIncluye estuche: Sí</br>\nTipos de gases: Butano</br>\nAccesorios incluidos: Valija</br></div>",
-    "features": [
-      "Envío Gratis 🚚"
-    ]
-  },
-  {
-    "id": "G-NONSTICK28",
-    "name": "Plancha 28cm Antiadherente Mango Plegable",
-    "slug": "plancha-28cm-antiadherente-mango-plegable",
-    "price": 58988,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Características Destacadas:</br>\n</br>\nMedidas: 28cm x 28cm x 4.5cm (Mango plegado)</br>\n</br>\nLargo total: 49cm </br>\n</br>\n* Superficie Antiadherente: Cocina sin esfuerzo gracias a su superficie antiadherente, que facilita la limpieza y evita que los alimentos se peguen.</br>\n</br>\n* Compatible con Cocinas de Gas e Inducción: Esta sartén es versátil y se puede utilizar en diferentes tipos de cocinas.</br>\n</br>\n* Ecosostenible y Práctica: Su diseño ecosostenible y portátil te permite cocinar de manera eficiente y consciente del medio ambiente.</br></div>",
-    "features": [
-      "Envío Gratis 🚚"
-    ]
-  },
-  {
-    "id": "G-NONSTICK24",
-    "name": "Sarten Plancha 24cm Antiadherente Mango Plegable",
-    "slug": "sarten-plancha-24cm-antiadherente-mango-plegable",
-    "price": 50545,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Características Destacadas:</br>\n</br>\nMedidas: 24cm x 24cm x 4.5cm (Mango plegado)</br>\n</br>\nLargo total: 45cm </br>\n</br>\n* Superficie Antiadherente: Cocina sin esfuerzo gracias a su superficie antiadherente, que facilita la limpieza y evita que los alimentos se peguen.</br>\n</br>\n* Compatible con Cocinas de Gas e Inducción: Esta sartén es versátil y se puede utilizar en diferentes tipos de cocinas.</br>\n</br>\n* Ecosostenible y Práctica: Su diseño ecosostenible y portátil te permite cocinar de manera eficiente y consciente del medio ambiente.</br></div>",
-    "features": [
-      "Envío Gratis 🚚"
-    ]
-  },
-  {
-    "id": "G-NONSTICK20",
-    "name": "Plancha 20cm Antiadherente Mango Plegable",
-    "slug": "plancha-20cm-antiadherente-mango-plegable",
-    "price": 42396,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Características Destacadas:</br>\n</br>\nMedidas: 20cm x 20cm x 4.5cm (Mango plegado)</br>\n</br>\nLargo total: 41cm </br>\n</br>\n* Superficie Antiadherente: Cocina sin esfuerzo gracias a su superficie antiadherente, que facilita la limpieza y evita que los alimentos se peguen.</br>\n</br>\n* Compatible con Cocinas de Gas e Inducción: Esta sartén es versátil y se puede utilizar en diferentes tipos de cocinas.</br>\n</br>\n* Ecosostenible y Práctica: Su diseño ecosostenible y portátil te permite cocinar de manera eficiente y consciente del medio ambiente.</br></div>",
-    "features": [
-      "Envío Gratis 🚚"
-    ]
-  },
-  {
-    "id": "WH-BWH0204-AZ",
-    "name": "Lunchera 2 En 1 Hermética con Cubiertos Azul",
-    "slug": "lunchera-2-en-1-hermetica-con-cubiertos-azul",
-    "price": 31796,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">El diseño de partición construido mantiene el sabor original.<br>\nDiseño de aislamiento de calor de doble capa previene las manos calientes.<br>\nLos niños también pueden comer una dieta equilibrada cuando traen comidas o se conmutan por trabajar.<br>\nLa hebilla elegante te permite llevar comidas contigo cuando te abrojas.<br>\nAditable para uso familiar, escuela, picnics al aire libre.<br>\n<br>\nMaterial: Plástico polipropileno<br>\nForma: Rectangular<br>\nCapacidad en volumen: 800 mL<br>\nLargo x Ancho x Altura: 11.8 cm x 18 cm x 12 cm<br>\nEs hermético: Sí<br>\nEs apto para microondas: Sí<br>\nEs apto para lavavajillas: Sí<br>\nCon tapa: Sí<br>\nTipo de tapa: Hérmetica<br>\n\n</div>",
-    "features": [
-      "Envío Gratis 🚚"
-    ]
-  },
-  {
-    "id": "WH-BWH0204-TU",
-    "name": "Lunchera 2 En 1 Hermética con Cubiertos Turquesa",
-    "slug": "lunchera-2-en-1-hermetica-con-cubiertos-turquesa",
-    "price": 31796,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">El diseño de partición construido mantiene el sabor original.<br>\nDiseño de aislamiento de calor de doble capa previene las manos calientes.<br>\nLos niños también pueden comer una dieta equilibrada cuando traen comidas o se conmutan por trabajar.<br>\nLa hebilla elegante te permite llevar comidas contigo cuando te abrojas.<br>\nAditable para uso familiar, escuela, picnics al aire libre.<br>\n<br>\nMaterial: Plástico polipropileno<br>\nForma: Rectangular<br>\nCapacidad en volumen: 800 mL<br>\nLargo x Ancho x Altura: 11.8 cm x 18 cm x 12 cm<br>\nEs hermético: Sí<br>\nEs apto para microondas: Sí<br>\nEs apto para lavavajillas: Sí<br>\nCon tapa: Sí<br>\nTipo de tapa: Hérmetica<br>\n\n</div>",
-    "features": [
-      "Envío Gratis 🚚"
-    ]
-  },
-  {
-    "id": "WH-BWH0204-VI",
-    "name": "Lunchera 2 En 1 Hermética con Cubiertos Violeta",
-    "slug": "lunchera-2-en-1-hermetica-con-cubiertos-violeta",
-    "price": 31796,
-    "image": "/bolushop.png",
-    "category": "cocina",
-    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">El diseño de partición construido mantiene el sabor original.<br>\nDiseño de aislamiento de calor de doble capa previene las manos calientes.<br>\nLos niños también pueden comer una dieta equilibrada cuando traen comidas o se conmutan por trabajar.<br>\nLa hebilla elegante te permite llevar comidas contigo cuando te abrojas.<br>\nAditable para uso familiar, escuela, picnics al aire libre.<br>\n<br>\nMaterial: Plástico polipropileno<br>\nForma: Rectangular<br>\nCapacidad en volumen: 800 mL<br>\nLargo x Ancho x Altura: 11.8 cm x 18 cm x 12 cm<br>\nEs hermético: Sí<br>\nEs apto para microondas: Sí<br>\nEs apto para lavavajillas: Sí<br>\nCon tapa: Sí<br>\nTipo de tapa: Hérmetica<br>\n\n</div>",
+    "description": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Silla de oficina Ergonómica<p>\r\nCon soporte de cabeza<p>\r\nMedidas: 107 x 64 cm + soporte<p>\r\nColor Negro<p></div>",
     "features": [
       "Envío Gratis 🚚"
     ]

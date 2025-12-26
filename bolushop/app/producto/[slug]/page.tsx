@@ -17,11 +17,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     if (!product) return {};
 
     const url = `${SITE_URL}/producto/${slug}`;
-    const description = product.description.replace(/<[^>]*>?/gm, '').slice(0, 160) + '...';
+    const cleanDescription = product.description.replace(/<[^>]*>?/gm, '');
+    const description = cleanDescription.length > 160
+        ? cleanDescription.substring(0, 157) + "..."
+        : cleanDescription;
 
     return {
-        title: product.name,
+        title: `${product.name} - Envíos a todo el país`,
         description: description,
+        keywords: `${product.name}, ${product.category}, comprar ${product.name}, envío gratis argentina, bolushop`,
         alternates: {
             canonical: url,
         },
@@ -30,11 +34,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             description: description,
             url: url,
             type: 'article',
+            siteName: SITE_NAME,
+            locale: 'es_AR',
             images: [
                 {
-                    url: product.image,
-                    width: 800,
-                    height: 800,
+                    url: product.image.startsWith('http') ? product.image : `${SITE_URL}${product.image}`,
+                    width: 1200,
+                    height: 630,
                     alt: product.name,
                 },
             ],
@@ -43,7 +49,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             card: 'summary_large_image',
             title: product.name,
             description: description,
-            images: [product.image],
+            images: [product.image.startsWith('http') ? product.image : `${SITE_URL}${product.image}`],
+            creator: '@bolushop.arg',
         },
     };
 }
@@ -65,19 +72,48 @@ export default async function ProductPage({
         "@context": "https://schema.org",
         "@type": "Product",
         "name": product.name,
-        "image": product.image,
+        "image": product.image.startsWith('http') ? product.image : `${SITE_URL}${product.image}`,
         "description": product.description.replace(/<[^>]*>?/gm, ''),
         "brand": {
             "@type": "Brand",
             "name": SITE_NAME
         },
+        "sku": product.id,
         "offers": {
             "@type": "Offer",
             "url": `${SITE_URL}/producto/${slug}`,
             "priceCurrency": "ARS",
             "price": product.price,
+            "priceValidUntil": new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString().split('T')[0],
             "availability": "https://schema.org/InStock",
-            "itemCondition": "https://schema.org/NewCondition"
+            "itemCondition": "https://schema.org/NewCondition",
+            "shippingDetails": {
+                "@type": "OfferShippingDetails",
+                "shippingRate": {
+                    "@type": "MonetaryAmount",
+                    "value": 0,
+                    "currency": "ARS"
+                },
+                "shippingDestination": {
+                    "@type": "DefinedRegion",
+                    "addressCountry": "AR"
+                },
+                "deliveryTime": {
+                    "@type": "ShippingDeliveryTime",
+                    "handlingTime": {
+                        "@type": "QuantitativeValue",
+                        "minValue": 0,
+                        "maxValue": 1,
+                        "unitCode": "DAY"
+                    },
+                    "transitTime": {
+                        "@type": "QuantitativeValue",
+                        "minValue": 2,
+                        "maxValue": 5,
+                        "unitCode": "DAY"
+                    }
+                }
+            }
         }
     };
 
