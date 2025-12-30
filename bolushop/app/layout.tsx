@@ -23,11 +23,11 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL(siteUrl),
     title: {
-      default: `${settings.siteName} | Envíos Gratis 🇦🇷`,
+      default: `${settings.siteName} | Tu Marketplace de Confianza en Argentina`,
       template: `%s | ${settings.siteName}`
     },
     description: settings.siteDescription,
-    keywords: "tienda online, argentina, envios gratis, bolushop, compras",
+    keywords: "marketplace, tienda virtual, argentina, compras online, envios gratis, bolushop, calidad garantizada, mejores precios",
     authors: [{ name: settings.siteName }],
     creator: settings.siteName,
     publisher: settings.siteName,

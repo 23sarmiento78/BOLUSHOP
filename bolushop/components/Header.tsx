@@ -18,7 +18,7 @@ export default function Header() {
                     <div className="flex items-center gap-4 animate-pulse">
                         <span className="flex items-center gap-1.5"><span className="text-secondary">●</span> ENVÍOS GRATIS A TODO EL PAÍS</span>
                         <span className="hidden md:inline text-white/30">|</span>
-                        <span className="hidden md:flex items-center gap-1.5 font-bold text-white/80">LOS PRODUCTOS MÁS VIRALES DE TIKTOK</span>
+                        <span className="hidden md:flex items-center gap-1.5 font-bold text-white/80">REVOLUCIONANDO EL COMERCIO ELECTRÓNICO EN ARGENTINA</span>
                     </div>
                     <div className="flex items-center gap-4">
                         <span className="flex items-center gap-1.5"><span className="text-primary">✓</span> MERCADO PAGO</span>
@@ -48,7 +48,7 @@ export default function Header() {
                     <nav className="hidden md:flex items-center gap-8">
                         <Link href="/" className="text-gray-600 hover:text-primary font-medium transition-colors">Inicio</Link>
                         <Link href="/categorias" className="text-gray-600 hover:text-primary font-medium transition-colors">Categorías</Link>
-                        <Link href="/#viral" className="text-gray-600 hover:text-primary font-medium transition-colors">Virales</Link>
+                        <Link href="/#ofertas" className="text-gray-600 hover:text-primary font-medium transition-colors">Ofertas</Link>
                     </nav>
 
                     {/* Cart & Mobile Menu Trigger */}

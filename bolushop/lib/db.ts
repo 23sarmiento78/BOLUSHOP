@@ -56,7 +56,7 @@ const DEFAULT_SETTINGS: Settings = {
     profitMargin: 1.05,
     shippingCost: 5000,
     siteName: "BoluShop",
-    siteDescription: "La mejor tienda de dropshipping en Argentina",
+    siteDescription: "Tu Marketplace Premium en Argentina. Calidad, confianza y envíos rápidos a todo el país.",
     whatsappNumber: "5491122334455"
 };
 
