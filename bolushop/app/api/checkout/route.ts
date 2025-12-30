@@ -34,9 +34,9 @@ export async function POST(req: NextRequest) {
                     picture_url: item.image,
                 })),
                 payer: {
-                    name: payer.name.split(' ')[0],
-                    surname: payer.name.split(' ').slice(1).join(' '),
-                    email: payer.email,
+                    name: (payer.name && payer.name.split(' ')[0]) || 'Cliente', // Added check for payer.name
+                    surname: (payer.name && payer.name.split(' ').slice(1).join(' ')) || '', // Added check for payer.name
+                    email: payer.email || 'no-email@test.com',
                 },
                 back_urls: {
                     success: `${req.nextUrl.origin}/checkout/success?orderId=${orderId}`,
