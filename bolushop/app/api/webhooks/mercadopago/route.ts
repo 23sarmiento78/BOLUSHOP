@@ -74,8 +74,20 @@ export async function POST(req: NextRequest) {
         }
 
         // 2. Handle Payment Event
-        if (topic === "payment") {
-            const paymentId = body.data.id;
+        if (topic === "payment" || topic === "merchant_order") {
+            let paymentId = body.data?.id;
+
+            // If it's a merchant_order, we might need to fetch the order to get the payment IDs
+            if (topic === "merchant_order") {
+                console.log("📦 Merchant Order notification received:", body.resource || body.id);
+                // For now, we mainly care about direct payment updates, 
+                // but we log it to understand the flow in production.
+                return NextResponse.json({ success: true });
+            }
+
+            if (!paymentId) return NextResponse.json({ error: "No payment ID" }, { status: 400 });
+
+            console.log(`🔍 Processing ${topic} update for ID: ${paymentId}`);
 
             // We try with Pro client first, then Bricks client
             let paymentData = null;
@@ -84,12 +96,12 @@ export async function POST(req: NextRequest) {
                 const proPayment = new Payment(proClient);
                 paymentData = await proPayment.get({ id: paymentId });
             } catch (e) {
-                console.log("Could not find payment with Pro client, trying Bricks...");
+                console.log(`ℹ️ Payment ${paymentId} not found in Pro account, checking Bricks...`);
                 try {
                     const bricksPayment = new Payment(bricksClient);
                     paymentData = await bricksPayment.get({ id: paymentId });
                 } catch (e2) {
-                    console.error("Could not find payment with either client:", e2);
+                    console.error("❌ Payment not found in any account:", e2);
                 }
             }
 
@@ -97,7 +109,7 @@ export async function POST(req: NextRequest) {
                 const externalReference = paymentData.external_reference; // This is our Order ID
                 const status = paymentData.status;
 
-                console.log(`Webhook received for Order ${externalReference}: Status ${status}`);
+                console.log(`✅ Webhook Match: Order ${externalReference} -> MP Status: ${status}`);
 
                 if (externalReference) {
                     // Map MP status to our internal status
@@ -105,6 +117,7 @@ export async function POST(req: NextRequest) {
 
                     if (status === 'approved') newStatus = 'paid';
                     else if (status === 'rejected' || status === 'cancelled') newStatus = 'cancelled';
+                    else if (status === 'in_process') newStatus = 'pending';
 
                     // Update DB
                     await updateOrder(externalReference, {

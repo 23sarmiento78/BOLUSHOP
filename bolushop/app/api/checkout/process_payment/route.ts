@@ -45,6 +45,28 @@ export async function POST(req: NextRequest) {
                     }
                 },
                 external_reference: orderId,
+                notification_url: `${req.nextUrl.origin}/api/webhooks/mercadopago`,
+                additional_info: {
+                    items: items.map((item: any) => ({
+                        id: item.id,
+                        title: item.name,
+                        quantity: item.quantity,
+                        unit_price: item.price,
+                        category_id: 'others',
+                        description: item.description || 'Producto BoluShop'
+                    })),
+                    payer: {
+                        first_name: body.internalPayer?.name?.split(' ')[0] || 'Cliente',
+                        last_name: body.internalPayer?.name?.split(' ').slice(1).join(' ') || 'Brick',
+                        phone: {
+                            number: body.internalPayer?.phone || ''
+                        },
+                        address: {
+                            street_name: body.internalPayer?.address || 'N/A',
+                            zip_code: '0000'
+                        }
+                    }
+                }
             }
         });
 
@@ -74,12 +96,21 @@ export async function POST(req: NextRequest) {
             paymentId: String(result.id)
         });
 
-        return NextResponse.json({
+        const responseData = {
             status: result.status,
             status_detail: result.status_detail,
             id: result.id,
             orderId: orderId
-        });
+        };
+
+        if (result.status === 'rejected') {
+            return NextResponse.json({
+                error: 'Pago rechazado',
+                ...responseData
+            }, { status: 400 });
+        }
+
+        return NextResponse.json(responseData);
 
     } catch (error: any) {
         console.error("❌ Payment Processing Error:", error);

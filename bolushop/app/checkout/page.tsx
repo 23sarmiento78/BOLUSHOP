@@ -17,11 +17,12 @@ export default function CheckoutPage() {
         address: '',
         city: '',
         email: '',
-        phone: ''
+        phone: '',
+        dni: ''
     });
 
     const isFormValid = useMemo(() => {
-        return formData.name && formData.address && formData.email && formData.email.includes('@');
+        return !!(formData.name && formData.address && formData.email && formData.email.includes('@') && formData.dni.length >= 7);
     }, [formData]);
 
     const handleTraditionalPayment = async () => {
@@ -90,7 +91,16 @@ export default function CheckoutPage() {
         };
         localStorage.setItem(`order_${result.orderId}`, JSON.stringify(orderData));
 
-        router.push(`/checkout/success?orderId=${result.orderId}`);
+        if (result.status === 'approved') {
+            router.push(`/checkout/success?orderId=${result.orderId}`);
+        } else if (result.status === 'in_process' || result.status === 'pending') {
+            // Redirect to success but with a pending flag or let success page handle status
+            router.push(`/checkout/success?orderId=${result.orderId}&status=pending`);
+        } else {
+            // This case should be handled by onError in PaymentMethodsBrick usually,
+            // but as a safety measure:
+            alert("El pago no fue aprobado. Por favor intente con otro medio.");
+        }
     };
 
     return (
@@ -152,15 +162,28 @@ export default function CheckoutPage() {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Celular / WhatsApp</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">DNI / CUIL (Requerido para el pago)</label>
                                 <input
                                     type="text"
-                                    value={formData.phone}
-                                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                    required
+                                    value={formData.dni}
+                                    onChange={(e) => setFormData({ ...formData, dni: e.target.value.replace(/\D/g, '') })}
                                     className="w-full border-gray-300 rounded-lg p-3 bg-gray-50 focus:ring-2 focus:ring-primary outline-none"
-                                    placeholder="11 1234 5678"
+                                    placeholder="12345678"
+                                    maxLength={11}
                                 />
                             </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Celular / WhatsApp</label>
+                            <input
+                                type="text"
+                                value={formData.phone}
+                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                className="w-full border-gray-300 rounded-lg p-3 bg-gray-50 focus:ring-2 focus:ring-primary outline-none"
+                                placeholder="11 1234 5678"
+                            />
                         </div>
                     </div>
                 </div>
