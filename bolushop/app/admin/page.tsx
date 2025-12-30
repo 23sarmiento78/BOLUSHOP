@@ -1,9 +1,9 @@
 import { getAllOrders, getAllProducts } from '@/lib/db';
 import Link from 'next/link';
 
-export default function AdminPage() {
+export default async function AdminPage() {
     const products = getAllProducts();
-    const orders = getAllOrders();
+    const orders = await getAllOrders();
 
     // Stats calculation
     const paidOrders = orders.filter(o => o.status === 'paid' || o.status === 'shipped');

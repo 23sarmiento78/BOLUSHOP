@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { supabase } from './supabase';
 
 // Define paths
 const DATA_DIR = path.join(process.cwd(), 'data');
@@ -38,8 +39,10 @@ export interface Order {
     items: (Product & { quantity: number })[];
     total: number;
     payer: {
-        email?: string;
-        name?: string;
+        email: string;
+        name: string;
+        address: string;
+        phone: string;
     };
     paymentId?: string;
 }
@@ -122,12 +125,43 @@ export function getProductBySlug(slug: string): Product | undefined {
 }
 
 // Orders API
-export function getAllOrders(): Order[] {
-    return readJson<Order[]>(ORDERS_FILE, []);
+export async function getAllOrders(): Promise<Order[]> {
+    const localOrders = readJson<Order[]>(ORDERS_FILE, []);
+
+    try {
+        const { data, error } = await supabase
+            .from('orders')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+            // Map Supabase data back to Order interface
+            return data.map(o => ({
+                id: o.external_id || o.id,
+                date: o.created_at,
+                status: o.status,
+                items: o.items,
+                total: o.total,
+                payer: {
+                    name: o.payer_name,
+                    email: o.payer_email,
+                    address: o.payer_address,
+                    phone: o.payer_phone
+                },
+                paymentId: o.payment_id
+            }));
+        }
+    } catch (e) {
+        console.warn("⚠️ Supabase Fetch Error (falling back to JSON):", e);
+    }
+
+    return localOrders;
 }
 
-export function createOrder(order: Order) {
-    const orders = getAllOrders();
+export async function createOrder(order: Order) {
+    const orders = await getAllOrders();
     orders.push(order);
     writeJson(ORDERS_FILE, orders);
 
@@ -135,19 +169,79 @@ export function createOrder(order: Order) {
     order.items.forEach(item => {
         subtractStock(item.id, item.quantity || 1);
     });
+
+    // Sync to Supabase
+    try {
+        const { error } = await supabase.from('orders').insert([{
+            created_at: order.date,
+            status: order.status,
+            total: order.total,
+            payer_name: order.payer.name,
+            payer_email: order.payer.email,
+            payer_address: order.payer.address,
+            payer_phone: order.payer.phone || 'N/A',
+            items: order.items,
+            payment_id: order.paymentId,
+            external_id: order.id
+        }]);
+        if (error) console.error("❌ Supabase Sync Error:", error);
+        else console.log("✅ Order synced to Supabase");
+    } catch (e) {
+        console.warn("⚠️ Supabase not configured or unreachable:", e);
+    }
 }
 
-export function getOrderById(id: string): Order | undefined {
-    const orders = getAllOrders();
+export async function getOrderById(id: string): Promise<Order | undefined> {
+    try {
+        const { data, error } = await supabase
+            .from('orders')
+            .select('*')
+            .or(`external_id.eq.${id},id.eq.${id}`)
+            .single();
+
+        if (data) {
+            return {
+                id: data.external_id || data.id,
+                date: data.created_at,
+                status: data.status,
+                items: data.items,
+                total: data.total,
+                payer: {
+                    name: data.payer_name,
+                    email: data.payer_email,
+                    address: data.payer_address,
+                    phone: data.payer_phone
+                },
+                paymentId: data.payment_id
+            };
+        }
+    } catch (e) {
+        console.warn("⚠️ Supabase Fetch ID Error:", e);
+    }
+
+    const orders = await getAllOrders();
     return orders.find(o => o.id === id);
 }
 
-export function updateOrder(id: string, updates: Partial<Order>) {
-    const orders = getAllOrders();
+export async function updateOrder(id: string, updates: Partial<Order>) {
+    const orders = await getAllOrders();
     const index = orders.findIndex(o => o.id === id);
     if (index !== -1) {
         orders[index] = { ...orders[index], ...updates };
         writeJson(ORDERS_FILE, orders);
+
+        // Sync to Supabase
+        try {
+            const { error } = await supabase
+                .from('orders')
+                .update({ status: updates.status, payment_id: updates.paymentId })
+                .eq('external_id', id);
+
+            if (error) console.error("❌ Supabase Update Error:", error);
+        } catch (e) {
+            console.warn("⚠️ Supabase Sync Error (Update):", e);
+        }
+
         return orders[index];
     }
     return null;

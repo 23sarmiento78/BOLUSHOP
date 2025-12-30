@@ -1,6 +1,6 @@
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { NextRequest, NextResponse } from 'next/server';
-import { createOrder, updateOrderStatus } from '@/lib/db';
+import { createOrder, Order } from '@/lib/db';
 import { v4 as uuidv4 } from 'uuid';
 
 const client = new MercadoPagoConfig({
@@ -49,10 +49,10 @@ export async function POST(req: NextRequest) {
         const finalStatus = statusMap[result.status || ''] || 'pending';
 
         // Save Order to DB
-        createOrder({
+        await createOrder({
             id: orderId,
             date: new Date().toISOString(),
-            status: finalStatus,
+            status: finalStatus as Order['status'],
             items: items,
             total: total,
             payer: {

@@ -4,7 +4,7 @@ import { sendRefundRequestEmail } from '@/lib/email';
 
 export async function GET() {
     try {
-        const orders = getAllOrders();
+        const orders = await getAllOrders();
         return NextResponse.json({ orders });
     } catch (error) {
         console.error(error);
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const { orderId, action, status } = body;
 
-        const orders = getAllOrders();
+        const orders = await getAllOrders();
         const order = orders.find((o: any) => o.id === orderId);
 
         if (!order) {
@@ -25,14 +25,14 @@ export async function POST(req: NextRequest) {
         }
 
         if (action === 'cancel') {
-            updateOrder(orderId, { status: 'cancelled' });
+            await updateOrder(orderId, { status: 'cancelled' });
             const email = order.payer?.email || 'cliente@ejemplo.com';
             await sendRefundRequestEmail(orderId, email);
             return NextResponse.json({ success: true, message: 'Order cancelled and email sent' });
         }
 
         if (action === 'update_status' && status) {
-            updateOrder(orderId, { status });
+            await updateOrder(orderId, { status });
             return NextResponse.json({ success: true, message: `Order status updated to ${status}` });
         }
 
