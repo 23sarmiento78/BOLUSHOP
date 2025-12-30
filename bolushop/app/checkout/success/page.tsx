@@ -110,12 +110,12 @@ function SuccessContent() {
                     <div className="bg-gray-50 p-6 rounded-2xl text-left mb-8 border border-gray-200">
                         <h2 className="font-bold text-gray-900 mb-4 border-b pb-2 flex justify-between items-center text-sm">
                             Resumen del Pedido
-                            <span className="text-xs font-normal text-gray-400">#{order.id.slice(0, 8)}</span>
+                            <span className="text-xs font-normal text-gray-400">#{order?.id ? order.id.slice(0, 8) : 'N/A'}</span>
                         </h2>
                         <div className="space-y-2 text-sm text-gray-600">
-                            <p><strong>Cliente:</strong> {order.payer.name}</p>
-                            <p><strong>Envío a:</strong> {order.payer.address}</p>
-                            <p className="text-primary font-bold text-lg pt-2 mt-2 border-t">A confirmar: ${order.total.toLocaleString('es-AR')}</p>
+                            <p><strong>Cliente:</strong> {order.payer?.name || 'Cliente'}</p>
+                            <p><strong>Envío a:</strong> {order.payer?.address || 'A convenir'}</p>
+                            <p className="text-primary font-bold text-lg pt-2 mt-2 border-t">A confirmar: ${order.total?.toLocaleString('es-AR')}</p>
                         </div>
                     </div>
                 )}
