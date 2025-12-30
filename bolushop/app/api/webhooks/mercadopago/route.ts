@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
                     else if (status === 'rejected' || status === 'cancelled') newStatus = 'cancelled';
 
                     // Update DB
-                    updateOrder(externalReference, {
+                    await updateOrder(externalReference, {
                         status: newStatus,
                         paymentId: String(paymentId)
                     });
