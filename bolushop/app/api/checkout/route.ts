@@ -8,25 +8,23 @@ const client = new MercadoPagoConfig({
 });
 
 export async function POST(req: NextRequest) {
+    // Basic verification of Credentials
+    if (!process.env.MP_ACCESS_TOKEN) {
+        console.error("❌ ERROR: MP_ACCESS_TOKEN no está configurado en las variables de entorno.");
+        return NextResponse.json({ error: 'Configuración incompleta en el servidor.' }, { status: 500 });
+    }
+
     try {
         const body = await req.json();
-        // Fallbacks for safety if frontend doesn't send payer yet
         const items = body.items || [];
         const payer = body.payer || { name: 'Cliente', email: 'no-email@test.com' };
 
         const preference = new Preference(client);
-
-        // Create an internal Order ID
         const orderId = uuidv4();
-
-        // Recalculate shipping logic: Universal absorption (shipping is already in product price)
-        const shippingCost = 0;
-
-        const total = items.reduce((sum: number, i: any) => sum + (i.price * i.quantity), 0);
 
         const result = await preference.create({
             body: {
-                external_reference: orderId, // Link MP to our Order ID
+                external_reference: orderId,
                 items: items.map((item: any) => ({
                     id: item.id,
                     title: item.name,
@@ -35,9 +33,10 @@ export async function POST(req: NextRequest) {
                     currency_id: 'ARS',
                     picture_url: item.image,
                 })),
-                shipments: {
-                    cost: shippingCost,
-                    mode: 'not_specified',
+                payer: {
+                    name: payer.name.split(' ')[0],
+                    surname: payer.name.split(' ').slice(1).join(' '),
+                    email: payer.email,
                 },
                 back_urls: {
                     success: `${req.nextUrl.origin}/checkout/success?orderId=${orderId}`,
@@ -45,14 +44,18 @@ export async function POST(req: NextRequest) {
                     pending: `${req.nextUrl.origin}/checkout/pending?orderId=${orderId}`,
                 },
                 auto_return: 'approved',
+                binary_mode: true, // Recommended for immediate results
+                statement_descriptor: 'BOLUSHOP', // Name on credit card bill
             }
         });
+
+        console.log(`✅ Preference Created for Order ${orderId}: ${result.init_point}`);
 
         // Save Order to JSON DB
         createOrder({
             id: orderId,
             date: new Date().toISOString(),
-            status: 'pending', // Will stay pending until Webhook confirms (or we simulate it)
+            status: 'pending',
             items,
             total: items.reduce((sum: number, i: any) => sum + (i.price * i.quantity), 0),
             payer,
