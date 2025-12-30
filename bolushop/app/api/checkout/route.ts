@@ -4,13 +4,13 @@ import { createOrder } from '@/lib/db';
 import { v4 as uuidv4 } from 'uuid';
 
 const client = new MercadoPagoConfig({
-    accessToken: process.env.MP_ACCESS_TOKEN || ''
+    accessToken: process.env.MP_PRO_ACCESS_TOKEN || ''
 });
 
 export async function POST(req: NextRequest) {
     // Basic verification of Credentials
-    if (!process.env.MP_ACCESS_TOKEN) {
-        console.error("❌ ERROR: MP_ACCESS_TOKEN no está configurado en las variables de entorno.");
+    if (!process.env.MP_PRO_ACCESS_TOKEN) {
+        console.error("❌ ERROR: MP_PRO_ACCESS_TOKEN no está configurado en las variables de entorno.");
         return NextResponse.json({ error: 'Configuración incompleta en el servidor.' }, { status: 500 });
     }
 

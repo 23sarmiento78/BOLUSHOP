@@ -3,9 +3,13 @@ import crypto from "crypto";
 import { MercadoPagoConfig, Payment } from "mercadopago";
 import { updateOrder, getAllOrders } from "@/lib/db";
 
-// Initialize MP Client (reusing the same token logic)
-const client = new MercadoPagoConfig({
-    accessToken: process.env.MP_ACCESS_TOKEN || ''
+// Initialize MP clients for both gateways
+const proClient = new MercadoPagoConfig({
+    accessToken: process.env.MP_PRO_ACCESS_TOKEN || ''
+});
+
+const bricksClient = new MercadoPagoConfig({
+    accessToken: process.env.MP_BRICKS_ACCESS_TOKEN || ''
 });
 
 // Helper to validate signature
@@ -13,10 +17,15 @@ const client = new MercadoPagoConfig({
 function isSignatureValid(req: NextRequest, body: any): boolean {
     const xSignature = req.headers.get("x-signature");
     const xRequestId = req.headers.get("x-request-id");
-    const secret = process.env.MP_WEBHOOK_SECRET;
 
-    if (!xSignature || !xRequestId || !secret) {
-        console.error("Missing signature headers or MP_WEBHOOK_SECRET");
+    // We try with the main secret or the bricks secret
+    const secrets = [
+        process.env.MP_WEBHOOK_SECRET,
+        process.env.MP_BRICKS_WEBHOOK_SECRET
+    ].filter(Boolean);
+
+    if (!xSignature || !xRequestId || secrets.length === 0) {
+        console.error("Missing signature headers or MP secrets");
         return false;
     }
 
@@ -39,13 +48,15 @@ function isSignatureValid(req: NextRequest, body: any): boolean {
 
     const manifest = `id:${dataId};request-id:${xRequestId};ts:${ts};`;
 
-    // Calculate HMAC
-    const cyphedSignature = crypto
-        .createHmac("sha256", secret)
-        .update(manifest)
-        .digest("hex");
+    // Calculate and compare for each secret until one matches
+    return secrets.some(secret => {
+        const cyphedSignature = crypto
+            .createHmac("sha256", secret!)
+            .update(manifest)
+            .digest("hex");
 
-    return cyphedSignature === hash;
+        return cyphedSignature === hash;
+    });
 }
 
 export async function POST(req: NextRequest) {
@@ -65,10 +76,22 @@ export async function POST(req: NextRequest) {
         // 2. Handle Payment Event
         if (topic === "payment") {
             const paymentId = body.data.id;
-            const payment = new Payment(client);
 
-            // Fetch actual payment data from MP
-            const paymentData = await payment.get({ id: paymentId });
+            // We try with Pro client first, then Bricks client
+            let paymentData = null;
+
+            try {
+                const proPayment = new Payment(proClient);
+                paymentData = await proPayment.get({ id: paymentId });
+            } catch (e) {
+                console.log("Could not find payment with Pro client, trying Bricks...");
+                try {
+                    const bricksPayment = new Payment(bricksClient);
+                    paymentData = await bricksPayment.get({ id: paymentId });
+                } catch (e2) {
+                    console.error("Could not find payment with either client:", e2);
+                }
+            }
 
             if (paymentData) {
                 const externalReference = paymentData.external_reference; // This is our Order ID
