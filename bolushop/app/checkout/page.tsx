@@ -227,6 +227,9 @@ export default function CheckoutPage() {
                 <p className="text-center text-xs text-gray-400 mt-8 italic">
                     Tus datos están protegidos por encriptación de grado bancario.
                 </p>
+                <p className="text-center text-xs font-bold text-primary mt-2">
+                    * Al completar el pago, deberás confirmar tu orden por WhatsApp.
+                </p>
             </div>
         </div>
     );
