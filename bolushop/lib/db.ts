@@ -154,7 +154,7 @@ export async function getAllOrders(): Promise<Order[]> {
             }));
         }
     } catch (e) {
-        console.warn("⚠️ Supabase Fetch Error (falling back to JSON):", e);
+        console.error("❌ Supabase Fetch Error:", e);
     }
 
     return localOrders;
@@ -187,7 +187,7 @@ export async function createOrder(order: Order) {
         if (error) console.error("❌ Supabase Sync Error:", error);
         else console.log("✅ Order synced to Supabase");
     } catch (e) {
-        console.warn("⚠️ Supabase not configured or unreachable:", e);
+        console.error("❌ Supabase Sync Error (Insert):", e);
     }
 }
 

@@ -13,15 +13,21 @@ export async function POST(req: NextRequest) {
     }
 
     try {
+        console.log("🚀 Starting payment process...");
         const body = await req.json();
+        console.log("📦 Body received:", JSON.stringify(body).slice(0, 100) + "...");
         const { formData, items, total } = body;
 
+        if (!formData || !formData.token) {
+            console.error("❌ Missing token in formData");
+            return NextResponse.json({ error: 'Token de pago faltante' }, { status: 400 });
+        }
+
         const payment = new Payment(client);
-
-        // Create Order ID
         const orderId = uuidv4();
+        console.log("🆔 Generated Order ID:", orderId);
 
-        // Process Payment with Mercado Pago
+        console.log("💳 Calling Mercado Pago API...");
         const result = await payment.create({
             body: {
                 transaction_amount: formData.transaction_amount,
@@ -37,6 +43,7 @@ export async function POST(req: NextRequest) {
                 external_reference: orderId,
             }
         });
+        console.log("✅ Mercado Pago Response Status:", result.status);
 
         // Map status
         const statusMap: Record<string, string> = {
