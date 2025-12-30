@@ -4,30 +4,25 @@ import { createOrder, Order } from '@/lib/db';
 import { v4 as uuidv4 } from 'uuid';
 
 const client = new MercadoPagoConfig({
-    accessToken: process.env.MP_ACCESS_TOKEN || ''
+    accessToken: process.env.MP_BRICKS_ACCESS_TOKEN || ''
 });
 
 export async function POST(req: NextRequest) {
-    if (!process.env.MP_ACCESS_TOKEN) {
+    if (!process.env.MP_BRICKS_ACCESS_TOKEN) {
         return NextResponse.json({ error: 'Configuración incompleta' }, { status: 500 });
     }
 
     try {
-        console.log("🚀 Starting payment process...");
         const body = await req.json();
-        console.log("📦 Body received:", JSON.stringify(body).slice(0, 100) + "...");
         const { formData, items, total } = body;
 
         if (!formData || !formData.token) {
-            console.error("❌ Missing token in formData");
             return NextResponse.json({ error: 'Token de pago faltante' }, { status: 400 });
         }
 
         const payment = new Payment(client);
         const orderId = uuidv4();
-        console.log("🆔 Generated Order ID:", orderId);
 
-        console.log("💳 Calling Mercado Pago API...");
         const result = await payment.create({
             body: {
                 transaction_amount: formData.transaction_amount,
@@ -43,7 +38,6 @@ export async function POST(req: NextRequest) {
                 external_reference: orderId,
             }
         });
-        console.log("✅ Mercado Pago Response Status:", result.status);
 
         // Map status
         const statusMap: Record<string, string> = {
