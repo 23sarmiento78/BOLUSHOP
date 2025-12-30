@@ -137,6 +137,7 @@ export async function getAllOrders(): Promise<Order[]> {
         if (error) throw error;
 
         if (data && data.length > 0) {
+            console.log(`✅ Supabase: Fetched ${data.length} orders`);
             // Map Supabase data back to Order interface
             return data.map(o => ({
                 id: o.external_id || o.id,
@@ -152,11 +153,14 @@ export async function getAllOrders(): Promise<Order[]> {
                 },
                 paymentId: o.payment_id
             }));
+        } else {
+            console.log("ℹ️ Supabase: No orders found in DB");
         }
     } catch (e) {
         console.error("❌ Supabase Fetch Error:", e);
     }
 
+    console.log(`ℹ️ Falling back to local data (${localOrders.length} orders)`);
     return localOrders;
 }
 
