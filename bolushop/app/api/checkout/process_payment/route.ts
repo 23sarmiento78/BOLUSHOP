@@ -34,6 +34,15 @@ export async function POST(req: NextRequest) {
                 payer: {
                     email: formData.payer.email,
                     identification: formData.payer.identification,
+                    first_name: body.internalPayer?.name?.split(' ')[0] || 'Cliente',
+                    last_name: body.internalPayer?.name?.split(' ').slice(1).join(' ') || 'Brick',
+                    phone: {
+                        number: body.internalPayer?.phone || ''
+                    },
+                    address: {
+                        street_name: body.internalPayer?.address || 'N/A',
+                        zip_code: '0000' // Mercado Pago often prefers a string for zip
+                    }
                 },
                 external_reference: orderId,
             }

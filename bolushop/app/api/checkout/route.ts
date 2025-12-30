@@ -34,9 +34,16 @@ export async function POST(req: NextRequest) {
                     picture_url: item.image,
                 })),
                 payer: {
-                    name: (payer.name && payer.name.split(' ')[0]) || 'Cliente', // Added check for payer.name
-                    surname: (payer.name && payer.name.split(' ').slice(1).join(' ')) || '', // Added check for payer.name
+                    name: (payer.name && payer.name.split(' ')[0]) || 'Cliente',
+                    surname: (payer.name && payer.name.split(' ').slice(1).join(' ')) || '',
                     email: payer.email || 'no-email@test.com',
+                    phone: {
+                        number: payer.phone || ''
+                    },
+                    address: {
+                        street_name: payer.address || 'N/A',
+                        zip_code: '0000'
+                    }
                 },
                 back_urls: {
                     success: `${req.nextUrl.origin}/checkout/success?orderId=${orderId}`,
