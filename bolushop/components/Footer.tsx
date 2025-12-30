@@ -22,7 +22,7 @@ export default function Footer() {
                             </span>
                         </Link>
                         <p className="text-gray-400 text-lg font-medium leading-relaxed mb-8">
-                            Revolucionando el dropshipping en Argentina. Productos virales, calidad garantizada y envíos relámpago a todo el país.
+                            BoluShop es tu destino principal para las últimas tendencias y productos de alta calidad. Ofrecemos una experiencia de compra excepcional con envíos rápidos y seguros a todo el país.
                         </p>
                         <div className="flex gap-4">
                             {['Instagram', 'TikTok', 'YouTube'].map(social => (
@@ -56,9 +56,9 @@ export default function Footer() {
                             <span className="w-2 h-2 bg-primary rounded-full"></span> Compras
                         </h5>
                         <ul className="space-y-4">
-                            {['Inicio', 'Categorías', 'Lo más Viral', 'Mi Carrito'].map(item => (
+                            {['Inicio', 'Categorías', 'Ofertas Destacadas', 'Mi Carrito'].map(item => (
                                 <li key={item}>
-                                    <Link href={item === 'Inicio' ? '/' : item === 'Categorías' ? '/categorias' : item === 'Mi Carrito' ? '/carrito' : '/#viral'}
+                                    <Link href={item === 'Inicio' ? '/' : item === 'Categorías' ? '/categorias' : item === 'Mi Carrito' ? '/carrito' : '/#ofertas'}
                                         className="text-gray-400 hover:text-white transition-colors font-semibold flex items-center group">
                                         <span className="opacity-0 group-hover:opacity-100 -ml-4 mr-2 transition-all">→</span>
                                         {item}

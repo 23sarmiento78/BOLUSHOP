@@ -166,5 +166,21 @@
     "features": [
       "Envío Gratis 🚚"
     ]
+  },
+  {
+    "id": "test-100",
+    "name": "Producto de Prueba ",
+    "slug": "producto-prueba-100",
+    "price": 100,
+    "image": "https://placehold.co/600x600/f0f0f0/333333?text=Test+100",
+    "category": "Pruebas",
+    "description": "Producto creado para testear el flujo de pago con éxito.",
+    "features": [
+      "Precio real para test",
+      "Checkout verificado"
+    ],
+    "stock": 999,
+    "createdAt": "2025-12-30T00:33:42.758Z",
+    "collections": []
   }
 ]
