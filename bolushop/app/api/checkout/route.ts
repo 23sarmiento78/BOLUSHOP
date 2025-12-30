@@ -22,6 +22,8 @@ export async function POST(req: NextRequest) {
         const preference = new Preference(client);
         const orderId = uuidv4();
 
+        const notification_url = `${req.nextUrl.origin}/api/webhooks/mercadopago`;
+
         const result = await preference.create({
             body: {
                 external_reference: orderId,
@@ -40,6 +42,10 @@ export async function POST(req: NextRequest) {
                     phone: {
                         number: payer.phone || ''
                     },
+                    identification: payer.dni ? {
+                        type: 'DNI',
+                        number: payer.dni
+                    } : undefined,
                     address: {
                         street_name: payer.address || 'N/A',
                         zip_code: '0000'
@@ -53,6 +59,7 @@ export async function POST(req: NextRequest) {
                 auto_return: 'approved',
                 binary_mode: true, // Recommended for immediate results
                 statement_descriptor: 'BOLUSHOP', // Name on credit card bill
+                notification_url: notification_url,
             }
         });
 

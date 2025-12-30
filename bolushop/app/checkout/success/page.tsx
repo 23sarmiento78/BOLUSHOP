@@ -12,6 +12,7 @@ import { useState } from 'react';
 function SuccessContent() {
     const searchParams = useSearchParams();
     const orderId = searchParams.get('orderId') || searchParams.get('external_reference');
+    const statusParam = searchParams.get('status'); // Might be 'pending' from our redirect
     const { clearCart } = useCart();
     const [order, setOrder] = useState<any>(null);
     const [loading, setLoading] = useState(true);
@@ -30,6 +31,10 @@ function SuccessContent() {
                     if (localData) {
                         try {
                             const decodedOrder = JSON.parse(localData);
+                            // If we have a status param, use it if the local order doesn't have it
+                            if (statusParam && !decodedOrder.status) {
+                                decodedOrder.status = statusParam;
+                            }
                             setOrder(decodedOrder);
                         } catch (e) {
                             console.error("Failed to parse order from localStorage", e);
@@ -41,7 +46,7 @@ function SuccessContent() {
         } else {
             setLoading(false);
         }
-    }, [clearCart, orderId]);
+    }, [clearCart, orderId, statusParam]);
 
     const sendWhatsApp = () => {
         if (!order) return;
@@ -51,6 +56,7 @@ function SuccessContent() {
 
         const message = `*NUEVA ORDEN BOLUSHOP* 🛒\n\n` +
             `*ID:* ${order.id}\n` +
+            `*Estado Pago:* ${order.status === 'paid' ? 'APROBADO ✅' : 'PENDIENTE ⏳'}\n` +
             `*Cliente:* ${order.payer.name}\n` +
             `*Dirección:* ${order.payer.address}\n` +
             `*Email:* ${order.payer.email}\n` +
@@ -65,15 +71,49 @@ function SuccessContent() {
 
     if (loading) return <div className="py-20 text-center text-gray-500">Cargando detalles de tu compra...</div>;
 
+    if (!orderId || (!order && !loading)) {
+        return (
+            <div className="container mx-auto px-4 py-20 text-center">
+                <h1 className="text-2xl font-bold mb-4 text-gray-800">No encontramos tu pedido</h1>
+                <p className="mb-8 text-gray-600">Si crees que esto es un error, por favor contactanos.</p>
+                <Link href="/" className="bg-primary text-white px-6 py-2 rounded-lg">Volver al inicio</Link>
+            </div>
+        );
+    }
+
+    // Handle Rejected/Cancelled Status
+    if (order?.status === 'cancelled' || order?.status === 'rejected') {
+        return (
+            <div className="container mx-auto px-4 py-20 text-center max-w-lg">
+                <div className="w-20 h-20 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">
+                    ✕
+                </div>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">Pago Rechazado</h1>
+                <p className="text-gray-500 mb-8">
+                    Tu pago no pudo ser procesado. Por favor, intentá con otro método de pago o consultá con tu banco.
+                </p>
+                <Link href="/checkout" className="w-full block bg-primary text-white font-bold py-4 rounded-2xl shadow-lg">
+                    Reintentar Pago
+                </Link>
+            </div>
+        );
+    }
+
+    const isPending = order?.status === 'pending' || order?.status === 'in_process';
+
     return (
         <div className="container mx-auto px-4 py-8 max-w-lg">
             <div className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 text-center">
-                <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-6 shadow-inner animate-bounce">
-                    ✓
+                <div className={`w-20 h-20 ${isPending ? 'bg-orange-100 text-orange-600' : 'bg-green-100 text-green-600'} rounded-full flex items-center justify-center text-4xl mx-auto mb-6 shadow-inner animate-bounce`}>
+                    {isPending ? '⏳' : '✓'}
                 </div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">¡Pago Recibido!</h1>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                    {isPending ? 'Pago en Proceso' : '¡Pago Recibido!'}
+                </h1>
                 <p className="text-gray-500 mb-8">
-                    Tu pago ha sido procesado con éxito.
+                    {isPending
+                        ? 'Tu pago se está procesando. Actualizaremos el estado en unos minutos.'
+                        : 'Tu pago ha sido procesado con éxito.'}
                 </p>
 
                 {/* Paso Final Requerido */}
@@ -88,12 +128,12 @@ function SuccessContent() {
 
                 <div className="flex flex-col gap-4 mb-8">
                     <div className="flex items-center gap-4 text-left p-4 bg-gray-50 rounded-xl border border-gray-100">
-                        <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">1</div>
+                        <div className={`w-8 h-8 rounded-full ${isPending ? 'bg-orange-500' : 'bg-green-500'} text-white flex items-center justify-center font-bold`}>1</div>
                         <div className="flex-grow">
-                            <p className="font-bold text-gray-900 text-sm">Pago Realizado</p>
-                            <p className="text-xs text-gray-400">Completado con éxito</p>
+                            <p className="font-bold text-gray-900 text-sm">Estado del Pago</p>
+                            <p className="text-xs text-gray-400">{isPending ? 'Pendiente / En Proceso' : 'Completado con éxito'}</p>
                         </div>
-                        <span className="text-green-500">✅</span>
+                        <span className={isPending ? 'text-orange-500' : 'text-green-500'}>{isPending ? '⏳' : '✅'}</span>
                     </div>
 
                     <div className="flex items-center gap-4 text-left p-4 bg-white rounded-xl border-2 border-primary/20">
