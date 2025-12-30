@@ -127,6 +127,7 @@ export function getProductBySlug(slug: string): Product | undefined {
 // Orders API
 export async function getAllOrders(): Promise<Order[]> {
     const localOrders = readJson<Order[]>(ORDERS_FILE, []);
+    let supabaseOrders: Order[] = [];
 
     try {
         const { data, error } = await supabase
@@ -138,8 +139,7 @@ export async function getAllOrders(): Promise<Order[]> {
 
         if (data && data.length > 0) {
             console.log(`✅ Supabase: Fetched ${data.length} orders`);
-            // Map Supabase data back to Order interface
-            return data.map(o => ({
+            supabaseOrders = data.map(o => ({
                 id: o.external_id || o.id,
                 date: o.created_at,
                 status: o.status,
@@ -153,15 +153,21 @@ export async function getAllOrders(): Promise<Order[]> {
                 },
                 paymentId: o.payment_id
             }));
-        } else {
-            console.log("ℹ️ Supabase: No orders found in DB");
         }
     } catch (e) {
         console.error("❌ Supabase Fetch Error:", e);
     }
 
-    console.log(`ℹ️ Falling back to local data (${localOrders.length} orders)`);
-    return localOrders;
+    // Smart Merge: Use a Map to keep unique orders, Supabase version takes precedence
+    const allOrdersMap = new Map<string, Order>();
+    localOrders.forEach(o => allOrdersMap.set(o.id, o));
+    supabaseOrders.forEach(o => allOrdersMap.set(o.id, o));
+
+    const totalOrders = Array.from(allOrdersMap.values()).sort((a, b) =>
+        new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+
+    return totalOrders;
 }
 
 export async function createOrder(order: Order) {
@@ -232,16 +238,31 @@ export async function updateOrder(id: string, updates: Partial<Order>) {
     const index = orders.findIndex(o => o.id === id);
     if (index !== -1) {
         orders[index] = { ...orders[index], ...updates };
-        writeJson(ORDERS_FILE, orders);
+        writeJson(ORDERS_FILE, orders.filter(o => o.id)); // Filter out potential errors
 
         // Sync to Supabase
         try {
-            const { error } = await supabase
+            // Try updating by external_id FIRST
+            const { error: errorExt } = await supabase
                 .from('orders')
-                .update({ status: updates.status, payment_id: updates.paymentId })
+                .update({
+                    status: updates.status,
+                    payment_id: updates.paymentId
+                })
                 .eq('external_id', id);
 
-            if (error) console.error("❌ Supabase Update Error:", error);
+            if (errorExt) {
+                // FALLBACK: Try updating by the native record ID
+                await supabase
+                    .from('orders')
+                    .update({
+                        status: updates.status,
+                        payment_id: updates.paymentId
+                    })
+                    .eq('id', id);
+            }
+
+            console.log(`✅ Supabase updated for order ${id}`);
         } catch (e) {
             console.warn("⚠️ Supabase Sync Error (Update):", e);
         }
