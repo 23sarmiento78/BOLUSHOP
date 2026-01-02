@@ -101,7 +101,7 @@ export default function CarritoPage() {
                                             className="relative w-24 h-24 rounded-2xl overflow-hidden bg-gray-50 flex-shrink-0"
                                         >
                                             <Image
-                                                src={item.image}
+                                                src={item.image || "/placeholder.png"}
                                                 alt={item.name}
                                                 fill
                                                 className="object-cover"

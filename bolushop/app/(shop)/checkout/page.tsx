@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 import { getCart, getCartTotal, clearCart, CartItem } from "@/lib/cart";
 import { getShippingRate } from "@/app/actions/shop";
 import { LOCATION_DATA } from "@/lib/locations";
-import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
+import { initMercadoPago, Wallet, Payment } from '@mercadopago/sdk-react';
 
 export default function CheckoutPage() {
     const router = useRouter();
     const [cart, setCart] = useState<CartItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [shippingCost, setShippingCost] = useState(0);
-    const [preferenceId, setPreferenceId] = useState<string | null>(null);
+    const [showPaymentBrick, setShowPaymentBrick] = useState(false);
 
     const [formData, setFormData] = useState({
         name: "",
@@ -48,8 +48,6 @@ export default function CheckoutPage() {
     useEffect(() => {
         if (formData.province && formData.city) {
             getShippingRate(formData.province, formData.city).then(setShippingCost);
-            // Reset preference if shipping changes as total changes
-            setPreferenceId(null);
         } else {
             setShippingCost(0);
         }
@@ -69,37 +67,42 @@ export default function CheckoutPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
-        setPreferenceId(null);
+        setShowPaymentBrick(true);
+        // Scroll to payment
+        setTimeout(() => {
+            document.getElementById('payment_container')?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+    };
 
+    const processPayment = async (param: any) => {
+        console.log("🎁 Payment Brick Params:", param);
         try {
-            const response = await fetch('/api/checkout', {
+            const response = await fetch('/api/process_payment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    items: cart,
-                    payer: formData,
-                    shippingCost,
+                    ...param,
+                    metadata: {
+                        items: cart,
+                        payer: formData
+                    }
                 }),
             });
 
             const data = await response.json();
 
-            if (data.success && data.preferenceId) {
-                setPreferenceId(data.preferenceId);
-                setIsLoading(false);
-                // Scroll to wallet
-                setTimeout(() => {
-                    document.getElementById('wallet_container')?.scrollIntoView({ behavior: 'smooth' });
-                }, 100);
+            if (data.status === 'approved') {
+                router.push(`/exito?order_id=${data.orderId}`);
+            } else if (data.status === 'in_process' || data.status === 'pending') {
+                router.push(`/exito?order_id=${data.orderId}&status=pending`);
             } else {
-                alert('Error al procesar el pago. Por favor, intentá de nuevo.');
-                setIsLoading(false);
+                const errorMsg = data.details || data.error || 'Error al procesar el pago';
+                alert(`Error: ${errorMsg}`);
+                throw new Error(errorMsg);
             }
-        } catch (error) {
-            console.error('Checkout error:', error);
-            alert('Error al procesar el pago. Por favor, intentá de nuevo.');
-            setIsLoading(false);
+        } catch (error: any) {
+            console.error('Payment error:', error);
+            throw error; // Re-throw for Brick internal handling
         }
     };
 
@@ -155,7 +158,7 @@ export default function CheckoutPage() {
                             )}
                             <div className="mt-4 flex -space-x-2 overflow-hidden">
                                 {cart.slice(0, 5).map((item, i) => (
-                                    <img key={i} className="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover" src={item.image} alt={item.name} />
+                                    <img key={i} className="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover" src={item.image || "/placeholder.png"} alt={item.name} />
                                 ))}
                                 {cart.length > 5 && (
                                     <div className="flex items-center justify-center h-8 w-8 rounded-full ring-2 ring-white bg-gray-200 text-xs font-bold text-gray-600">
@@ -287,27 +290,50 @@ export default function CheckoutPage() {
                             </div>
                         </div>
 
-                        {!preferenceId ? (
+                        {!showPaymentBrick ? (
                             <button
                                 type="submit"
                                 disabled={isLoading || !formData.province || !formData.city || !formData.name || !formData.email || !formData.address || !formData.phone}
                                 className="w-full mt-8 py-5 bg-black text-white rounded-xl font-black text-lg uppercase tracking-widest hover:bg-gray-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed transform hover:translate-y-px"
                             >
-                                {isLoading ? 'Procesando...' : 'Continuar al Pago'}
+                                Continuar al Pago
                             </button>
                         ) : (
-                            <div id="wallet_container" className="mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            <div id="payment_container" className="mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                                 <p className="text-center text-xs mb-4 font-bold text-gray-400 uppercase tracking-widest">
-                                    Seleccioná cómo querés pagar
+                                    Seleccioná tu método de pago
                                 </p>
                                 <div className="rounded-xl overflow-hidden shadow-2xl border border-gray-100">
-                                    <Wallet
-                                        initialization={{ preferenceId: preferenceId }}
+                                    <Payment
+                                        initialization={{
+                                            amount: total,
+                                            payer: {
+                                                email: formData.email,
+                                            }
+                                        }}
+                                        customization={{
+                                            visual: {
+                                                style: {
+                                                    theme: "default",
+                                                },
+                                            },
+                                            paymentMethods: {
+                                                maxInstallments: 12,
+                                                creditCard: "all",
+                                                debitCard: "all",
+                                                prepaidCard: "all",
+                                                ticket: "all",
+                                                bankTransfer: "all",
+                                                atm: "all",
+                                                mercadoPago: "all",
+                                            }
+                                        }}
+                                        onSubmit={processPayment}
                                     />
                                 </div>
                                 <button
                                     type="button"
-                                    onClick={() => setPreferenceId(null)}
+                                    onClick={() => setShowPaymentBrick(false)}
                                     className="w-full mt-6 py-3 text-gray-400 font-bold hover:text-black transition-colors text-xs uppercase tracking-widest"
                                 >
                                     ← Modificar datos

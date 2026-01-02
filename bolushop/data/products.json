@@ -182,5 +182,19 @@
     "stock": 999,
     "createdAt": "2025-12-30T00:33:42.758Z",
     "collections": []
+  },
+  {
+    "name": "producto de prueba",
+    "slug": "producto-de-prueba",
+    "price": 100,
+    "image": "",
+    "category": "Varios",
+    "description": "esto no es un producto real",
+    "features": [],
+    "stock": 99,
+    "collections": [],
+    "isActive": true,
+    "id": "82adc295-2aa0-45f0-a6dc-e7c4066b586c",
+    "createdAt": "2026-01-02T15:59:25.321Z"
   }
 ]

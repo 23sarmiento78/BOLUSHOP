@@ -52,7 +52,7 @@ export default function ProductCard({ product }: Props) {
             {/* Image */}
             <Link href={`/producto/${product.slug}`} className="block relative aspect-square overflow-hidden bg-gray-50">
                 <Image
-                    src={product.image}
+                    src={product.image || "/placeholder.png"}
                     alt={product.name}
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-500"
@@ -95,10 +95,10 @@ export default function ProductCard({ product }: Props) {
                         onClick={handleAddToCart}
                         disabled={product.stock === 0 || isAdding}
                         className={`px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest transition-all ${product.stock === 0
-                                ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                                : isAdding
-                                    ? 'bg-green-500 text-white scale-110'
-                                    : 'bg-primary text-white hover:scale-105 shadow-lg shadow-primary/20'
+                            ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                            : isAdding
+                                ? 'bg-green-500 text-white scale-110'
+                                : 'bg-primary text-white hover:scale-105 shadow-lg shadow-primary/20'
                             }`}
                     >
                         {isAdding ? '✓ Agregado' : '+ Carrito'}

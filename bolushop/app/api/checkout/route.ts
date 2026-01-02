@@ -42,6 +42,25 @@ export async function POST(req: NextRequest) {
             );
         }
 
+        // Determine Base URL
+        const protocol = req.headers.get('x-forwarded-proto') || 'http';
+        const host = req.headers.get('host');
+        let baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
+
+        if (!baseUrl) {
+            baseUrl = `${protocol}://${host || 'localhost:3000'}`;
+        }
+
+        // Ensure protocol is present
+        if (!baseUrl.startsWith('http')) {
+            baseUrl = `https://${baseUrl}`;
+        }
+
+        // Remove trailing slash if present
+        baseUrl = baseUrl.replace(/\/$/, '');
+
+        console.log("🌐 Base URL calculated (Sanitized):", baseUrl);
+
         // Create Mercado Pago preference
         const preference = {
             items: items.map((item: any) => ({
@@ -66,15 +85,16 @@ export async function POST(req: NextRequest) {
                 },
             },
             back_urls: {
-                success: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/exito?order_id=${order.id}`,
-                failure: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/carrito`,
-                pending: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/exito?order_id=${order.id}`,
+                success: `https://www.google.com/exito?order_id=${order.id}`,
+                failure: `https://www.google.com/carrito`,
+                pending: `https://www.google.com/exito?order_id=${order.id}`,
             },
             auto_return: 'approved' as const,
             external_reference: order.id,
-            notification_url: `${process.env.NEXT_PUBLIC_SITE_URL}/api/webhook/mercadopago`,
+            notification_url: `https://www.google.com/api/webhook/mercadopago`,
         };
 
+        console.log("🔗 Back URLs constructed:", JSON.stringify(preference.back_urls, null, 2));
         console.log("📤 Sending Preference to MP...", JSON.stringify(preference, null, 2));
 
         const response = await fetch('https://api.mercadopago.com/checkout/preferences', {

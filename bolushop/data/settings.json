@@ -2,7 +2,7 @@
   "profitMargin": 1.1,
   "shippingCost": 7500,
   "shippingJson": {
-    "caba": 3000,
+    "caba": 100,
     "gba1": 5000,
     "gba2": 5500,
     "gba3": 8500,
