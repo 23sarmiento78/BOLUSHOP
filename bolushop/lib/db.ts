@@ -270,14 +270,19 @@ export async function createOrder(order: Order) {
 
 export async function getOrderById(id: string): Promise<Order | undefined> {
     try {
-        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id.trim());
 
         let query = supabase.from('orders').select('*');
 
         if (isUUID) {
-            query = query.eq('external_id', id);
+            query = query.eq('external_id', id.trim());
         } else {
-            query = query.or(`id.eq.${id},external_id.eq.${id}`);
+            // If it looks like a number, try id eq
+            if (/^\d+$/.test(id)) {
+                query = query.eq('id', parseInt(id));
+            } else {
+                query = query.eq('external_id', id);
+            }
         }
 
         const { data, error } = await query.single();
@@ -315,8 +320,8 @@ export async function updateOrder(id: string, updates: Partial<Order>) {
 
         // Sync to Supabase
         try {
-            // Determine if id is UUID (external_id) or potentially numeric (internal id)
-            const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+            const cleanId = id.trim();
+            const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(cleanId);
 
             let query = supabase.from('orders').update({
                 status: updates.status,
@@ -324,10 +329,11 @@ export async function updateOrder(id: string, updates: Partial<Order>) {
             });
 
             if (isUUID) {
-                query = query.eq('external_id', id);
+                query = query.eq('external_id', cleanId);
+            } else if (/^\d+$/.test(cleanId)) {
+                query = query.eq('id', parseInt(cleanId));
             } else {
-                // If not UUID, try both just in case, but usually it's the internal serial ID
-                query = query.or(`id.eq.${id},external_id.eq.${id}`);
+                query = query.eq('external_id', cleanId);
             }
 
             const { error: syncError } = await query;
@@ -335,7 +341,7 @@ export async function updateOrder(id: string, updates: Partial<Order>) {
             if (syncError) {
                 console.error("❌ Supabase Sync Error (Update):", syncError);
             } else {
-                console.log(`✅ Supabase updated for order ${id}`);
+                console.log(`✅ Supabase updated for order ${cleanId}`);
             }
         } catch (e) {
             console.warn("⚠️ Supabase Sync Error (Catch):", e);
