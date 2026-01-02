@@ -5,12 +5,13 @@ import ProductDetailClient from "./ProductDetailClient";
 import type { Metadata } from "next";
 
 interface Props {
-    params: { slug: string };
+    params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { slug } = await params;
     const products = await getAllProducts();
-    const product = products.find(p => p.slug === params.slug);
+    const product = products.find(p => p.slug === slug);
 
     if (!product) {
         return {
@@ -39,8 +40,9 @@ export async function generateStaticParams() {
 }
 
 export default async function ProductPage({ params }: Props) {
+    const { slug } = await params;
     const products = await getAllProducts();
-    const product = products.find(p => p.slug === params.slug);
+    const product = products.find(p => p.slug === slug);
 
     if (!product || product.isActive === false) {
         notFound();
