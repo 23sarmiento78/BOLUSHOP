@@ -49,6 +49,15 @@ export async function POST(req: NextRequest) {
         const [firstName, ...lastNameParts] = (fullPayer.name || 'Cliente').split(' ');
         const lastName = lastNameParts.join(' ') || 'BoluShop';
 
+        // Helper to extract street number from address
+        const extractStreetNumber = (address: string) => {
+            const match = address.match(/\d+/);
+            return match ? match[0] : null;
+        };
+
+        const streetName = fullPayer.address || 'N/A';
+        const streetNumber = extractStreetNumber(streetName);
+
         // Map Items for Anti-fraud (additional_info)
         const mpItems = (metadata?.items || []).map((item: any) => ({
             id: item.id || item.productId,
@@ -87,15 +96,20 @@ export async function POST(req: NextRequest) {
                 },
                 address: {
                     zip_code: fullPayer.zipCode || fullPayer.zip_code || '1000',
-                    street_name: fullPayer.address || 'N/A',
-                    street_number: '0',
+                    street_name: streetName,
+                    street_number: streetNumber || undefined,
                 },
-                ...(payer.identification?.number ? {
+                ...(fullPayer.identification?.number ? {
+                    identification: {
+                        type: fullPayer.identification?.type || 'DNI',
+                        number: fullPayer.identification?.number,
+                    }
+                } : (payer.identification?.number ? {
                     identification: {
                         type: payer.identification?.type,
                         number: payer.identification?.number,
                     }
-                } : {}),
+                } : {})),
             },
             additional_info: {
                 items: mpItems,
@@ -108,15 +122,27 @@ export async function POST(req: NextRequest) {
                     },
                     address: {
                         zip_code: fullPayer.zipCode || fullPayer.zip_code || '1000',
-                        street_name: fullPayer.address || 'N/A',
-                        street_number: '0',
+                        street_name: streetName,
+                        street_number: streetNumber ? parseInt(streetNumber) : undefined,
                     },
+                    // Crucial for anti-fraud in additional_info
+                    ...(fullPayer.identification?.number ? {
+                        identification: {
+                            type: fullPayer.identification?.type || 'DNI',
+                            number: fullPayer.identification?.number,
+                        }
+                    } : (payer.identification?.number ? {
+                        identification: {
+                            type: payer.identification?.type,
+                            number: payer.identification?.number,
+                        }
+                    } : {})),
                 },
                 shipments: {
                     receiver_address: {
                         zip_code: fullPayer.zipCode || fullPayer.zip_code || '1000',
-                        street_name: fullPayer.address || 'N/A',
-                        street_number: 0,
+                        street_name: streetName,
+                        street_number: streetNumber ? parseInt(streetNumber) : undefined,
                     }
                 },
                 ip_address: userIp,

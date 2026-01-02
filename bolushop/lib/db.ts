@@ -24,7 +24,7 @@ const DEFAULT_SETTINGS: Settings = {
     },
     siteName: "BoluShop",
     siteDescription: "Tu Marketplace Premium en Argentina. Calidad, confianza y envíos rápidos a todo el país.",
-    whatsappNumber: "5491122334455"
+    whatsappNumber: "3541237972"
 };
 
 // Ensure data dir exists
