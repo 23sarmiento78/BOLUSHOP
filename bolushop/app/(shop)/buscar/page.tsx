@@ -10,11 +10,12 @@ export const metadata: Metadata = {
 };
 
 interface Props {
-    searchParams: { q?: string };
+    searchParams: Promise<{ q?: string }>;
 }
 
 export default async function BuscarPage({ searchParams }: Props) {
-    const query = searchParams.q || "";
+    const params = await searchParams;
+    const query = params.q || "";
     const results = query ? await searchProducts(query) : [];
 
     return (

@@ -26,8 +26,38 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
         }, 1500);
     };
 
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.vercel.app';
+
+    const productJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": product.name,
+        "image": product.image,
+        "description": product.description,
+        "sku": product.id,
+        "brand": {
+            "@type": "Brand",
+            "name": "BoluShop"
+        },
+        "offers": {
+            "@type": "Offer",
+            "url": `${siteUrl}/producto/${product.slug}`,
+            "priceCurrency": "ARS",
+            "price": product.price,
+            "availability": product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+            "seller": {
+                "@type": "Organization",
+                "name": "BoluShop"
+            }
+        }
+    };
+
     return (
         <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+            />
             <Header />
 
             <main className="min-h-screen bg-white">
@@ -134,8 +164,8 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
                                         onClick={handleAddToCart}
                                         disabled={isAdding}
                                         className={`flex-grow py-4 px-8 rounded-2xl font-black text-sm uppercase tracking-widest transition-all ${isAdding
-                                                ? 'bg-green-500 text-white scale-105'
-                                                : 'bg-primary text-white hover:scale-105 shadow-xl shadow-primary/30'
+                                            ? 'bg-green-500 text-white scale-105'
+                                            : 'bg-primary text-white hover:scale-105 shadow-xl shadow-primary/30'
                                             }`}
                                     >
                                         {isAdding ? '✓ Agregado al Carrito' : '🛒 Agregar al Carrito'}
