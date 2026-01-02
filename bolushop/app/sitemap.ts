@@ -35,12 +35,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ];
 
     // Páginas de productos dinámicas
-    const productPages: MetadataRoute.Sitemap = activeProducts.map((product) => ({
-        url: `${siteUrl}/producto/${product.slug}`,
-        lastModified: new Date(product.createdAt),
-        changeFrequency: 'weekly' as const,
-        priority: 0.8,
-    }));
+    const productPages: MetadataRoute.Sitemap = activeProducts.map((product) => {
+        // Validar que createdAt sea una fecha válida
+        let lastModified = new Date();
+        try {
+            const productDate = new Date(product.createdAt);
+            if (!isNaN(productDate.getTime())) {
+                lastModified = productDate;
+            }
+        } catch (e) {
+            // Si hay error, usar fecha actual
+        }
+
+        return {
+            url: `${siteUrl}/producto/${product.slug}`,
+            lastModified,
+            changeFrequency: 'weekly' as const,
+            priority: 0.8,
+        };
+    });
 
     return [...staticPages, ...productPages];
 }
