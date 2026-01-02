@@ -270,11 +270,17 @@ export async function createOrder(order: Order) {
 
 export async function getOrderById(id: string): Promise<Order | undefined> {
     try {
-        const { data, error } = await supabase
-            .from('orders')
-            .select('*')
-            .or(`external_id.eq.${id},id.eq.${id}`)
-            .single();
+        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+
+        let query = supabase.from('orders').select('*');
+
+        if (isUUID) {
+            query = query.eq('external_id', id);
+        } else {
+            query = query.or(`id.eq.${id},external_id.eq.${id}`);
+        }
+
+        const { data, error } = await query.single();
 
         if (data) {
             return {
