@@ -56,11 +56,16 @@ function readJson<T>(file: string, defaultData: T): T {
 }
 
 function writeJson(file: string, data: any): boolean {
+    const isVercel = process.env.VERCEL === '1';
     try {
         fs.writeFileSync(file, JSON.stringify(data, null, 2));
         return true;
-    } catch (e) {
-        console.error(`❌ Error writing to ${file} (expected on Vercel):`, e);
+    } catch (e: any) {
+        // Silently skip if on Vercel read-only filesystem
+        if (isVercel || e.code === 'EROFS') {
+            return false;
+        }
+        console.error(`❌ Error writing to ${file}:`, e);
         return false;
     }
 }
