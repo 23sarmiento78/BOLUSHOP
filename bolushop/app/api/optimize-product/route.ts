@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
         }
 
         const model = genAI.getGenerativeModel({
-            model: 'gemini-1.5-flash',
+            model: 'gemini-pro',
         });
 
         const prompt = `Sos un experto en e-commerce y copywriting para tiendas online en Argentina. 
