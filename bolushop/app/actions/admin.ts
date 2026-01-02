@@ -98,6 +98,12 @@ export async function importProductsAction(rawProducts: any[], source: string) {
         const PROFIT_MARGIN = settings.profitMargin;
         const SHIPPING_COST = settings.shippingCost;
 
+        // Get existing products to preserve custom images
+        const existingProducts = await getAllProducts();
+        const existingProductsMap = new Map(
+            existingProducts.map(p => [p.id, p])
+        );
+
         let mappedProducts: (Product | null)[] = [];
 
         if (source === 'dropers-csv') {
@@ -171,19 +177,35 @@ export async function importProductsAction(rawProducts: any[], source: string) {
                     category = 'Varios';
                 }
 
+                // Preserve custom image if product already exists
+                const productId = String(row['SKU'] || uuidv4());
+                const existingProduct = existingProductsMap.get(productId);
+
+                // Use existing custom image if:
+                // 1. Product already exists
+                // 2. Existing image is not the default bolushop.png
+                // 3. Existing image is not empty
+                let finalImage = image;
+                if (existingProduct &&
+                    existingProduct.image &&
+                    existingProduct.image !== '/bolushop.png' &&
+                    !existingProduct.image.includes('dropers')) {
+                    finalImage = existingProduct.image; // Preserve custom image
+                }
+
                 return {
-                    id: String(row['SKU'] || uuidv4()),
+                    id: productId,
                     name: row['Nombre'] || 'Sin Nombre',
                     slug: row['Identificador de URL'] || (row['Nombre'] ? row['Nombre'].toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '') : uuidv4()),
                     price: price,
-                    image: image,
+                    image: finalImage,
                     category: category,
                     description: cleanDescription,
                     features: features,
                     stock: 99, // Standard stock for imports
-                    createdAt: new Date().toISOString(),
-                    collections: [],
-                    isActive: true
+                    createdAt: existingProduct?.createdAt || new Date().toISOString(),
+                    collections: existingProduct?.collections || [],
+                    isActive: existingProduct?.isActive ?? true
                 } as Product;
             });
         }
