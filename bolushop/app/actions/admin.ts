@@ -131,6 +131,37 @@ export async function importProductsAction(rawProducts: any[], source: string) {
                 const description = row['Descripción'] || '';
                 const image = row['Imagen'] || '/bolushop.png';
 
+                // Clean HTML from description
+                const cleanHtmlDescription = (html: string): string => {
+                    if (!html) return '';
+
+                    // Remove HTML tags but preserve content
+                    let text = html
+                        .replace(/<div[^>]*>/gi, '')
+                        .replace(/<\/div>/gi, '\n')
+                        .replace(/<p[^>]*>/gi, '')
+                        .replace(/<\/p>/gi, '\n')
+                        .replace(/<br\s*\/?>/gi, '\n')
+                        .replace(/<[^>]+>/g, '') // Remove any other HTML tags
+                        .replace(/&nbsp;/g, ' ')
+                        .replace(/&amp;/g, '&')
+                        .replace(/&lt;/g, '<')
+                        .replace(/&gt;/g, '>')
+                        .replace(/&quot;/g, '"')
+                        .trim();
+
+                    // Clean up multiple newlines and spaces
+                    text = text
+                        .split('\n')
+                        .map(line => line.trim())
+                        .filter(line => line.length > 0)
+                        .join('. ');
+
+                    return text;
+                };
+
+                const cleanDescription = cleanHtmlDescription(description);
+
                 // Fallback logical for category
                 const categoryRaw = row['Categorias'] || row['Tags'] || '';
                 let category = categoryRaw.trim();
@@ -147,7 +178,7 @@ export async function importProductsAction(rawProducts: any[], source: string) {
                     price: price,
                     image: image,
                     category: category,
-                    description: description,
+                    description: cleanDescription,
                     features: features,
                     stock: 99, // Standard stock for imports
                     createdAt: new Date().toISOString(),
