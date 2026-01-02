@@ -41,9 +41,29 @@ export async function POST(req: NextRequest) {
         const payment = new Payment(client);
         const orderId = uuidv4();
 
+        // Anti-fraud: Idempotency Key
+        const idempotencyKey = uuidv4();
+
+        // Extract Payer Details for Anti-fraud
+        const fullPayer = metadata?.payer || {};
+        const [firstName, ...lastNameParts] = (fullPayer.name || 'Cliente').split(' ');
+        const lastName = lastNameParts.join(' ') || 'BoluShop';
+
+        // Map Items for Anti-fraud (additional_info)
+        const mpItems = (metadata?.items || []).map((item: any) => ({
+            id: item.id || item.productId,
+            title: item.name,
+            description: item.name,
+            category_id: item.category || 'others',
+            quantity: item.quantity,
+            unit_price: item.price,
+        }));
+
         // Determine Base URL for notification
         const protocol = req.headers.get('x-forwarded-proto') || 'http';
         const host = req.headers.get('host');
+        const userIp = req.headers.get('x-forwarded-for')?.split(',')[0] || req.headers.get('x-real-ip') || '127.0.0.1';
+
         let baseUrl = process.env.NEXT_PUBLIC_SITE_URL || `${protocol}://${host || 'localhost:3000'}`;
         baseUrl = baseUrl.replace(/\/$/, '');
 
@@ -53,12 +73,23 @@ export async function POST(req: NextRequest) {
         const paymentData: any = {
             transaction_amount: Number(transaction_amount || body.transaction_amount),
             token,
-            description: description || `Pedido BoluShop - ${metadata?.items?.length || 0} items`,
+            description: description || `Pedido BoluShop - ${mpItems.length} items`,
             installments: Number(installments),
             payment_method_id,
             issuer_id,
             payer: {
                 email: payer.email,
+                first_name: firstName,
+                last_name: lastName,
+                phone: {
+                    area_code: '54',
+                    number: fullPayer.phone?.replace(/\D/g, '') || '1100000000',
+                },
+                address: {
+                    zip_code: fullPayer.zip_code || '1000',
+                    street_name: fullPayer.address || 'N/A',
+                    street_number: '0',
+                },
                 ...(payer.identification?.number ? {
                     identification: {
                         type: payer.identification?.type,
@@ -66,14 +97,37 @@ export async function POST(req: NextRequest) {
                     }
                 } : {}),
             },
+            additional_info: {
+                items: mpItems,
+                payer: {
+                    first_name: firstName,
+                    last_name: lastName,
+                    phone: {
+                        area_code: '54',
+                        number: fullPayer.phone?.replace(/\D/g, '') || '1100000000',
+                    },
+                    address: {
+                        zip_code: fullPayer.zip_code || '1000',
+                        street_name: fullPayer.address || 'N/A',
+                        street_number: '0',
+                    },
+                },
+                ip_address: userIp,
+            },
             external_reference: orderId,
             ...(notification_url ? { notification_url } : {}),
-            metadata: metadata || {},
+            metadata: {
+                ...metadata,
+                user_ip: userIp,
+            },
         };
 
         let result;
         try {
-            result = await payment.create({ body: paymentData });
+            result = await payment.create({
+                body: paymentData,
+                requestOptions: { idempotencyKey }
+            });
         } catch (mpError: any) {
             console.error('❌ Mercado Pago API Error:', JSON.stringify(mpError, null, 2));
             return NextResponse.json(
