@@ -309,14 +309,22 @@ export async function updateOrder(id: string, updates: Partial<Order>) {
 
         // Sync to Supabase
         try {
-            // Try update with OR filter to catch either external_id or native id
-            const { error: syncError } = await supabase
-                .from('orders')
-                .update({
-                    status: updates.status,
-                    payment_id: updates.paymentId
-                })
-                .or(`external_id.eq.${id},id.eq.${id}`);
+            // Determine if id is UUID (external_id) or potentially numeric (internal id)
+            const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+
+            let query = supabase.from('orders').update({
+                status: updates.status,
+                payment_id: updates.paymentId
+            });
+
+            if (isUUID) {
+                query = query.eq('external_id', id);
+            } else {
+                // If not UUID, try both just in case, but usually it's the internal serial ID
+                query = query.or(`id.eq.${id},external_id.eq.${id}`);
+            }
+
+            const { error: syncError } = await query;
 
             if (syncError) {
                 console.error("❌ Supabase Sync Error (Update):", syncError);
