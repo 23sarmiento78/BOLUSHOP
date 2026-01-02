@@ -43,25 +43,19 @@ export async function getRelatedProducts(productId: string, category: string): P
         .slice(0, 4);
 }
 
-export async function getShippingRate(province: string): Promise<number> {
+import { getCityZone } from "@/lib/locations";
+
+export async function getShippingRate(province: string, city: string = ""): Promise<number> {
     const settings = await getSettings();
-    const provinceKey = province.toLowerCase();
+    const zone = getCityZone(province, city);
 
-    // Map provinces to shipping zones
-    const cabaProvinces = ['caba', 'capital federal', 'ciudad autónoma de buenos aires'];
-    const gba1Provinces = ['vicente lópez', 'san isidro', 'san fernando', 'tigre', 'la matanza', 'tres de febrero'];
-    const gba2Provinces = ['morón', 'hurlingham', 'ituzaingó', 'merlo', 'moreno', 'san miguel'];
-    const gba3Provinces = ['esteban echeverría', 'lomas de zamora', 'lanús', 'avellaneda', 'quilmes'];
-
-    if (cabaProvinces.some(p => provinceKey.includes(p))) {
-        return settings.shippingJson.caba;
-    } else if (gba1Provinces.some(p => provinceKey.includes(p))) {
-        return settings.shippingJson.gba1;
-    } else if (gba2Provinces.some(p => provinceKey.includes(p))) {
-        return settings.shippingJson.gba2;
-    } else if (gba3Provinces.some(p => provinceKey.includes(p))) {
-        return settings.shippingJson.gba3;
-    } else {
-        return settings.shippingJson.rest;
+    switch (zone) {
+        case 'caba': return settings.shippingJson.caba;
+        case 'gba1': return settings.shippingJson.gba1;
+        case 'gba2': return settings.shippingJson.gba2;
+        case 'gba3': return settings.shippingJson.gba3;
+        case 'rest':
+        default:
+            return settings.shippingJson.rest;
     }
 }
