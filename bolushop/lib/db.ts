@@ -323,10 +323,12 @@ export async function updateOrder(id: string, updates: Partial<Order>) {
             const cleanId = id.trim();
             const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(cleanId);
 
-            let query = supabase.from('orders').update({
-                status: updates.status,
-                payment_id: updates.paymentId
-            });
+            const updatePayload: any = {
+                status: updates.status
+            };
+            if (updates.paymentId) updatePayload.payment_id = updates.paymentId;
+
+            let query = supabase.from('orders').update(updatePayload);
 
             if (isUUID) {
                 query = query.eq('external_id', cleanId);
@@ -341,7 +343,7 @@ export async function updateOrder(id: string, updates: Partial<Order>) {
             if (syncError) {
                 console.error("❌ Supabase Sync Error (Update):", syncError);
             } else {
-                console.log(`✅ Supabase updated for order ${cleanId}`);
+                console.log(`✅ Supabase updated for order ${cleanId} to ${updates.status}`);
             }
         } catch (e) {
             console.warn("⚠️ Supabase Sync Error (Catch):", e);

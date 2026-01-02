@@ -48,6 +48,7 @@ export default function TrackingPageClient() {
             case 'paid': return 2;
             case 'shipped': return 3;
             case 'delivered': return 4;
+            case 'cancelled': return -1; // Special value for cancelled
             default: return 1;
         }
     };
@@ -97,35 +98,43 @@ export default function TrackingPageClient() {
                             </div>
 
                             {/* Status Steps */}
-                            <div className="relative mb-12 px-4">
-                                <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-100 -translate-y-1/2 rounded-full" />
-                                <div
-                                    className="absolute top-1/2 left-0 h-1 bg-green-500 -translate-y-1/2 rounded-full transition-all duration-1000"
-                                    style={{ width: `${((currentStep - 1) / 3) * 100}%` }}
-                                />
-
-                                <div className="relative flex justify-between">
-                                    {[
-                                        { label: 'Pendiente', icon: '📝', step: 1 },
-                                        { label: 'Pagado', icon: '💳', step: 2 },
-                                        { label: 'Enviado', icon: '🚚', step: 3 },
-                                        { label: 'Entregado', icon: '✨', step: 4 }
-                                    ].map((s) => (
-                                        <div key={s.step} className="flex flex-col items-center gap-2">
-                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg z-10 transition-all duration-500 ${currentStep >= s.step
-                                                ? 'bg-green-500 text-white shadow-lg shadow-green-500/30 scale-110'
-                                                : 'bg-white border-2 border-gray-200 text-gray-300'
-                                                }`}>
-                                                {s.icon}
-                                            </div>
-                                            <p className={`text-xs font-bold uppercase tracking-widest ${currentStep >= s.step ? 'text-green-600' : 'text-gray-300'
-                                                }`}>
-                                                {s.label}
-                                            </p>
-                                        </div>
-                                    ))}
+                            {currentStep === -1 ? (
+                                <div className="bg-red-50 border-2 border-red-100 rounded-3xl p-8 text-center mb-12 animate-in zoom-in duration-500">
+                                    <div className="text-6xl mb-4">🚫</div>
+                                    <h3 className="text-2xl font-black text-red-600 mb-2 uppercase tracking-tight">Pedido Cancelado</h3>
+                                    <p className="text-red-500 font-medium">Esta orden ha sido cancelada. Si creés que es un error, por favor contactanos.</p>
                                 </div>
-                            </div>
+                            ) : (
+                                <div className="relative mb-12 px-4">
+                                    <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-100 -translate-y-1/2 rounded-full" />
+                                    <div
+                                        className="absolute top-1/2 left-0 h-1 bg-green-500 -translate-y-1/2 rounded-full transition-all duration-1000"
+                                        style={{ width: `${((currentStep - 1) / 3) * 100}%` }}
+                                    />
+
+                                    <div className="relative flex justify-between">
+                                        {[
+                                            { label: 'Pendiente', icon: '📝', step: 1 },
+                                            { label: 'Pagado', icon: '💳', step: 2 },
+                                            { label: 'Enviado', icon: '🚚', step: 3 },
+                                            { label: 'Entregado', icon: '✨', step: 4 }
+                                        ].map((s) => (
+                                            <div key={s.step} className="flex flex-col items-center gap-2">
+                                                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg z-10 transition-all duration-500 ${currentStep >= s.step
+                                                    ? 'bg-green-500 text-white shadow-lg shadow-green-500/30 scale-110'
+                                                    : 'bg-white border-2 border-gray-200 text-gray-300'
+                                                    }`}>
+                                                    {s.icon}
+                                                </div>
+                                                <p className={`text-xs font-bold uppercase tracking-widest ${currentStep >= s.step ? 'text-green-600' : 'text-gray-300'
+                                                    }`}>
+                                                    {s.label}
+                                                </p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
 
                             {/* Items */}
                             <div className="bg-gray-50 rounded-2xl p-6 mb-8">
