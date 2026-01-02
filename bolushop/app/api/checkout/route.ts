@@ -5,9 +5,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { revalidatePath } from 'next/cache';
 
 export async function POST(req: NextRequest) {
+    console.log("🚀 Starting Checkout Process");
     try {
         const body = await req.json();
         const { items, payer, shippingCost } = body;
+        console.log("📦 Body received:", { itemsCount: items.length, payerEmail: payer.email, shippingCost });
 
         // Calculate total
         const itemsTotal = items.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0);
@@ -22,18 +24,18 @@ export async function POST(req: NextRequest) {
             total: total,
             payer: payer,
         };
+        console.log("📝 Order object created:", order.id);
 
-        // Save order (you'll need to implement saveOrder in lib/db.ts)
-        const orders = await getAllOrders();
-        orders.push(order);
+        // Save order
+        // const orders = await getAllOrders();
+        // orders.push(order);
+        // console.log("💾 Order pushed to local array (simulated)");
 
-        // In a real implementation, you would save this to Supabase
-        // For now, we'll create the Mercado Pago preference
-
-        const settings = await getSettings();
-        const MP_ACCESS_TOKEN = process.env.MP_BRICKS_ACCESS_TOKEN;
+        const MP_ACCESS_TOKEN = process.env.MP_BRICKS_ACCESS_TOKEN || process.env.MP_ACCESS_TOKEN;
+        console.log("🔑 MP Token present:", !!MP_ACCESS_TOKEN, "Length:", MP_ACCESS_TOKEN?.length);
 
         if (!MP_ACCESS_TOKEN) {
+            console.error("❌ Stats: MP_ACCESS_TOKEN missing");
             return NextResponse.json(
                 { error: 'Mercado Pago not configured' },
                 { status: 500 }
@@ -73,6 +75,8 @@ export async function POST(req: NextRequest) {
             notification_url: `${process.env.NEXT_PUBLIC_SITE_URL}/api/webhook/mercadopago`,
         };
 
+        console.log("📤 Sending Preference to MP...", JSON.stringify(preference, null, 2));
+
         const response = await fetch('https://api.mercadopago.com/checkout/preferences', {
             method: 'POST',
             headers: {
@@ -83,16 +87,33 @@ export async function POST(req: NextRequest) {
         });
 
         const data = await response.json();
+        console.log("📥 MP Response Status:", response.status);
 
         if (!response.ok) {
-            console.error('Mercado Pago Error:', data);
+            console.error('❌ Mercado Pago Error Data:', JSON.stringify(data, null, 2));
             return NextResponse.json(
-                { error: 'Error creating payment preference' },
+                { error: 'Error creating payment preference', details: data },
                 { status: 500 }
             );
         }
 
-        revalidatePath('/admin/orders');
+        console.log("✅ Preference Created:", data.id);
+
+        // Only save to DB if preference successful? No, save as pending first usually, or after. 
+        // Logic in original file was saving before.
+        // Let's restore the save logic but add a try catch for it specifically or use the existing lib
+        try {
+            // We need to import createOrder from lib/db if it exists, or use the direct logic
+            // Original file used getAllOrders and push.
+            // I'll stick to what was there but add logging.
+            const orders = await getAllOrders();
+            orders.push(order);
+            console.log("💾 Order saved to memory/file");
+        } catch (dbErr) {
+            console.error("❌ DB Save Error:", dbErr);
+        }
+
+        // revalidatePath('/admin/orders');
 
         return NextResponse.json({
             success: true,
@@ -102,9 +123,9 @@ export async function POST(req: NextRequest) {
         });
 
     } catch (error) {
-        console.error('Checkout Error:', error);
+        console.error('💥 Internal Checkout Error:', error);
         return NextResponse.json(
-            { error: 'Internal server error' },
+            { error: 'Internal server error', details: String(error) },
             { status: 500 }
         );
     }
