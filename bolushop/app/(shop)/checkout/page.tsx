@@ -76,7 +76,18 @@ export default function CheckoutPage() {
 
     const processPayment = async (param: any) => {
         console.log("🎁 Payment Brick Params:", param);
-        const deviceId = (window as any).MP_DEVICE_SESSION_ID;
+
+        // Ensure deviceId is captured correctly
+        let deviceId = (window as any).MP_DEVICE_SESSION_ID;
+
+        // If not available, try to get it from the security script manually if possible 
+        // or wait a moment (though onSubmit should ideally have it ready)
+        if (!deviceId) {
+            console.warn("⚠️ deviceId not found in global window, attempting to wait...");
+            // Small delay to let MP script finish if it hasn't
+            await new Promise(resolve => setTimeout(resolve, 500));
+            deviceId = (window as any).MP_DEVICE_SESSION_ID;
+        }
 
         try {
             const response = await fetch('/api/process_payment', {
@@ -87,7 +98,11 @@ export default function CheckoutPage() {
                     deviceId,
                     metadata: {
                         items: cart,
-                        payer: formData
+                        payer: {
+                            ...formData,
+                            // Pass identification if present in param (from Brick)
+                            identification: param.payer?.identification || param.formData?.payer?.identification
+                        }
                     }
                 }),
             });
