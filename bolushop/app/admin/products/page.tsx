@@ -4,9 +4,9 @@ import ProductsTable from './ProductsTable';
 
 export const dynamic = 'force-dynamic'; // Force dynamic rendering on the server
 
-export default function ProductsManagerPage() {
+export default async function ProductsManagerPage() {
     // Read directly from DB file - Single Source of Truth
-    const products = getAllProducts();
+    const products = await getAllProducts();
 
     return (
         <div className="container mx-auto px-4 py-8">

@@ -1,0 +1,158 @@
+"use client";
+
+import { useState } from "react";
+import { Order } from "@/lib/types";
+import { updateOrderStatusAction } from "@/app/actions/admin";
+import { toast } from "sonner";
+import Image from "next/image";
+
+interface Props {
+    initialOrders: Order[];
+}
+
+export default function OrdersTable({ initialOrders }: Props) {
+    const [orders, setOrders] = useState(initialOrders);
+    const [isLoading, setIsLoading] = useState(false);
+    const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
+
+    const handleStatusChange = async (orderId: string, newStatus: string) => {
+        setIsLoading(true);
+        try {
+            const success = await updateOrderStatusAction(orderId, newStatus);
+            if (success) {
+                setOrders(orders.map(o => o.id === orderId ? { ...o, status: newStatus as any } : o));
+                toast.success("Estado actualizado correctamente");
+            } else {
+                toast.error("Error al actualizar estado");
+            }
+        } catch (e) {
+            toast.error("Error desconocido");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const statusColors: any = {
+        pending: "bg-yellow-100 text-yellow-800",
+        paid: "bg-blue-100 text-blue-800",
+        shipped: "bg-purple-100 text-purple-800",
+        delivered: "bg-green-100 text-green-800",
+        cancelled: "bg-red-100 text-red-800"
+    };
+
+    return (
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="overflow-x-auto">
+                <table className="w-full text-left">
+                    <thead>
+                        <tr className="bg-gray-50 text-sm uppercase text-gray-500 font-bold border-b border-gray-100">
+                            <th className="p-4">Orden ID</th>
+                            <th className="p-4">Fecha</th>
+                            <th className="p-4">Cliente</th>
+                            <th className="p-4">Total</th>
+                            <th className="p-4">Estado</th>
+                            <th className="p-4">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                        {orders.map((order) => (
+                            <>
+                                <tr key={order.id} className="hover:bg-gray-50 transition-colors">
+                                    <td className="p-4 font-mono text-xs">{order.id}</td>
+                                    <td className="p-4 text-sm text-gray-600">
+                                        {new Date(order.date).toLocaleDateString()}
+                                    </td>
+                                    <td className="p-4">
+                                        <p className="font-bold text-gray-900 text-sm">{order.payer.name}</p>
+                                        <p className="text-xs text-gray-500">{order.payer.email}</p>
+                                    </td>
+                                    <td className="p-4 font-bold text-gray-900">
+                                        ${order.total.toLocaleString('es-AR')}
+                                    </td>
+                                    <td className="p-4">
+                                        <span className={`px-3 py-1 rounded-full text-xs font-black uppercase ${statusColors[order.status] || "bg-gray-100"}`}>
+                                            {order.status}
+                                        </span>
+                                    </td>
+                                    <td className="p-4">
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
+                                                className="text-gray-400 hover:text-primary transition-colors text-sm font-bold"
+                                            >
+                                                {expandedOrder === order.id ? 'Ocultar' : 'Ver Detalles'}
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {expandedOrder === order.id && (
+                                    <tr className="bg-gray-50">
+                                        <td colSpan={6} className="p-6">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                                {/* Status Control */}
+                                                <div>
+                                                    <h3 className="font-black text-sm uppercase text-gray-400 mb-4">Actualizar Estado</h3>
+                                                    <div className="flex gap-2 flex-wrap">
+                                                        {['pending', 'paid', 'shipped', 'delivered', 'cancelled'].map((status) => (
+                                                            <button
+                                                                key={status}
+                                                                onClick={() => handleStatusChange(order.id, status)}
+                                                                disabled={isLoading || order.status === status}
+                                                                className={`px-4 py-2 rounded-lg text-xs font-bold uppercase transition-all ${order.status === status
+                                                                    ? 'bg-gray-900 text-white ring-2 ring-gray-900 ring-offset-2'
+                                                                    : 'bg-white border border-gray-200 text-gray-600 hover:border-gray-900 hover:text-gray-900'
+                                                                    }`}
+                                                            >
+                                                                {status}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+
+                                                    <div className="mt-8">
+                                                        <h3 className="font-black text-sm uppercase text-gray-400 mb-2">Datos de Envío</h3>
+                                                        <div className="bg-white p-4 rounded-xl border border-gray-100 text-sm">
+                                                            {typeof order.payer.address === 'object' && order.payer.address !== null ? (
+                                                                <>
+                                                                    <p><strong>Dirección:</strong> {(order.payer.address as any).street} {(order.payer.address as any).number}</p>
+                                                                    <p><strong>Ciudad:</strong> {(order.payer.address as any).city}, {(order.payer.address as any).state}</p>
+                                                                    <p><strong>CP:</strong> {(order.payer.address as any).zipCode}</p>
+                                                                </>
+                                                            ) : (
+                                                                <p><strong>Dirección Completa:</strong> {order.payer.address as string}</p>
+                                                            )}
+                                                            <p><strong>Teléfono:</strong> {order.payer.phone || 'No especificado'}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {/* Items */}
+                                                <div>
+                                                    <h3 className="font-black text-sm uppercase text-gray-400 mb-4">Productos</h3>
+                                                    <div className="space-y-3">
+                                                        {order.items.map((item: any, idx: number) => (
+                                                            <div key={idx} className="flex gap-4 bg-white p-3 rounded-xl border border-gray-100">
+                                                                <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                                                                    {item.image && (
+                                                                        <Image src={item.image} alt={item.name} fill className="object-cover" />
+                                                                    )}
+                                                                </div>
+                                                                <div>
+                                                                    <p className="font-bold text-sm text-gray-900">{item.name}</p>
+                                                                    <p className="text-xs text-gray-500">Cant: {item.quantity}</p>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )}
+                            </>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+}

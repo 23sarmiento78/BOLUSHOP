@@ -3,7 +3,7 @@ import { getSettings, saveSettings } from '@/lib/db';
 
 export async function GET() {
     try {
-        const settings = getSettings();
+        const settings = await getSettings();
         return NextResponse.json({ settings });
     } catch (error) {
         return NextResponse.json({ error: 'Internal Error' }, { status: 500 });
@@ -13,7 +13,7 @@ export async function GET() {
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const success = saveSettings(body);
+        const success = await saveSettings(body);
         if (success) {
             return NextResponse.json({ success: true });
         }

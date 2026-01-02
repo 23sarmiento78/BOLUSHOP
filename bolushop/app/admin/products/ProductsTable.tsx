@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Product } from "@/lib/db";
-import { deleteProductAction, updateProductAction, deleteAllProductsAction, deleteMultipleProductsAction, createProductAction } from "@/app/actions/admin";
+import { Product, Category } from "@/lib/types";
+import { deleteProductAction, updateProductAction, deleteAllProductsAction, deleteMultipleProductsAction, createProductAction, bulkUpdatePricesAction, uploadImageAction, getCategoriesAction } from "@/app/actions/admin";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 interface Props {
     initialProducts: Product[];
@@ -18,7 +19,8 @@ const EMPTY_PRODUCT: Omit<Product, 'id' | 'createdAt'> = {
     description: "",
     features: [],
     stock: 99,
-    collections: []
+    collections: [],
+    isActive: true
 };
 
 export default function ProductsTable({ initialProducts }: Props) {
@@ -29,8 +31,19 @@ export default function ProductsTable({ initialProducts }: Props) {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("all");
     const [isSaving, setIsSaving] = useState(false);
+    const [dbCategories, setDbCategories] = useState<Category[]>([]);
+    const [isBulkPriceModalOpen, setIsBulkPriceModalOpen] = useState(false);
+    const [bulkPercentage, setBulkPercentage] = useState(0);
 
     const router = useRouter();
+
+    useEffect(() => {
+        const fetchCats = async () => {
+            const res = await getCategoriesAction() as any;
+            if (res) setDbCategories(res);
+        };
+        fetchCats();
+    }, []);
 
     const categories = useMemo(() => {
         const cats = new Set(initialProducts.map(p => p.category));
@@ -142,6 +155,22 @@ export default function ProductsTable({ initialProducts }: Props) {
         setSelectedIds(newSet);
     }
 
+    const handleBulkPriceUpdate = async () => {
+        if (!confirm(`¿Seguro que querés aplicar un aumento del ${bulkPercentage}% a los productos seleccionados?`)) return;
+        setIsSaving(true);
+        try {
+            const result = await bulkUpdatePricesAction(bulkPercentage, selectedCategory !== 'all' ? selectedCategory : undefined);
+            if (result.success) {
+                setIsBulkPriceModalOpen(false);
+                handleRefresh();
+            } else {
+                alert(result.error);
+            }
+        } finally {
+            setIsSaving(false);
+        }
+    }
+
     return (
         <div className="space-y-6">
             {/* Header / Actions Bar */}
@@ -150,12 +179,20 @@ export default function ProductsTable({ initialProducts }: Props) {
                     <h2 className="text-2xl font-black text-gray-900">Gestión de Productos</h2>
                     <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">{filteredProducts.length} productos en catálogo</p>
                 </div>
-                <button
-                    onClick={() => setIsCreating(true)}
-                    className="px-8 py-4 bg-primary text-white rounded-[1.5rem] font-black text-sm uppercase tracking-widest shadow-xl shadow-primary/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
-                >
-                    <span className="text-xl">+</span> Nuevo Producto
-                </button>
+                <div className="flex gap-4">
+                    <button
+                        onClick={() => setIsBulkPriceModalOpen(true)}
+                        className="px-6 py-4 bg-gray-900 text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest hover:scale-105 transition-all flex items-center gap-3"
+                    >
+                        📈 Ajuste Masivo
+                    </button>
+                    <button
+                        onClick={() => setIsCreating(true)}
+                        className="px-8 py-4 bg-primary text-white rounded-[1.5rem] font-black text-sm uppercase tracking-widest shadow-xl shadow-primary/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
+                    >
+                        <span className="text-xl">+</span> Nuevo Producto
+                    </button>
+                </div>
             </div>
 
             {/* Controls Bar */}
@@ -215,7 +252,7 @@ export default function ProductsTable({ initialProducts }: Props) {
                             <th className="px-4 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400">Producto</th>
                             <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400">Precio</th>
                             <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400">Stock</th>
-                            <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400">Categoría</th>
+                            <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400">Estado</th>
                             <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400 text-right">Acciones</th>
                         </tr>
                     </thead>
@@ -254,7 +291,12 @@ export default function ProductsTable({ initialProducts }: Props) {
                                     </div>
                                 </td>
                                 <td className="px-8 py-5">
-                                    <span className="px-3 py-1 bg-gray-100 text-gray-500 rounded-lg text-[10px] font-black uppercase tracking-widest">{product.category}</span>
+                                    <div className="flex items-center gap-2">
+                                        <span className={`w-3 h-3 rounded-full ${product.isActive !== false ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]' : 'bg-gray-300'}`}></span>
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">
+                                            {product.isActive !== false ? 'Activo' : 'Pausado'}
+                                        </span>
+                                    </div>
                                 </td>
                                 <td className="px-8 py-5">
                                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -295,6 +337,7 @@ export default function ProductsTable({ initialProducts }: Props) {
                     onClose={() => setIsCreating(false)}
                     onSubmit={handleCreateProduct}
                     isSaving={isSaving}
+                    dbCategories={dbCategories}
                 />
             )}
 
@@ -308,14 +351,50 @@ export default function ProductsTable({ initialProducts }: Props) {
                     onSubmit={handleSaveEdit}
                     isSaving={isSaving}
                     isEditing={true}
+                    dbCategories={dbCategories}
                 />
+            )}
+
+            {/* Bulk Price Modal */}
+            {isBulkPriceModalOpen && (
+                <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-[70] animate-in zoom-in duration-200">
+                    <div className="bg-white rounded-[2.5rem] shadow-2xl max-w-md w-full p-10 text-center">
+                        <div className="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-3xl flex items-center justify-center text-3xl mx-auto mb-6">📈</div>
+                        <h2 className="text-2xl font-black text-gray-900 mb-2">Ajuste Masivo de Precios</h2>
+                        <p className="text-gray-500 text-sm mb-8">Aplicar aumento porcentual a {selectedCategory === 'all' ? 'todos los productos' : `categoría ${selectedCategory}`}.</p>
+
+                        <div className="mb-8">
+                            <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Porcentaje de aumento (%)</label>
+                            <div className="relative">
+                                <input
+                                    type="number"
+                                    value={bulkPercentage}
+                                    onChange={(e) => setBulkPercentage(Number(e.target.value))}
+                                    className="w-full px-6 py-5 rounded-2xl bg-gray-50 border-none focus:ring-4 focus:ring-emerald-100 font-black text-3xl text-center text-emerald-600"
+                                />
+                                <span className="absolute right-6 top-1/2 -translate-y-1/2 text-2xl font-black text-emerald-200">%</span>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-4">
+                            <button onClick={() => setIsBulkPriceModalOpen(false)} className="flex-1 py-4 font-black text-xs uppercase tracking-widest text-gray-400">Cancelar</button>
+                            <button
+                                onClick={handleBulkPriceUpdate}
+                                disabled={isSaving}
+                                className="flex-[2] py-4 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-emerald-200 hover:scale-105 transition-all"
+                            >
+                                {isSaving ? 'Procesando...' : 'Aplicar Aumento'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );
 }
 
 // Reusable Modal Component
-function ProductFormModal({ title, product, setProduct, onClose, onSubmit, isSaving, isEditing = false }: any) {
+function ProductFormModal({ title, product, setProduct, onClose, onSubmit, isSaving, isEditing = false, dbCategories = [] }: any) {
     return (
         <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-[60] animate-in fade-in duration-300">
             <div className="bg-white rounded-[3rem] shadow-2xl max-w-5xl w-full max-h-[95vh] overflow-hidden flex flex-col md:flex-row">
@@ -343,9 +422,9 @@ function ProductFormModal({ title, product, setProduct, onClose, onSubmit, isSav
                             const formData = new FormData();
                             formData.append('file', file);
                             try {
-                                const res = await fetch('/api/upload', { method: 'POST', body: formData });
-                                const data = await res.json();
-                                if (data.success) setProduct({ ...product, image: data.url });
+                                const result = await uploadImageAction(formData);
+                                if (result.success) setProduct({ ...product, image: result.url });
+                                else alert(result.error);
                             } catch (err) { alert('Error al subir imagen'); }
                         }}
                         className="hidden"
@@ -404,12 +483,34 @@ function ProductFormModal({ title, product, setProduct, onClose, onSubmit, isSav
                             </div>
                             <div>
                                 <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 px-1">Categoría</label>
-                                <input
+                                <select
                                     required
                                     value={product.category}
-                                    onChange={(e) => setProduct({ ...product, category: e.target.value })}
+                                    onChange={(e) => {
+                                        const cat = dbCategories?.find((c: any) => c.name === e.target.value);
+                                        setProduct({ ...product, category: e.target.value, categoryId: cat?.id });
+                                    }}
                                     className="w-full px-5 py-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20 font-bold text-gray-900"
-                                />
+                                >
+                                    <option value="">Seleccionar Categoría</option>
+                                    <option value="Varios">Varios</option>
+                                    {dbCategories?.map((cat: any) => (
+                                        <option key={cat.id} value={cat.name}>{cat.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="md:col-span-2 flex items-center justify-between bg-gray-50 p-6 rounded-2xl">
+                                <div>
+                                    <div className="text-sm font-black text-gray-900">Producto Activo</div>
+                                    <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">¿Mostrar en la tienda?</div>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => setProduct({ ...product, isActive: !product.isActive })}
+                                    className={`w-14 h-8 rounded-full p-1 transition-colors ${product.isActive !== false ? 'bg-primary' : 'bg-gray-200'}`}
+                                >
+                                    <div className={`w-6 h-6 bg-white rounded-full shadow-sm transition-transform ${product.isActive !== false ? 'translate-x-6' : 'translate-x-0'}`} />
+                                </button>
                             </div>
                         </div>
 

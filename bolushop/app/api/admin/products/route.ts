@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
-import { saveProducts, Product } from '@/lib/db';
+import { saveProducts } from '@/lib/db';
+import { Product } from '@/lib/types';
 import { v4 as uuidv4 } from 'uuid';
 
 export async function POST(req: NextRequest) {
@@ -64,7 +65,7 @@ export async function POST(req: NextRequest) {
         mappedProducts = mappedProducts.filter(p => p.name && p.name !== 'Sin Nombre' && p.price > 0);
 
         if (mappedProducts.length > 0) {
-            saveProducts(mappedProducts);
+            await saveProducts(mappedProducts);
             // Revalidate cache to update UI immediately
             revalidatePath('/');
             revalidatePath('/admin');

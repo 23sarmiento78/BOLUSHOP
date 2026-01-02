@@ -8,56 +8,20 @@ const PRODUCTS_FILE = path.join(DATA_DIR, 'products.json');
 const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
 const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');
 const COLLECTIONS_FILE = path.join(DATA_DIR, 'collections.json');
+const CATEGORIES_FILE = path.join(DATA_DIR, 'categories.json');
 
-export interface Collection {
-    id: string;
-    name: string;
-    slug: string;
-    description: string;
-    image?: string;
-}
-
-// Types
-export interface Product {
-    id: string;
-    name: string;
-    slug: string;
-    price: number;
-    image: string;
-    category: string;
-    description: string;
-    features: string[];
-    stock: number;         // New field
-    collections?: string[]; // New field
-    createdAt: string;     // New field for sorting
-}
-
-export interface Order {
-    id: string;
-    date: string;
-    status: 'pending' | 'paid' | 'shipped' | 'cancelled';
-    items: (Product & { quantity: number })[];
-    total: number;
-    payer: {
-        email: string;
-        name: string;
-        address: string;
-        phone: string;
-    };
-    paymentId?: string;
-}
-
-export interface Settings {
-    profitMargin: number;
-    shippingCost: number;
-    siteName: string;
-    siteDescription: string;
-    whatsappNumber: string;
-}
+import { Category, Collection, Product, Order, Settings } from './types';
 
 const DEFAULT_SETTINGS: Settings = {
     profitMargin: 1.05,
     shippingCost: 5000,
+    shippingJson: {
+        caba: 3000,
+        gba1: 5000,
+        gba2: 5500,
+        gba3: 8500,
+        rest: 9000
+    },
     siteName: "BoluShop",
     siteDescription: "Tu Marketplace Premium en Argentina. Calidad, confianza y envíos rápidos a todo el país.",
     whatsappNumber: "5491122334455"
@@ -102,25 +66,123 @@ function writeJson(file: string, data: any): boolean {
 }
 
 // Settings API
-export function getSettings(): Settings {
-    return readJson<Settings>(SETTINGS_FILE, DEFAULT_SETTINGS);
+export async function getSettings(): Promise<Settings> {
+    const localSettings = readJson<Settings>(SETTINGS_FILE, DEFAULT_SETTINGS);
+    try {
+        const { data, error } = await supabase
+            .from('settings')
+            .select('*')
+            .eq('id', 1)
+            .single();
+
+        if (data) {
+            return {
+                profitMargin: data.profit_margin,
+                shippingCost: data.shipping_cost,
+                shippingJson: data.shipping_json || DEFAULT_SETTINGS.shippingJson,
+                siteName: data.site_name,
+                siteDescription: data.site_description,
+                whatsappNumber: data.whatsapp_number
+            };
+        }
+    } catch (e) {
+        console.warn("⚠️ Supabase Settings Fetch Error:", e);
+    }
+    return localSettings;
 }
 
-export function saveSettings(settings: Settings): boolean {
-    return writeJson(SETTINGS_FILE, settings);
+export async function saveSettings(settings: Settings): Promise<boolean> {
+    const success = writeJson(SETTINGS_FILE, settings);
+    try {
+        const { error } = await supabase
+            .from('settings')
+            .upsert({
+                id: 1,
+                profit_margin: settings.profitMargin,
+                shipping_cost: settings.shippingCost,
+                shipping_json: settings.shippingJson,
+                site_name: settings.siteName,
+                site_description: settings.siteDescription,
+                whatsapp_number: settings.whatsappNumber,
+                updated_at: new Date().toISOString()
+            });
+        if (error) console.error("❌ Supabase Settings Sync Error:", error);
+    } catch (e) {
+        console.error("❌ Supabase Settings Sync Error:", e);
+    }
+    return success;
 }
 
 // Products API
-export function getAllProducts(): Product[] {
-    return readJson<Product[]>(PRODUCTS_FILE, []);
+export async function getAllProducts(): Promise<Product[]> {
+    const localProducts = readJson<Product[]>(PRODUCTS_FILE, []);
+    try {
+        const { data, error } = await supabase
+            .from('products')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (data && data.length > 0) {
+            const supabaseProducts = data.map(p => ({
+                id: p.id,
+                name: p.name,
+                slug: p.slug,
+                price: p.price,
+                image: p.image,
+                category: p.category,
+                categoryId: p.category_id,
+                description: p.description,
+                features: p.features || [],
+                stock: p.stock,
+                collections: p.collections || [],
+                createdAt: p.created_at,
+                isActive: p.is_active ?? true
+            }));
+
+            // Merge: Supabase takes precedence
+            const productsMap = new Map<string, Product>();
+            localProducts.forEach(p => productsMap.set(p.id, p));
+            supabaseProducts.forEach(p => productsMap.set(p.id, p));
+            return Array.from(productsMap.values()).sort((a, b) =>
+                new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            );
+        }
+    } catch (e) {
+        console.error("❌ Supabase Products Fetch Error:", e);
+    }
+    return localProducts;
 }
 
-export function saveProducts(products: Product[]): boolean {
-    return writeJson(PRODUCTS_FILE, products);
+export async function saveProducts(products: Product[]): Promise<boolean> {
+    const success = writeJson(PRODUCTS_FILE, products);
+    // Sync to Supabase - caution: this overwrites/upserts multiple
+    try {
+        const toUpsert = products.map(p => ({
+            id: p.id,
+            name: p.name,
+            slug: p.slug,
+            price: p.price,
+            image: p.image,
+            category: p.category,
+            category_id: p.categoryId,
+            description: p.description,
+            features: p.features,
+            stock: p.stock,
+            collections: p.collections,
+            created_at: p.createdAt,
+            is_active: p.isActive ?? true
+        }));
+
+        const { error } = await supabase.from('products').upsert(toUpsert);
+        if (error) console.error("❌ Supabase Products Sync Error:", error);
+    } catch (e) {
+        console.error("❌ Supabase Products Sync Error:", e);
+    }
+    return success;
 }
 
-export function getProductBySlug(slug: string): Product | undefined {
-    const products = getAllProducts();
+export async function getProductBySlug(slug: string): Promise<Product | undefined> {
+    const products = await getAllProducts();
     return products.find(p => p.slug === slug);
 }
 
@@ -176,9 +238,9 @@ export async function createOrder(order: Order) {
     writeJson(ORDERS_FILE, orders);
 
     // Auto Subtract Stock
-    order.items.forEach(item => {
-        subtractStock(item.id, item.quantity || 1);
-    });
+    for (const item of order.items) {
+        await subtractStock(item.id, item.quantity || 1);
+    }
 
     // Sync to Supabase
     try {
@@ -242,29 +304,22 @@ export async function updateOrder(id: string, updates: Partial<Order>) {
 
         // Sync to Supabase
         try {
-            // Try updating by external_id FIRST
-            const { error: errorExt } = await supabase
+            // Try update with OR filter to catch either external_id or native id
+            const { error: syncError } = await supabase
                 .from('orders')
                 .update({
                     status: updates.status,
                     payment_id: updates.paymentId
                 })
-                .eq('external_id', id);
+                .or(`external_id.eq.${id},id.eq.${id}`);
 
-            if (errorExt) {
-                // FALLBACK: Try updating by the native record ID
-                await supabase
-                    .from('orders')
-                    .update({
-                        status: updates.status,
-                        payment_id: updates.paymentId
-                    })
-                    .eq('id', id);
+            if (syncError) {
+                console.error("❌ Supabase Sync Error (Update):", syncError);
+            } else {
+                console.log(`✅ Supabase updated for order ${id}`);
             }
-
-            console.log(`✅ Supabase updated for order ${id}`);
         } catch (e) {
-            console.warn("⚠️ Supabase Sync Error (Update):", e);
+            console.warn("⚠️ Supabase Sync Error (Catch):", e);
         }
 
         return orders[index];
@@ -272,22 +327,115 @@ export async function updateOrder(id: string, updates: Partial<Order>) {
     return null;
 }
 
-export function subtractStock(productId: string, quantity: number) {
-    const products = getAllProducts();
+export async function subtractStock(productId: string, quantity: number) {
+    const products = await getAllProducts();
     const index = products.findIndex(p => p.id === productId);
     if (index !== -1) {
         products[index].stock = Math.max(0, (products[index].stock || 0) - quantity);
-        saveProducts(products);
+        await saveProducts(products);
         return true;
     }
     return false;
 }
 
 // Collections API
-export function getAllCollections(): Collection[] {
-    return readJson<Collection[]>(COLLECTIONS_FILE, []);
+export async function getAllCollections(): Promise<Collection[]> {
+    const localCollections = readJson<Collection[]>(COLLECTIONS_FILE, []);
+    try {
+        const { data, error } = await supabase
+            .from('collections')
+            .select('*')
+            .order('name', { ascending: true });
+
+        if (data && data.length > 0) {
+            const supabaseCollections = data.map(c => ({
+                id: c.id,
+                name: c.name,
+                slug: c.slug,
+                description: c.description,
+                image: c.image,
+                discountType: c.discount_type,
+                discountValue: c.discount_value,
+                isFeatured: c.is_featured,
+                productIds: c.product_ids || []
+            }));
+
+            const collectionsMap = new Map<string, Collection>();
+            localCollections.forEach(c => collectionsMap.set(c.id, c));
+            supabaseCollections.forEach(c => collectionsMap.set(c.id, c));
+            return Array.from(collectionsMap.values());
+        }
+    } catch (e) {
+        console.error("❌ Supabase Collections Fetch Error:", e);
+    }
+    return localCollections;
 }
 
-export function saveCollections(collections: Collection[]): boolean {
-    return writeJson(COLLECTIONS_FILE, collections);
+export async function saveCollections(collections: Collection[]): Promise<boolean> {
+    const success = writeJson(COLLECTIONS_FILE, collections);
+    try {
+        const toUpsert = collections.map(c => ({
+            id: c.id,
+            name: c.name,
+            slug: c.slug,
+            description: c.description,
+            image: c.image,
+            discount_type: c.discountType || 'none',
+            discount_value: c.discountValue || 0,
+            is_featured: c.isFeatured || false,
+            product_ids: c.productIds || []
+        }));
+
+        const { error } = await supabase.from('collections').upsert(toUpsert);
+        if (error) console.error("❌ Supabase Collections Sync Error:", error);
+    } catch (e) {
+        console.error("❌ Supabase Collections Sync Error:", e);
+    }
+    return success;
+}
+
+// Categories API
+export async function getAllCategories(): Promise<Category[]> {
+    const localCategories = readJson<Category[]>(CATEGORIES_FILE, []);
+    try {
+        const { data, error } = await supabase
+            .from('categories')
+            .select('*')
+            .order('name', { ascending: true });
+
+        if (data && data.length > 0) {
+            const supabaseCategories = data.map(c => ({
+                id: c.id,
+                name: c.name,
+                slug: c.slug,
+                description: c.description
+            }));
+
+            const categoriesMap = new Map<string, Category>();
+            localCategories.forEach(c => categoriesMap.set(c.id, c));
+            supabaseCategories.forEach(c => categoriesMap.set(c.id, c));
+            return Array.from(categoriesMap.values());
+        }
+    } catch (e) {
+        console.error("❌ Supabase Categories Fetch Error:", e);
+    }
+    return localCategories;
+}
+
+export async function saveCategories(categories: Category[]): Promise<boolean> {
+    const success = writeJson(CATEGORIES_FILE, categories);
+    try {
+        const toUpsert = categories.map(c => ({
+            id: c.id,
+            name: c.name,
+            slug: c.slug,
+            description: c.description
+        }));
+
+        const { error } = await supabase.from('categories').upsert(toUpsert);
+        if (error) console.error("❌ Supabase Categories Sync Error:", error);
+    } catch (e) {
+        console.error("❌ Supabase Categories Sync Error:", e);
+    }
+    return success;
 }
