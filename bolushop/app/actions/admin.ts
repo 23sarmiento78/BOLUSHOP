@@ -116,7 +116,7 @@ export async function importProductsAction(rawProducts: any[], source: string) {
                 }
                 if (isNaN(price)) price = 0;
 
-                const MIN_BASE_PRICE = 15000;
+                const MIN_BASE_PRICE = 100;
                 let features = [];
 
                 if (price > 0) {
