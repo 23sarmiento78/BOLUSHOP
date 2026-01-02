@@ -19,7 +19,7 @@ function ExitoContent() {
 
     const isPending = status === 'pending';
     const whatsappMessage = `Hola! Acabo de realizar una compra. Mi número de orden es: ${orderId}. Estado: ${isPending ? 'Pendiente de revisión' : 'Aprobada'}`;
-    const whatsappLink = `https://wa.me/5491122334455?text=${encodeURIComponent(whatsappMessage)}`;
+    const whatsappLink = `https://wa.me/3541237972?text=${encodeURIComponent(whatsappMessage)}`;
 
     return (
         <>
