@@ -76,12 +76,15 @@ export default function CheckoutPage() {
 
     const processPayment = async (param: any) => {
         console.log("🎁 Payment Brick Params:", param);
+        const deviceId = (window as any).MP_DEVICE_SESSION_ID;
+
         try {
             const response = await fetch('/api/process_payment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     ...param,
+                    deviceId,
                     metadata: {
                         items: cart,
                         payer: formData
@@ -95,6 +98,8 @@ export default function CheckoutPage() {
                 router.push(`/exito?order_id=${data.orderId}`);
             } else if (data.status === 'in_process' || data.status === 'pending') {
                 router.push(`/exito?order_id=${data.orderId}&status=pending`);
+            } else if (data.status === 'rejected') {
+                router.push(`/rechazado?status_detail=${data.status_detail || ''}`);
             } else {
                 const errorMsg = data.details || data.error || 'Error al procesar el pago';
                 alert(`Error: ${errorMsg}`);

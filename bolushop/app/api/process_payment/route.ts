@@ -4,7 +4,9 @@ import { createOrder } from '@/lib/db';
 import { Order } from '@/lib/types';
 import { v4 as uuidv4 } from 'uuid';
 
-const client = new MercadoPagoConfig({ accessToken: process.env.MP_BRICKS_ACCESS_TOKEN || process.env.MP_ACCESS_TOKEN || '' });
+const client = new MercadoPagoConfig({
+    accessToken: process.env.MP_BRICKS_ACCESS_TOKEN || process.env.MP_ACCESS_TOKEN || ''
+});
 
 export async function POST(req: NextRequest) {
     try {
@@ -22,7 +24,7 @@ export async function POST(req: NextRequest) {
             issuer_id
         } = paymentInfo;
 
-        const { metadata } = body;
+        const { metadata, deviceId } = body;
 
         console.log("💳 Processing integrated payment...", {
             transaction_amount,
@@ -40,8 +42,6 @@ export async function POST(req: NextRequest) {
 
         const payment = new Payment(client);
         const orderId = uuidv4();
-
-        // Anti-fraud: Idempotency Key
         const idempotencyKey = uuidv4();
 
         // Extract Payer Details for Anti-fraud
@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
                     number: fullPayer.phone?.replace(/\D/g, '') || '1100000000',
                 },
                 address: {
-                    zip_code: fullPayer.zip_code || '1000',
+                    zip_code: fullPayer.zipCode || fullPayer.zip_code || '1000',
                     street_name: fullPayer.address || 'N/A',
                     street_number: '0',
                 },
@@ -107,10 +107,17 @@ export async function POST(req: NextRequest) {
                         number: fullPayer.phone?.replace(/\D/g, '') || '1100000000',
                     },
                     address: {
-                        zip_code: fullPayer.zip_code || '1000',
+                        zip_code: fullPayer.zipCode || fullPayer.zip_code || '1000',
                         street_name: fullPayer.address || 'N/A',
                         street_number: '0',
                     },
+                },
+                shipments: {
+                    receiver_address: {
+                        zip_code: fullPayer.zipCode || fullPayer.zip_code || '1000',
+                        street_name: fullPayer.address || 'N/A',
+                        street_number: 0,
+                    }
                 },
                 ip_address: userIp,
             },
@@ -119,6 +126,7 @@ export async function POST(req: NextRequest) {
             metadata: {
                 ...metadata,
                 user_ip: userIp,
+                device_id: deviceId
             },
         };
 
@@ -126,52 +134,58 @@ export async function POST(req: NextRequest) {
         try {
             result = await payment.create({
                 body: paymentData,
-                requestOptions: { idempotencyKey }
+                requestOptions: {
+                    idempotencyKey,
+                    ...(deviceId ? { 'X-Meli-Session-Id': deviceId } : {})
+                }
             });
         } catch (mpError: any) {
             console.error('❌ Mercado Pago API Error:', JSON.stringify(mpError, null, 2));
             return NextResponse.json(
                 {
                     error: 'Error de Mercado Pago',
-                    details: mpError.message || 'Error desconocido en la API',
-                    cause: mpError.cause || mpError
+                    details: mpError.message || 'Error desconocido',
+                    cause: mpError.cause
                 },
                 { status: 400 }
             );
         }
 
-        console.log("✅ Payment result:", { id: result.id, status: result.status, status_detail: result.status_detail });
+        console.log("✅ Payment result:", {
+            id: result.id,
+            status: result.status,
+            status_detail: result.status_detail
+        });
 
-        // Save order if payment is progressing or completed
-        // Statuses: approved, in_process, pending, rejected, cancelled, etc.
-        if (result.status === 'approved' || result.status === 'in_process' || result.status === 'pending') {
-            const order: Order = {
+        // Save order to our database if not rejected
+        if (result.status !== 'rejected') {
+            const orderData: Order = {
                 id: orderId,
                 date: new Date().toISOString(),
                 status: result.status === 'approved' ? 'paid' : 'pending',
                 items: metadata?.items || [],
-                total: transaction_amount,
+                total: Number(transaction_amount || body.transaction_amount),
                 payer: {
-                    name: `${metadata?.payer?.name || 'Cliente'}`,
+                    name: fullPayer.name || 'Cliente',
                     email: payer.email,
-                    address: metadata?.payer?.address || 'N/A',
-                    phone: metadata?.payer?.phone || 'N/A',
+                    address: fullPayer.address || 'N/A',
+                    phone: fullPayer.phone || 'N/A'
                 },
-                paymentId: String(result.id)
+                paymentId: result.id?.toString()
             };
 
-            await createOrder(order);
+            await createOrder(orderData);
             console.log("💾 Order created successfully:", orderId);
         }
 
         return NextResponse.json({
-            id: result.id,
             status: result.status,
             status_detail: result.status_detail,
-            orderId: orderId,
+            orderId,
+            paymentId: result.id
         });
 
-    } catch (error) {
+    } catch (error: any) {
         console.error('💥 Payment Process Error:', error);
         return NextResponse.json(
             { error: 'Error processing payment', details: String(error) },

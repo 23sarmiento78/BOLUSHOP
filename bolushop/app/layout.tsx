@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
+import Script from "next/script";
 import { getSettings } from "@/lib/db";
 import "./globals.css";
 
@@ -100,7 +101,10 @@ export default async function RootLayout({
         <main className="flex-grow">
           {children}
         </main>
-        <Toaster position="top-center" richColors />
+        <Script
+          src="https://www.mercadopago.com/v2/security.js"
+          {...({ view: "checkout" } as any)}
+        />
       </body>
     </html>
   );

@@ -10,33 +10,42 @@ import { clearCart } from "@/lib/cart";
 function ExitoContent() {
     const searchParams = useSearchParams();
     const orderId = searchParams.get('order_id');
+    const status = searchParams.get('status'); // 'pending' or undefined (approved)
 
     useEffect(() => {
         // Clear cart after successful purchase
         clearCart();
     }, []);
 
-    const whatsappMessage = `Hola! Acabo de realizar una compra. Mi número de orden es: ${orderId}`;
+    const isPending = status === 'pending';
+    const whatsappMessage = `Hola! Acabo de realizar una compra. Mi número de orden es: ${orderId}. Estado: ${isPending ? 'Pendiente de revisión' : 'Aprobada'}`;
     const whatsappLink = `https://wa.me/5491122334455?text=${encodeURIComponent(whatsappMessage)}`;
 
     return (
         <>
             <Header />
 
-            <main className="min-h-screen bg-gradient-to-b from-green-50 to-white flex items-center justify-center px-4 py-12">
+            <main className={`min-h-screen bg-gradient-to-b ${isPending ? 'from-amber-50' : 'from-green-50'} to-white flex items-center justify-center px-4 py-12`}>
                 <div className="max-w-2xl w-full text-center">
                     <div className="bg-white rounded-[3rem] p-12 shadow-2xl">
-                        {/* Success Icon */}
-                        <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce">
-                            <span className="text-5xl text-white">✓</span>
+                        {/* Icon */}
+                        <div className={`w-24 h-24 ${isPending ? 'bg-amber-500' : 'bg-green-500'} rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce`}>
+                            <span className="text-5xl text-white">{isPending ? '⏳' : '✓'}</span>
                         </div>
 
                         <h1 className="text-5xl font-black text-gray-900 mb-4">
-                            ¡Compra <span className="text-green-500 italic">Exitosa</span>!
+                            {isPending ? (
+                                <>Pago en <span className="text-amber-500 italic">Revisión</span></>
+                            ) : (
+                                <>¡Compra <span className="text-green-500 italic">Exitosa</span>!</>
+                            )}
                         </h1>
 
                         <p className="text-xl text-gray-600 mb-8">
-                            Gracias por tu compra. Recibirás un email con los detalles de tu pedido.
+                            {isPending
+                                ? "Mercado Pago está procesando tu pago. Te avisaremos cuando se confirme."
+                                : "Gracias por tu compra. Recibirás un email con los detalles de tu pedido."
+                            }
                         </p>
 
                         {orderId && (
