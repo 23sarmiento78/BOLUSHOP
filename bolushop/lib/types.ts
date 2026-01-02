@@ -36,7 +36,7 @@ export interface Product {
 export interface Order {
     id: string;
     date: string;
-    status: 'pending' | 'paid' | 'shipped' | 'cancelled';
+    status: 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
     items: (Product & { quantity: number })[];
     total: number;
     payer: {
