@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { ShoppingCart, Search, Menu, X, Package } from "lucide-react";
 import { getCart } from "@/lib/cart";
 
@@ -13,6 +13,9 @@ export default function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const router = useRouter();
+    const pathname = usePathname();
+    const isHome = pathname === "/";
+
 
     useEffect(() => {
         const handleScroll = () => {
@@ -64,7 +67,7 @@ export default function Header() {
                                     className="object-cover group-hover:scale-110 transition-transform duration-500"
                                 />
                             </div>
-                            <span className={`font-black text-2xl tracking-tighter transition-colors ${isScrolled ? 'text-gray-900' : 'text-white'
+                            <span className={`font-black text-2xl tracking-tighter transition-colors ${isScrolled || !isHome ? 'text-gray-900' : 'text-white'
                                 }`}>
                                 Bolu<span className="text-primary italic">Shop</span>
                             </span>
@@ -72,7 +75,10 @@ export default function Header() {
                     </Link>
 
                     {/* Desktop Navigation & Search */}
-                    <div className="hidden md:flex items-center gap-8 bg-white/10 backdrop-blur-sm rounded-full px-6 py-2 border border-white/20">
+                    <div className={`hidden md:flex items-center gap-8 rounded-full px-6 py-2 border transition-all duration-300 ${isScrolled || !isHome
+                        ? "bg-white/50 backdrop-blur-md border-gray-200/50"
+                        : "bg-white/10 backdrop-blur-sm border-white/20"
+                        }`}>
                         <nav className="flex gap-6">
                             {[
                                 { label: 'Inicio', href: '/' },
@@ -82,7 +88,7 @@ export default function Header() {
                                 <Link
                                     key={link.href}
                                     href={link.href}
-                                    className={`text-sm font-bold uppercase tracking-wide hover:text-primary transition-colors ${isScrolled ? 'text-gray-600' : 'text-gray-200'
+                                    className={`text-sm font-bold uppercase tracking-wide hover:text-primary transition-colors ${isScrolled || !isHome ? 'text-gray-800' : 'text-gray-200'
                                         }`}
                                 >
                                     {link.label}
@@ -90,7 +96,7 @@ export default function Header() {
                             ))}
                         </nav>
 
-                        <div className="h-4 w-px bg-gray-300/30" />
+                        <div className={`h-4 w-px ${isScrolled || !isHome ? 'bg-gray-300' : 'bg-gray-300/30'}`} />
 
                         {/* Search */}
                         <form onSubmit={handleSearch} className="relative group">
@@ -99,7 +105,7 @@ export default function Header() {
                                 placeholder="Buscar..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className={`bg-transparent outline-none text-sm w-24 focus:w-48 transition-all duration-300 placeholder:text-gray-400 ${isScrolled ? 'text-gray-900' : 'text-white'
+                                className={`bg-transparent outline-none text-sm w-24 focus:w-48 transition-all duration-300 placeholder:text-gray-400 ${isScrolled || !isHome ? 'text-gray-900' : 'text-white'
                                     }`}
                             />
                             <button type="submit" className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-primary transition-colors">
@@ -112,7 +118,7 @@ export default function Header() {
                     <div className="flex items-center gap-4">
                         <Link href="/carrito" className="relative group p-2">
                             <ShoppingCart
-                                className={`w-6 h-6 transition-colors ${isScrolled ? 'text-gray-900' : 'text-white group-hover:text-primary'
+                                className={`w-6 h-6 transition-colors ${isScrolled || !isHome ? 'text-gray-900' : 'text-white group-hover:text-primary'
                                     }`}
                             />
                             {cartCount > 0 && (
@@ -125,13 +131,14 @@ export default function Header() {
                         {/* Mobile Menu Toggle */}
                         <button
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            className="md:hidden p-2 text-white"
+                            className={`md:hidden p-2 transition-colors ${isScrolled || !isHome ? 'text-gray-900' : 'text-white'}`}
                         >
                             {isMobileMenuOpen
-                                ? <X className={isScrolled ? 'text-gray-900' : 'text-white'} />
-                                : <Menu className={isScrolled ? 'text-gray-900' : 'text-white'} />
+                                ? <X />
+                                : <Menu />
                             }
                         </button>
+
                     </div>
                 </div>
             </div>

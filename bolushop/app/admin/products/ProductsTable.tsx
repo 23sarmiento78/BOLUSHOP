@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Product, Category } from "@/lib/types";
-import { deleteProductAction, updateProductAction, deleteAllProductsAction, deleteMultipleProductsAction, createProductAction, bulkUpdatePricesAction, uploadImageAction, getCategoriesAction } from "@/app/actions/admin";
+import { deleteProductAction, updateProductAction, deleteAllProductsAction, deleteMultipleProductsAction, createProductAction, bulkUpdatePricesAction, uploadImageAction, getCategoriesAction, bulkUpdateCategoriesAction } from "@/app/actions/admin";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -33,7 +33,9 @@ export default function ProductsTable({ initialProducts }: Props) {
     const [isSaving, setIsSaving] = useState(false);
     const [dbCategories, setDbCategories] = useState<Category[]>([]);
     const [isBulkPriceModalOpen, setIsBulkPriceModalOpen] = useState(false);
+    const [isBulkCategoryModalOpen, setIsBulkCategoryModalOpen] = useState(false);
     const [bulkPercentage, setBulkPercentage] = useState(0);
+    const [bulkTargetCategory, setBulkTargetCategory] = useState<{ name: string, id: string }>({ name: "", id: "" });
 
     const router = useRouter();
 
@@ -171,6 +173,25 @@ export default function ProductsTable({ initialProducts }: Props) {
         }
     }
 
+    const handleBulkCategoryUpdate = async () => {
+        if (!bulkTargetCategory.name) return;
+        if (!confirm(`¿Seguro que querés mover ${selectedIds.size} productos a la categoría "${bulkTargetCategory.name}"?`)) return;
+
+        setIsSaving(true);
+        try {
+            const result = await bulkUpdateCategoriesAction(Array.from(selectedIds), bulkTargetCategory.name, bulkTargetCategory.id);
+            if (result.success) {
+                setIsBulkCategoryModalOpen(false);
+                setSelectedIds(new Set());
+                handleRefresh();
+            } else {
+                alert(result.error);
+            }
+        } finally {
+            setIsSaving(false);
+        }
+    }
+
     return (
         <div className="space-y-6">
             {/* Header / Actions Bar */}
@@ -219,20 +240,28 @@ export default function ProductsTable({ initialProducts }: Props) {
                 </select>
 
                 <div className="flex gap-2 w-full md:w-auto">
+                    {selectedIds.size > 0 && (
+                        <>
+                            <button
+                                onClick={() => setIsBulkCategoryModalOpen(true)}
+                                className="flex-grow md:flex-none px-4 py-3 bg-blue-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-blue-200"
+                            >
+                                Re-Categorizar ({selectedIds.size})
+                            </button>
+                            <button
+                                onClick={handleDeleteSelected}
+                                className="flex-grow md:flex-none px-4 py-3 bg-red-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-red-200"
+                            >
+                                Eliminar ({selectedIds.size})
+                            </button>
+                        </>
+                    )}
                     <button
                         onClick={handleDeleteAll}
                         className="flex-grow md:flex-none px-4 py-3 bg-red-50 text-red-600 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all"
                     >
                         Borrar Todo
                     </button>
-                    {selectedIds.size > 0 && (
-                        <button
-                            onClick={handleDeleteSelected}
-                            className="flex-grow md:flex-none px-4 py-3 bg-red-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-red-200"
-                        >
-                            Eliminar ({selectedIds.size})
-                        </button>
-                    )}
                 </div>
             </div>
 
@@ -448,7 +477,48 @@ export default function ProductsTable({ initialProducts }: Props) {
                     </div>
                 </div>
             )}
-        </div>
+
+            {/* Bulk Category Modal */}
+            {isBulkCategoryModalOpen && (
+                <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-[70] animate-in zoom-in duration-200">
+                    <div className="bg-white rounded-[2.5rem] shadow-2xl max-w-md w-full p-10 text-center">
+                        <div className="w-20 h-20 bg-blue-50 text-blue-600 rounded-3xl flex items-center justify-center text-3xl mx-auto mb-6">🏷️</div>
+                        <h2 className="text-2xl font-black text-gray-900 mb-2">Asignar Categoría</h2>
+                        <p className="text-gray-500 text-sm mb-8">Mover {selectedIds.size} productos seleccionados a una nueva categoría.</p>
+
+                        <div className="mb-8">
+                            <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3 text-left px-1">Nueva Categoría</label>
+                            <select
+                                value={bulkTargetCategory.name}
+                                onChange={(e) => {
+                                    const cat = dbCategories.find(c => c.name === e.target.value);
+                                    if (cat) setBulkTargetCategory({ name: cat.name, id: cat.id });
+                                    else if (e.target.value === "Varios") setBulkTargetCategory({ name: "Varios", id: "varios" });
+                                }}
+                                className="w-full px-6 py-4 rounded-2xl bg-gray-100 border-none focus:ring-4 focus:ring-blue-100 font-bold text-gray-700"
+                            >
+                                <option value="">Seleccionar...</option>
+                                <option value="Varios">Varios</option>
+                                {dbCategories.map(cat => (
+                                    <option key={cat.id} value={cat.name}>{cat.name}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="flex gap-4">
+                            <button onClick={() => setIsBulkCategoryModalOpen(false)} className="flex-1 py-4 font-black text-xs uppercase tracking-widest text-gray-400">Cancelar</button>
+                            <button
+                                onClick={handleBulkCategoryUpdate}
+                                disabled={isSaving || !bulkTargetCategory.name}
+                                className="flex-[2] py-4 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-blue-200 hover:scale-105 transition-all disabled:opacity-50 disabled:hover:scale-100"
+                            >
+                                {isSaving ? 'Procesando...' : 'Aplicar Categoría'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div >
     );
 }
 

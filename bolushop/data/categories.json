@@ -1,1 +1,38 @@
-[]
+[
+    {
+        "id": "hogar",
+        "name": "Hogar",
+        "slug": "hogar",
+        "description": "Productos esenciales para el confort de tu casa."
+    },
+    {
+        "id": "organizacion",
+        "name": "Organización",
+        "slug": "organizacion",
+        "description": "Estanterías, percheros y carritos para mantener todo ordenado."
+    },
+    {
+        "id": "oficina",
+        "name": "Oficina",
+        "slug": "oficina",
+        "description": "Equipamiento ergonómico para tu espacio de trabajo."
+    },
+    {
+        "id": "bano",
+        "name": "Baño",
+        "slug": "bano",
+        "description": "Accesorios y complementos para un baño moderno."
+    },
+    {
+        "id": "limpieza",
+        "name": "Limpieza",
+        "slug": "limpieza",
+        "description": "Soluciones inteligentes para el aseo del hogar."
+    },
+    {
+        "id": "varios",
+        "name": "Varios",
+        "slug": "varios",
+        "description": "Otros productos útiles para tu día a día."
+    }
+]
