@@ -5,7 +5,7 @@
     "slug": "organizador-calzado-perchero-mediano-blanco",
     "price": 25308,
     "image": "/products/d700d819-788d-4f31-b21d-52373f14f2c4-Organizador-Calzado-Perchero-Mediano-BLANCO.png",
-    "category": "Varios",
+    "category": "Organización",
     "description": "Organizador Zapatos Perchero Metálico. 4 Estantes 7 Percheros. Medidas: Ancho 60Cm X 1,72Mt Alto X 26Cm Profundidad. Colores: Negro Y Blanco. Se Entrega Surtido",
     "features": [
       "Envío Gratis 🚚"
@@ -13,7 +13,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.220Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "organizacion"
   },
   {
     "id": "DL2035-BL",
@@ -21,7 +22,7 @@
     "slug": "organizador-calzado-perchero-grande-blanco",
     "price": 29138,
     "image": "/products/46eae8f8-f6bb-448b-87dd-1fdffb9b565c-Organizador-Calzado-Perchero-Mediano-BLANCO.png",
-    "category": "Varios",
+    "category": "Organización",
     "description": "Organizador Zapatos Perchero Metálico. 4 Estantes 7 Percheros. Medidas: Ancho 80Cm X 1,72Mt Alto X 26Cm Profundidad. Colores: Negro Y Blanco. Se Entrega Surtido",
     "features": [
       "Envío Gratis 🚚"
@@ -29,7 +30,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.221Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "organizacion"
   },
   {
     "id": "DL2034-NE",
@@ -53,7 +55,7 @@
     "slug": "organizador-calzado-perchero-grande-negro",
     "price": 29138,
     "image": "/products/0e1204c3-d8cb-4e51-8017-8589f64ccd87-Organizador-Calzado-Perchero-Grande-negro.jpg",
-    "category": "Varios",
+    "category": "Organización",
     "description": "Organizador Zapatos Perchero Metálico. 4 Estantes 7 Percheros. Medidas: Ancho 80Cm X 1,72Mt Alto X 26Cm Profundidad. Colores: Negro Y Blanco. Se Entrega Surtido",
     "features": [
       "Envío Gratis 🚚"
@@ -61,7 +63,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.221Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "organizacion"
   },
   {
     "id": "DL2018",
@@ -69,7 +72,7 @@
     "slug": "carrito-organizador-con-ruedas-y-4-estantes",
     "price": 46620,
     "image": "/products/1c2b1575-d4f2-4f94-8162-1dc207707fe7-Carrito-Organizador-con-Ruedas-y-4-Estantes.png",
-    "category": "Varios",
+    "category": "Organización",
     "description": "Estantería Carrito Con Rueda De 4 Estantes Para Organizar. Material Plástico Alto Impacto. Color Blanco.. Medidas: 95Cm X 54Cm X 12,5Cm",
     "features": [
       "Envío Gratis 🚚"
@@ -77,7 +80,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.221Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "organizacion"
   },
   {
     "id": "DL2017",
@@ -85,7 +89,7 @@
     "slug": "carrito-organizador-con-ruedas--y-3-estantes",
     "price": 36630,
     "image": "/products/334d3133-7b50-4dd4-8d7e-884ce8d2f793-Carrito-Organizador-con-Ruedas-y-3-Estantes.png",
-    "category": "Varios",
+    "category": "Organización",
     "description": "Estantería Carrito Con Rueda De 3 Estantes Para Organizar. Material Plastico Alto Impacto. Color Blanco.. Medidas: 70Cm X 54Cm X 12,5Cm",
     "features": [
       "Envío Gratis 🚚"
@@ -93,7 +97,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.221Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "organizacion"
   },
   {
     "id": "DL1203-2",
@@ -101,7 +106,7 @@
     "slug": "silla-de-oficina-ergonomica",
     "price": 107143,
     "image": "/products/6d680410-a2c3-43bd-b734-63e81d43d174-Silla-de-Oficina-Ergonómica.jpg",
-    "category": "Varios",
+    "category": "Oficina",
     "description": "Silla de oficina Ergonómica. Medidas: 107 x 64 cm. Color Negro",
     "features": [
       "Envío Gratis 🚚"
@@ -109,7 +114,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.221Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "oficina"
   },
   {
     "id": "DL1183-L",
@@ -117,7 +123,7 @@
     "slug": "puerta-para-mascotas-calidad-superior",
     "price": 56610,
     "image": "/products/67fbccb8-ed09-48c0-a12c-6eb20765b802-Puerta-Para-Mascotas-Calidad-Superior.jpg",
-    "category": "Varios",
+    "category": "Hogar",
     "description": "Puerta para mascotas calidad superior. Tamaño XL ( 25 x 23,5 x 5,3 cm ). Color: Blanco",
     "features": [
       "Envío Gratis 🚚"
@@ -125,7 +131,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.221Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "hogar"
   },
   {
     "id": "DL1255",
@@ -133,7 +140,7 @@
     "slug": "reflector-linterna-led",
     "price": 39377,
     "image": "/products/0cfccb46-110b-4057-a6d5-d27e339b9505-Reflector-Linterna-Led.jpg",
-    "category": "Varios",
+    "category": "Hogar",
     "description": "Reflector linterna led busca huella. Modelo W5119. Alta potencia - Incluye trípode. Recargable USB. Color negro",
     "features": [
       "Envío Gratis 🚚"
@@ -141,7 +148,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.221Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "hogar"
   },
   {
     "id": "DL1070",
@@ -149,7 +157,7 @@
     "slug": "cama-catre-plegable-185x68",
     "price": 181301,
     "image": "/products/161dc3c2-f923-4074-8387-bed0d81e04d0-Cama-Catre-Plegable-185x68.png",
-    "category": "Varios",
+    "category": "Hogar",
     "description": "Cama catre plegable hogar camping. Medidas: 185 x 68 cm. Material soporte: Acero inoxidable. Color gris",
     "features": [
       "Envío Gratis 🚚"
@@ -157,7 +165,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "hogar"
   },
   {
     "id": "DL1136GR",
@@ -197,7 +206,7 @@
     "slug": "silla-de-oficina-ergonomica-lumbar",
     "price": 72344,
     "image": "/products/6bbb4003-79ce-411d-8be8-2c4ea0e1d864-Silla-de-Oficina-Ergonómica-Lumbar.png",
-    "category": "Varios",
+    "category": "Oficina",
     "description": "Silla de oficina Ergonómica. Base cruceta plástico reforzado. Medidas: 100 x 50 cm. Color negro",
     "features": [
       "Envío Gratis 🚚"
@@ -205,7 +214,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "oficina"
   },
   {
     "id": "DL1203-4",
@@ -213,7 +223,7 @@
     "slug": "silla-ergonomica-de-oficina",
     "price": 122711,
     "image": "/products/730e7e94-a502-4985-be73-780abf3a3ab5-Silla-Ergonómica-de-Oficina.jpg",
-    "category": "Varios",
+    "category": "Oficina",
     "description": "Silla de oficina Ergonómica. Con soporte de cabeza. Medidas: 107 x 64 cm + soporte. Color Negro",
     "features": [
       "Envío Gratis 🚚"
@@ -221,7 +231,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "oficina"
   },
   {
     "id": "600131",
@@ -229,7 +240,7 @@
     "slug": "pistola-de-aire-comprimido-destapa-canerias",
     "price": 28805,
     "image": "https://droppers.com.ar/media/catalog/product/cache/180de48b51213f2b31b6fc04fceb91c7/6/0/600184_2_.jpg",
-    "category": "Varios",
+    "category": "Baño",
     "description": "Nueva Herramienta De Eliminación De Obstrucciones En Los Drenaje. Limpiador De Aire Comprimido. Ideal Aseos Baño Ducha De Baño Cocina Tubería Obstruida Bañera. La Destapadora De Presión Utiliza La Potencia Del Aire Comprimido A Alta Presión Para Eliminar Las Obstrucciones Más Difíciles De Forma Rápida Y Fácil. Se Llena Del Aire Comprimido Mediante Una Carga Manual Y Segura. Mucho Más Efectivo Que Las Sopapas Tradicionales. Múltiples Ocasiones: Adecuado Para Una Variedad De Ocasiones- Inodoro- Cocina- Lavabo- Rejilla. Ideal Para Todo Tipo De Tuberías. Puede Hacer Frente A Varios Bloqueos Causados Por Todo Tipo De Basura- Como Pelo- Tela- Té- Hojas- Grasa- Suciedad De Aceite- Etc..  Fácil De Usar Y Efectivo) El Desintegrador Utiliza La Potencia Del Aire Comprimido A Alta Presión Para Eliminar Las Obstrucciones Más Difíciles En Sus Drenajes En Solo Segundos. Simplemente Bombee La Desintegradora Y Apriete El Gatillo- La Obstrucción Se Elimina Instantáneamente. Mucho Más Rápido Que Los Émbolos Y Las Serpientes Tradicionales Y No Más Tiempo De Cintura En Los Abridores De Drenaje..  (Multifunción Puede Lidiar Con Diversos Bloqueos Causados Por Todo Tipo De Desperdicios Como Pelo- Tela- Té- Hojas- Grasa- Suciedad De Aceite- Etc.). Con Poder De Aire A Alta Presión- Limpia Los Desagües De Forma Rápida Y Sencilla. Perfecto Para Trabajos En Fregaderos- Bañeras Y Aseos..  (Calidad Duradera) ¡Vencer A Usar Químicos Dañinos Que Pueden Corroer Sus Tuberías O Poner En Peligro A Su Familia! Es Reutilizable Y Puede Durar Años Y Elimina Las Obstrucciones Sin Necesidad De Llamar Al Plomero- Lo Que Le Evita Tener Que Pagar Grandes Sumas De Dinero Por Un Plomero..  Amplio Rango De Uso Viene Con Accesorio Para Destapar Inodoro- Rejilla- Bachas- Bañeras - Etc. -.  Función Principal: Eliminar Obstrucciones En Las Cañerías.  Consejos: Simplemente Bombee Aire En Él- Inclínela Hacia El Inodoro En Estado Vertical- Presione El Botón De Aire Para Desatascar El Inodoro La Rejilla - La Bacha O El Fregadero..  Fácil De Conservar Y Limpiar: Fácil De Limpiar Sin Salpicaduras Y Perfecto Para Almacenar Con Un Diseño Compacto.",
     "features": [
       "Envío Gratis 🚚"
@@ -237,7 +248,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "bano"
   },
   {
     "id": "600116-1-VA",
@@ -245,7 +257,7 @@
     "slug": "balde-mopa-trapeador-centrifugo-con-ruedas-y-manija-premium-verde",
     "price": 44123,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/h/4/h4bccd774c9f4417b852ea81794946848d.jpg_960x960q75.jpg__2.png",
-    "category": "Varios",
+    "category": "Baño",
     "description": "Balde trapeador centrifugo con cuba giratoria de acero inoxidable. Posee ruedas y manija transportadora, tapón de desagote. Incluye 2 mopas lavables. Medidas: balde 45,5cm x 25,5cm x 21,5cm. Color: Blanco con verde",
     "features": [
       "Envío Gratis 🚚"
@@ -253,7 +265,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "bano"
   },
   {
     "id": "600047",
@@ -261,7 +274,7 @@
     "slug": "destapa-canerias-de-alta-presion",
     "price": 49950,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/d/i/dise_o_sin_t_tulo_16__1.jpg",
-    "category": "Varios",
+    "category": "Baño",
     "description": "Función principal: destapa cañeria por medio de inflación y el flujo de aire de alta presión.. Puede eliminar eficazmente los obstáculos en la tubería.. Consejo: simplemente conecte la bomba al dispositivo, bombee el aire en el dispositivo, incline en el inodoro en una posición vertical y presione el botón de aire para limpiar el inodoro o el fregadero.. Para una variedad de ocasiones: inodoros, sentadillas, cocinas, lavabos, lavabos. Adecuado para todo tipo de tuberías. Puede manejar una variedad de obstrucciones causadas por varios tipos de basura, como Cabello, tela, té, grasa, aceite, etc.. Diseño de alta presión: el eyector de drenaje utiliza la potencia del aire comprimido de alta presión para impactar rápida y fácilmente el bloqueo más fuerte. Está lleno de gas mediante una carga segura.. Más efectivo que los émbolos tradicionales.. Fácil de almacenar y limpiar: fácil de limpiar, sin salpicaduras, ideal para almacenamiento y diseño compacto. Es fácil dragar las tuberías en unos minutos, haciendo que el drenaje del fregadero sea más rápido.",
     "features": [
       "Envío Gratis 🚚"
@@ -269,7 +282,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "bano"
   },
   {
     "id": "550230",
@@ -277,7 +291,7 @@
     "slug": "filtro-para-pelos-ducha",
     "price": 1126,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/9/c/9cm_5_.jpg",
-    "category": "Varios",
+    "category": "Baño",
     "description": "Tapon de silicona atrapapelos para rejilla bañera. - previene drenajes de tina obstruidos: este protector de desague y recogedor de cabello tubshroom esta diseñado para atrapar sin esfuerzo cualquier tipo de cabello humano o de mascotas, evitando desagues obstruidos y costosas visitas al plomero, sin interrumpir el flujo de agua.. - sin receptor de drenajes: tubshroom cabe dentro del desague, recolectando y ocultando cuidadosamente el cabello a su alrededor, a diferencia de los antiesteticos tapones normales para atrapar el cabello que se colocan sobre el desague. Se adapta a desagues de bañera estandar de hasta 4.5cm de ancho.. Color: Gris. Medidas: 5.5cm x 5cm",
     "features": [
       "Envío Gratis 🚚"
@@ -285,7 +299,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "bano"
   },
   {
     "id": "600045",
@@ -301,7 +316,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "varios"
   },
   {
     "id": "DWH0255",
@@ -309,7 +325,7 @@
     "slug": "dispenser-de-jabon-liquido-oso-",
     "price": 17749,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/s/e/se1a2362678f9495ea6a5379b41caebf1x.jpg_640x640q90_1_.jpg",
-    "category": "Varios",
+    "category": "Baño",
     "description": "Bonita forma de oso: la botella con bomba de espuma está diseñada en la forma de un oso lindo, este dispensador de jabón para niños interesante y vívido, puede alentar a su bebé a lavarse las manos con burbujas cada vez, se puede utilizar como accesorios de baño para la decoración de la familia u hotel.. BOTELLA DE CHAMPÚ DE LOCIÓN: Este dispensador de jabón para niños utiliza un diseño de forma de oso 3D de moda, y los dispensadores de líquidos están hechos de material de polipropileno y pe premium, portátil y duradero, con una larga vida útil.. GRAN CAPACIDAD: Esta botella dispensadora de jabón espumosa reutilizable está diseñada con gran capacidad, ideal para champú, acondicionador, lavado facial, jabón líquido y gel de baño.. BOTELLA DISPENSADORA DE ESPUMA: Este dispensador de champú de jabón como un bonito juguete de dibujos animados de animales hace que su estado de ánimo sea hermoso para todo el día, pequeño en tamaño y ligero en peso, no ocupa espacio, fácil de transportar y usar.. Dispensador de jabón rellenable: esta botella de jabón con bomba adopta un diseño prensado y tiene un cabezal de bomba fuerte, conveniente para que llene varios líquidos, puede utilizar esta botella de bomba espumosa con confianza.. Capacidad en volumen: 250 mL. Material: Plástico. Tipos de productos compatibles: Jabón. Consistencias del producto: Líquido. Altura: x Largo x Ancho 18 cm x 0 cm x 8 cm. Peso: 83 g",
     "features": [
       "Envío Gratis 🚚"
@@ -317,7 +333,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "bano"
   },
   {
     "id": "600086",
@@ -325,7 +342,7 @@
     "slug": "bidet-para-inodoro-universal",
     "price": 69098,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/6/0/600086_1_.jpg",
-    "category": "Varios",
+    "category": "Baño",
     "description": "Bidet para inodoro universal con variador de presion.. Dos modalidades de chorro de agua.. Incluye elementos de colocación:. - Flexible 1/4 mallado metalico de 68cm -. - Niple T de 3/8 (hembra/macho) a salida 1/4 macho. - O rings (Juntas de goma). - Cinta de Teflon. - Manual de instalacion",
     "features": [
       "Envío Gratis 🚚"
@@ -333,7 +350,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "bano"
   },
   {
     "id": "600089",
@@ -341,7 +359,7 @@
     "slug": "organizador-curvo-esquinero-de-bano",
     "price": 8825,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/9/c/9cm_59__2.png",
-    "category": "Varios",
+    "category": "Baño",
     "description": "Ideal para optimizar el espacio en tu baño o ducha.. Fabricado en resistente aluminio, este organizador no solo es duradero, sino que también es completamente resistente al agua, lo que lo convierte en la opción perfecta para ambientes húmedos.. Medidas: 5 cm de alto - 21 cm de profundidad - 29 cm de ancho. Su instalación en pared es sencilla y práctica, permitiendo un acceso rápido a tus productos de higiene personal.. Incluye kit de montaje.",
     "features": [
       "Envío Gratis 🚚"
@@ -349,7 +367,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "bano"
   },
   {
     "id": "600090",
@@ -357,7 +376,7 @@
     "slug": "estante-organizador-recto-autodhesivo-metalico",
     "price": 8908,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/d/_/d_nq_np_2x_608747-mla71345550618_082023-f.png",
-    "category": "Varios",
+    "category": "Baño",
     "description": "- Repisa simple para ducha.. - Material: Totalmente de aluminio. - Resistente al agua. No se Oxida. - Apto para ducha. - Excelente terminación y calidad.. - Soporta hasta 5kg. Medidas : Alto 5 cm Ancho 31.5 cm Profundidad 14 cm",
     "features": [
       "Envío Gratis 🚚"
@@ -365,7 +384,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "bano"
   },
   {
     "id": "600091",
@@ -373,7 +393,7 @@
     "slug": "esquinero-organizador-2-niveles-aluminio",
     "price": 19980,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/6/0/600091_4_.jpeg",
-    "category": "Varios",
+    "category": "Baño",
     "description": "Ideal para optimizar el espacio en tu baño o ducha.. Fabricado en resistente aluminio, este organizador no solo es duradero, sino que también es completamente resistente al agua, lo que lo convierte en la opción perfecta para ambientes húmedos.. Medidas: 34 cm de alto - 21 cm de profundidad - 21 cm de ancho. Su instalación en pared es sencilla y práctica, permitiendo un acceso rápido a tus productos de higiene personal.",
     "features": [
       "Envío Gratis 🚚"
@@ -381,7 +401,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "bano"
   },
   {
     "id": "600099",
@@ -389,7 +410,7 @@
     "slug": "estante-esquinero-negro",
     "price": 12488,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/6/0/600099_2_.png",
-    "category": "Varios",
+    "category": "Baño",
     "description": "Estante organizador para baño, hecho de un material resistente el cual permite soportar peso y tambien evita el oxido.. Viene con diseño de drenaje que evita que se acumule agua.. Incluye 2 tornillos y 2 ganchos adhesivos para su fácil y rápida colocación, no daña la pared.. Disponible en color negro. Medidas(cm): Largo:29cm x Ancho:22cm x Alto:5cm Aprox.",
     "features": [
       "Envío Gratis 🚚"
@@ -397,7 +418,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "bano"
   },
   {
     "id": "600101",
@@ -405,7 +427,7 @@
     "slug": "estante-organizador-autoadhesivo-negro",
     "price": 12987,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/6/0/600101_1_.png",
-    "category": "Varios",
+    "category": "Baño",
     "description": "Adhesivos súper fuertes: resisten un mínimo de 10kgs, es muy estable. El organizador de ducha puede almacenar artículos pesados como shampoo grandes, acondicionadores,etc.. Fácil de instalar: el organizador de ducha de baño se puede instalar sin taladrar, sin dañar la pared. Simplemente pega los adhesivos donde quieras y cuelga los organizadores de ducha.. Nota: Los adhesivos son adecuados para paredes lisas y planas como azulejos y mármol.. El estante de ducha está hecho de aluminio espacial, que es duradero, a prueba de óxido, impermeable, no se decolora, resistente a los arañazos.. Pueden drenar y secar rápidamente artículos con un diseño hueco de fondo abierto, evitando el crecimiento de incrustaciones y bacterias.",
     "features": [
       "Envío Gratis 🚚"
@@ -413,7 +435,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "bano"
   },
   {
     "id": "600071",
@@ -421,7 +444,7 @@
     "slug": "x4-gancho-perchero-doble-autoadhesivo-metalico",
     "price": 10047,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/7/1/71plsuo7b7l._ac_sl1500_.jpg",
-    "category": "Varios",
+    "category": "Organización",
     "description": "Resistente al agua y al acero inoxidable. Seguro de usar en baños húmedos, no se cae ni se oxida durante un uso prolongado.. Fácil de usar e instalación rápida, solo lleva unos segundos instalarlo, sin taladrar, tornillos, clavos ni pegamento.. Consejos: se recomienda esperar 24 horas antes de colgar cosas.. Soporta hasta 6 Kgs con tiras superadhesivas de doble cara, este gancho de pared se sostiene bien y no se cae.",
     "features": [
       "Envío Gratis 🚚"
@@ -429,7 +452,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "organizacion"
   },
   {
     "id": "600070",
@@ -437,7 +461,7 @@
     "slug": "x4-gancho-perchero-autoadhesivo-plateado",
     "price": 7869,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/9/c/9cm_52_.png",
-    "category": "Varios",
+    "category": "Organización",
     "description": "Resistente al agua y al acero inoxidable. Seguro de usar en baños húmedos, no se cae ni se oxida durante un uso prolongado.. Fácil de usar e instalación rápida, solo lleva unos segundos instalarlo, sin taladrar, tornillos, clavos ni pegamento.. Consejos: se recomienda esperar 24 horas antes de colgar cosas.. Soporta hasta 6 Kgs con tiras superadhesivas de doble cara, este gancho de pared se sostiene bien y no se cae.",
     "features": [
       "Envío Gratis 🚚"
@@ -445,7 +469,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "organizacion"
   },
   {
     "id": "600072",
@@ -453,7 +478,7 @@
     "slug": "x4-gancho-garfio-autoadhesivo-plateado",
     "price": 9211,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/6/0/600072_6_.jpg",
-    "category": "Varios",
+    "category": "Baño",
     "description": "Este perchero es ideal para mantener tu hogar organizado y con estilo. Con una profundidad de 1.5 cm, se adapta perfectamente a cualquier espacio sin ocupar mucho lugar. Su acabado en acero inoxidable le da un toque moderno y elegante que combina con cualquier decoración.. El sistema de fijación con adhesivo facilita su instalación sin necesidad de hacer agujeros en la pared. Con una altura y ancho de 4 cm, este perchero simple es perfecto para colgar abrigos, bolsos, llaves y más. Fabricado en acero resistente, el modelo HOGAR garantiza durabilidad y funcionalidad en tu día a día.. Aprovecha la versatilidad y practicidad de este perchero para mantener tus espacios ordenados y libres de desorden. Su diseño minimalista y funcional lo convierten en un accesorio imprescindible para cualquier hogar moderno.",
     "features": [
       "Envío Gratis 🚚"
@@ -461,7 +486,8 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "bano"
   },
   {
     "id": "DL1161",
@@ -469,7 +495,7 @@
     "slug": "dispenser-de-pared-para-bano",
     "price": 17399,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/s/3/s30552b71c25f456f98d6c46f72ce1483j.jpg_960x960q75.jpg__1_.jpg",
-    "category": "Varios",
+    "category": "Baño",
     "description": "Dispenser de pared para baño. Material: ABS",
     "features": [
       "Envío Gratis 🚚"
@@ -477,6 +503,22 @@
     "stock": 99,
     "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
-    "isActive": true
+    "isActive": true,
+    "categoryId": "bano"
+  },
+  {
+    "name": "producto prueba",
+    "slug": "producto-prueba",
+    "price": 100,
+    "image": "",
+    "category": "Varios",
+    "description": "esto no es un producto real ",
+    "features": [],
+    "stock": 99,
+    "collections": [],
+    "isActive": true,
+    "categoryId": "varios",
+    "id": "d449be10-e4cb-49f3-89b8-130de8fe6112",
+    "createdAt": "2026-01-02T21:08:48.916Z"
   }
 ]

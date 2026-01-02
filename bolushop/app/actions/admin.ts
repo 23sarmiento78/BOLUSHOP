@@ -168,23 +168,28 @@ export async function importProductsAction(rawProducts: any[], source: string) {
 
                 const cleanDescription = cleanHtmlDescription(description);
 
-                // Fallback logical for category
+                // Fallback logic for category
                 const categoryRaw = row['Categorias'] || row['Tags'] || '';
                 let category = categoryRaw.trim();
 
-                // AUTO-CATEGORIZATION: Simple fallback if no category
-                if (!category || category.toLowerCase() === 'varios') {
-                    category = 'Varios';
-                }
-
-                // Preserve custom image if product already exists
+                // Preserve custom image AND category if product already exists
                 const productId = String(row['SKU'] || uuidv4());
                 const existingProduct = existingProductsMap.get(productId);
 
-                // Use existing custom image if:
-                // 1. Product already exists
-                // 2. Existing image is not the default bolushop.png
-                // 3. Existing image is not empty
+                // Use existing data if current row has generic/empty values
+                let finalCategory = category;
+                let finalCategoryId = existingProduct?.categoryId;
+
+                if (!finalCategory || finalCategory.toLowerCase() === 'varios') {
+                    if (existingProduct && existingProduct.category && existingProduct.category.toLowerCase() !== 'varios') {
+                        finalCategory = existingProduct.category;
+                        finalCategoryId = existingProduct.categoryId;
+                    } else {
+                        finalCategory = 'Varios';
+                    }
+                }
+
+                // Use existing custom image if applicable
                 let finalImage = image;
                 if (existingProduct &&
                     existingProduct.image &&
@@ -199,10 +204,11 @@ export async function importProductsAction(rawProducts: any[], source: string) {
                     slug: row['Identificador de URL'] || (row['Nombre'] ? row['Nombre'].toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '') : uuidv4()),
                     price: price,
                     image: finalImage,
-                    category: category,
+                    category: finalCategory,
+                    categoryId: finalCategoryId,
                     description: cleanDescription,
                     features: features,
-                    stock: 99, // Standard stock for imports
+                    stock: 99,
                     createdAt: existingProduct?.createdAt || new Date().toISOString(),
                     collections: existingProduct?.collections || [],
                     isActive: existingProduct?.isActive ?? true
@@ -321,6 +327,24 @@ export async function bulkUpdatePricesAction(percentage: number, categoryId?: st
     revalidatePath("/admin/products");
     revalidatePath("/");
     return { success: true, count: updatedProducts.length };
+}
+
+export async function bulkUpdateCategoriesAction(productIds: string[], categoryName: string, categoryId: string) {
+    const products = await getAllProducts();
+
+    const updatedProducts = products.map(p => {
+        if (productIds.includes(p.id)) {
+            return { ...p, category: categoryName, categoryId: categoryId };
+        }
+        return p;
+    });
+
+    const success = await saveProducts(updatedProducts);
+    if (!success) return { success: false, error: "Error al actualizar categorías masivamente" };
+
+    revalidatePath("/admin/products");
+    revalidatePath("/");
+    return { success: true, count: productIds.length };
 }
 
 export async function uploadImageAction(formData: FormData) {
