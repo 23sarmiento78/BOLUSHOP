@@ -33,6 +33,11 @@ export default function Footer() {
                                 </Link>
                             </li>
                             <li>
+                                <Link href="/garantias" className="text-gray-400 hover:text-white transition-colors text-sm">
+                                    Garantías y Devoluciones
+                                </Link>
+                            </li>
+                            <li>
                                 <Link href="/admin" className="text-gray-400 hover:text-white transition-colors text-sm">
                                     Admin
                                 </Link>
