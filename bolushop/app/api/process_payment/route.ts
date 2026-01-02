@@ -125,18 +125,6 @@ export async function POST(req: NextRequest) {
                         street_name: streetName,
                         street_number: streetNumber ? parseInt(streetNumber) : undefined,
                     },
-                    // Crucial for anti-fraud in additional_info
-                    ...(fullPayer.identification?.number ? {
-                        identification: {
-                            type: fullPayer.identification?.type || 'DNI',
-                            number: fullPayer.identification?.number,
-                        }
-                    } : (payer.identification?.number ? {
-                        identification: {
-                            type: payer.identification?.type,
-                            number: payer.identification?.number,
-                        }
-                    } : {})),
                 },
                 shipments: {
                     receiver_address: {
