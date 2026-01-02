@@ -515,7 +515,55 @@ function ProductFormModal({ title, product, setProduct, onClose, onSubmit, isSav
                         </div>
 
                         <div>
-                            <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 px-1">Descripción</label>
+                            <div className="flex items-center justify-between mb-2 px-1">
+                                <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400">Descripción</label>
+                                <button
+                                    type="button"
+                                    onClick={async () => {
+                                        if (!product.name) {
+                                            alert('Por favor ingresá un nombre de producto primero');
+                                            return;
+                                        }
+                                        const btn = event?.target as HTMLButtonElement;
+                                        if (btn) {
+                                            btn.disabled = true;
+                                            btn.textContent = '⏳ Optimizando...';
+                                        }
+                                        try {
+                                            const res = await fetch('/api/optimize-product', {
+                                                method: 'POST',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify({ product })
+                                            });
+                                            const data = await res.json();
+                                            if (data.success) {
+                                                const confirmed = confirm(
+                                                    `✨ IA SUGIERE:\n\nDescripción:\n${data.suggestions.description}\n\nCaracterísticas:\n${data.suggestions.features.join('\n')}\n\n¿Aplicar estas sugerencias?`
+                                                );
+                                                if (confirmed) {
+                                                    setProduct({
+                                                        ...product,
+                                                        description: data.suggestions.description,
+                                                        features: data.suggestions.features
+                                                    });
+                                                }
+                                            } else {
+                                                alert('Error: ' + data.error);
+                                            }
+                                        } catch (err) {
+                                            alert('Error al optimizar producto');
+                                        } finally {
+                                            if (btn) {
+                                                btn.disabled = false;
+                                                btn.textContent = '✨ Optimizar con IA';
+                                            }
+                                        }
+                                    }}
+                                    className="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-lg"
+                                >
+                                    ✨ Optimizar con IA
+                                </button>
+                            </div>
                             <textarea
                                 required
                                 value={product.description}
