@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import Script from "next/script";
+import NextTopLoader from 'nextjs-toploader';
 import { getSettings } from "@/lib/db";
 import "./globals.css";
 
@@ -94,6 +95,11 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen bg-sand-white`}
       >
+        <NextTopLoader
+          color="#EAB308"
+          showSpinner={false}
+          shadow="0 0 10px #EAB308,0 0 5px #EAB308"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
