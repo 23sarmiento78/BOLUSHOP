@@ -174,21 +174,21 @@ export default function ProductsTable({ initialProducts }: Props) {
     return (
         <div className="space-y-6">
             {/* Header / Actions Bar */}
-            <div className="flex justify-between items-center bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 mt-2">
+            <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 mt-2">
                 <div>
                     <h2 className="text-2xl font-black text-gray-900">Gestión de Productos</h2>
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">{filteredProducts.length} productos en catálogo</p>
+                    <p className="text-xs font-bold text-gray-600 uppercase tracking-widest">{filteredProducts.length} productos en catálogo</p>
                 </div>
-                <div className="flex gap-4">
+                <div className="flex flex-col sm:flex-row gap-3">
                     <button
                         onClick={() => setIsBulkPriceModalOpen(true)}
-                        className="px-6 py-4 bg-gray-900 text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest hover:scale-105 transition-all flex items-center gap-3"
+                        className="px-6 py-4 bg-gray-900 text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest hover:scale-105 transition-all flex items-center justify-center gap-3"
                     >
                         📈 Ajuste Masivo
                     </button>
                     <button
                         onClick={() => setIsCreating(true)}
-                        className="px-8 py-4 bg-primary text-white rounded-[1.5rem] font-black text-sm uppercase tracking-widest shadow-xl shadow-primary/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
+                        className="px-8 py-4 bg-primary text-white rounded-[1.5rem] font-black text-sm uppercase tracking-widest shadow-xl shadow-primary/30 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3"
                     >
                         <span className="text-xl">+</span> Nuevo Producto
                     </button>
@@ -238,7 +238,66 @@ export default function ProductsTable({ initialProducts }: Props) {
 
             {/* Table */}
             <div className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 overflow-hidden">
-                <table className="w-full text-left border-collapse">
+                {/* Mobile Cards View */}
+                <div className="md:hidden divide-y divide-gray-100">
+                    {filteredProducts.map((product) => (
+                        <div key={product.id} className={`p-4 ${selectedIds.has(product.id) ? 'bg-primary/5' : ''}`}>
+                            <div className="flex items-start gap-4">
+                                <input
+                                    type="checkbox"
+                                    checked={selectedIds.has(product.id)}
+                                    onChange={() => toggleSelect(product.id)}
+                                    className="mt-1 w-5 h-5 rounded-lg border-gray-200 text-primary focus:ring-primary/20"
+                                />
+                                <div className="w-20 h-20 rounded-2xl bg-gray-50 border border-gray-100 overflow-hidden flex-shrink-0">
+                                    {product.image ? (
+                                        <img src={product.image} alt="" className="w-full h-full object-cover" />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center text-2xl opacity-30">📦</div>
+                                    )}
+                                </div>
+                                <div className="flex-grow min-w-0">
+                                    <h3 className="font-black text-gray-900 text-base mb-1 line-clamp-2">{product.name}</h3>
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <span className="font-black text-primary text-lg">${product.price.toLocaleString("es-AR")}</span>
+                                        <span className={`text-xs font-black px-2 py-1 rounded-full ${product.stock > 10 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                            {product.stock} uts.
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <span className={`w-2 h-2 rounded-full ${product.isActive !== false ? 'bg-green-500' : 'bg-gray-300'}`}></span>
+                                        <span className="text-xs font-bold text-gray-600">
+                                            {product.isActive !== false ? 'Activo' : 'Pausado'}
+                                        </span>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => setEditingProduct(product)}
+                                            className="flex-1 py-2.5 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-600 hover:text-white transition-all font-bold text-sm"
+                                        >
+                                            ✏️ Editar
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(product.id)}
+                                            className="flex-1 py-2.5 bg-red-50 text-red-600 rounded-xl hover:bg-red-600 hover:text-white transition-all font-bold text-sm"
+                                        >
+                                            🗑️ Borrar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    {filteredProducts.length === 0 && (
+                        <div className="p-16 text-center">
+                            <div className="text-6xl mb-4 opacity-10">🔎</div>
+                            <p className="text-gray-500 font-bold text-sm">No se encontraron productos</p>
+                        </div>
+                    )}
+                </div>
+
+                {/* Desktop Table View */}
+                <table className="hidden md:table w-full text-left border-collapse">
                     <thead className="bg-gray-50/50 border-b border-gray-100">
                         <tr>
                             <th className="px-8 py-5 w-16">
