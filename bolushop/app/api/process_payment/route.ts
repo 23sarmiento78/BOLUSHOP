@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
                 address: {
                     zip_code: fullPayer.zipCode || fullPayer.zip_code || '1000',
                     street_name: streetName,
-                    street_number: streetNumber || undefined,
+                    street_number: streetNumber ? parseInt(streetNumber) : undefined,
                 },
                 ...(fullPayer.identification?.number ? {
                     identification: {
@@ -144,6 +144,15 @@ export async function POST(req: NextRequest) {
             },
         };
 
+        // Log sanitized payload for debugging
+        console.log("🚀 Sending payment request...", {
+            amount: paymentData.transaction_amount,
+            method: paymentData.payment_method_id,
+            has_token: !!paymentData.token,
+            has_device_id: !!deviceId,
+            external_ref: orderId
+        });
+
         let result;
         try {
             result = await payment.create({
@@ -165,10 +174,11 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        console.log("✅ Payment result:", {
+        console.log("✅ Payment result detailed:", {
             id: result.id,
             status: result.status,
-            status_detail: result.status_detail
+            status_detail: result.status_detail,
+            message: result.status_detail === 'cc_rejected_high_risk' ? 'Rechazado por Prevención de Fraude' : 'OK'
         });
 
         // Save order to our database if not rejected
