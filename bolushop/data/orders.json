@@ -1,1 +1,66 @@
-[]
+[
+  {
+    "id": "cb49ed78-345b-4366-bfd9-1ad68342b1c6",
+    "date": "2025-12-30T05:37:48.952+00:00",
+    "status": "cancelled",
+    "items": [
+      {
+        "id": "test-100",
+        "name": "Producto de Prueba ",
+        "slug": "producto-prueba-100",
+        "image": "https://placehold.co/600x600/f0f0f0/333333?text=Test+100",
+        "price": 100,
+        "stock": 999,
+        "category": "Pruebas",
+        "features": [
+          "Precio real para test",
+          "Checkout verificado"
+        ],
+        "quantity": 1,
+        "createdAt": "2025-12-30T00:33:42.758Z",
+        "collections": [],
+        "description": "Producto creado para testear el flujo de pago con éxito."
+      }
+    ],
+    "total": 100,
+    "payer": {
+      "name": "israel Enrique Sarmiento escuela",
+      "email": "23sarmiento@gmail.com",
+      "address": "Doctor Juan Felipe Aranguren. 1460",
+      "phone": "N/A"
+    },
+    "paymentId": "139980003390"
+  },
+  {
+    "id": "df04651f-fbe0-44bd-a85e-f311dee6aaf5",
+    "date": "2025-12-30T05:01:39.421+00:00",
+    "status": "cancelled",
+    "items": [
+      {
+        "id": "test-100",
+        "name": "Producto de Prueba ",
+        "slug": "producto-prueba-100",
+        "image": "https://placehold.co/600x600/f0f0f0/333333?text=Test+100",
+        "price": 100,
+        "stock": 999,
+        "category": "Pruebas",
+        "features": [
+          "Precio real para test",
+          "Checkout verificado"
+        ],
+        "quantity": 1,
+        "createdAt": "2025-12-30T00:33:42.758Z",
+        "collections": [],
+        "description": "Producto creado para testear el flujo de pago con éxito."
+      }
+    ],
+    "total": 100,
+    "payer": {
+      "name": "israel Enrique Sarmiento escuela",
+      "email": "23sarmiento@gmail.com",
+      "address": "Doctor Juan Felipe Aranguren. 1460",
+      "phone": "N/A"
+    },
+    "paymentId": "139979633144"
+  }
+]

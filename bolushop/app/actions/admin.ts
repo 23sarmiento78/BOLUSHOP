@@ -1,13 +1,25 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { getAllProducts, saveProducts, Product, getAllOrders, getSettings, getAllCollections, saveCollections, Collection } from "@/lib/db";
+import {
+    getAllProducts,
+    saveProducts,
+    getAllOrders,
+    getSettings,
+    getAllCollections,
+    saveCollections,
+    getAllCategories,
+    saveCategories,
+    updateOrder
+} from "@/lib/db";
+import { Product, Collection, Category, Order } from "@/lib/types";
 import { v4 as uuidv4 } from 'uuid';
+import { supabase } from "@/lib/supabase";
 
 export async function deleteProductAction(id: string) {
-    const products = getAllProducts();
+    const products = await getAllProducts();
     const newProducts = products.filter(p => p.id !== id);
-    const success = saveProducts(newProducts);
+    const success = await saveProducts(newProducts);
 
     if (!success) return { success: false, error: "Vercel no permite borrar archivos en tiempo real. Esto solo funciona localmente." };
 
@@ -18,7 +30,7 @@ export async function deleteProductAction(id: string) {
 }
 
 export async function deleteAllProductsAction() {
-    const success = saveProducts([]); // Clear all
+    const success = await saveProducts([]); // Clear all
 
     if (!success) return { success: false, error: "Vercel no permite borrar archivos en tiempo real. Esto solo funciona localmente." };
 
@@ -29,9 +41,9 @@ export async function deleteAllProductsAction() {
 }
 
 export async function deleteMultipleProductsAction(idsToDelete: string[]) {
-    const products = getAllProducts();
+    const products = await getAllProducts();
     const newProducts = products.filter(p => !idsToDelete.includes(p.id));
-    const success = saveProducts(newProducts);
+    const success = await saveProducts(newProducts);
 
     if (!success) return { success: false, error: "Vercel no permite borrar archivos en tiempo real. Esto solo funciona localmente." };
 
@@ -42,12 +54,12 @@ export async function deleteMultipleProductsAction(idsToDelete: string[]) {
 }
 
 export async function updateProductAction(updatedProduct: Product) {
-    const products = getAllProducts();
+    const products = await getAllProducts();
     const index = products.findIndex(p => p.id === updatedProduct.id);
 
     if (index !== -1) {
         products[index] = updatedProduct;
-        const success = saveProducts(products);
+        const success = await saveProducts(products);
         if (!success) return { success: false, error: "Vercel no permite editar archivos en tiempo real. Esto solo funciona localmente." };
 
         revalidatePath("/admin/products");
@@ -60,7 +72,7 @@ export async function updateProductAction(updatedProduct: Product) {
 }
 
 export async function createProductAction(product: Omit<Product, 'id' | 'createdAt'>) {
-    const products = getAllProducts();
+    const products = await getAllProducts();
     const newProduct: Product = {
         ...product,
         id: uuidv4(),
@@ -70,7 +82,7 @@ export async function createProductAction(product: Omit<Product, 'id' | 'created
     };
 
     products.push(newProduct);
-    const success = saveProducts(products);
+    const success = await saveProducts(products);
 
     if (!success) return { success: false, error: "No se pudo guardar el producto." };
 
@@ -82,7 +94,7 @@ export async function createProductAction(product: Omit<Product, 'id' | 'created
 
 export async function importProductsAction(rawProducts: any[], source: string) {
     try {
-        const settings = getSettings();
+        const settings = await getSettings();
         const PROFIT_MARGIN = settings.profitMargin;
         const SHIPPING_COST = settings.shippingCost;
 
@@ -123,10 +135,9 @@ export async function importProductsAction(rawProducts: any[], source: string) {
                 const categoryRaw = row['Categorias'] || row['Tags'] || '';
                 let category = categoryRaw.trim();
 
-                // AUTO-CATEGORIZATION: If no category or generic 'varios', utilize smart detector
+                // AUTO-CATEGORIZATION: Simple fallback if no category
                 if (!category || category.toLowerCase() === 'varios') {
-                    const { detectCategory } = require("@/lib/auto-category");
-                    category = detectCategory(row['Nombre'], description);
+                    category = 'Varios';
                 }
 
                 return {
@@ -140,7 +151,8 @@ export async function importProductsAction(rawProducts: any[], source: string) {
                     features: features,
                     stock: 99, // Standard stock for imports
                     createdAt: new Date().toISOString(),
-                    collections: []
+                    collections: [],
+                    isActive: true
                 } as Product;
             });
         }
@@ -148,7 +160,7 @@ export async function importProductsAction(rawProducts: any[], source: string) {
         const validProducts = (mappedProducts.filter(p => p !== null && p.name && p.name !== 'Sin Nombre' && p.price > 0) as Product[]);
 
         if (validProducts.length > 0) {
-            const success = saveProducts(validProducts);
+            const success = await saveProducts(validProducts);
             if (!success) return { success: false, error: "Vercel no permite crear archivos en tiempo real. Subí tus productos al GitHub para que aparezcan." };
 
             revalidatePath("/admin/products");
@@ -166,35 +178,141 @@ export async function importProductsAction(rawProducts: any[], source: string) {
 
 // Collection Actions
 export async function createCollectionAction(collection: Omit<Collection, 'id'>) {
-    const collections = getAllCollections();
+    const collections = await getAllCollections();
     const newCollection: Collection = {
         ...collection,
         id: uuidv4(),
     };
+
     collections.push(newCollection);
-    const success = saveCollections(collections);
+    const success = await saveCollections(collections);
     if (!success) return { success: false, error: "Error al guardar colección" };
     revalidatePath("/admin/collections");
     return { success: true, collection: newCollection };
 }
 
 export async function deleteCollectionAction(id: string) {
-    const collections = getAllCollections();
-    const filtered = collections.filter(c => c.id !== id);
-    const success = saveCollections(filtered);
+    const collections = await getAllCollections();
+    const newCollections = collections.filter(c => c.id !== id);
+    const success = await saveCollections(newCollections);
     if (!success) return { success: false, error: "Error al borrar colección" };
     revalidatePath("/admin/collections");
     return { success: true };
 }
 
-export async function updateCollectionAction(updated: Collection) {
-    const collections = getAllCollections();
-    const index = collections.findIndex(c => c.id === updated.id);
+export async function updateCollectionAction(updatedCollection: Collection) {
+    const collections = await getAllCollections();
+    const index = collections.findIndex(c => c.id === updatedCollection.id);
+
     if (index !== -1) {
-        collections[index] = updated;
-        saveCollections(collections);
+        collections[index] = updatedCollection;
+        const success = await saveCollections(collections);
         revalidatePath("/admin/collections");
         return { success: true };
     }
     return { success: false, error: "Colección no encontrada" };
+}
+
+// Category Actions
+export async function createCategoryAction(category: Omit<Category, 'id'>) {
+    const categories = await getAllCategories();
+    const newCategory: Category = {
+        ...category,
+        id: uuidv4(),
+    };
+
+    categories.push(newCategory);
+    const success = await saveCategories(categories);
+    if (!success) return { success: false, error: "Error al guardar categoría" };
+    revalidatePath("/admin/products");
+    return { success: true, category: newCategory };
+}
+
+export async function deleteCategoryAction(id: string) {
+    const categories = await getAllCategories();
+    const newCategories = categories.filter(c => c.id !== id);
+    const success = await saveCategories(newCategories);
+    if (!success) return { success: false, error: "Error al borrar categoría" };
+    revalidatePath("/admin/products");
+    return { success: true };
+}
+
+export async function updateCategoryAction(updatedCategory: Category) {
+    const categories = await getAllCategories();
+    const index = categories.findIndex(c => c.id === updatedCategory.id);
+
+    if (index !== -1) {
+        categories[index] = updatedCategory;
+        const success = await saveCategories(categories);
+        revalidatePath("/admin/products");
+        return { success: true };
+    }
+    return { success: false, error: "Categoría no encontrada" };
+}
+
+// Bulk Actions
+export async function bulkUpdatePricesAction(percentage: number, categoryId?: string) {
+    const products = await getAllProducts();
+    const multiplier = 1 + (percentage / 100);
+
+    const updatedProducts = products.map(p => {
+        if (!categoryId || p.categoryId === categoryId || p.category === categoryId) {
+            return { ...p, price: Math.round(p.price * multiplier) };
+        }
+        return p;
+    });
+
+    const success = await saveProducts(updatedProducts);
+    if (!success) return { success: false, error: "Error al actualizar precios masivamente" };
+
+    revalidatePath("/admin/products");
+    revalidatePath("/");
+    return { success: true, count: updatedProducts.length };
+}
+
+export async function uploadImageAction(formData: FormData) {
+    const file = formData.get('file') as File;
+    if (!file) return { success: false, error: "No file provided" };
+
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${uuidv4()}.${fileExt}`;
+    const filePath = `products/${fileName}`;
+
+    try {
+        const { data, error } = await supabase.storage
+            .from('products')
+            .upload(filePath, file);
+
+        if (error) throw error;
+
+        const { data: { publicUrl } } = supabase.storage
+            .from('products')
+            .getPublicUrl(filePath);
+
+        return { success: true, url: publicUrl };
+    } catch (e: any) {
+        console.error("❌ Storage Upload Error:", e);
+        return { success: false, error: e.message || "Error al subir imagen" };
+    }
+}
+
+export async function getCategoriesAction() {
+    return await getAllCategories();
+}
+
+// Orders Actions
+export async function updateOrderStatusAction(orderId: string, newStatus: string) {
+    try {
+        await updateOrder(orderId, { status: newStatus as Order['status'] });
+        revalidatePath('/admin/orders');
+        revalidatePath('/rastreo');
+        return true;
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
+}
+
+export async function getAllOrdersAction() {
+    return await getAllOrders();
 }

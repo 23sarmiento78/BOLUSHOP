@@ -1,10 +1,11 @@
--- SQL para crear la tabla de órdenes en Supabase
+-- SQL para crear todas las tablas necesarias en Supabase
 -- Copia y pega esto en el SQL Editor de Supabase
 
+-- TABLA DE ÓRDENES
 create table if not exists public.orders (
   id uuid default gen_random_uuid() primary key,
   created_at timestamptz default now(),
-  external_id text unique, -- ID interno de la tienda (UUID v4)
+  external_id text unique,
   status text check (status in ('pending', 'paid', 'shipped', 'cancelled')),
   total numeric,
   payer_name text,
@@ -15,14 +16,80 @@ create table if not exists public.orders (
   payment_id text
 );
 
--- Habilitar acceso público para inserción (Si no usas Auth de Supabase)
--- Nota: En producción deberías configurar RLS adecuadamente.
+-- TABLA DE PRODUCTOS
+create table if not exists public.products (
+  id text primary key, -- Usamos el ID de la tienda (UUID o SKU)
+  created_at timestamptz default now(),
+  name text not null,
+  slug text unique not null,
+  price numeric not null,
+  image text,
+  category text,
+  category_id text,
+  description text,
+  features jsonb, -- Array de strings
+  stock integer default 0,
+  collections jsonb, -- Array de IDs de colecciones
+  is_active boolean default true
+);
+
+-- TABLA DE CATEGORÍAS
+create table if not exists public.categories (
+  id text primary key,
+  created_at timestamptz default now(),
+  name text not null,
+  slug text unique not null,
+  description text
+);
+
+-- TABLA DE CONFIGURACIONES (Single row)
+create table if not exists public.settings (
+  id integer primary key default 1,
+  updated_at timestamptz default now(),
+  profit_margin numeric,
+  shipping_cost numeric, -- Base/Fallbcak
+  shipping_json jsonb, -- { "caba": 3000, "gba1": 5000, "gba2": 5500, "gba3": 8500, "rest": 9000 }
+  site_name text,
+  site_description text,
+  whatsapp_number text,
+  constraint single_row check (id = 1)
+);
+
+-- TABLA DE COLECCIONES
+create table if not exists public.collections (
+  id text primary key,
+  created_at timestamptz default now(),
+  name text not null,
+  slug text unique not null,
+  description text,
+  image text,
+  discount_type text default 'none',
+  discount_value numeric default 0,
+  is_featured boolean default false,
+  product_ids jsonb default '[]'
+);
+
+-- Habilitar RLS en todas las tablas
 alter table public.orders enable row level security;
+alter table public.products enable row level security;
+alter table public.settings enable row level security;
+alter table public.collections enable row level security;
+alter table public.categories enable row level security;
 
-create policy "Permitir inserción pública" 
-on public.orders for insert 
-with check (true);
+-- Políticas de acceso (Lectura y Escritura pública para simplificar el MVP)
+-- En producción, deberías usar autenticación de Supabase.
 
-create policy "Permitir lectura pública" 
-on public.orders for select 
-using (true);
+drop policy if exists "Acceso total órdenes" on public.orders;
+create policy "Acceso total órdenes" on public.orders for all using (true) with check (true);
+
+drop policy if exists "Acceso total productos" on public.products;
+create policy "Acceso total productos" on public.products for all using (true) with check (true);
+
+drop policy if exists "Acceso total settings" on public.settings;
+create policy "Acceso total settings" on public.settings for all using (true) with check (true);
+
+drop policy if exists "Acceso total colecciones" on public.collections;
+create policy "Acceso total colecciones" on public.collections for all using (true) with check (true);
+
+drop policy if exists "Acceso total categorías" on public.categories;
+create policy "Acceso total categorías" on public.categories for all using (true) with check (true);

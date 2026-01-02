@@ -5,6 +5,13 @@ export default function SettingsPage() {
     const [settings, setSettings] = useState({
         profitMargin: 1.05,
         shippingCost: 5000,
+        shippingJson: {
+            caba: 3000,
+            gba1: 5000,
+            gba2: 5500,
+            gba3: 8500,
+            rest: 9000
+        },
         siteName: "BoluShop",
         siteDescription: "",
         whatsappNumber: ""
@@ -17,10 +24,27 @@ export default function SettingsPage() {
         fetch('/api/admin/settings')
             .then(res => res.json())
             .then(data => {
-                if (data.settings) setSettings(data.settings);
+                if (data.settings) {
+                    setSettings(prev => ({
+                        ...prev,
+                        ...data.settings,
+                        shippingJson: data.settings.shippingJson || prev.shippingJson
+                    }));
+                }
                 setLoading(false);
-            });
+            })
+            .catch(() => setLoading(false));
     }, []);
+
+    const updateShippingZone = (zone: string, value: number) => {
+        setSettings({
+            ...settings,
+            shippingJson: {
+                ...settings.shippingJson,
+                [zone as keyof typeof settings.shippingJson]: value
+            }
+        });
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -61,14 +85,14 @@ export default function SettingsPage() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-8">
-                {/* Rentabilidad */}
+                {/* Rentabilidad y Envío */}
                 <div className="bg-white p-8 md:p-12 rounded-[3rem] shadow-sm border border-gray-100">
                     <h2 className="text-xl font-black text-gray-900 mb-8 flex items-center gap-3">
                         <span className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">💰</span>
-                        Rentabilidad y Envío
+                        Rentabilidad y Envío Regional
                     </h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
                         <div>
                             <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3 px-1">Margen de Ganancia (Multiplicador)</label>
                             <div className="relative">
@@ -81,17 +105,46 @@ export default function SettingsPage() {
                                 />
                                 <span className="absolute right-6 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">Ej: 1.05 = 5%</span>
                             </div>
-                            <p className="mt-2 text-[10px] text-gray-400 font-medium px-1">Este valor se aplica al importar productos nuevos.</p>
                         </div>
 
                         <div>
-                            <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3 px-1">Costo de Envío Base (ARS)</label>
+                            <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3 px-1">Costo de Envío Base (Fallback)</label>
                             <input
                                 type="number"
                                 value={settings.shippingCost}
                                 onChange={(e) => setSettings({ ...settings, shippingCost: Number(e.target.value) })}
                                 className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20 font-black text-gray-900"
                             />
+                        </div>
+                    </div>
+
+                    <div className="space-y-6 pt-6 border-t border-gray-50">
+                        <h3 className="text-sm font-black uppercase tracking-widest text-gray-900 mb-4 px-1 flex items-center gap-2">
+                            <span className="w-1.5 h-4 bg-emerald-500 rounded-full"></span>
+                            Tarifas por Zonas (Argentina)
+                        </h3>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {[
+                                { key: 'caba', label: 'CABA', price: settings.shippingJson?.caba },
+                                { key: 'gba1', label: 'GBA 1 (Primer Cordón)', price: settings.shippingJson?.gba1 },
+                                { key: 'gba2', label: 'GBA 2 (Segundo Cordón)', price: settings.shippingJson?.gba2 },
+                                { key: 'gba3', label: 'GBA 3 (Tercer Cordón)', price: settings.shippingJson?.gba3 },
+                                { key: 'rest', label: 'Resto del País', price: settings.shippingJson?.rest },
+                            ].map((zone) => (
+                                <div key={zone.key}>
+                                    <label className="block text-[9px] font-black uppercase tracking-[0.1em] text-gray-400 mb-2 px-1">{zone.label}</label>
+                                    <div className="relative">
+                                        <span className="absolute left-6 top-1/2 -translate-y-1/2 text-xs font-black text-emerald-600">$</span>
+                                        <input
+                                            type="number"
+                                            value={zone.price}
+                                            onChange={(e) => updateShippingZone(zone.key, Number(e.target.value))}
+                                            className="w-full pl-10 pr-6 py-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20 font-black text-gray-900"
+                                        />
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>

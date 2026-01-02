@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { CartProvider } from "@/lib/cart-context";
+import { Toaster } from "sonner";
 import { getSettings } from "@/lib/db";
 import "./globals.css";
 
@@ -17,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = getSettings();
+  const settings = await getSettings();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com.ar';
 
   return {
@@ -63,12 +61,12 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const settings = getSettings();
+  const settings = await getSettings();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com.ar';
 
   const jsonLd = {
@@ -99,13 +97,10 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <CartProvider>
-          <Header />
-          <main className="flex-grow">
-            {children}
-          </main>
-          <Footer />
-        </CartProvider>
+        <main className="flex-grow">
+          {children}
+        </main>
+        <Toaster position="top-center" richColors />
       </body>
     </html>
   );

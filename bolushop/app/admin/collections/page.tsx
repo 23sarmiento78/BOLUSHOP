@@ -1,8 +1,9 @@
-import { getAllCollections } from "@/lib/db";
+import { getAllCollections, getAllProducts } from "@/lib/db";
 import CollectionsClient from "./CollectionsClient";
 
-export default function CollectionsPage() {
-    const collections = getAllCollections();
+export default async function CollectionsPage() {
+    const collections = await getAllCollections();
+    const products = await getAllProducts();
 
     return (
         <div className="space-y-8">
@@ -13,7 +14,7 @@ export default function CollectionsPage() {
                 </div>
             </div>
 
-            <CollectionsClient initialCollections={collections} />
+            <CollectionsClient initialCollections={collections} initialProducts={products} />
         </div>
     );
 }

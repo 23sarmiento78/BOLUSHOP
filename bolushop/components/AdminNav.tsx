@@ -12,6 +12,7 @@ export default function AdminNav() {
     const links = [
         { href: '/admin', label: 'Dashboard', icon: '📊' },
         { href: '/admin/products', label: 'Productos', icon: '📦' },
+        { href: '/admin/categories', label: 'Categorías', icon: '📁' },
         { href: '/admin/orders', label: 'Pedidos', icon: '🚚' },
         { href: '/admin/collections', label: 'Colecciones', icon: '🏷️' },
         { href: '/admin/settings', label: 'Ajustes', icon: '⚙️' },
