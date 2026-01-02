@@ -42,7 +42,75 @@ export default function OrdersTable({ initialOrders }: Props) {
 
     return (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="overflow-x-auto">
+            {/* Mobile Cards View */}
+            <div className="md:hidden divide-y divide-gray-100">
+                {orders.map((order) => (
+                    <div key={order.id} className="p-4">
+                        <div className="flex justify-between items-start mb-3">
+                            <div>
+                                <p className="font-black text-gray-900 text-base mb-1">{order.payer.name}</p>
+                                <p className="text-xs text-gray-600 font-mono">{order.id.slice(0, 12)}...</p>
+                                <p className="text-xs text-gray-600 mt-1">{new Date(order.date).toLocaleDateString()}</p>
+                            </div>
+                            <span className={`px-3 py-1.5 rounded-full text-xs font-black uppercase ${statusColors[order.status] || "bg-gray-100"}`}>
+                                {order.status}
+                            </span>
+                        </div>
+                        <div className="flex justify-between items-center mb-3">
+                            <span className="font-black text-primary text-lg">${order.total.toLocaleString('es-AR')}</span>
+                            <button
+                                onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
+                                className="px-4 py-2 bg-gray-100 text-gray-900 rounded-xl hover:bg-gray-200 transition-colors text-sm font-bold"
+                            >
+                                {expandedOrder === order.id ? '▲ Ocultar' : '▼ Ver Detalles'}
+                            </button>
+                        </div>
+                        {expandedOrder === order.id && (
+                            <div className="mt-4 pt-4 border-t border-gray-200 space-y-4">
+                                <div>
+                                    <h4 className="font-black text-xs uppercase text-gray-600 mb-2">Actualizar Estado</h4>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {['pending', 'paid', 'shipped', 'delivered', 'cancelled'].map((status) => (
+                                            <button
+                                                key={status}
+                                                onClick={() => handleStatusChange(order.id, status)}
+                                                disabled={isLoading || order.status === status}
+                                                className={`px-3 py-2.5 rounded-xl text-xs font-black uppercase transition-all ${order.status === status
+                                                    ? statusColors[status]
+                                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                                    } disabled:opacity-50`}
+                                            >
+                                                {status}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 className="font-black text-xs uppercase text-gray-600 mb-2">Productos</h4>
+                                    <div className="space-y-2">
+                                        {order.items.map((item, idx) => (
+                                            <div key={idx} className="flex items-center gap-3 bg-gray-50 p-2 rounded-xl">
+                                                {item.image && (
+                                                    <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
+                                                        <Image src={item.image} alt={item.name} width={48} height={48} className="object-cover" />
+                                                    </div>
+                                                )}
+                                                <div className="flex-grow min-w-0">
+                                                    <p className="font-bold text-gray-900 text-sm line-clamp-1">{item.name}</p>
+                                                    <p className="text-xs text-gray-600">{item.quantity}x ${item.price.toLocaleString('es-AR')}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                ))}
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-left">
                     <thead>
                         <tr className="bg-gray-50 text-sm uppercase text-gray-500 font-bold border-b border-gray-100">
