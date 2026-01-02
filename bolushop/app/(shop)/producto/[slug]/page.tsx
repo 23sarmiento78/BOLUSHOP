@@ -19,12 +19,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         };
     }
 
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.vercel.app';
+
     return {
         title: `${product.name} | BoluShop`,
-        description: product.description,
+        description: product.description.slice(0, 160),
+        keywords: `${product.name}, ${product.category}, comprar online, argentina, envío gratis, ${product.features.join(', ')}`,
         openGraph: {
-            title: product.name,
+            type: 'website',
+            url: `${siteUrl}/producto/${product.slug}`,
+            title: `${product.name} - Comprá Online en BoluShop`,
             description: product.description,
+            images: [{
+                url: product.image,
+                width: 800,
+                height: 800,
+                alt: product.name,
+            }],
+            siteName: 'BoluShop',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: product.name,
+            description: product.description.slice(0, 160),
             images: [product.image],
         },
     };
