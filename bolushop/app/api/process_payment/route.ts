@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import MercadoPagoConfig, { Payment } from 'mercadopago';
 import { createOrder } from '@/lib/db';
 import { Order } from '@/lib/types';

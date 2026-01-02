@@ -126,11 +126,11 @@ export async function importProductsAction(rawProducts: any[], source: string) {
                 let features = [];
 
                 if (price > 0) {
-                    // Business Rule: Skip products below $15,000 base price
+                    // Business Rule: Skip products below minimum base price
                     if (price < MIN_BASE_PRICE) return null;
 
-                    // Formula: (Base + Shipping) * Profit
-                    price = Math.round((price + SHIPPING_COST) * PROFIT_MARGIN);
+                    // Formula: Base * Profit Margin (simplified)
+                    price = Math.round(price * PROFIT_MARGIN);
                     features.push("Envío Gratis 🚚");
                 }
 
