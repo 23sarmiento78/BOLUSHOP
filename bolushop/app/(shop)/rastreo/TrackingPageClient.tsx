@@ -113,8 +113,8 @@ export default function TrackingPageClient() {
                                     ].map((s) => (
                                         <div key={s.step} className="flex flex-col items-center gap-2">
                                             <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg z-10 transition-all duration-500 ${currentStep >= s.step
-                                                    ? 'bg-green-500 text-white shadow-lg shadow-green-500/30 scale-110'
-                                                    : 'bg-white border-2 border-gray-200 text-gray-300'
+                                                ? 'bg-green-500 text-white shadow-lg shadow-green-500/30 scale-110'
+                                                : 'bg-white border-2 border-gray-200 text-gray-300'
                                                 }`}>
                                                 {s.icon}
                                             </div>
@@ -156,9 +156,19 @@ export default function TrackingPageClient() {
                                 </div>
                             </div>
 
-                            <div className="text-center">
+
+                            <div className="flex flex-col gap-4 text-center">
+                                <a
+                                    href={`https://wa.me/5493541237972?text=Hola,%20quisiera%20saber%20el%20estado%20de%20mi%20pedido%20%23${order.id}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-green-500 text-white rounded-xl font-bold uppercase tracking-widest hover:bg-green-600 transition-colors shadow-lg shadow-green-500/30 mx-auto"
+                                >
+                                    <span className="text-xl">📱</span>
+                                    Consultar estado por WhatsApp
+                                </a>
                                 <Link href="/contacto" className="text-sm text-gray-500 hover:text-primary underline">
-                                    ¿Tenés algún problema con tu pedido? Contactanos
+                                    ¿Tenés algún otro problema? Contactanos
                                 </Link>
                             </div>
                         </div>
