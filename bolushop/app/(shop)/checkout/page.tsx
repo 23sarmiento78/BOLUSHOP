@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 import { getCart, getCartTotal, clearCart, CartItem } from "@/lib/cart";
 import { getShippingRate } from "@/app/actions/shop";
 import { LOCATION_DATA } from "@/lib/locations";
-import { initMercadoPago, Wallet, Payment } from '@mercadopago/sdk-react';
+import { initMercadoPago } from '@mercadopago/sdk-react';
 
 export default function CheckoutPage() {
     const router = useRouter();
     const [cart, setCart] = useState<CartItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [shippingCost, setShippingCost] = useState(0);
-    const [showPaymentBrick, setShowPaymentBrick] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
 
     const [formData, setFormData] = useState({
         name: "",
@@ -25,12 +25,12 @@ export default function CheckoutPage() {
     });
 
     useEffect(() => {
-        initMercadoPago(process.env.NEXT_PUBLIC_MP_BRICKS_PUBLIC_KEY || '', {
+        // Inicializar con la nueva Public Key de Pro
+        initMercadoPago(process.env.NEXT_PUBLIC_MP_PRO_PUBLIC_KEY || '', {
             locale: 'es-AR'
         });
     }, []);
 
-    // Derived state for available cities based on selected province
     const availableCities = useMemo(() => {
         const provinceData = LOCATION_DATA.find(p => p.province === formData.province);
         return provinceData ? provinceData.cities : [];
@@ -44,7 +44,6 @@ export default function CheckoutPage() {
         setCart(cartItems);
     }, [router]);
 
-    // Recalculate shipping when Province OR City changes
     useEffect(() => {
         if (formData.province && formData.city) {
             getShippingRate(formData.province, formData.city).then(setShippingCost);
@@ -58,71 +57,41 @@ export default function CheckoutPage() {
         setFormData(prev => ({
             ...prev,
             province: newProvince,
-            city: "" // Reset city when province changes
+            city: ""
         }));
     };
 
     const subtotal = getCartTotal();
     const total = subtotal + shippingCost;
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleCheckout = async (e: React.FormEvent) => {
         e.preventDefault();
-        setShowPaymentBrick(true);
-        // Scroll to payment
-        setTimeout(() => {
-            document.getElementById('payment_container')?.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-    };
-
-    const processPayment = async (param: any) => {
-        console.log("🎁 Payment Brick Params:", param);
-
-        // Ensure deviceId is captured correctly
-        let deviceId = (window as any).MP_DEVICE_SESSION_ID;
-
-        // If not available, try to get it from the security script manually if possible 
-        // or wait a moment (though onSubmit should ideally have it ready)
-        if (!deviceId) {
-            console.warn("⚠️ deviceId not found in global window, attempting to wait...");
-            // Small delay to let MP script finish if it hasn't
-            await new Promise(resolve => setTimeout(resolve, 500));
-            deviceId = (window as any).MP_DEVICE_SESSION_ID;
-        }
+        setIsProcessing(true);
 
         try {
-            const response = await fetch('/api/process_payment', {
+            const response = await fetch('/api/create-preference', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    ...param,
-                    deviceId,
-                    metadata: {
-                        items: cart,
-                        payer: {
-                            ...formData,
-                            // Pass identification if present in param (from Brick)
-                            identification: param.payer?.identification || param.formData?.payer?.identification
-                        }
-                    }
+                    cart,
+                    shippingCost,
+                    formData
                 }),
             });
 
             const data = await response.json();
 
-            if (data.status === 'approved') {
-                router.push(`/exito?order_id=${data.orderId}`);
-            } else if (data.status === 'in_process' || data.status === 'pending') {
-                router.push(`/exito?order_id=${data.orderId}&status=pending`);
-            } else if (data.status === 'rejected') {
-                router.push(`/rechazado?status_detail=${data.status_detail || ''}`);
+            if (data.init_point) {
+                // Redirigir al Checkout Pro de Mercado Pago
+                window.location.href = data.init_point;
             } else {
-                const errorMsg = data.details || data.error || 'Error al procesar el pago';
-                alert(`Error: ${errorMsg}`);
-                throw new Error(errorMsg);
+                throw new Error(data.error || 'No se pudo generar el punto de inicio del pago');
             }
         } catch (error: any) {
-            console.error('Payment error:', error);
-            throw error; // Re-throw for Brick internal handling
+            console.error('Error al iniciar checkout:', error);
+            alert(`Error: ${error.message || 'Ocurrió un error al procesar el pago. Por favor, intenta de nuevo.'}`);
+        } finally {
+            setIsProcessing(false);
         }
     };
 
@@ -157,16 +126,14 @@ export default function CheckoutPage() {
             {/* Right Side - Scrollable Form */}
             <div className="lg:w-1/2 lg:ml-[50%] min-h-screen bg-white">
                 <div className="p-6 lg:p-12 xl:p-20 max-w-3xl mx-auto">
-                    {/* Simplified Header for Trust */}
                     <div className="flex items-center gap-4 mb-12 opacity-50 hover:opacity-100 transition-opacity cursor-default">
                         <span className="text-2xl">🔒</span>
-                        <span className="text-xs font-bold uppercase tracking-widest text-gray-500">Checkout Seguro · Encriptado 256-bit</span>
+                        <span className="text-xs font-bold uppercase tracking-widest text-gray-500">Checkout Seguro · Mercado Pago Pro</span>
                     </div>
 
                     <h2 className="text-3xl font-black mb-8 text-gray-900">Datos de Envío</h2>
 
-                    <form onSubmit={handleSubmit} className="space-y-8">
-                        {/* Summary at top for mobile/desktop context */}
+                    <form onSubmit={handleCheckout} className="space-y-8">
                         <div className="bg-gray-50 rounded-2xl p-6 lg:p-8 mb-8 border border-gray-100">
                             <h3 className="text-sm font-bold uppercase tracking-widest text-gray-500 mb-4">Resumen de tu pedido</h3>
                             <div className="flex justify-between items-end mb-2">
@@ -248,7 +215,6 @@ export default function CheckoutPage() {
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {/* Province Select */}
                                 <div>
                                     <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
                                         Provincia
@@ -271,7 +237,6 @@ export default function CheckoutPage() {
                                     </div>
                                 </div>
 
-                                {/* City Select (Dependent) */}
                                 <div>
                                     <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
                                         Localidad
@@ -310,56 +275,20 @@ export default function CheckoutPage() {
                             </div>
                         </div>
 
-                        {!showPaymentBrick ? (
-                            <button
-                                type="submit"
-                                disabled={isLoading || !formData.province || !formData.city || !formData.name || !formData.email || !formData.address || !formData.phone}
-                                className="w-full mt-8 py-5 bg-black text-white rounded-xl font-black text-lg uppercase tracking-widest hover:bg-gray-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed transform hover:translate-y-px"
-                            >
-                                Continuar al Pago
-                            </button>
-                        ) : (
-                            <div id="payment_container" className="mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                <p className="text-center text-xs mb-4 font-bold text-gray-400 uppercase tracking-widest">
-                                    Seleccioná tu método de pago
-                                </p>
-                                <div className="rounded-xl overflow-hidden shadow-2xl border border-gray-100">
-                                    <Payment
-                                        initialization={{
-                                            amount: total,
-                                            payer: {
-                                                email: formData.email,
-                                            }
-                                        }}
-                                        customization={{
-                                            visual: {
-                                                style: {
-                                                    theme: "default",
-                                                },
-                                            },
-                                            paymentMethods: {
-                                                maxInstallments: 12,
-                                                creditCard: "all",
-                                                debitCard: "all",
-                                                prepaidCard: "all",
-                                                ticket: "all",
-                                                bankTransfer: "all",
-                                                atm: "all",
-                                                mercadoPago: "all",
-                                            }
-                                        }}
-                                        onSubmit={processPayment}
-                                    />
-                                </div>
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPaymentBrick(false)}
-                                    className="w-full mt-6 py-3 text-gray-400 font-bold hover:text-black transition-colors text-xs uppercase tracking-widest"
-                                >
-                                    ← Modificar datos
-                                </button>
-                            </div>
-                        )}
+                        <button
+                            type="submit"
+                            disabled={isProcessing || !formData.province || !formData.city || !formData.name || !formData.email || !formData.address || !formData.phone}
+                            className="w-full mt-8 py-5 bg-black text-white rounded-xl font-black text-lg uppercase tracking-widest hover:bg-gray-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed transform hover:translate-y-px flex items-center justify-center gap-3"
+                        >
+                            {isProcessing ? (
+                                <>
+                                    <span className="w-5 h-5 border-4 border-white border-t-transparent rounded-full animate-spin"></span>
+                                    Procesando...
+                                </>
+                            ) : (
+                                "Pagar con Mercado Pago"
+                            )}
+                        </button>
 
                         <div className="pt-8 mt-8 border-t border-gray-100 text-center">
                             <a href="/" className="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-black transition-colors">Volver a la tienda</a>
@@ -370,3 +299,4 @@ export default function CheckoutPage() {
         </div>
     );
 }
+
