@@ -1,14 +1,18 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
-  /* Tropical Theme - Colores mejorados para mejor contraste */
-  --tropical-green: #00A86B;
-  --sun-yellow: #EAB308; /* Cambiado a un amarillo más accesible */
-  --ocean-blue: #0077BE;
-  --sand-white: #F9FAFB;
-  --text-main: #111827; /* Más oscuro para mejor contraste */
-  --text-secondary: #4B5563; /* Gris más oscuro para mejor legibilidad */
-  
+  /* Exclusive Premium Theme */
+  --royal-navy: #0F172A;
+  --gold-accent: #D4AF37;
+  --success-emerald: #10B981;
+  --sand-white: #F8FAFC;
+  --text-main: #1E293B;
+  --text-secondary: #64748B;
+
   --background: var(--sand-white);
   --foreground: var(--text-main);
 }
@@ -16,10 +20,10 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-primary: var(--tropical-green);
-  --color-secondary: var(--sun-yellow);
-  --color-accent: var(--ocean-blue);
-  
+  --color-primary: var(--royal-navy);
+  --color-secondary: var(--gold-accent);
+  --color-accent: var(--success-emerald);
+
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -38,12 +42,15 @@ body {
 /* Optimizaciones para móviles */
 @media (max-width: 768px) {
   html {
-    font-size: 16px; /* Asegurar tamaño mínimo legible */
+    font-size: 16px;
+    /* Asegurar tamaño mínimo legible */
   }
-  
+
   /* Hacer botones más grandes en móviles */
-  button, a[role="button"] {
-    min-height: 44px; /* Tamaño táctil recomendado */
+  button,
+  a[role="button"] {
+    min-height: 44px;
+    /* Tamaño táctil recomendado */
     min-width: 44px;
   }
 }

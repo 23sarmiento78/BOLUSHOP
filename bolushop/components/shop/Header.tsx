@@ -48,7 +48,7 @@ export default function Header() {
 
     return (
         <header
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled || !isHome
                 ? "bg-white/90 backdrop-blur-md shadow-lg py-3"
                 : "bg-transparent py-6"
                 }`}
@@ -57,62 +57,54 @@ export default function Header() {
                 <div className="flex items-center justify-between">
                     {/* Logo */}
                     <Link href="/" className="relative z-50 group">
-                        <div className="flex items-center gap-2">
-                            <div className="relative w-10 h-10 overflow-hidden rounded-xl">
-                                <Image
-                                    src="/bolushop.png"
-                                    alt="BoluShop Logo"
-                                    fill
-                                    priority
-                                    className="object-cover group-hover:scale-110 transition-transform duration-500"
-                                />
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-primary/20 group-hover:rotate-6 transition-transform">
+                                B
                             </div>
-                            <span className={`font-black text-2xl tracking-tighter transition-colors ${isScrolled || !isHome ? 'text-gray-900' : 'text-white'
-                                }`}>
-                                Bolu<span className="text-primary italic">Shop</span>
-                            </span>
+                            <div className="flex flex-col -gap-1">
+                                <span className={`font-black text-2xl tracking-tighter leading-none transition-colors ${isScrolled || !isHome ? 'text-gray-900' : 'text-white'}`}>
+                                    BoluShop
+                                </span>
+                                <span className="text-[8px] font-black uppercase tracking-[0.3em] text-primary">Premium Store</span>
+                            </div>
                         </div>
                     </Link>
 
-                    {/* Desktop Navigation & Search */}
-                    <div className={`hidden md:flex items-center gap-8 rounded-full px-6 py-2 border transition-all duration-300 ${isScrolled || !isHome
-                        ? "bg-white/50 backdrop-blur-md border-gray-200/50"
-                        : "bg-white/10 backdrop-blur-sm border-white/20"
-                        }`}>
-                        <nav className="flex gap-6">
-                            {[
-                                { label: 'Inicio', href: '/' },
-                                { label: 'Productos', href: '/productos' },
-                                { label: 'Rastreo', href: '/rastreo' },
-                            ].map((link) => (
-                                <Link
-                                    key={link.href}
-                                    href={link.href}
-                                    className={`text-sm font-bold uppercase tracking-wide hover:text-primary transition-colors ${isScrolled || !isHome ? 'text-gray-800' : 'text-gray-200'
-                                        }`}
-                                >
-                                    {link.label}
-                                </Link>
-                            ))}
-                        </nav>
-
-                        <div className={`h-4 w-px ${isScrolled || !isHome ? 'bg-gray-300' : 'bg-gray-300/30'}`} />
-
-                        {/* Search */}
-                        <form onSubmit={handleSearch} className="relative group">
+                    {/* Desktop Search Center */}
+                    <div className="hidden lg:flex flex-grow max-w-xl mx-8">
+                        <form onSubmit={handleSearch} className="relative w-full group">
                             <input
                                 type="text"
-                                placeholder="Buscar..."
+                                placeholder="¿Qué estás buscando hoy?"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className={`bg-transparent outline-none text-sm w-24 focus:w-48 transition-all duration-300 placeholder:text-gray-400 ${isScrolled || !isHome ? 'text-gray-900' : 'text-white'
+                                className={`w-full rounded-2xl py-3 pl-6 pr-12 transition-all duration-300 outline-none border ${isScrolled || !isHome
+                                    ? "bg-gray-50 border-gray-200 focus:bg-white focus:ring-2 ring-primary/20 text-gray-900"
+                                    : "bg-white/10 backdrop-blur-md border-white/20 text-white placeholder:text-gray-300 focus:bg-white/20"
                                     }`}
                             />
-                            <button type="submit" className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-primary transition-colors">
-                                <Search size={16} />
+                            <button type="submit" className={`absolute right-4 top-1/2 -translate-y-1/2 transition-colors ${isScrolled || !isHome ? 'text-gray-400 hover:text-primary' : 'text-white/70 hover:text-white'}`}>
+                                <Search size={20} />
                             </button>
                         </form>
                     </div>
+
+                    {/* Desktop Navigation */}
+                    <nav className="hidden md:flex items-center gap-8 mr-6">
+                        {[
+                            { label: 'Productos', href: '/productos' },
+                            { label: 'Rastreo', href: '/rastreo' },
+                        ].map((link) => (
+                            <Link
+                                key={link.href}
+                                href={link.href}
+                                className={`text-sm font-black uppercase tracking-widest hover:text-primary transition-colors ${isScrolled || !isHome ? 'text-gray-600' : 'text-gray-200'
+                                    }`}
+                            >
+                                {link.label}
+                            </Link>
+                        ))}
+                    </nav>
 
                     {/* Actions */}
                     <div className="flex items-center gap-4">

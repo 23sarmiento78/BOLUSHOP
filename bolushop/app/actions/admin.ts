@@ -10,7 +10,9 @@ import {
     saveCollections,
     getAllCategories,
     saveCategories,
-    updateOrder
+    updateOrder,
+    getNewsletterSubscribers,
+    deleteNewsletterSubscriber
 } from "@/lib/db";
 import { Product, Collection, Category, Order } from "@/lib/types";
 import { v4 as uuidv4 } from 'uuid';
@@ -392,4 +394,69 @@ export async function updateOrderStatusAction(orderId: string, newStatus: string
 
 export async function getAllOrdersAction() {
     return await getAllOrders();
+}
+
+export async function getNewsletterSubscribersAction() {
+    return await getNewsletterSubscribers();
+}
+
+export async function deleteNewsletterSubscriberAction(email: string) {
+    const success = await deleteNewsletterSubscriber(email);
+    revalidatePath("/admin/newsletter");
+    return success;
+}
+
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+export async function sendNewsletterCampaignAction(campaign: {
+    subject: string;
+    bannerUrl?: string;
+    content: string;
+    collectionId?: string;
+}) {
+    try {
+        const subscribers = await getNewsletterSubscribers();
+        const emails = subscribers.map(s => s.email);
+
+        if (emails.length === 0) {
+            return { success: false, message: "No hay suscriptores" };
+        }
+
+        // Real email sending via Resend
+        const { data, error } = await resend.emails.send({
+            from: 'BoluShop <onboarding@resend.dev>', // Should be a verified domain in production
+            to: emails,
+            subject: campaign.subject,
+            html: `
+                <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 12px; overflow: hidden;">
+                    ${campaign.bannerUrl ? `<img src="${campaign.bannerUrl}" style="width: 100%; height: auto; display: block;" />` : ''}
+                    <div style="padding: 40px;">
+                        <h1 style="color: #0F172A; font-size: 24px; font-weight: 900; margin-bottom: 24px;">${campaign.subject}</h1>
+                        <p style="color: #475569; font-size: 16px; line-height: 1.6; white-space: pre-line; margin-bottom: 32px;">${campaign.content}</p>
+                        ${campaign.collectionId ? `
+                            <div style="background-color: #F8FAFC; border-radius: 12px; padding: 24px; text-align: center; border: 1px solid #E2E8F0;">
+                                <p style="text-transform: uppercase; font-size: 10px; font-weight: 900; letter-spacing: 0.1em; color: #0F172A; margin-bottom: 8px;">Promoción Exclusiva</p>
+                                <a href="${process.env.NEXT_PUBLIC_SITE_URL}/productos?coleccion=${campaign.collectionId}" style="display: inline-block; background-color: #0F172A; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 900; font-size: 14px; text-transform: uppercase;">Ver Colección</a>
+                            </div>
+                        ` : ''}
+                        <div style="margin-top: 40px; border-top: 1px solid #eee; pt-20; text-align: center;">
+                            <p style="font-size: 10px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 20px;">BoluShop Argentina · 2026</p>
+                        </div>
+                    </div>
+                </div>
+            `
+        });
+
+        if (error) {
+            console.error("❌ Resend Error:", error);
+            return { success: false, message: "Error al enviar: " + error.message };
+        }
+
+        return { success: true, message: `Campaña enviada con éxito a ${emails.length} suscriptores` };
+    } catch (e: any) {
+        console.error("❌ Campaign Action Error:", e);
+        return { success: false, message: e.message || "Error al procesar el envío" };
+    }
 }

@@ -3,36 +3,42 @@
         "id": "hogar",
         "name": "Hogar",
         "slug": "hogar",
-        "description": "Productos esenciales para el confort de tu casa."
+        "description": "Transformá cada rincón de tu casa con elegancia.",
+        "image": "https://images.unsplash.com/photo-1583847268964-b28dc2f51ac9?q=80&w=2000&auto=format&fit=crop"
     },
     {
         "id": "organizacion",
         "name": "Organización",
         "slug": "organizacion",
-        "description": "Estanterías, percheros y carritos para mantener todo ordenado."
+        "description": "El orden es la base de un hogar armonioso.",
+        "image": "https://images.unsplash.com/photo-1540518614846-7eded433c457?q=80&w=2000&auto=format&fit=crop"
     },
     {
         "id": "oficina",
         "name": "Oficina",
         "slug": "oficina",
-        "description": "Equipamiento ergonómico para tu espacio de trabajo."
+        "description": "Productividad y confort en tu espacio de trabajo.",
+        "image": "https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=2000&auto=format&fit=crop"
     },
     {
         "id": "bano",
         "name": "Baño",
         "slug": "bano",
-        "description": "Accesorios y complementos para un baño moderno."
+        "description": "Detalles que convierten tu baño en un spa.",
+        "image": "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?q=80&w=2000&auto=format&fit=crop"
     },
     {
         "id": "limpieza",
         "name": "Limpieza",
         "slug": "limpieza",
-        "description": "Soluciones inteligentes para el aseo del hogar."
+        "description": "Soluciones eficientes para un hogar impecable.",
+        "image": "https://images.unsplash.com/photo-1516062423079-7ca13cdc7f5a?q=80&w=2000&auto=format&fit=crop"
     },
     {
         "id": "varios",
         "name": "Varios",
         "slug": "varios",
-        "description": "Otros productos útiles para tu día a día."
+        "description": "Descubrí tesoros únicos para tu día a día.",
+        "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=2000&auto=format&fit=crop"
     }
 ]
