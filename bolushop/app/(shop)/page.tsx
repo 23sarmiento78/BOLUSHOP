@@ -21,81 +21,108 @@ export const metadata: Metadata = {
 export default async function HomePage() {
     const allProducts = await getAllProducts();
     const categories = await getAllCategories();
-    const featuredProducts = allProducts.filter(p => p.isActive !== false).slice(0, 8);
+    // Prioritize products that are active and have essential data
+    const featuredProducts = allProducts
+        .filter(p => p.isActive !== false && p.price > 0)
+        .slice(0, 8);
 
     return (
         <>
             <Header />
 
-            <main>
-                {/* Hero Section with Video Background */}
-                <section className="relative h-[70vh] min-h-[500px] flex items-center justify-center overflow-hidden">
+            <main className="min-h-screen">
+                {/* Hero Section with Video/Image Background */}
+                <section className="relative h-[65vh] md:h-[75vh] min-h-[450px] flex items-center justify-center overflow-hidden">
+                    {/* Background Video with Poster to prevent CLS */}
                     <video
                         autoPlay
                         loop
                         muted
                         playsInline
-                        className="absolute inset-0 w-full h-full object-cover"
+                        poster="/hero-fallback.jpg" // You should create this image or I will generate one
+                        className="absolute inset-0 w-full h-full object-cover scale-105"
                     >
                         <source src="/videohero.mp4" type="video/mp4" />
                     </video>
 
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80" />
 
-                    <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
-                        <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-700">
-                            Tu Marketplace <span className="text-primary italic">Premium</span>
+                    <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto">
+                        <span className="inline-block px-4 py-1.5 bg-primary/20 backdrop-blur-md border border-primary/30 rounded-full text-[10px] font-black uppercase tracking-[0.3em] mb-6 animate-in fade-in slide-in-from-top-4 duration-1000">
+                            Nueva Colección 2026
+                        </span>
+                        <h1 className="text-5xl md:text-8xl font-black mb-8 tracking-tighter leading-[0.9] animate-in fade-in slide-in-from-bottom-4 duration-700">
+                            Estilo Que <br />
+                            <span className="text-primary italic">Inspira</span>
                         </h1>
-                        <p className="text-xl md:text-2xl mb-8 font-medium text-gray-200 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150">
-                            Calidad, confianza y envíos rápidos a todo Argentina 🇦🇷
+                        <p className="text-lg md:text-2xl mb-12 font-medium text-gray-200/90 max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150">
+                            Elevá tu hogar con piezas exclusivas elegidas para durar. Envíos flash a todo el país.
                         </p>
-                        <Link
-                            href="/productos"
-                            className="inline-block px-10 py-5 bg-primary text-white rounded-full font-black text-lg uppercase tracking-widest hover:scale-110 transition-transform shadow-2xl shadow-primary/50 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300"
-                        >
-                            Ver Productos
-                        </Link>
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
+                            <Link
+                                href="/productos"
+                                className="w-full sm:w-auto px-12 py-5 bg-primary text-white rounded-full font-black text-sm uppercase tracking-widest hover:scale-110 active:scale-95 transition-all shadow-2xl shadow-primary/40"
+                            >
+                                Explorar Tienda
+                            </Link>
+                            <Link
+                                href="/rastreo"
+                                className="w-full sm:w-auto px-8 py-5 bg-white/10 backdrop-blur-md text-white border border-white/20 rounded-full font-black text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-all"
+                            >
+                                Mi Pedido 🚚
+                            </Link>
+                        </div>
                     </div>
                 </section>
 
-                {/* Categories Section */}
-                <section className="container mx-auto px-4 py-24">
-                    <div className="text-center mb-16">
-                        <h2 className="text-5xl md:text-6xl font-black mb-4">
-                            Explorá por <span className="text-primary italic">Categoría</span>
-                        </h2>
-                        <p className="text-gray-500 text-lg md:text-xl max-w-2xl mx-auto">
-                            Encontrá exactamente lo que necesitás para tu hogar y oficina con nuestra selección curada.
-                        </p>
+                {/* Categories Section - Improved Mobile Grid */}
+                <section className="container mx-auto px-4 py-20 md:py-32">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+                        <div className="max-w-2xl">
+                            <h2 className="text-5xl md:text-7xl font-black mb-6 tracking-tighter">
+                                Selecciones <span className="text-primary italic">Curadas</span>
+                            </h2>
+                            <p className="text-gray-500 text-lg md:text-xl font-medium">
+                                Artículos diseñados para mejorar tu calidad de vida diario. Encontrá la pieza perfecta.
+                            </p>
+                        </div>
+                        <Link href="/productos" className="hidden md:flex items-center gap-2 font-black uppercase tracking-widest text-sm text-gray-400 hover:text-primary transition-colors">
+                            Ver todas las categorías <span className="text-xl">→</span>
+                        </Link>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {categories.map((category) => (
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+                        {categories.map((category, index) => (
                             <Link
                                 key={category.id}
                                 href={`/productos?categoria=${encodeURIComponent(category.name)}`}
-                                className="group relative h-[350px] overflow-hidden rounded-[2.5rem] shadow-lg hover:shadow-2xl transition-all duration-500"
+                                className="group relative h-[300px] md:h-[450px] overflow-hidden rounded-[2.5rem] shadow-sm hover:shadow-2xl transition-all duration-700"
                             >
-                                {/* Category Image */}
+                                {/* Category Image - Added Priority for first 2 images */}
                                 <div className="absolute inset-0">
                                     <Image
                                         src={category.image || "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=2070&auto=format&fit=crop"}
                                         alt={category.name}
                                         fill
-                                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                        className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                        priority={index < 2}
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent transition-opacity duration-500 group-hover:via-black/40" />
                                 </div>
 
                                 {/* Content */}
-                                <div className="absolute inset-0 flex flex-col justify-end p-10 text-white">
-                                    <h3 className="text-3xl font-black mb-2 transform transition-transform duration-500 group-hover:-translate-y-2">
-                                        {category.name}
-                                    </h3>
-                                    <p className="text-gray-300 font-medium opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
-                                        {category.description}
-                                    </p>
-                                    <div className="mt-6 flex items-center gap-2 text-primary font-black uppercase tracking-widest text-sm opacity-0 group-hover:opacity-100 transition-all duration-500 delay-100">
-                                        Explorar colección
+                                <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 text-white">
+                                    <div className="transform transition-all duration-500 group-hover:-translate-y-4">
+                                        <h3 className="text-3xl md:text-4xl font-black mb-2 tracking-tight">
+                                            {category.name}
+                                        </h3>
+                                        <p className="text-gray-300 font-medium line-clamp-2 md:line-clamp-none opacity-90 md:opacity-0 md:group-hover:opacity-100 transition-all duration-500 text-sm md:text-base">
+                                            {category.description}
+                                        </p>
+                                    </div>
+                                    <div className="mt-6 flex items-center gap-2 text-primary font-black uppercase tracking-widest text-[10px] md:text-xs opacity-0 md:group-hover:opacity-100 transition-all duration-500 delay-100">
+                                        Ver Colección
                                         <span className="text-xl">→</span>
                                     </div>
                                 </div>
@@ -104,46 +131,63 @@ export default async function HomePage() {
                     </div>
                 </section>
 
-                {/* Featured Products */}
-                <section className="bg-gray-50 py-16">
+                {/* Featured Products - Performance Optimized */}
+                <section className="bg-gray-50/50 py-24 md:py-32 rounded-[3rem] md:rounded-[5rem] mx-0 md:mx-4">
                     <div className="container mx-auto px-4">
-                        <div className="flex justify-between items-center mb-12">
-                            <h2 className="text-4xl font-black">
-                                Productos <span className="text-primary italic">Destacados</span>
-                            </h2>
+                        <div className="flex flex-col sm:flex-row justify-between items-center mb-16 gap-6 text-center sm:text-left">
+                            <div>
+                                <h2 className="text-5xl md:text-6xl font-black tracking-tighter">
+                                    Solo <span className="text-primary italic">Lo Mejor</span>
+                                </h2>
+                                <p className="text-gray-400 font-medium mt-2">Productos que están marcando tendencia esta semana.</p>
+                            </div>
                             <Link
                                 href="/productos"
-                                className="px-6 py-3 bg-white rounded-full font-black text-sm uppercase tracking-widest hover:bg-primary hover:text-white transition-all shadow-lg"
+                                className="w-full sm:w-auto px-8 py-4 bg-white border border-gray-100 text-gray-900 rounded-full font-black text-xs uppercase tracking-widest hover:bg-primary hover:text-white hover:border-primary transition-all shadow-xl shadow-gray-200/50"
                             >
-                                Ver Todos →
+                                Ver Catálogo Completo
                             </Link>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
                             {featuredProducts.map((product) => (
-                                <ProductCard key={product.id} product={product} />
+                                <div key={product.id} className="h-full">
+                                    <ProductCard product={product} />
+                                </div>
                             ))}
                         </div>
                     </div>
                 </section>
 
-                {/* Trust Badges */}
-                <section className="container mx-auto px-4 py-16">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                        <div className="p-8">
-                            <div className="text-6xl mb-4">🚚</div>
-                            <h3 className="text-xl font-black mb-2">Envíos a Todo el País</h3>
-                            <p className="text-gray-600">Llegamos a todos los rincones de Argentina</p>
+                {/* Trust Badges - Optimized for Mobile */}
+                <section className="container mx-auto px-6 py-24 md:py-32">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-20">
+                        <div className="group text-center">
+                            <div className="w-20 h-20 bg-primary/5 rounded-[2rem] flex items-center justify-center text-5xl mx-auto mb-8 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                                🚚
+                            </div>
+                            <h3 className="text-2xl font-black mb-4 tracking-tight">Envíos Flash</h3>
+                            <p className="text-gray-500 font-medium leading-relaxed">
+                                Procesamos tu pedido en menos de 24hs. Envío gratis a todo Argentina en compras mayores a $30.000.
+                            </p>
                         </div>
-                        <div className="p-8">
-                            <div className="text-6xl mb-4">💳</div>
-                            <h3 className="text-xl font-black mb-2">Pago Seguro</h3>
-                            <p className="text-gray-600">Mercado Pago - Todas las formas de pago</p>
+                        <div className="group text-center">
+                            <div className="w-20 h-20 bg-secondary/10 rounded-[2rem] flex items-center justify-center text-5xl mx-auto mb-8 group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500">
+                                🔒
+                            </div>
+                            <h3 className="text-2xl font-black mb-4 tracking-tight">Compra Segura</h3>
+                            <p className="text-gray-500 font-medium leading-relaxed">
+                                Usamos Mercado Pago para garantizar que tus datos estén 100% protegidos. Pagá en cuotas sin interés.
+                            </p>
                         </div>
-                        <div className="p-8">
-                            <div className="text-6xl mb-4">✨</div>
-                            <h3 className="text-xl font-black mb-2">Calidad Garantizada</h3>
-                            <p className="text-gray-600">Productos seleccionados con los mejores estándares</p>
+                        <div className="group text-center">
+                            <div className="w-20 h-20 bg-emerald-50 rounded-[2rem] flex items-center justify-center text-5xl mx-auto mb-8 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                                ✨
+                            </div>
+                            <h3 className="text-2xl font-black mb-4 tracking-tight">Garantía Real</h3>
+                            <p className="text-gray-500 font-medium leading-relaxed">
+                                Si no te gusta el producto, tenés 30 días para devolverlo. Sin preguntas ni vueltas.
+                            </p>
                         </div>
                     </div>
                 </section>

@@ -137,50 +137,50 @@ export default function Header() {
 
             {/* Mobile Menu Overlay */}
             {isMobileMenuOpen && (
-                <div className="absolute top-full left-0 right-0 bg-white border-t border-gray-100 shadow-2xl p-6 md:hidden animate-in slide-in-from-top-5">
-                    <form onSubmit={handleSearch} className="mb-6 relative">
-                        <input
-                            type="text"
-                            placeholder="¿Qué estás buscando?"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full bg-gray-50 border-none rounded-xl py-4 pl-4 pr-12 font-medium outline-none focus:ring-2 ring-primary/20"
-                        />
-                        <button type="submit" className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
-                            <Search size={20} />
-                        </button>
-                    </form>
+                <div
+                    className="fixed inset-0 top-[70px] bg-white/95 backdrop-blur-lg z-50 md:hidden animate-in fade-in slide-in-from-right-full duration-500 ease-out"
+                    style={{ height: 'calc(100vh - 70px)' }}
+                >
+                    <div className="p-6 h-full overflow-y-auto">
+                        <form onSubmit={handleSearch} className="mb-8 relative group">
+                            <input
+                                type="text"
+                                placeholder="¿Qué estás buscando?"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-5 pl-6 pr-14 font-bold outline-none focus:ring-4 ring-primary/10 transition-all"
+                            />
+                            <button type="submit" className="absolute right-5 top-1/2 -translate-y-1/2 text-primary">
+                                <Search size={24} />
+                            </button>
+                        </form>
 
-                    <nav className="flex flex-col gap-4">
-                        <Link
-                            href="/"
-                            className="flex items-center gap-4 p-4 rounded-xl hover:bg-gray-50 font-bold text-gray-900 transition-colors"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                        >
-                            🏠 Inicio
-                        </Link>
-                        <Link
-                            href="/productos"
-                            className="flex items-center gap-4 p-4 rounded-xl hover:bg-gray-50 font-bold text-gray-900 transition-colors"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                        >
-                            📦 Productos
-                        </Link>
-                        <Link
-                            href="/rastreo"
-                            className="flex items-center gap-4 p-4 rounded-xl hover:bg-gray-50 font-bold text-gray-900 transition-colors"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                        >
-                            🚚 Rastreo de Pedido
-                        </Link>
-                        <Link
-                            href="/carrito"
-                            className="flex items-center gap-4 p-4 rounded-xl hover:bg-gray-50 font-bold text-gray-900 transition-colors"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                        >
-                            🛒 Mi Carrito ({cartCount})
-                        </Link>
-                    </nav>
+                        <nav className="flex flex-col gap-3">
+                            {[
+                                { label: '🏠 Inicio', href: '/' },
+                                { label: '📦 Productos', href: '/productos' },
+                                { label: '🚚 Rastreo de Pedido', href: '/rastreo' },
+                                { label: '🛒 Mi Carrito', href: '/carrito', suffix: `(${cartCount})` }
+                            ].map((item, idx) => (
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    className="flex items-center justify-between p-5 rounded-2xl bg-gray-50/50 hover:bg-primary hover:text-white font-black text-lg transition-all active:scale-95 group"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    style={{ animationDelay: `${idx * 50}ms` }}
+                                >
+                                    <span>{item.label} {item.suffix}</span>
+                                    <span className="text-xl opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                                </Link>
+                            ))}
+                        </nav>
+
+                        <div className="mt-12 p-8 bg-primary rounded-[2.5rem] text-white text-center">
+                            <p className="text-[10px] font-black uppercase tracking-[0.3em] mb-4 opacity-60">Ayuda Directa</p>
+                            <a href="https://wa.me/3541237972" className="text-xl font-black block mb-2">WhatsApp 24/7</a>
+                            <p className="text-sm opacity-80">Estamos online para ayudarte</p>
+                        </div>
+                    </div>
                 </div>
             )}
         </header>
