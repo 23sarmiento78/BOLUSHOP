@@ -9,8 +9,8 @@ import { clearCart } from "@/lib/cart";
 
 function ExitoContent() {
     const searchParams = useSearchParams();
-    const orderId = searchParams.get('order_id');
-    const status = searchParams.get('status'); // 'pending' or undefined (approved)
+    const orderId = searchParams.get('order_id') || searchParams.get('external_reference');
+    const status = searchParams.get('status') || searchParams.get('collection_status'); // 'pending' or 'approved'
 
     useEffect(() => {
         // Clear cart after successful purchase
