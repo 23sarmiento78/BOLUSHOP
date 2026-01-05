@@ -3,6 +3,7 @@ export interface Category {
     name: string;
     slug: string;
     description?: string;
+    image?: string;
 }
 
 export interface Collection {
@@ -61,4 +62,19 @@ export interface Settings {
     siteName: string;
     siteDescription: string;
     whatsappNumber: string;
+}
+
+export interface Review {
+    id: string;
+    productId: string;
+    userName: string;
+    rating: number;
+    comment: string;
+    date: string;
+}
+
+export interface Newsletter {
+    id?: string;
+    email: string;
+    createdAt: string;
 }

@@ -58,6 +58,10 @@ export default async function AdminDashboard() {
                             <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">⚙️</div>
                             <span className="font-bold text-gray-700">Configuración</span>
                         </Link>
+                        <Link href="/admin/newsletter" className="bg-white p-6 rounded-2xl border border-gray-100 hover:border-pink-500 hover:shadow-lg transition-all group text-center">
+                            <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">📧</div>
+                            <span className="font-bold text-gray-700">Email Marketing</span>
+                        </Link>
                     </div>
                 </div>
 

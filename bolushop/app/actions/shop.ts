@@ -1,7 +1,7 @@
 "use server";
 
-import { getAllProducts, getSettings } from "@/lib/db";
-import { Product } from "@/lib/types";
+import { getAllProducts, getSettings, getProductReviews, addProductReview, subscribeToNewsletter } from "@/lib/db";
+import { Product, Review } from "@/lib/types";
 
 export async function searchProducts(query: string): Promise<Product[]> {
     const products = await getAllProducts();
@@ -58,4 +58,16 @@ export async function getShippingRate(province: string, city: string = ""): Prom
         default:
             return settings.shippingJson.rest;
     }
+}
+
+export async function getProductReviewsAction(productId: string) {
+    return await getProductReviews(productId);
+}
+
+export async function addProductReviewAction(review: Review) {
+    return await addProductReview(review);
+}
+
+export async function subscribeToNewsletterAction(email: string) {
+    return await subscribeToNewsletter(email);
 }

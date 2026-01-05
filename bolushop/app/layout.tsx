@@ -4,6 +4,7 @@ import { Toaster } from "sonner";
 import Script from "next/script";
 import NextTopLoader from 'nextjs-toploader';
 import { getSettings } from "@/lib/db";
+import WhatsAppButton from "@/components/shop/WhatsAppButton";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -107,6 +108,8 @@ export default async function RootLayout({
         <main className="flex-grow">
           {children}
         </main>
+        <WhatsAppButton />
+        <Toaster position="top-center" richColors />
         <Script
           src="https://www.mercadopago.com/v2/security.js"
           {...({ view: "checkout" } as any)}

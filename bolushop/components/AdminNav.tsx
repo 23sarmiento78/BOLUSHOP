@@ -16,6 +16,7 @@ export default function AdminNav() {
         { href: '/admin/orders', label: 'Pedidos', icon: '🚚' },
         { href: '/admin/collections', label: 'Colecciones', icon: '🏷️' },
         { href: '/admin/settings', label: 'Ajustes', icon: '⚙️' },
+        { href: '/admin/newsletter', label: 'Marketing', icon: '📧' },
         { href: '/admin/upload', label: 'Importar CSV', icon: '📥' },
     ];
 

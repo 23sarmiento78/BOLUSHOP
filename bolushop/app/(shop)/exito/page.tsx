@@ -25,7 +25,7 @@ function ExitoContent() {
         <>
             <Header />
 
-            <main className={`min-h-screen bg-gradient-to-b ${isPending ? 'from-amber-50' : 'from-green-50'} to-white flex items-center justify-center px-4 py-12`}>
+            <main className={`min-h-screen bg-gradient-to-b ${isPending ? 'from-amber-50' : 'from-green-50'} to-white flex items-center justify-center px-4 pt-28 pb-12`}>
                 <div className="max-w-2xl w-full text-center">
                     <div className="bg-white rounded-[3rem] p-12 shadow-2xl">
                         {/* Icon */}

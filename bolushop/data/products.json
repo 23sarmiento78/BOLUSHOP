@@ -1,22 +1,5 @@
 [
   {
-    "id": "DL2034-BL",
-    "name": "Organizador Calzado Perchero Mediano BLANCO",
-    "slug": "organizador-calzado-perchero-mediano-blanco",
-    "price": 25308,
-    "image": "/products/d700d819-788d-4f31-b21d-52373f14f2c4-Organizador-Calzado-Perchero-Mediano-BLANCO.png",
-    "category": "Organización",
-    "description": "Organizador Zapatos Perchero Metálico. 4 Estantes 7 Percheros. Medidas: Ancho 60Cm X 1,72Mt Alto X 26Cm Profundidad. Colores: Negro Y Blanco. Se Entrega Surtido",
-    "features": [
-      "Envío Gratis 🚚"
-    ],
-    "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.220Z",
-    "collections": [],
-    "isActive": true,
-    "categoryId": "organizacion"
-  },
-  {
     "id": "DL2035-BL",
     "name": "Organizador Calzado Perchero Grande BLANCO",
     "slug": "organizador-calzado-perchero-grande-blanco",
@@ -505,20 +488,5 @@
     "collections": [],
     "isActive": true,
     "categoryId": "bano"
-  },
-  {
-    "name": "producto prueba",
-    "slug": "producto-prueba",
-    "price": 100,
-    "image": "",
-    "category": "Varios",
-    "description": "esto no es un producto real ",
-    "features": [],
-    "stock": 99,
-    "collections": [],
-    "isActive": true,
-    "categoryId": "varios",
-    "id": "d449be10-e4cb-49f3-89b8-130de8fe6112",
-    "createdAt": "2026-01-02T21:08:48.916Z"
   }
 ]

@@ -54,7 +54,7 @@ export default function CarritoPage() {
         return (
             <>
                 <Header />
-                <main className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <main className="min-h-screen bg-gray-50 flex items-center justify-center pt-20">
                     <div className="text-center px-4">
                         <div className="text-9xl mb-6 opacity-20">🛒</div>
                         <h1 className="text-4xl font-black text-gray-900 mb-4">
@@ -80,7 +80,7 @@ export default function CarritoPage() {
         <>
             <Header />
 
-            <main className="min-h-screen bg-gray-50 py-12">
+            <main className="min-h-screen bg-gray-50 pt-28 pb-12">
                 <div className="container mx-auto px-4">
                     <h1 className="text-5xl font-black mb-12">
                         Tu <span className="text-primary italic">Carrito</span>

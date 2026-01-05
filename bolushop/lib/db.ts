@@ -9,8 +9,10 @@ const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
 const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');
 const COLLECTIONS_FILE = path.join(DATA_DIR, 'collections.json');
 const CATEGORIES_FILE = path.join(DATA_DIR, 'categories.json');
+const REVIEWS_FILE = path.join(DATA_DIR, 'reviews.json');
+const NEWSLETTER_FILE = path.join(DATA_DIR, 'newsletter.json');
 
-import { Category, Collection, Product, Order, Settings } from './types';
+import { Category, Collection, Product, Order, Settings, Review, Newsletter } from './types';
 
 const DEFAULT_SETTINGS: Settings = {
     profitMargin: 1.05,
@@ -465,4 +467,135 @@ export async function saveCategories(categories: Category[]): Promise<boolean> {
         console.error("❌ Supabase Categories Sync Error:", e);
     }
     return success;
+}
+
+// Reviews API
+export async function getProductReviews(productId: string): Promise<Review[]> {
+    const localReviews = readJson<Review[]>(REVIEWS_FILE, []);
+    const productReviews = localReviews.filter(r => r.productId === productId);
+
+    try {
+        const { data, error } = await supabase
+            .from('reviews')
+            .select('*')
+            .eq('product_id', productId)
+            .order('date', { ascending: false });
+
+        if (data && data.length > 0) {
+            return data.map(r => ({
+                id: r.id,
+                productId: r.product_id,
+                userName: r.user_name,
+                rating: r.rating,
+                comment: r.comment,
+                date: r.date
+            }));
+        }
+    } catch (e) {
+        console.warn("⚠️ Supabase Reviews Fetch Error:", e);
+    }
+    return productReviews;
+}
+
+export async function addProductReview(review: Review): Promise<boolean> {
+    const allReviews = readJson<Review[]>(REVIEWS_FILE, []);
+
+    // Filter reviews for this product
+    const productReviews = allReviews.filter(r => r.productId === review.productId);
+
+    // Limit to 10: If we have 10, remove the oldest one
+    if (productReviews.length >= 10) {
+        const oldestIndex = allReviews.indexOf(productReviews[0]);
+        if (oldestIndex !== -1) allReviews.splice(oldestIndex, 1);
+    }
+
+    allReviews.push(review);
+    writeJson(REVIEWS_FILE, allReviews);
+
+    try {
+        // For Supabase, we also want to limit if possible, or just insert
+        // Since it's a "free version", we'll respect the 10-limit by deleting the oldest if count > 10
+        const { data: countData } = await supabase
+            .from('reviews')
+            .select('id', { count: 'exact' })
+            .eq('product_id', review.productId);
+
+        if (countData && countData.length >= 10) {
+            const { data: oldest } = await supabase
+                .from('reviews')
+                .select('id')
+                .eq('product_id', review.productId)
+                .order('date', { ascending: true })
+                .limit(1)
+                .single();
+
+            if (oldest) {
+                await supabase.from('reviews').delete().eq('id', oldest.id);
+            }
+        }
+
+        const { error } = await supabase.from('reviews').insert([{
+            id: review.id,
+            product_id: review.productId,
+            user_name: review.userName,
+            rating: review.rating,
+            comment: review.comment,
+            date: review.date
+        }]);
+        if (error) console.error("❌ Supabase Review Insert Error:", error);
+    } catch (e) {
+        console.error("❌ Supabase Review Sync Error:", e);
+    }
+    return true;
+}
+// Newsletter API
+export async function subscribeToNewsletter(email: string): Promise<boolean> {
+    const emails = readJson<Newsletter[]>(NEWSLETTER_FILE, []);
+    if (emails.find(e => e.email === email)) return true;
+
+    const entry = { email, createdAt: new Date().toISOString() };
+    emails.push(entry);
+    writeJson(NEWSLETTER_FILE, emails);
+
+    try {
+        const { error } = await supabase.from('newsletter').insert([entry]);
+        if (error) console.error("❌ Supabase Newsletter Error:", error);
+    } catch (e) {
+        console.error("❌ Supabase Newsletter Sync Error:", e);
+    }
+    return true;
+}
+
+export async function getNewsletterSubscribers(): Promise<Newsletter[]> {
+    const localEmails = readJson<Newsletter[]>(NEWSLETTER_FILE, []);
+    try {
+        const { data, error } = await supabase
+            .from('newsletter')
+            .select('*')
+            .order('createdAt', { ascending: false });
+
+        if (data && data.length > 0) {
+            return data.map(e => ({
+                id: e.id,
+                email: e.email,
+                createdAt: e.createdAt
+            }));
+        }
+    } catch (e) {
+        console.warn("⚠️ Supabase Newsletter Fetch Error:", e);
+    }
+    return localEmails;
+}
+
+export async function deleteNewsletterSubscriber(email: string): Promise<boolean> {
+    const emails = readJson<Newsletter[]>(NEWSLETTER_FILE, []);
+    const filtered = emails.filter(e => e.email !== email);
+    writeJson(NEWSLETTER_FILE, filtered);
+
+    try {
+        await supabase.from('newsletter').delete().eq('email', email);
+    } catch (e) {
+        console.error("❌ Supabase Newsletter Delete Error:", e);
+    }
+    return true;
 }

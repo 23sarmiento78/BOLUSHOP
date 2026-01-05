@@ -8,6 +8,8 @@ import Footer from "@/components/shop/Footer";
 import ProductCard from "@/components/shop/ProductCard";
 import { Product } from "@/lib/types";
 import { addToCart } from "@/lib/cart";
+import { Truck, ShieldCheck } from "lucide-react";
+import ProductReviews from "@/components/shop/ProductReviews";
 
 interface Props {
     product: Product;
@@ -60,8 +62,8 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
             />
             <Header />
 
-            <main className="min-h-screen bg-white">
-                <div className="container mx-auto px-4 py-12">
+            <main className="min-h-screen bg-white pt-28 pb-12">
+                <div className="container mx-auto px-4">
                     {/* Breadcrumb */}
                     <div className="mb-8 flex items-center gap-2 text-sm text-gray-500">
                         <Link href="/" className="hover:text-primary">Inicio</Link>
@@ -87,107 +89,125 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
 
                         {/* Info */}
                         <div className="flex flex-col">
-                            <p className="text-xs font-black uppercase tracking-widest text-gray-400 mb-3">
-                                {product.category}
-                            </p>
+                            <div className="flex items-center gap-4 mb-6">
+                                <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
+                                    {product.category}
+                                </span>
+                                <div className="flex items-center gap-1 text-sun-yellow">
+                                    {[1, 2, 3, 4, 5].map((s) => (
+                                        <span key={s} className="text-lg">★</span>
+                                    ))}
+                                    <span className="text-gray-400 text-xs font-bold ml-2">(+50 ventas)</span>
+                                </div>
+                            </div>
 
-                            <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 leading-tight">
+                            <h1 className="text-4xl md:text-6xl font-black text-gray-900 mb-8 leading-[1.1] tracking-tighter">
                                 {product.name}
                             </h1>
 
-                            <div className="mb-8">
-                                <div className="flex items-baseline gap-3 mb-2">
-                                    <span className="text-5xl font-black text-primary">
-                                        ${product.price.toLocaleString('es-AR')}
-                                    </span>
-                                </div>
-                                <p className="text-sm text-gray-500 font-bold">+ Costo de envío (se calcula en el checkout)</p>
-                            </div>
-
-                            <div className="mb-8 p-6 bg-gray-50 rounded-2xl">
-                                <p className="text-gray-700 leading-relaxed">
-                                    {product.description}
-                                </p>
-                            </div>
-
-                            {product.features && product.features.length > 0 && (
-                                <div className="mb-8">
-                                    <h3 className="font-black text-lg mb-4">Características:</h3>
-                                    <ul className="space-y-2">
-                                        {product.features.map((feature, index) => (
-                                            <li key={index} className="flex items-start gap-3">
-                                                <span className="text-primary text-xl">✓</span>
-                                                <span className="text-gray-700">{feature}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )}
-
-                            {/* Stock Status */}
-                            <div className="mb-8">
-                                {product.stock > 0 ? (
-                                    <div className="flex items-center gap-2 text-green-600">
-                                        <span className="text-2xl">✓</span>
-                                        <span className="font-bold">
-                                            {product.stock > 10 ? 'En stock' : `Últimas ${product.stock} unidades`}
-                                        </span>
-                                    </div>
-                                ) : (
-                                    <div className="flex items-center gap-2 text-red-600">
-                                        <span className="text-2xl">✕</span>
-                                        <span className="font-bold">Sin stock</span>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Quantity & Add to Cart */}
-                            {product.stock > 0 && (
-                                <div className="flex gap-4 mb-8">
-                                    <div className="flex items-center gap-4 bg-gray-50 rounded-2xl px-6 py-3">
-                                        <button
-                                            onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                            className="text-2xl font-black text-gray-600 hover:text-primary transition-colors"
-                                        >
-                                            −
-                                        </button>
-                                        <span className="text-xl font-black w-12 text-center">{quantity}</span>
-                                        <button
-                                            onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
-                                            className="text-2xl font-black text-gray-600 hover:text-primary transition-colors"
-                                        >
-                                            +
-                                        </button>
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                                {/* Left: Description & Features */}
+                                <div className="lg:col-span-2 space-y-10">
+                                    <div className="prose prose-gray max-w-none">
+                                        <p className="text-gray-600 text-lg leading-relaxed font-medium">
+                                            {product.description}
+                                        </p>
                                     </div>
 
-                                    <button
-                                        onClick={handleAddToCart}
-                                        disabled={isAdding}
-                                        className={`flex-grow py-4 px-8 rounded-2xl font-black text-sm uppercase tracking-widest transition-all ${isAdding
-                                            ? 'bg-green-500 text-white scale-105'
-                                            : 'bg-primary text-white hover:scale-105 shadow-xl shadow-primary/30'
-                                            }`}
-                                    >
-                                        {isAdding ? '✓ Agregado al Carrito' : '🛒 Agregar al Carrito'}
-                                    </button>
+                                    {product.features && product.features.length > 0 && (
+                                        <div className="bg-gray-50 rounded-[2.5rem] p-10">
+                                            <h3 className="font-black text-xl mb-8 flex items-center gap-3">
+                                                <span className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white text-sm">✓</span>
+                                                Características Principales
+                                            </h3>
+                                            <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                {product.features.map((feature, index) => (
+                                                    <li key={index} className="flex items-start gap-3 group">
+                                                        <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:bg-primary transition-colors" />
+                                                        <span className="text-gray-700 font-medium">{feature}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
                                 </div>
-                            )}
 
-                            {/* Trust Badges */}
-                            <div className="grid grid-cols-3 gap-4 pt-8 border-t border-gray-200">
-                                <div className="text-center">
-                                    <div className="text-3xl mb-2">🚚</div>
-                                    <p className="text-xs font-bold text-gray-600">Envío a todo el país</p>
-                                </div>
-                                <div className="text-center">
-                                    <div className="text-3xl mb-2">💳</div>
-                                    <p className="text-xs font-bold text-gray-600">Pago seguro</p>
-                                </div>
-                                <div className="text-center">
-                                    <div className="text-3xl mb-2">✨</div>
-                                    <p className="text-xs font-bold text-gray-600">Calidad garantizada</p>
+                                {/* Right: Purchase Card (Amazon style) */}
+                                <div className="lg:col-span-1">
+                                    <div className="sticky top-32 bg-white border border-gray-100 rounded-[2.5rem] p-8 shadow-2xl shadow-gray-200/50">
+                                        <div className="mb-8">
+                                            <div className="flex items-baseline gap-2 mb-2">
+                                                <span className="text-sm font-black text-primary">$</span>
+                                                <span className="text-5xl font-black text-gray-900 tracking-tighter">
+                                                    {product.price.toLocaleString('es-AR')}
+                                                </span>
+                                            </div>
+                                            <p className="text-green-600 font-black text-sm uppercase tracking-widest">
+                                                ¡Envío disponible hoy!
+                                            </p>
+                                        </div>
+
+                                        {product.stock > 0 ? (
+                                            <div className="space-y-6">
+                                                <div className="space-y-4">
+                                                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Cantidad</label>
+                                                    <div className="flex items-center justify-between bg-gray-50 rounded-2xl p-2 px-4 border border-gray-100">
+                                                        <button
+                                                            onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                                                            className="w-10 h-10 flex items-center justify-center text-xl font-black text-gray-400 hover:text-primary"
+                                                        >−</button>
+                                                        <span className="font-black text-lg">{quantity}</span>
+                                                        <button
+                                                            onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
+                                                            className="w-10 h-10 flex items-center justify-center text-xl font-black text-gray-400 hover:text-primary"
+                                                        >+</button>
+                                                    </div>
+                                                </div>
+
+                                                <button
+                                                    onClick={handleAddToCart}
+                                                    disabled={isAdding}
+                                                    className={`w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all duration-500 shadow-xl ${isAdding
+                                                        ? 'bg-green-500 text-white scale-[0.98]'
+                                                        : 'bg-gray-900 text-white hover:bg-primary shadow-gray-900/20 hover:shadow-primary/30'
+                                                        }`}
+                                                >
+                                                    {isAdding ? '¡Agregado con éxito!' : 'Comprar Ahora'}
+                                                </button>
+
+                                                <div className="space-y-4 pt-6 border-t border-gray-50">
+                                                    <div className="flex items-center gap-4 group">
+                                                        <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 transition-transform group-hover:scale-110">
+                                                            <Truck size={20} />
+                                                        </div>
+                                                        <div className="text-xs">
+                                                            <p className="font-black text-gray-900">Envío Gratis</p>
+                                                            <p className="text-gray-400 font-bold">En pedidos seleccionados</p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center gap-4 group">
+                                                        <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-600 transition-transform group-hover:scale-110">
+                                                            <ShieldCheck size={20} />
+                                                        </div>
+                                                        <div className="text-xs">
+                                                            <p className="font-black text-gray-900">Compra Protegida</p>
+                                                            <p className="text-gray-400 font-bold">12 meses de garantía</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="text-center p-6 bg-red-50 rounded-2xl border border-red-100">
+                                                <p className="text-red-600 font-black uppercase tracking-widest text-xs">Agotado Temporalmente</p>
+                                                <p className="text-red-400 text-[10px] mt-1 font-bold">Te avisaremos cuando vuelva</p>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
+
+                            {/* Reviews Section */}
+                            <ProductReviews productId={product.id} />
                         </div>
                     </div>
 
