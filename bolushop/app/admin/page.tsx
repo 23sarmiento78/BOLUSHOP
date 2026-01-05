@@ -1,9 +1,23 @@
 import Link from "next/link";
-import { getAllProducts, getAllOrders } from "@/lib/db";
+import { getAllProducts, getAllOrders, getAllCategories, saveCategories } from "@/lib/db";
+import fs from 'fs';
+import path from 'path';
 
 export default async function AdminDashboard() {
     const products = await getAllProducts();
     const orders = await getAllOrders();
+
+    // Force fix for category images: Read directly from JSON to overwrite Supabase once
+    try {
+        const categoriesPath = path.join(process.cwd(), 'data', 'categories.json');
+        if (fs.existsSync(categoriesPath)) {
+            const localCategories = JSON.parse(fs.readFileSync(categoriesPath, 'utf-8'));
+            await saveCategories(localCategories);
+        }
+    } catch (e) {
+        console.error("Error syncing categories:", e);
+    }
+
     const lowStockProducts = products.filter((p) => p.stock < 5);
 
     return (

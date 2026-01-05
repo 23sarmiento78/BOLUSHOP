@@ -78,7 +78,7 @@ export default async function HomePage() {
                                 {/* Category Image */}
                                 <div className="absolute inset-0">
                                     <Image
-                                        src={category.image || "https://images.unsplash.com/photo-1583847268964-b28dc2f51ac9?q=80&w=2070&auto=format&fit=crop"}
+                                        src={category.image || "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=2070&auto=format&fit=crop"}
                                         alt={category.name}
                                         fill
                                         className="object-cover transition-transform duration-700 group-hover:scale-110"
