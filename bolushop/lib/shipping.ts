@@ -67,7 +67,7 @@ export function getZoneByAddress(params: {
 }
 
 /**
- * Enhanced shipping cost calculation with multiple fallbacks and error prevention.
+ * Enhanced shipping cost calculation with multiple fall and error prevention.
  */
 export function calculateShippingCost(params: {
     locality: string,
