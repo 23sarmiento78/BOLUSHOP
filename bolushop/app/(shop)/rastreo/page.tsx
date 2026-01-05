@@ -20,9 +20,10 @@ export default function RastreoPage() {
                         loop
                         muted
                         playsInline
+                        preload="auto"
                         className="w-full h-full object-cover scale-105 blur-sm"
                     >
-                        <source src="/videohero.mp4" type="video/mp4" />
+                        <source src="/assets/4169341-uhd_3840_2160_25fps.mp4" type="video/mp4" />
                     </video>
                     <div className="absolute inset-0 bg-sand-white/80 backdrop-blur-[2px]" />
                 </div>
