@@ -67,9 +67,9 @@ export async function POST(req: NextRequest) {
                     }
                 },
                 back_urls: {
-                    success: `${baseUrl}/exito?order_id=${orderId}`,
-                    failure: `${baseUrl}/rechazado?order_id=${orderId}`,
-                    pending: `${baseUrl}/exito?order_id=${orderId}&status=pending`
+                    success: `${baseUrl}/exito`,
+                    failure: `${baseUrl}/rechazado`,
+                    pending: `${baseUrl}/exito`
                 },
                 auto_return: 'approved',
                 external_reference: orderId,
