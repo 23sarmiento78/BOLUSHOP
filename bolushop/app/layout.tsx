@@ -10,11 +10,13 @@ import "./globals.css";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: 'swap',
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: 'swap',
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -97,9 +99,9 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen bg-sand-white`}
       >
         <NextTopLoader
-          color="#EAB308"
+          color="#0F172A"
           showSpinner={false}
-          shadow="0 0 10px #EAB308,0 0 5px #EAB308"
+          shadow="0 0 10px #0F172A,0 0 5px #0F172A"
         />
         <script
           type="application/ld+json"

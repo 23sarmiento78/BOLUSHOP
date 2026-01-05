@@ -42,28 +42,53 @@ body {
 /* Optimizaciones para móviles */
 @media (max-width: 768px) {
   html {
-    font-size: 16px;
-    /* Asegurar tamaño mínimo legible */
+    font-size: 15px;
+    /* Ligeramente más pequeño para mejor densidad en móvil */
   }
 
-  /* Hacer botones más grandes en móviles */
+  /* Hacer botones más fáciles de tocar */
   button,
-  a[role="button"] {
-    min-height: 44px;
-    /* Tamaño táctil recomendado */
-    min-width: 44px;
+  a {
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
+}
+
+/* Skeleton Animation para mejor carga percibida */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
 }
 
 /* Mejorar contraste de textos grises */
 .text-gray-400 {
-  color: var(--text-secondary) !important;
+  color: #64748B !important;
 }
 
 .text-gray-500 {
-  color: #6B7280 !important;
+  color: #4B5563 !important;
 }
 
 .text-gray-600 {
   color: #374151 !important;
+}
+
+/* Prevenir Layout Shifts */
+img {
+  content-visibility: auto;
+}
+
+/* Scroll más suave para iOS */
+body {
+  -webkit-overflow-scrolling: touch;
 }
