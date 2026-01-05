@@ -8,14 +8,15 @@ import Footer from "@/components/shop/Footer";
 
 function RechazadoContent() {
     const searchParams = useSearchParams();
-    const statusDetail = searchParams.get('status_detail');
+    const statusDetail = searchParams.get('status_detail') || searchParams.get('collection_status');
+    const orderId = searchParams.get('order_id') || searchParams.get('external_reference');
 
     let mensajeError = "Lo sentimos, no pudimos procesar tu pago en este momento.";
     let sugerencia = "Por favor, intenta con otro medio de pago o verifica los datos ingresados.";
 
-    if (statusDetail === 'cc_rejected_high_risk') {
-        mensajeError = "Tu pago fue rechazado por medidas de seguridad.";
-        sugerencia = "Te recomendamos intentar con otro medio de pago o dispositivo que uses habitualmente.";
+    if (statusDetail === 'cc_rejected_high_risk' || statusDetail === 'rejected') {
+        mensajeError = "El pago no pudo ser procesado por seguridad.";
+        sugerencia = "Te recomendamos intentar con otro medio de pago o verificar con tu entidad bancaria.";
     } else if (statusDetail === 'cc_rejected_insufficient_amount') {
         mensajeError = "Tu tarjeta no tiene fondos suficientes.";
         sugerencia = "Por favor, verifica el límite de tu tarjeta o intenta con otra.";
@@ -48,6 +49,17 @@ function RechazadoContent() {
                             {sugerencia}
                         </p>
 
+                        {orderId && (
+                            <div className="bg-gray-50 rounded-2xl p-4 mb-8 border border-gray-100">
+                                <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">
+                                    Referencia de Intento
+                                </p>
+                                <p className="text-sm font-bold text-gray-600 font-mono">
+                                    {orderId}
+                                </p>
+                            </div>
+                        )}
+
                         <div className="space-y-4">
                             <Link
                                 href="/checkout"
@@ -66,15 +78,16 @@ function RechazadoContent() {
 
                         <div className="mt-12 pt-8 border-t border-gray-200">
                             <h3 className="font-black text-lg mb-4 text-gray-400">¿Necesitas ayuda?</h3>
-                            <p className="text-sm text-gray-500">
-                                Contactanos por WhatsApp para asistirte con tu compra.
+                            <p className="text-sm text-gray-500 mb-4">
+                                Si crees que esto es un error, contactanos para asistirte.
                             </p>
                             <a
-                                href="https://wa.me/5491122334455"
+                                href={`https://wa.me/3541237972?text=${encodeURIComponent(`Hola, tuve un problema con mi pago. Mi referencia es: ${orderId}`)}`}
                                 target="_blank"
-                                className="inline-block mt-4 font-black text-green-500 hover:underline"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 px-6 py-3 bg-green-500 text-white rounded-xl font-black text-sm uppercase tracking-widest hover:bg-green-600 transition-colors"
                             >
-                                Escribinos ahora →
+                                📱 Soporte por WhatsApp
                             </a>
                         </div>
                     </div>
@@ -104,3 +117,4 @@ export default function RechazadoPage() {
         </Suspense>
     );
 }
+
