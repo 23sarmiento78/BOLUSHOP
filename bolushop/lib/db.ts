@@ -458,7 +458,8 @@ export async function saveCategories(categories: Category[]): Promise<boolean> {
             id: c.id,
             name: c.name,
             slug: c.slug,
-            description: c.description
+            description: c.description,
+            image: c.image
         }));
 
         const { error } = await supabase.from('categories').upsert(toUpsert);
