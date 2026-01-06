@@ -17,13 +17,12 @@ html {
   --foreground: var(--text-main);
 }
 
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-primary: var(--royal-navy);
   --color-secondary: var(--gold-accent);
   --color-accent: var(--success-emerald);
-
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -35,7 +34,7 @@ body {
 
 /* Mejoras de accesibilidad */
 *:focus-visible {
-  outline: 2px solid var(--tropical-green);
+  outline: 2px solid var(--success-emerald);
   outline-offset: 2px;
 }
 

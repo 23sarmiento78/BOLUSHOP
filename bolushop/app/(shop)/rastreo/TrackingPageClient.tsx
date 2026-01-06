@@ -57,21 +57,21 @@ export default function TrackingPageClient() {
 
     return (
         <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-[2rem] shadow-xl p-8 mb-12">
-                <h1 className="text-3xl font-black text-center mb-8">Seguí tu Pedido</h1>
+            <div className="bg-white rounded-[2rem] md:rounded-[3rem] shadow-2xl p-6 md:p-12 mb-12">
+                <h1 className="text-3xl md:text-5xl font-black text-center mb-10 tracking-tighter">Seguí tu Pedido</h1>
 
-                <form onSubmit={handleSearch} className="flex gap-4 max-w-lg mx-auto mb-8">
+                <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto mb-10">
                     <input
                         type="text"
                         value={orderId}
                         onChange={(e) => setOrderId(e.target.value)}
-                        placeholder="Ingresá tu número de orden (ID)"
-                        className="flex-grow px-6 py-4 rounded-xl bg-gray-50 border-2 border-transparent focus:border-primary focus:bg-white transition-all outline-none font-mono"
+                        placeholder="Número de orden"
+                        className="flex-grow px-6 py-4 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-primary focus:bg-white transition-all outline-none font-mono text-center sm:text-left"
                     />
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="px-8 py-4 bg-primary text-white rounded-xl font-black uppercase tracking-widest hover:scale-105 transition-transform shadow-lg disabled:opacity-50"
+                        className="px-8 py-5 bg-primary text-white rounded-2xl font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/20 disabled:opacity-50"
                     >
                         {isLoading ? '...' : 'Buscar'}
                     </button>
@@ -85,15 +85,15 @@ export default function TrackingPageClient() {
 
                 {order && (
                     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                        <div className="border-t border-gray-100 pt-8">
-                            <div className="flex justify-between items-start mb-8">
+                        <div className="border-t border-gray-100 pt-10">
+                            <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start mb-10 gap-6 text-center sm:text-left">
                                 <div>
-                                    <p className="text-sm text-gray-400 font-bold uppercase tracking-widest mb-1">Orden #</p>
-                                    <p className="font-mono text-xl font-bold">{order.id}</p>
+                                    <p className="text-[10px] text-gray-400 font-extrabold uppercase tracking-[0.2em] mb-2">ID de Orden</p>
+                                    <p className="font-mono text-xl md:text-2xl font-black text-primary">{order.id}</p>
                                 </div>
-                                <div className="text-right">
-                                    <p className="text-sm text-gray-400 font-bold uppercase tracking-widest mb-1">Fecha</p>
-                                    <p className="font-medium">{new Date(order.date).toLocaleDateString()}</p>
+                                <div className="sm:text-right">
+                                    <p className="text-[10px] text-gray-400 font-extrabold uppercase tracking-[0.2em] mb-2">Fecha de Compra</p>
+                                    <p className="font-bold text-lg">{new Date(order.date).toLocaleDateString()}</p>
                                 </div>
                             </div>
 
@@ -105,10 +105,10 @@ export default function TrackingPageClient() {
                                     <p className="text-red-500 font-medium">Esta orden ha sido cancelada. Si creés que es un error, por favor contactanos.</p>
                                 </div>
                             ) : (
-                                <div className="relative mb-12 px-4">
-                                    <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-100 -translate-y-1/2 rounded-full" />
+                                <div className="relative mb-14 px-2 sm:px-4">
+                                    <div className="absolute top-[20px] left-0 w-full h-1 bg-gray-100 rounded-full" />
                                     <div
-                                        className="absolute top-1/2 left-0 h-1 bg-green-500 -translate-y-1/2 rounded-full transition-all duration-1000"
+                                        className="absolute top-[20px] left-0 h-1 bg-green-500 rounded-full transition-all duration-1000 ease-out"
                                         style={{ width: `${((currentStep - 1) / 3) * 100}%` }}
                                     />
 
@@ -119,14 +119,14 @@ export default function TrackingPageClient() {
                                             { label: 'Enviado', icon: '🚚', step: 3 },
                                             { label: 'Entregado', icon: '✨', step: 4 }
                                         ].map((s) => (
-                                            <div key={s.step} className="flex flex-col items-center gap-2">
-                                                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg z-10 transition-all duration-500 ${currentStep >= s.step
-                                                    ? 'bg-green-500 text-white shadow-lg shadow-green-500/30 scale-110'
-                                                    : 'bg-white border-2 border-gray-200 text-gray-300'
+                                            <div key={s.step} className="flex flex-col items-center gap-3">
+                                                <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-lg md:text-xl z-10 transition-all duration-700 ${currentStep >= s.step
+                                                    ? 'bg-green-500 text-white shadow-xl shadow-green-500/30 scale-110'
+                                                    : 'bg-white border-2 border-gray-100 text-gray-300'
                                                     }`}>
                                                     {s.icon}
                                                 </div>
-                                                <p className={`text-xs font-bold uppercase tracking-widest ${currentStep >= s.step ? 'text-green-600' : 'text-gray-300'
+                                                <p className={`text-[9px] md:text-[10px] font-black uppercase tracking-tighter sm:tracking-widest ${currentStep >= s.step ? 'text-green-600' : 'text-gray-300'
                                                     }`}>
                                                     {s.label}
                                                 </p>
@@ -157,9 +157,9 @@ export default function TrackingPageClient() {
                                         </div>
                                     ))}
                                 </div>
-                                <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-200">
-                                    <span className="font-bold text-gray-600">Total Pagado</span>
-                                    <span className="text-2xl font-black text-gray-900">
+                                <div className="flex justify-between items-center mt-6 pt-6 border-t border-gray-100">
+                                    <span className="font-extrabold text-gray-400 uppercase text-[10px] tracking-widest">Total Pagado</span>
+                                    <span className="text-2xl md:text-3xl font-black text-primary">
                                         ${order.total.toLocaleString('es-AR')}
                                     </span>
                                 </div>
