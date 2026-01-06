@@ -96,7 +96,7 @@ create policy "Acceso total categorías" on public.categories for all using (tru
 
 -- TABLA DE RESEÑAS (Para el segundo proyecto de Supabase)
 create table if not exists public.reviews (
-  id uuid default gen_random_uuid() primary key,
+  id text primary key,
   product_id text not null,
   user_name text not null,
   rating integer check (rating >= 1 and rating <= 5),
