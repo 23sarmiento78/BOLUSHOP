@@ -48,8 +48,20 @@ export async function POST(req: NextRequest) {
 
             console.log(`✅ Webhook Processed: Order ${orderId} - Status: ${status} (${status_detail})`);
 
-            // TODO: Update order in database
-            // await updateOrderStatus(orderId, status === 'approved' ? 'paid' : 'pending');
+            // Mapeo de estados de Mercado Pago a estados de nuestra base de datos
+            // statuses: 'pending', 'paid', 'shipped', 'delivered', 'cancelled'
+            let dbStatus: 'pending' | 'paid' | 'cancelled' = 'pending';
+            if (status === 'approved') dbStatus = 'paid';
+            else if (['rejected', 'cancelled', 'refunded'].includes(status)) dbStatus = 'cancelled';
+
+            if (orderId) {
+                const { updateOrder } = await import('@/lib/db');
+                await updateOrder(orderId, {
+                    status: dbStatus as any,
+                    paymentId: paymentId.toString()
+                });
+                console.log(`✨ Database updated for Order ${orderId} to ${dbStatus}`);
+            }
 
             return NextResponse.json({ success: true });
         }
