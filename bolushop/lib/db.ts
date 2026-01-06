@@ -240,17 +240,25 @@ export async function getAllOrders(): Promise<Order[]> {
 }
 
 export async function createOrder(order: Order) {
-    const orders = await getAllOrders();
-    orders.push(order);
-    writeJson(ORDERS_FILE, orders);
-
-    // Auto Subtract Stock
-    for (const item of order.items) {
-        await subtractStock(item.id, item.quantity || 1);
+    // 1. Minimal local save (will only work in dev/persistent environments)
+    try {
+        const localOrders = readJson<Order[]>(ORDERS_FILE, []);
+        localOrders.push(order);
+        writeJson(ORDERS_FILE, localOrders);
+    } catch (e) {
+        console.warn("⚠️ Local JSON save failed (Expected on Vercel)");
     }
 
-    // Sync to Supabase
+    // 2. Auto Subtract Stock (Optimized)
     try {
+        await Promise.all(order.items.map(item => subtractStock(item.id, item.quantity || 1)));
+    } catch (e) {
+        console.error("❌ Stock Subtraction Error:", e);
+    }
+
+    // 3. Sync to Supabase
+    try {
+        console.log("🚀 Syncing order to Supabase:", order.id);
         const { error } = await supabase.from('orders').insert([{
             created_at: order.date,
             status: order.status,
@@ -263,10 +271,15 @@ export async function createOrder(order: Order) {
             payment_id: order.paymentId,
             external_id: order.id
         }]);
-        if (error) console.error("❌ Supabase Sync Error:", error);
-        else console.log("✅ Order synced to Supabase");
+
+        if (error) {
+            console.error("❌ Supabase Insertion Error Detail:", JSON.stringify(error, null, 2));
+            throw error;
+        }
+        console.log("✅ Order successfully synced to Supabase");
     } catch (e) {
-        console.error("❌ Supabase Sync Error (Insert):", e);
+        console.error("❌ Fatal Supabase Sync Error:", e);
+        throw e; // Rethrow so the caller knows it failed
     }
 }
 
@@ -357,14 +370,44 @@ export async function updateOrder(id: string, updates: Partial<Order>) {
 }
 
 export async function subtractStock(productId: string, quantity: number) {
-    const products = await getAllProducts();
-    const index = products.findIndex(p => p.id === productId);
-    if (index !== -1) {
-        products[index].stock = Math.max(0, (products[index].stock || 0) - quantity);
-        await saveProducts(products);
+    try {
+        // 1. Local update
+        const localProducts = readJson<Product[]>(PRODUCTS_FILE, []);
+        const index = localProducts.findIndex(p => p.id === productId);
+        if (index !== -1) {
+            localProducts[index].stock = Math.max(0, (localProducts[index].stock || 0) - quantity);
+            writeJson(PRODUCTS_FILE, localProducts);
+        }
+
+        // 2. Supabase Atomic Update (RPC or single update)
+        // If we don't have an RPC for atomic decrement, we do a quick select-update
+        const { data: product, error: fetchError } = await supabase
+            .from('products')
+            .select('stock')
+            .eq('id', productId)
+            .single();
+
+        if (fetchError || !product) {
+            console.error(`❌ Product ${productId} not found in Supabase for stock update`);
+            return false;
+        }
+
+        const newStock = Math.max(0, (product.stock || 0) - quantity);
+        const { error: updateError } = await supabase
+            .from('products')
+            .update({ stock: newStock })
+            .eq('id', productId);
+
+        if (updateError) {
+            console.error(`❌ Supabase Stock Update Error for ${productId}:`, updateError);
+            return false;
+        }
+
         return true;
+    } catch (e) {
+        console.error(`❌ Fatal Error in subtractStock for ${productId}:`, e);
+        return false;
     }
-    return false;
 }
 
 // Collections API

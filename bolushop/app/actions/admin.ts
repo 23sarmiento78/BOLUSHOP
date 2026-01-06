@@ -17,6 +17,7 @@ import {
 import { Product, Collection, Category, Order } from "@/lib/types";
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from "@/lib/supabase";
+import { Resend } from 'resend';
 
 export async function deleteProductAction(id: string) {
     const products = await getAllProducts();
@@ -406,10 +407,6 @@ export async function deleteNewsletterSubscriberAction(email: string) {
     return success;
 }
 
-import { Resend } from 'resend';
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function sendNewsletterCampaignAction(campaign: {
     subject: string;
     bannerUrl?: string;
@@ -417,6 +414,13 @@ export async function sendNewsletterCampaignAction(campaign: {
     collectionId?: string;
 }) {
     try {
+        const apiKey = process.env.RESEND_API_KEY;
+        if (!apiKey) {
+            console.error("❌ Resend API Key is missing");
+            return { success: false, message: "Falta configurar la API Key de Resend en las variables de entorno." };
+        }
+
+        const resend = new Resend(apiKey);
         const subscribers = await getNewsletterSubscribers();
         const emails = subscribers.map(s => s.email);
 

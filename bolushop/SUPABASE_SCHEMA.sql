@@ -6,7 +6,7 @@ create table if not exists public.orders (
   id uuid default gen_random_uuid() primary key,
   created_at timestamptz default now(),
   external_id text unique,
-  status text check (status in ('pending', 'paid', 'shipped', 'cancelled')),
+  status text check (status in ('pending', 'paid', 'shipped', 'delivered', 'cancelled')),
   total numeric,
   payer_name text,
   payer_email text,
