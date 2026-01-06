@@ -52,7 +52,8 @@ export async function POST(req: NextRequest) {
                     number: formData.phone?.replace(/\D/g, '') || '1122334455'
                 },
                 address: {
-                    street_name: formData.address || 'Calle Falsa 123',
+                    street_name: formData.street || 'Calle',
+                    street_number: Number(formData.streetNumber) || 0,
                     zip_code: formData.zipCode || '1000'
                 }
             },
@@ -88,7 +89,7 @@ export async function POST(req: NextRequest) {
             payer: {
                 name: formData.name,
                 email: formData.email,
-                address: `${formData.address}, ${formData.city}, ${formData.province}`,
+                address: `${formData.street} ${formData.streetNumber}${formData.apartment ? ', ' + formData.apartment : ''}, ${formData.city}, ${formData.province}`,
                 phone: formData.phone
             },
             paymentId: response.id

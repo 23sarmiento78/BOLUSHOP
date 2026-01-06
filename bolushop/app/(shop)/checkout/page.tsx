@@ -18,7 +18,9 @@ export default function CheckoutPage() {
         name: "",
         email: "",
         phone: "",
-        address: "",
+        street: "",
+        streetNumber: "",
+        apartment: "",
         city: "",
         province: "",
         zipCode: "",
@@ -202,16 +204,45 @@ export default function CheckoutPage() {
 
                             <div>
                                 <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
-                                    Dirección de Entrega
+                                    Calle
                                 </label>
                                 <input
                                     type="text"
                                     required
-                                    value={formData.address}
-                                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                    value={formData.street}
+                                    onChange={(e) => setFormData({ ...formData, street: e.target.value })}
                                     className="w-full px-4 py-4 rounded-xl bg-white border-2 border-gray-100 focus:border-black focus:ring-0 transition-all outline-none font-medium text-lg placeholder-gray-300"
-                                    placeholder="Calle, Altura, Piso/Depto"
+                                    placeholder="Nombre de la calle"
                                 />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-6">
+                                <div>
+                                    <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
+                                        Número
+                                    </label>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={formData.streetNumber}
+                                        onChange={(e) => setFormData({ ...formData, streetNumber: e.target.value })}
+                                        className="w-full px-4 py-4 rounded-xl bg-white border-2 border-gray-100 focus:border-black focus:ring-0 transition-all outline-none font-medium text-lg placeholder-gray-300"
+                                        placeholder="Altura"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
+                                        Piso / Depto / Casa
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={formData.apartment}
+                                        onChange={(e) => setFormData({ ...formData, apartment: e.target.value })}
+                                        className="w-full px-4 py-4 rounded-xl bg-white border-2 border-gray-100 focus:border-black focus:ring-0 transition-all outline-none font-medium text-lg placeholder-gray-300"
+                                        placeholder="Piso, torre o casa"
+                                    />
+                                </div>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -277,7 +308,7 @@ export default function CheckoutPage() {
 
                         <button
                             type="submit"
-                            disabled={isProcessing || !formData.province || !formData.city || !formData.name || !formData.email || !formData.address || !formData.phone}
+                            disabled={isProcessing || !formData.province || !formData.city || !formData.name || !formData.email || !formData.street || !formData.streetNumber || !formData.phone}
                             className="w-full mt-8 py-5 bg-black text-white rounded-xl font-black text-lg uppercase tracking-widest hover:bg-gray-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed transform hover:translate-y-px flex items-center justify-center gap-3"
                         >
                             {isProcessing ? (

@@ -507,7 +507,9 @@ export async function saveCategories(categories: Category[]): Promise<boolean> {
         }));
 
         const { error } = await supabase.from('categories').upsert(toUpsert);
-        if (error) console.error("❌ Supabase Categories Sync Error:", error);
+        if (error) {
+            console.error("❌ Supabase Categories Sync Error:", error.message || error);
+        }
     } catch (e) {
         console.error("❌ Supabase Categories Sync Error:", e);
     }
