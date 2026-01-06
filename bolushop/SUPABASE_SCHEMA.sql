@@ -93,3 +93,17 @@ create policy "Acceso total colecciones" on public.collections for all using (tr
 
 drop policy if exists "Acceso total categorías" on public.categories;
 create policy "Acceso total categorías" on public.categories for all using (true) with check (true);
+
+-- TABLA DE RESEÑAS (Para el segundo proyecto de Supabase)
+create table if not exists public.reviews (
+  id uuid default gen_random_uuid() primary key,
+  product_id text not null,
+  user_name text not null,
+  rating integer check (rating >= 1 and rating <= 5),
+  comment text,
+  date timestamptz default now()
+);
+
+drop policy if exists "Acceso total reseñas" on public.reviews;
+create policy "Acceso total reseñas" on public.reviews for all using (true) with check (true);
+alter table public.reviews enable row level security;

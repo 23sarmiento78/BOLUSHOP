@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { supabase } from './supabase';
+import { supabaseReviews } from './supabase-reviews';
 
 // Define paths
 const DATA_DIR = path.join(process.cwd(), 'data');
@@ -519,7 +520,7 @@ export async function getProductReviews(productId: string): Promise<Review[]> {
     const productReviews = localReviews.filter(r => r.productId === productId);
 
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseReviews
             .from('reviews')
             .select('*')
             .eq('product_id', productId)
@@ -559,13 +560,13 @@ export async function addProductReview(review: Review): Promise<boolean> {
     try {
         // For Supabase, we also want to limit if possible, or just insert
         // Since it's a "free version", we'll respect the 10-limit by deleting the oldest if count > 10
-        const { data: countData } = await supabase
+        const { data: countData } = await supabaseReviews
             .from('reviews')
             .select('id', { count: 'exact' })
             .eq('product_id', review.productId);
 
         if (countData && countData.length >= 10) {
-            const { data: oldest } = await supabase
+            const { data: oldest } = await supabaseReviews
                 .from('reviews')
                 .select('id')
                 .eq('product_id', review.productId)
@@ -574,11 +575,11 @@ export async function addProductReview(review: Review): Promise<boolean> {
                 .single();
 
             if (oldest) {
-                await supabase.from('reviews').delete().eq('id', oldest.id);
+                await supabaseReviews.from('reviews').delete().eq('id', oldest.id);
             }
         }
 
-        const { error } = await supabase.from('reviews').insert([{
+        const { error } = await supabaseReviews.from('reviews').insert([{
             id: review.id,
             product_id: review.productId,
             user_name: review.userName,
