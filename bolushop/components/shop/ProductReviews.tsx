@@ -40,7 +40,7 @@ export default function ProductReviews({ productId }: Props) {
         setIsSubmitting(true);
         try {
             const review: Review = {
-                id: Math.random().toString(36).substring(7),
+                id: typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : Math.random().toString(36).substring(2) + Date.now().toString(36),
                 productId,
                 userName: newReview.userName,
                 rating: newReview.rating,
