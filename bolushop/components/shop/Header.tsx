@@ -48,12 +48,12 @@ export default function Header() {
 
     return (
         <header
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled || !isHome
-                ? "bg-white/90 backdrop-blur-md shadow-lg py-3"
-                : "bg-transparent py-6"
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled || !isHome
+                ? "bg-white/80 backdrop-blur-xl shadow-2xl py-4"
+                : "bg-transparent py-8 md:py-10"
                 }`}
         >
-            <div className="container mx-auto px-4">
+            <div className="container mx-auto px-6 md:px-12">
                 <div className="flex items-center justify-between">
                     {/* Logo */}
                     <Link href="/" className="relative z-50 group">

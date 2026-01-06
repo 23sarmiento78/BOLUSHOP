@@ -32,7 +32,7 @@ export default async function HomePage() {
 
             <main className="min-h-screen">
                 {/* Hero Section with Video/Image Background */}
-                <section className="relative h-[65vh] md:h-[75vh] min-h-[450px] flex items-center justify-center overflow-hidden">
+                <section className="relative h-[85vh] md:h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
                     {/* Background Video with Poster to prevent CLS */}
                     <video
                         autoPlay
@@ -47,7 +47,7 @@ export default async function HomePage() {
 
                     <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80" />
 
-                    <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto">
+                    <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto pt-10">
                         <span className="inline-block px-4 py-1.5 bg-primary/20 backdrop-blur-md border border-primary/30 rounded-full text-[10px] font-black uppercase tracking-[0.3em] mb-6 animate-in fade-in slide-in-from-top-4 duration-1000">
                             Nueva Colección 2026
                         </span>
