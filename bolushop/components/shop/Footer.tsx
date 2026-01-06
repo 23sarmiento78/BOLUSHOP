@@ -40,9 +40,9 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 py-20">
                     {/* Brand Section */}
                     <div className="space-y-6">
-                        <Link href="/" className="inline-block">
+                        <Link href="/" className="inline-block group">
                             <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-black text-sm">
+                                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-black text-sm shadow-lg shadow-primary/10 group-hover:rotate-12 transition-transform">
                                     B
                                 </div>
                                 <span className="font-black text-2xl tracking-tighter text-gray-900">BoluShop</span>
