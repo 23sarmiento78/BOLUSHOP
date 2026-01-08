@@ -48,16 +48,8 @@ export async function POST(req: NextRequest) {
             picture_url: item.image?.startsWith('http') ? item.image : `${baseUrl}${item.image}`
         }));
 
-        // SIEMPRE AGREGAR EL ITEM DE ENVÍO SI ES MAYOR A 0
-        if (serverShippingCost > 0) {
-            items.push({
-                id: 'shipping-cost',
-                title: 'Costo de Envío Especial',
-                unit_price: Number(serverShippingCost),
-                quantity: 1,
-                currency_id: 'ARS'
-            });
-        }
+        // NOTA: Eliminamos la inserción en 'items' para evitar el cobro doble, 
+        // ya que ahora usamos el campo oficial 'shipments.cost' de Mercado Pago.
 
         // 3. Payload de la Preferencia (Estructura Estricta SDK v2)
         const preferenceBody: any = {
@@ -107,7 +99,7 @@ export async function POST(req: NextRequest) {
             date: new Date().toISOString(),
             status: 'pending',
             items: cart.map((item: any) => ({ ...item, id: item.productId })),
-            total: items.reduce((acc: number, item: any) => acc + (item.unit_price * item.quantity), 0),
+            total: items.reduce((acc: number, item: any) => acc + (item.unit_price * item.quantity), 0) + serverShippingCost,
             payer: {
                 name: formData.name,
                 email: formData.email,
