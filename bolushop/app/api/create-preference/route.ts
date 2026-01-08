@@ -9,8 +9,25 @@ const client = new MercadoPagoConfig({ accessToken });
 
 export async function POST(req: NextRequest) {
     try {
-        const { cart, shippingCost, formData } = await req.json();
+        const { cart, formData } = await req.json();
         const orderId = uuidv4();
+
+        // RECALCULAR ENVÍO EN SERVIDOR PARA SEGURIDAD
+        const { getSettings } = await import('@/lib/db');
+        const { getCityZone } = await import('@/lib/locations');
+        const settings = await getSettings();
+        const zone = getCityZone(formData.province, formData.city);
+
+        let serverShippingCost = 0;
+        switch (zone) {
+            case 'caba': serverShippingCost = settings.shippingJson.caba; break;
+            case 'gba1': serverShippingCost = settings.shippingJson.gba1; break;
+            case 'gba2': serverShippingCost = settings.shippingJson.gba2; break;
+            case 'gba3': serverShippingCost = settings.shippingJson.gba3; break;
+            default: serverShippingCost = settings.shippingJson.rest;
+        }
+
+        console.log(`🚚 Envío Recalculado (${zone}): $${serverShippingCost}`);
 
         // 1. Detección de URL Base (Simpificada para Localhost)
         const host = req.headers.get('host') || 'localhost:3000';
@@ -31,11 +48,12 @@ export async function POST(req: NextRequest) {
             picture_url: item.image?.startsWith('http') ? item.image : `${baseUrl}${item.image}`
         }));
 
-        if (shippingCost > 0) {
+        // SIEMPRE AGREGAR EL ITEM DE ENVÍO SI ES MAYOR A 0
+        if (serverShippingCost > 0) {
             items.push({
                 id: 'shipping-cost',
-                title: 'Costo de Envío',
-                unit_price: Number(shippingCost),
+                title: 'Costo de Envío Especial',
+                unit_price: Number(serverShippingCost),
                 quantity: 1,
                 currency_id: 'ARS'
             });
@@ -66,6 +84,10 @@ export async function POST(req: NextRequest) {
             external_reference: orderId,
             metadata: {
                 order_id: orderId
+            },
+            shipments: {
+                cost: serverShippingCost,
+                mode: "not_specified",
             },
             // NOTA: notification_url NO puede ser localhost para que MP lo acepte
             notification_url: host.includes('localhost') ? undefined : `${baseUrl}/api/webhook/mercadopago`,
