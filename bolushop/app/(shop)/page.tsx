@@ -76,51 +76,58 @@ export default async function HomePage() {
                 </section>
 
                 {/* Infinite Product Marquee */}
-                <div className="bg-white py-12 overflow-hidden border-b border-gray-50">
+                <section className="bg-gray-50/30 py-24 overflow-hidden border-y border-gray-100">
+                    <div className="container mx-auto px-4 mb-12 text-center">
+                        <h3 className="text-xs font-black uppercase tracking-[0.4em] text-primary mb-4">Nuestras Joyas</h3>
+                        <h2 className="text-4xl md:text-5xl font-black tracking-tighter">Selección <span className="italic text-primary">Premium</span></h2>
+                    </div>
+
                     <div className="flex animate-marquee whitespace-nowrap">
                         {[...allProducts, ...allProducts].slice(0, 20).map((product, i) => (
-                            <div key={i} className="mx-8 flex items-center gap-4 group cursor-default">
-                                <div className="relative w-16 h-16 rounded-2xl overflow-hidden bg-gray-50 border border-gray-100 group-hover:scale-110 transition-transform">
+                            <div key={i} className="mx-6 flex flex-col items-center gap-6 group cursor-default">
+                                <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-[3rem] overflow-hidden bg-white shadow-xl shadow-gray-200/50 border border-gray-100 group-hover:scale-105 transition-all duration-700">
                                     <Image src={product.image} alt={product.name} fill className="object-cover" />
-                                </div>
-                                <div>
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Disponible</p>
-                                    <p className="font-black text-sm text-gray-900">{product.name}</p>
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                    <div className="absolute bottom-8 left-8 right-8 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                                        <p className="text-white font-black text-xl tracking-tight leading-tight">{product.name}</p>
+                                        <p className="text-primary font-bold mt-1">${product.price.toLocaleString('es-AR')}</p>
+                                    </div>
                                 </div>
                             </div>
                         ))}
                     </div>
-                </div>
+                </section>
 
                 {/* Catalog Request Section */}
                 <section className="container mx-auto px-4 py-20">
-                    <div className="bg-black rounded-[3rem] p-12 md:p-20 relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 w-1/2 h-full opacity-20 pointer-events-none">
-                            <div className="absolute inset-0 bg-gradient-to-l from-black to-transparent z-10" />
+                    <div className="bg-gray-900 rounded-[4rem] p-12 md:p-24 relative overflow-hidden group border border-white/5">
+                        <div className="absolute top-0 right-0 w-full md:w-2/3 h-full opacity-40 md:opacity-30 pointer-events-none">
+                            <div className="absolute inset-0 bg-gradient-to-l from-gray-900 via-gray-900/80 to-transparent z-10" />
                             <Image
-                                src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=2070&auto=format&fit=crop"
+                                src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2070&auto=format&fit=crop"
                                 alt="Shopping"
                                 fill
-                                className="object-cover grayscale group-hover:scale-110 transition-transform duration-[3000ms]"
+                                className="object-cover group-hover:scale-110 transition-transform duration-[5000ms]"
                             />
                         </div>
                         <div className="relative z-20 max-w-2xl">
-                            <span className="inline-block px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-6">
-                                VIP Experience
+                            <span className="inline-block px-6 py-2 bg-primary/20 backdrop-blur-xl border border-primary/30 rounded-full text-[11px] font-black uppercase tracking-[0.4em] text-primary mb-8">
+                                Servicio Exclusivo
                             </span>
-                            <h2 className="text-4xl md:text-6xl font-black text-white mb-8 tracking-tighter leading-tight">
-                                ¿No encontrás lo que buscás? <br />
-                                <span className="text-primary italic">Solicitá nuestro catálogo</span>
+                            <h2 className="text-5xl md:text-7xl font-black text-white mb-10 tracking-tighter leading-[1.1]">
+                                ¿No encontrás <br /> lo que buscás? <br />
+                                <span className="text-primary italic">Solicitá el catálogo</span>
                             </h2>
-                            <p className="text-gray-400 text-lg md:text-xl font-medium mb-12 max-w-lg leading-relaxed">
-                                Tenemos más de 500 productos exclusivos que no están en la web. Hablá con un asesor y recibí el PDF actualizado hoy mismo.
+                            <p className="text-gray-100 text-xl md:text-2xl font-medium mb-14 max-w-xl leading-relaxed opacity-90">
+                                Tenemos más de <span className="text-white font-black underline decoration-primary/50 underline-offset-4">500 productos exclusivos</span> que no están publicados. Hablá con nosotros y recibí el PDF actualizado al instante.
                             </p>
                             <a
                                 href="https://wa.me/3541237972?text=Hola!%20Me%20interesaría%20solicitar%20el%20catálogo%20completo%20de%20BoluShop."
                                 target="_blank"
-                                className="inline-flex items-center gap-4 px-10 py-5 bg-primary text-white rounded-full font-black text-sm uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-primary/40"
+                                className="group/btn relative inline-flex items-center gap-6 px-12 py-6 bg-primary text-white rounded-full font-black text-sm uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-primary/40 overflow-hidden"
                             >
-                                📱 Solicitar Catálogo Completo
+                                <span className="relative z-10">📱 Solicitar Catálogo VIP</span>
+                                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>
                             </a>
                         </div>
                     </div>
