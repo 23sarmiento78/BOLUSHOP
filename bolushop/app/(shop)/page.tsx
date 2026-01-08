@@ -75,8 +75,59 @@ export default async function HomePage() {
                     </div>
                 </section>
 
+                {/* Infinite Product Marquee */}
+                <div className="bg-white py-12 overflow-hidden border-b border-gray-50">
+                    <div className="flex animate-marquee whitespace-nowrap">
+                        {[...allProducts, ...allProducts].slice(0, 20).map((product, i) => (
+                            <div key={i} className="mx-8 flex items-center gap-4 group cursor-default">
+                                <div className="relative w-16 h-16 rounded-2xl overflow-hidden bg-gray-50 border border-gray-100 group-hover:scale-110 transition-transform">
+                                    <Image src={product.image} alt={product.name} fill className="object-cover" />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Disponible</p>
+                                    <p className="font-black text-sm text-gray-900">{product.name}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Catalog Request Section */}
+                <section className="container mx-auto px-4 py-20">
+                    <div className="bg-black rounded-[3rem] p-12 md:p-20 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-1/2 h-full opacity-20 pointer-events-none">
+                            <div className="absolute inset-0 bg-gradient-to-l from-black to-transparent z-10" />
+                            <Image
+                                src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=2070&auto=format&fit=crop"
+                                alt="Shopping"
+                                fill
+                                className="object-cover grayscale group-hover:scale-110 transition-transform duration-[3000ms]"
+                            />
+                        </div>
+                        <div className="relative z-20 max-w-2xl">
+                            <span className="inline-block px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-6">
+                                VIP Experience
+                            </span>
+                            <h2 className="text-4xl md:text-6xl font-black text-white mb-8 tracking-tighter leading-tight">
+                                ¿No encontrás lo que buscás? <br />
+                                <span className="text-primary italic">Solicitá nuestro catálogo</span>
+                            </h2>
+                            <p className="text-gray-400 text-lg md:text-xl font-medium mb-12 max-w-lg leading-relaxed">
+                                Tenemos más de 500 productos exclusivos que no están en la web. Hablá con un asesor y recibí el PDF actualizado hoy mismo.
+                            </p>
+                            <a
+                                href="https://wa.me/3541237972?text=Hola!%20Me%20interesaría%20solicitar%20el%20catálogo%20completo%20de%20BoluShop."
+                                target="_blank"
+                                className="inline-flex items-center gap-4 px-10 py-5 bg-primary text-white rounded-full font-black text-sm uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-primary/40"
+                            >
+                                📱 Solicitar Catálogo Completo
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
                 {/* Categories Section - Improved Mobile Grid */}
-                <section className="container mx-auto px-4 py-20 md:py-32">
+                <section className="container mx-auto px-4 py-10 md:py-20">
                     <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
                         <div className="max-w-2xl">
                             <h2 className="text-5xl md:text-7xl font-black mb-6 tracking-tighter">
