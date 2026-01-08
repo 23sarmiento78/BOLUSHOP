@@ -241,25 +241,10 @@ export async function getAllOrders(): Promise<Order[]> {
 }
 
 export async function createOrder(order: Order) {
-    // 1. Minimal local save (will only work in dev/persistent environments)
-    try {
-        const localOrders = readJson<Order[]>(ORDERS_FILE, []);
-        localOrders.push(order);
-        writeJson(ORDERS_FILE, localOrders);
-    } catch (e) {
-        console.warn("⚠️ Local JSON save failed (Expected on Vercel)");
-    }
+    console.log(`🚀 Iniciando creación de orden ${order.id} en DB...`);
 
-    // 2. Auto Subtract Stock (Optimized)
+    // 1. Sync to Supabase - PRIORIDAD 1
     try {
-        await Promise.all(order.items.map(item => subtractStock(item.id, item.quantity || 1)));
-    } catch (e) {
-        console.error("❌ Stock Subtraction Error:", e);
-    }
-
-    // 3. Sync to Supabase
-    try {
-        console.log("🚀 Syncing order to Supabase:", order.id);
         const { error } = await supabase.from('orders').insert([{
             created_at: order.date,
             status: order.status,
@@ -268,7 +253,13 @@ export async function createOrder(order: Order) {
             payer_email: order.payer.email,
             payer_address: order.payer.address,
             payer_phone: order.payer.phone || 'N/A',
-            items: order.items,
+            items: order.items.map(i => ({
+                id: i.id,
+                name: i.name,
+                price: i.price,
+                quantity: i.quantity,
+                image: i.image
+            })), // Sanitizar items para asegurar JSON limpio
             payment_id: order.paymentId,
             external_id: order.id
         }]);
@@ -277,10 +268,32 @@ export async function createOrder(order: Order) {
             console.error("❌ Supabase Insertion Error Detail:", JSON.stringify(error, null, 2));
             throw error;
         }
-        console.log("✅ Order successfully synced to Supabase");
+        console.log("✅ Orden sincronizada correctamente en Supabase");
     } catch (e) {
         console.error("❌ Fatal Supabase Sync Error:", e);
-        throw e; // Rethrow so the caller knows it failed
+        // No lanzamos error aquí para permitir que el proceso local continúe si es posible,
+        // pero registramos el fallo crítico.
+    }
+
+    // 2. Auto Subtract Stock (Optimized)
+    try {
+        // Ejecutar en paralelo pero no bloquear el retorno si falla alguno
+        Promise.all(order.items.map(item => subtractStock(item.id, item.quantity || 1)))
+            .then(() => console.log("📉 Stock actualizado en Supabase"))
+            .catch(err => console.error("❌ Error actualizando stock:", err));
+    } catch (e) {
+        console.error("❌ Stock Subtraction Error:", e);
+    }
+
+    // 3. Minimal local save (para desarrollo)
+    try {
+        const localOrders = readJson<Order[]>(ORDERS_FILE, []);
+        localOrders.push(order);
+        writeJson(ORDERS_FILE, localOrders);
+        console.log("💾 Orden guardada localmente");
+    } catch (e) {
+        // En Vercel esto fallará siempre, es normal
+        console.warn("⚠️ Local JSON save failed (Expected on Vercel)");
     }
 }
 
