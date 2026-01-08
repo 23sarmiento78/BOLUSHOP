@@ -28,15 +28,20 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
         }, 1500);
     };
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.vercel.app';
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com.ar';
+    const cleanDescription = product.description
+        .replace(/<[^>]*>?/gm, '')
+        .replace(/\s+/g, ' ')
+        .trim();
 
     const productJsonLd = {
         "@context": "https://schema.org",
         "@type": "Product",
         "name": product.name,
         "image": product.image,
-        "description": product.description,
+        "description": cleanDescription,
         "sku": product.id,
+        "category": product.category,
         "brand": {
             "@type": "Brand",
             "name": "BoluShop"
@@ -47,6 +52,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
             "priceCurrency": "ARS",
             "price": product.price,
             "availability": product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+            "itemCondition": "https://schema.org/NewCondition",
             "seller": {
                 "@type": "Organization",
                 "name": "BoluShop"
@@ -54,11 +60,40 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
         }
     };
 
+    const breadcrumbsJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Inicio",
+                "item": siteUrl
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Productos",
+                "item": `${siteUrl}/productos`
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": product.name,
+                "item": `${siteUrl}/producto/${product.slug}`
+            }
+        ]
+    };
+
     return (
         <>
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsJsonLd) }}
             />
             <Header />
 

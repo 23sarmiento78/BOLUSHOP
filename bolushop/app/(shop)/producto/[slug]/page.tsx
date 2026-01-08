@@ -19,21 +19,39 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         };
     }
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.vercel.app';
+    // Limpiar HTML de la descripción para los meta tags
+    const cleanDescription = product.description
+        .replace(/<[^>]*>?/gm, '') // Eliminar tags HTML
+        .replace(/\s+/g, ' ')      // Normalizar espacios
+        .trim();
+
+    const seoDescription = cleanDescription.length > 160
+        ? `${cleanDescription.slice(0, 157)}...`
+        : cleanDescription;
+
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com.ar';
+    const productUrl = `${siteUrl}/producto/${product.slug}`;
+
+    // Extraer keywords de las características y nombre
+    const featureKeywords = product.features?.slice(0, 5).join(', ') || '';
+    const keywords = `${product.name}, ${product.category}, comprar ${product.name}, precio ${product.name}, bolushop argentina, ${featureKeywords}`.toLowerCase();
 
     return {
-        title: `${product.name} | BoluShop`,
-        description: product.description.slice(0, 160),
-        keywords: `${product.name}, ${product.category}, comprar online, argentina, envío gratis, ${product.features.join(', ')}`,
+        title: `${product.name} | ${product.category} | BoluShop`,
+        description: seoDescription,
+        keywords: keywords,
+        alternates: {
+            canonical: productUrl,
+        },
         openGraph: {
             type: 'website',
-            url: `${siteUrl}/producto/${product.slug}`,
-            title: `${product.name} - Comprá Online en BoluShop`,
-            description: product.description,
+            url: productUrl,
+            title: `Comprar ${product.name} en BoluShop Argentina`,
+            description: seoDescription,
             images: [{
                 url: product.image,
-                width: 800,
-                height: 800,
+                width: 1200,
+                height: 630,
                 alt: product.name,
             }],
             siteName: 'BoluShop',
@@ -41,7 +59,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         twitter: {
             card: 'summary_large_image',
             title: product.name,
-            description: product.description.slice(0, 160),
+            description: seoDescription,
             images: [product.image],
         },
     };
