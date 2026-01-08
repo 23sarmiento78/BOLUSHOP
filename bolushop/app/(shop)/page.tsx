@@ -111,15 +111,15 @@ export default async function HomePage() {
                             />
                         </div>
                         <div className="relative z-20 max-w-2xl">
-                            <span className="inline-block px-6 py-2 bg-primary/20 backdrop-blur-xl border border-primary/30 rounded-full text-[11px] font-black uppercase tracking-[0.4em] text-primary mb-8">
+                            <span className="inline-block px-6 py-2 bg-secondary/10 backdrop-blur-xl border border-secondary/20 rounded-full text-[11px] font-black uppercase tracking-[0.4em] text-secondary mb-8">
                                 Servicio Exclusivo
                             </span>
                             <h2 className="text-5xl md:text-7xl font-black text-white mb-10 tracking-tighter leading-[1.1]">
                                 ¿No encontrás <br /> lo que buscás? <br />
-                                <span className="text-primary italic">Solicitá el catálogo</span>
+                                <span className="text-secondary italic">Solicitá el catálogo</span>
                             </h2>
                             <p className="text-gray-100 text-xl md:text-2xl font-medium mb-14 max-w-xl leading-relaxed opacity-90">
-                                Tenemos más de <span className="text-white font-black underline decoration-primary/50 underline-offset-4">500 productos exclusivos</span> que no están publicados. Hablá con nosotros y recibí el PDF actualizado al instante.
+                                Tenemos más de <span className="text-white font-black underline decoration-secondary/50 underline-offset-4">500 productos exclusivos</span> que no están publicados. Hablá con nosotros y recibí el PDF actualizado al instante.
                             </p>
                             <a
                                 href="https://wa.me/3541237972?text=Hola!%20Me%20interesaría%20solicitar%20el%20catálogo%20completo%20de%20BoluShop."
