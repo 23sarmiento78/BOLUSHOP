@@ -99,7 +99,7 @@ export async function getSettings(): Promise<Settings> {
     return localSettings;
 }
 
-export async function saveSettings(settings: Settings): Promise<boolean> {
+export async function saveSettings(settings: Settings): Promise<{ success: boolean, error?: string }> {
     const localSuccess = writeJson(SETTINGS_FILE, settings);
     try {
         const { error } = await supabase
@@ -113,16 +113,22 @@ export async function saveSettings(settings: Settings): Promise<boolean> {
                 site_description: settings.siteDescription,
                 whatsapp_number: settings.whatsappNumber,
                 updated_at: new Date().toISOString()
-            });
+            }, { onConflict: 'id' });
 
         if (error) {
             console.error("❌ Supabase Settings Sync Error:", error);
-            return localSuccess; // Fallback to local success if supabase fails
+            return {
+                success: localSuccess,
+                error: (error as any).message || JSON.stringify(error)
+            };
         }
-        return true; // Success if Supabase worked, even if local failed
-    } catch (e) {
-        console.error("❌ Supabase Settings Sync Error:", e);
-        return localSuccess;
+        return { success: true };
+    } catch (e: any) {
+        console.error("❌ Supabase Settings Sync Error (Catch):", e);
+        return {
+            success: localSuccess,
+            error: e.message || 'Unknown error'
+        };
     }
 }
 
@@ -166,7 +172,7 @@ export async function getAllProducts(): Promise<Product[]> {
     return localProducts;
 }
 
-export async function saveProducts(products: Product[]): Promise<boolean> {
+export async function saveProducts(products: Product[]): Promise<{ success: boolean, error?: string }> {
     const localSuccess = writeJson(PRODUCTS_FILE, products);
     // Sync to Supabase - caution: this overwrites/upserts multiple
     try {
@@ -186,15 +192,21 @@ export async function saveProducts(products: Product[]): Promise<boolean> {
             is_active: p.isActive ?? true
         }));
 
-        const { error } = await supabase.from('products').upsert(toUpsert);
+        const { error } = await supabase.from('products').upsert(toUpsert, { onConflict: 'id' });
         if (error) {
             console.error("❌ Supabase Products Sync Error:", error);
-            return localSuccess;
+            return {
+                success: localSuccess,
+                error: (error as any).message || JSON.stringify(error)
+            };
         }
-        return true;
-    } catch (e) {
+        return { success: true };
+    } catch (e: any) {
         console.error("❌ Supabase Products Sync Error:", e);
-        return localSuccess;
+        return {
+            success: localSuccess,
+            error: e.message || 'Unknown error'
+        };
     }
 }
 
@@ -506,7 +518,7 @@ export async function getAllCollections(): Promise<Collection[]> {
     return localCollections;
 }
 
-export async function saveCollections(collections: Collection[]): Promise<boolean> {
+export async function saveCollections(collections: Collection[]): Promise<{ success: boolean, error?: string }> {
     const localSuccess = writeJson(COLLECTIONS_FILE, collections);
     try {
         const toUpsert = collections.map(c => ({
@@ -521,15 +533,21 @@ export async function saveCollections(collections: Collection[]): Promise<boolea
             product_ids: c.productIds || []
         }));
 
-        const { error } = await supabase.from('collections').upsert(toUpsert);
+        const { error } = await supabase.from('collections').upsert(toUpsert, { onConflict: 'id' });
         if (error) {
             console.error("❌ Supabase Collections Sync Error:", error);
-            return localSuccess;
+            return {
+                success: localSuccess,
+                error: (error as any).message || JSON.stringify(error)
+            };
         }
-        return true;
-    } catch (e) {
+        return { success: true };
+    } catch (e: any) {
         console.error("❌ Supabase Collections Sync Error:", e);
-        return localSuccess;
+        return {
+            success: localSuccess,
+            error: e.message || 'Unknown error'
+        };
     }
 }
 
@@ -578,7 +596,7 @@ export async function getAllCategories(): Promise<Category[]> {
     return localCategories;
 }
 
-export async function saveCategories(categories: Category[]): Promise<boolean> {
+export async function saveCategories(categories: Category[]): Promise<{ success: boolean, error?: string }> {
     const localSuccess = writeJson(CATEGORIES_FILE, categories);
     try {
         const toUpsert = categories.map(c => ({
@@ -590,15 +608,21 @@ export async function saveCategories(categories: Category[]): Promise<boolean> {
             // Si deseas imágenes en categorías, debes agregar la columna 'image' a la tabla 'categories'
         }));
 
-        const { error } = await supabase.from('categories').upsert(toUpsert);
+        const { error } = await supabase.from('categories').upsert(toUpsert, { onConflict: 'id' });
         if (error) {
             console.error("❌ Supabase Categories Sync Error:", error.message || error);
-            return localSuccess;
+            return {
+                success: localSuccess,
+                error: (error as any).message || JSON.stringify(error)
+            };
         }
-        return true;
-    } catch (e) {
+        return { success: true };
+    } catch (e: any) {
         console.error("❌ Supabase Categories Sync Error:", e);
-        return localSuccess;
+        return {
+            success: localSuccess,
+            error: e.message || 'Unknown error'
+        };
     }
 }
 
@@ -708,7 +732,10 @@ export async function subscribeToNewsletter(email: string): Promise<boolean> {
     writeJson(NEWSLETTER_FILE, emails);
 
     try {
-        const { error } = await supabase.from('newsletter').insert([entry]);
+        const { error } = await supabase.from('newsletter').insert([{
+            email: entry.email,
+            created_at: entry.createdAt
+        }]);
         if (error) console.error("❌ Supabase Newsletter Error:", error);
     } catch (e) {
         console.error("❌ Supabase Newsletter Sync Error:", e);
@@ -728,7 +755,7 @@ export async function getNewsletterSubscribers(): Promise<Newsletter[]> {
             return data.map(e => ({
                 id: e.id,
                 email: e.email,
-                createdAt: e.createdAt
+                createdAt: e.created_at || e.createdAt
             }));
         }
     } catch (e) {

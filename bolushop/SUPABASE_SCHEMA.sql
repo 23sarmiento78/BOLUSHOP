@@ -107,3 +107,13 @@ create table if not exists public.reviews (
 drop policy if exists "Acceso total reseñas" on public.reviews;
 create policy "Acceso total reseñas" on public.reviews for all using (true) with check (true);
 alter table public.reviews enable row level security;
+-- TABLA DE NEWSLETTER
+create table if not exists public.newsletter (
+  id uuid default gen_random_uuid() primary key,
+  email text unique not null,
+  created_at timestamptz default now()
+);
+
+drop policy if exists "Acceso total newsletter" on public.newsletter;
+create policy "Acceso total newsletter" on public.newsletter for all using (true) with check (true);
+alter table public.newsletter enable row level security;

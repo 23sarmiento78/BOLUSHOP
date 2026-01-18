@@ -66,8 +66,8 @@ export async function updateProductAction(updatedProduct: Product) {
 
     if (index !== -1) {
         products[index] = updatedProduct;
-        const success = await saveProducts(products);
-        if (!success) return { success: false, error: "Error al actualizar el producto." };
+        const result = await saveProducts(products);
+        if (!result.success) return { success: false, error: result.error || "Error al actualizar el producto." };
 
         revalidatePath("/admin/products");
         revalidatePath("/admin");
@@ -89,9 +89,9 @@ export async function createProductAction(product: Omit<Product, 'id' | 'created
     };
 
     products.push(newProduct);
-    const success = await saveProducts(products);
+    const result = await saveProducts(products);
 
-    if (!success) return { success: false, error: "No se pudo guardar el producto." };
+    if (!result.success) return { success: false, error: result.error || "No se pudo guardar el producto." };
 
     revalidatePath("/admin/products");
     revalidatePath("/admin");
@@ -226,8 +226,11 @@ export async function importProductsAction(rawProducts: any[], source: string) {
         const validProducts = (mappedProducts.filter(p => p !== null && p.name && p.name !== 'Sin Nombre' && p.price > 0) as Product[]);
 
         if (validProducts.length > 0) {
-            const success = await saveProducts(validProducts);
-            if (!success) return { success: false, error: "Vercel no permite crear archivos en tiempo real. Subí tus productos al GitHub para que aparezcan." };
+            const result = await saveProducts(validProducts);
+            if (!result.success) return {
+                success: false,
+                error: result.error || "Vercel no permite crear archivos en tiempo real. Subí tus productos al GitHub para que aparezcan."
+            };
 
             revalidatePath("/admin/products");
             revalidatePath("/admin");
@@ -251,8 +254,8 @@ export async function createCollectionAction(collection: Omit<Collection, 'id'>)
     };
 
     collections.push(newCollection);
-    const success = await saveCollections(collections);
-    if (!success) return { success: false, error: "Error al guardar colección" };
+    const result = await saveCollections(collections);
+    if (!result.success) return { success: false, error: result.error || "Error al guardar colección" };
     revalidatePath("/admin/collections");
     return { success: true, collection: newCollection };
 }
@@ -270,7 +273,8 @@ export async function updateCollectionAction(updatedCollection: Collection) {
 
     if (index !== -1) {
         collections[index] = updatedCollection;
-        const success = await saveCollections(collections);
+        const result = await saveCollections(collections);
+        if (!result.success) return { success: false, error: result.error || "Error al actualizar colección" };
         revalidatePath("/admin/collections");
         return { success: true };
     }
@@ -286,8 +290,8 @@ export async function createCategoryAction(category: Omit<Category, 'id'>) {
     };
 
     categories.push(newCategory);
-    const success = await saveCategories(categories);
-    if (!success) return { success: false, error: "Error al guardar categoría" };
+    const result = await saveCategories(categories);
+    if (!result.success) return { success: false, error: result.error || "Error al guardar categoría" };
     revalidatePath("/admin/products");
     return { success: true, category: newCategory };
 }
@@ -305,7 +309,8 @@ export async function updateCategoryAction(updatedCategory: Category) {
 
     if (index !== -1) {
         categories[index] = updatedCategory;
-        const success = await saveCategories(categories);
+        const result = await saveCategories(categories);
+        if (!result.success) return { success: false, error: result.error || "Error al actualizar categoría" };
         revalidatePath("/admin/products");
         return { success: true };
     }
@@ -324,8 +329,8 @@ export async function bulkUpdatePricesAction(percentage: number, categoryId?: st
         return p;
     });
 
-    const success = await saveProducts(updatedProducts);
-    if (!success) return { success: false, error: "Error al actualizar precios masivamente" };
+    const result = await saveProducts(updatedProducts);
+    if (!result.success) return { success: false, error: result.error || "Error al actualizar precios masivamente" };
 
     revalidatePath("/admin/products");
     revalidatePath("/");
@@ -342,8 +347,8 @@ export async function bulkUpdateCategoriesAction(productIds: string[], categoryN
         return p;
     });
 
-    const success = await saveProducts(updatedProducts);
-    if (!success) return { success: false, error: "Error al actualizar categorías masivamente" };
+    const result = await saveProducts(updatedProducts);
+    if (!result.success) return { success: false, error: result.error || "Error al actualizar categorías masivamente" };
 
     revalidatePath("/admin/products");
     revalidatePath("/");
