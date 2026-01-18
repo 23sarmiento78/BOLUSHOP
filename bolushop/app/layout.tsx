@@ -63,6 +63,9 @@ export async function generateMetadata(): Promise<Metadata> {
       description: settings.siteDescription,
       images: ["/bolushop.png"],
     },
+    verification: {
+      google: "S8huFZQ1-Dj4hDM8duVC_mHJJCZscBb2wk-1SKhNqNw",
+    },
   };
 }
 
