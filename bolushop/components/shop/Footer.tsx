@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Instagram, Smartphone, Mail, Truck, ShieldCheck, CreditCard, Facebook, Music2 } from "lucide-react";
+import Logo from "./Logo";
 
 export default function Footer() {
     return (
@@ -41,12 +42,7 @@ export default function Footer() {
                     {/* Brand Section */}
                     <div className="space-y-6">
                         <Link href="/" className="inline-block group">
-                            <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-black text-sm shadow-lg shadow-primary/10 group-hover:rotate-12 transition-transform">
-                                    B
-                                </div>
-                                <span className="font-black text-2xl tracking-tighter text-gray-900">BoluShop</span>
-                            </div>
+                            <Logo size={32} className="text-gray-900" />
                         </Link>
                         <p className="text-gray-500 leading-relaxed font-medium">
                             Conectando calidad con tu hogar. Nuestra misión es elevar tu estilo de vida con productos exclusivos y envíos rápidos a todo el país.

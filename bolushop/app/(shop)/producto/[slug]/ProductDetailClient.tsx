@@ -28,7 +28,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
         }, 1500);
     };
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com.ar';
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
     const cleanDescription = product.description
         .replace(/<[^>]*>?/gm, '')
         .replace(/\s+/g, ' ')

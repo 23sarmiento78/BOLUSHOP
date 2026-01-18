@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { getAllProducts, getAllCategories, getAllCollections } from '@/lib/db';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com.ar';
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
 
     // Base routes
     const routes = [

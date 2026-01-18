@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/
 
-Sitemap: https://bolushop.com.ar/sitemap.xml
+Sitemap: https://bolushop.com/sitemap.xml

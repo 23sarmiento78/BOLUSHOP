@@ -21,7 +21,7 @@ const geistMono = Geist_Mono({
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings();
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com.ar';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
 
   return {
     metadataBase: new URL(siteUrl),
@@ -75,7 +75,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const settings = await getSettings();
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com.ar';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
 
   const jsonLd = {
     "@context": "https://schema.org",
