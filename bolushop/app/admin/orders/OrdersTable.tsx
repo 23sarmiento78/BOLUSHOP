@@ -49,6 +49,7 @@ export default function OrdersTable({ initialOrders }: Props) {
                         <div className="flex justify-between items-start mb-3">
                             <div>
                                 <p className="font-black text-gray-900 text-base mb-1">{order.payer.name}</p>
+                                <p className="text-xs text-gray-500 font-bold mb-1">DNI: {order.payer.dni || 'N/A'}</p>
                                 <p className="text-xs text-gray-600 font-mono">{order.id.slice(0, 12)}...</p>
                                 <p className="text-xs text-gray-600 mt-1">{new Date(order.date).toLocaleDateString()}</p>
                             </div>
@@ -132,6 +133,7 @@ export default function OrdersTable({ initialOrders }: Props) {
                                     </td>
                                     <td className="p-4">
                                         <p className="font-bold text-gray-900 text-sm">{order.payer.name}</p>
+                                        <p className="text-xs text-gray-500">{order.payer.dni || 'DNI N/A'}</p>
                                         <p className="text-xs text-gray-500">{order.payer.email}</p>
                                     </td>
                                     <td className="p-4 font-bold text-gray-900">

@@ -16,6 +16,7 @@ export default function CheckoutPage() {
 
     const [formData, setFormData] = useState({
         name: "",
+        dni: "",
         email: "",
         phone: "",
         street: "",
@@ -173,6 +174,20 @@ export default function CheckoutPage() {
                                 />
                             </div>
 
+                            <div>
+                                <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
+                                    DNI / CUIL
+                                </label>
+                                <input
+                                    type="text"
+                                    required
+                                    value={formData.dni}
+                                    onChange={(e) => setFormData({ ...formData, dni: e.target.value })}
+                                    className="w-full px-4 py-4 rounded-xl bg-white border-2 border-gray-100 focus:border-black focus:ring-0 transition-all outline-none font-medium text-lg placeholder-gray-300"
+                                    placeholder="Número sin puntos ni guiones"
+                                />
+                            </div>
+
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
@@ -309,7 +324,7 @@ export default function CheckoutPage() {
 
                         <button
                             type="submit"
-                            disabled={isProcessing || !formData.province || !formData.city || !formData.name || !formData.email || !formData.street || !formData.streetNumber || !formData.phone}
+                            disabled={isProcessing || !formData.province || !formData.city || !formData.name || !formData.dni || !formData.email || !formData.street || !formData.streetNumber || !formData.phone}
                             className="w-full mt-8 py-5 bg-black text-white rounded-xl font-black text-lg uppercase tracking-widest hover:bg-gray-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed transform hover:translate-y-px flex items-center justify-center gap-3 shadow-2xl shadow-black/10"
                         >
                             {isProcessing ? (

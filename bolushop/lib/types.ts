@@ -43,6 +43,7 @@ export interface Order {
     payer: {
         email: string;
         name: string;
+        dni?: string;
         address: string | any;
         phone?: string;
     };

@@ -61,6 +61,10 @@ export async function POST(req: NextRequest) {
                 phone: {
                     number: formData.phone?.replace(/\D/g, '') || '1122334455'
                 },
+                identification: {
+                    type: "DNI",
+                    number: formData.dni?.replace(/\D/g, '') || "11111111"
+                },
                 address: {
                     street_name: formData.street || 'Calle',
                     street_number: Number(formData.streetNumber) || 0,
@@ -102,6 +106,7 @@ export async function POST(req: NextRequest) {
             total: items.reduce((acc: number, item: any) => acc + (item.unit_price * item.quantity), 0) + serverShippingCost,
             payer: {
                 name: formData.name,
+                dni: formData.dni,
                 email: formData.email,
                 address: `${formData.street} ${formData.streetNumber}${formData.apartment ? ', ' + formData.apartment : ''}, ${formData.city}, ${formData.province}`,
                 phone: formData.phone

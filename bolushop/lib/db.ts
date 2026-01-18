@@ -221,6 +221,7 @@ export async function getAllOrders(): Promise<Order[]> {
                 payer: {
                     name: o.payer_name,
                     email: o.payer_email,
+                    dni: o.payer_dni,
                     address: o.payer_address,
                     phone: o.payer_phone
                 },
@@ -254,6 +255,7 @@ export async function createOrder(order: Order) {
             total: order.total,
             payer_name: order.payer.name,
             payer_email: order.payer.email,
+            payer_dni: order.payer.dni || 'N/A',
             payer_address: order.payer.address,
             payer_phone: order.payer.phone || 'N/A',
             items: order.items.map(i => ({
@@ -331,6 +333,7 @@ export async function getOrderById(id: string): Promise<Order | undefined> {
                 payer: {
                     name: data.payer_name,
                     email: data.payer_email,
+                    dni: data.payer_dni,
                     address: data.payer_address,
                     phone: data.payer_phone
                 },
