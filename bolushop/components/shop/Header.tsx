@@ -101,7 +101,7 @@ export default function Header() {
                                         : "bg-white/10 backdrop-blur-md border-white/20 text-white placeholder:text-gray-300 focus:bg-white/20"
                                         }`}
                                 />
-                                <button type="submit" className={`absolute right-4 top-1/2 -translate-y-1/2 transition-colors ${isScrolled || !isHome ? 'text-gray-400 hover:text-primary' : 'text-white/70 hover:text-white'}`}>
+                                <button type="submit" aria-label="Buscar" className={`absolute right-4 top-1/2 -translate-y-1/2 transition-colors ${isScrolled || !isHome ? 'text-gray-400 hover:text-primary' : 'text-white/70 hover:text-white'}`}>
                                     <Search size={20} />
                                 </button>
                             </form>
@@ -126,7 +126,7 @@ export default function Header() {
 
                         {/* Actions */}
                         <div className="flex items-center gap-4">
-                            <Link href="/carrito" className="relative group p-2">
+                            <Link href="/carrito" aria-label="Ver carrito" className="relative group p-2">
                                 <ShoppingCart
                                     className={`w-6 h-6 transition-colors ${isScrolled || !isHome ? 'text-gray-900' : 'text-white group-hover:text-primary'
                                         }`}
@@ -141,6 +141,7 @@ export default function Header() {
                             {/* Mobile Menu Toggle */}
                             <button
                                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                                aria-label={isMobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
                                 className={`md:hidden p-2 transition-colors ${isScrolled || !isHome ? 'text-gray-900' : 'text-white'}`}
                             >
                                 {isMobileMenuOpen
@@ -168,7 +169,7 @@ export default function Header() {
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-5 pl-6 pr-14 font-bold outline-none focus:ring-4 ring-primary/10 transition-all"
                                 />
-                                <button type="submit" className="absolute right-5 top-1/2 -translate-y-1/2 text-primary">
+                                <button type="submit" aria-label="Buscar" className="absolute right-5 top-1/2 -translate-y-1/2 text-primary">
                                     <Search size={24} />
                                 </button>
                             </form>

@@ -78,7 +78,7 @@ export default async function HomePage() {
                 {/* Infinite Product Marquee */}
                 <section className="bg-gray-50/30 py-24 overflow-hidden border-y border-gray-100">
                     <div className="container mx-auto px-4 mb-12 text-center">
-                        <h3 className="text-xs font-black uppercase tracking-[0.4em] text-primary mb-4">Nuestras Joyas</h3>
+                        <p className="text-xs font-black uppercase tracking-[0.4em] text-primary mb-4">Nuestras Joyas</p>
                         <h2 className="text-4xl md:text-5xl font-black tracking-tighter">Selección <span className="italic text-primary">Premium</span></h2>
                     </div>
 
@@ -124,6 +124,7 @@ export default async function HomePage() {
                             <a
                                 href="https://wa.me/3541237972?text=Hola!%20Me%20interesaría%20solicitar%20el%20catálogo%20completo%20de%20BoluShop."
                                 target="_blank"
+                                aria-label="Solicitar catálogo VIP por WhatsApp"
                                 className="group/btn relative inline-flex items-center gap-6 px-12 py-6 bg-primary text-white rounded-full font-black text-sm uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-primary/40 overflow-hidden"
                             >
                                 <span className="relative z-10">📱 Solicitar Catálogo VIP</span>

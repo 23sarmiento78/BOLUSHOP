@@ -42,6 +42,7 @@ export default function ProductCard({ product }: Props) {
             {/* Wishlist Button */}
             <button
                 onClick={handleWishlist}
+                aria-label={isWishlisted ? "Eliminar de favoritos" : "Agregar a favoritos"}
                 className="absolute top-5 right-5 z-20 bg-white/90 backdrop-blur-md p-3 rounded-2xl shadow-sm hover:scale-110 active:scale-95 transition-all group/wishlist"
             >
                 <Heart
@@ -112,7 +113,7 @@ export default function ProductCard({ product }: Props) {
                                     {product.price.toLocaleString('es-AR')}
                                 </p>
                             </div>
-                            <p className="text-[9px] text-green-600 font-bold uppercase tracking-widest mt-1">
+                            <p className="text-[9px] text-emerald-700 font-bold uppercase tracking-widest mt-1">
                                 Cuotas sin interés
                             </p>
                         </div>
@@ -120,6 +121,7 @@ export default function ProductCard({ product }: Props) {
                         <button
                             onClick={handleAddToCart}
                             disabled={product.stock === 0 || isAdding}
+                            aria-label="Agregar al carrito"
                             className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl md:rounded-[1.25rem] flex items-center justify-center transition-all duration-500 group/btn ${product.stock === 0
                                 ? 'bg-gray-100 text-gray-300 cursor-not-allowed'
                                 : isAdding
