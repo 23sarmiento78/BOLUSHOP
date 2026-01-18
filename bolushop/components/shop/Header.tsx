@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { ShoppingCart, Search, Menu, X, Package } from "lucide-react";
 import { getCart } from "@/lib/cart";
+import Logo from "./Logo";
 
 export default function Header() {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -75,17 +76,7 @@ export default function Header() {
                     <div className="flex items-center justify-between">
                         {/* Logo */}
                         <Link href="/" className="relative z-50 group">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-primary/20 group-hover:rotate-6 transition-transform">
-                                    B
-                                </div>
-                                <div className="flex flex-col -gap-1">
-                                    <span className={`font-black text-2xl tracking-tighter leading-none transition-colors ${isScrolled || !isHome ? 'text-gray-900' : 'text-white'}`}>
-                                        BoluShop
-                                    </span>
-                                    <span className="text-[8px] font-black uppercase tracking-[0.3em] text-primary">Premium Store</span>
-                                </div>
-                            </div>
+                            <Logo size={40} className={isScrolled || !isHome ? 'text-gray-900' : 'text-white'} />
                         </Link>
 
                         {/* Desktop Search Center */}

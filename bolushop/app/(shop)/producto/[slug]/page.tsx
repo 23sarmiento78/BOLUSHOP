@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         ? `${cleanDescription.slice(0, 157)}...`
         : cleanDescription;
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com.ar';
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
     const productUrl = `${siteUrl}/producto/${product.slug}`;
 
     // Extraer keywords de las características y nombre
