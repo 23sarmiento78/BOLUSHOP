@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getAllProducts, getAllOrders, saveCategories } from "@/lib/db";
+
+export const dynamic = "force-dynamic";
 import fs from 'fs';
 import path from 'path';
 import {

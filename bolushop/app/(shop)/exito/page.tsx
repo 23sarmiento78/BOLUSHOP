@@ -147,6 +147,30 @@ function ExitoContent() {
                             </div>
                         </div>
 
+                        {/* Enhanced Success Notice */}
+                        <div className="mt-12 p-8 bg-amber-50 rounded-3xl border-2 border-amber-200 shadow-xl shadow-amber-500/10 relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-125 transition-transform">
+                                <span className="text-6xl text-amber-500">📱</span>
+                            </div>
+                            <div className="relative z-10 text-left">
+                                <h3 className="text-sm font-black uppercase tracking-[0.2em] text-amber-800 mb-2 flex items-center gap-2">
+                                    <span className="flex h-2 w-2 relative">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                                    </span>
+                                    Atención: Acción Requerida
+                                </h3>
+                                <p className="text-base font-bold text-amber-900 leading-tight mb-4">
+                                    Para procesar tu pago y confirmar el stock, es <span className="underline decoration-amber-400 underline-offset-4 font-black">indispensable</span> que nos contactes ahora por WhatsApp.
+                                </p>
+                                <ul className="space-y-2 text-xs font-bold text-amber-800/70">
+                                    <li className="flex items-center gap-2">✅ Tocá el botón verde de arriba</li>
+                                    <li className="flex items-center gap-2">✅ Enviá el mensaje automático</li>
+                                    <li className="flex items-center gap-2">✅ Te entregaremos tu tracking id</li>
+                                </ul>
+                            </div>
+                        </div>
+
                         <div className="mt-12 pt-10 border-t border-gray-100">
                             <h3 className="font-black text-xs uppercase tracking-[0.3em] text-gray-400 mb-10">Próximos Pasos</h3>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

@@ -205,7 +205,10 @@ export async function getAllOrders(): Promise<Order[]> {
             .select('*')
             .order('created_at', { ascending: false });
 
-        if (error) throw error;
+        if (error) {
+            console.error("❌ Supabase Fetch Error (Orders):", error);
+            throw error;
+        }
 
         if (data && data.length > 0) {
             console.log(`✅ Supabase: Fetched ${data.length} orders`);
@@ -266,9 +269,11 @@ export async function createOrder(order: Order) {
 
         if (error) {
             console.error("❌ Supabase Insertion Error Detail:", JSON.stringify(error, null, 2));
+            // Show the actual payload for debugging
+            console.log("Payload attempted:", JSON.stringify(order, null, 2));
             throw error;
         }
-        console.log("✅ Orden sincronizada correctamente en Supabase");
+        console.log(`✅ Orden ${order.id} sincronizada correctamente en Supabase`);
     } catch (e) {
         console.error("❌ Fatal Supabase Sync Error:", e);
         // No lanzamos error aquí para permitir que el proceso local continúe si es posible,
