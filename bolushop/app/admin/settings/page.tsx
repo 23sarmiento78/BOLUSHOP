@@ -58,13 +58,15 @@ export default function SettingsPage() {
                 body: JSON.stringify(settings),
             });
 
+            const data = await res.json();
+
             if (res.ok) {
                 setMessage({ type: 'success', text: 'Configuración guardada exitosamente' });
             } else {
-                setMessage({ type: 'error', text: 'Error al guardar configuración' });
+                setMessage({ type: 'error', text: `Error: ${data.details || data.error || 'Error al guardar configuración'}` });
             }
-        } catch (error) {
-            setMessage({ type: 'error', text: 'Error de conexión' });
+        } catch (error: any) {
+            setMessage({ type: 'error', text: `Error de conexión: ${error.message}` });
         } finally {
             setSaving(false);
         }

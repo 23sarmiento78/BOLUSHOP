@@ -13,12 +13,18 @@ export async function GET() {
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const success = await saveSettings(body);
-        if (success) {
+        const result = await saveSettings(body);
+        if (result.success) {
             return NextResponse.json({ success: true });
         }
-        return NextResponse.json({ error: 'Failed to save settings' }, { status: 500 });
-    } catch (error) {
-        return NextResponse.json({ error: 'Internal Error' }, { status: 500 });
+        return NextResponse.json({
+            error: 'Failed to save settings',
+            details: result.error
+        }, { status: 500 });
+    } catch (error: any) {
+        return NextResponse.json({
+            error: 'Internal Error',
+            details: error?.message
+        }, { status: 500 });
     }
 }
