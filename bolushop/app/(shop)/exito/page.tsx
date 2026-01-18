@@ -43,6 +43,7 @@ function ExitoContent() {
 
     if (orderData) {
         whatsappMessage += `👤 Cliente: ${orderData.payer.name}\n`;
+        whatsappMessage += `🪪 DNI: ${orderData.payer.dni}\n`;
         whatsappMessage += `📞 Teléfono: ${orderData.payer.phone}\n`;
         whatsappMessage += `📍 Dirección: ${orderData.payer.address}\n\n`;
         whatsappMessage += `📦 Productos:\n`;
@@ -97,6 +98,10 @@ function ExitoContent() {
                                     <div className="flex justify-between items-center">
                                         <span className="text-sm font-bold text-gray-400 uppercase tracking-wider">Cliente</span>
                                         <span className="font-black text-gray-900">{orderData.payer.name}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-sm font-bold text-gray-400 uppercase tracking-wider">DNI</span>
+                                        <span className="font-black text-gray-900">{orderData.payer.dni}</span>
                                     </div>
                                     <div className="flex justify-between items-start">
                                         <span className="text-sm font-bold text-gray-400 uppercase tracking-wider">Entrega</span>
