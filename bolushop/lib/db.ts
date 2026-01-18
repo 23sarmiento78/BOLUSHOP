@@ -58,7 +58,7 @@ function readJson<T>(file: string, defaultData: T): T {
     }
 }
 
-function writeJson(file: string, data: any): boolean {
+export function writeJson(file: string, data: any): boolean {
     const isVercel = process.env.VERCEL === '1';
     try {
         fs.writeFileSync(file, JSON.stringify(data, null, 2));
@@ -100,7 +100,7 @@ export async function getSettings(): Promise<Settings> {
 }
 
 export async function saveSettings(settings: Settings): Promise<boolean> {
-    const success = writeJson(SETTINGS_FILE, settings);
+    const localSuccess = writeJson(SETTINGS_FILE, settings);
     try {
         const { error } = await supabase
             .from('settings')
@@ -114,11 +114,16 @@ export async function saveSettings(settings: Settings): Promise<boolean> {
                 whatsapp_number: settings.whatsappNumber,
                 updated_at: new Date().toISOString()
             });
-        if (error) console.error("❌ Supabase Settings Sync Error:", error);
+
+        if (error) {
+            console.error("❌ Supabase Settings Sync Error:", error);
+            return localSuccess; // Fallback to local success if supabase fails
+        }
+        return true; // Success if Supabase worked, even if local failed
     } catch (e) {
         console.error("❌ Supabase Settings Sync Error:", e);
+        return localSuccess;
     }
-    return success;
 }
 
 // Products API
@@ -162,7 +167,7 @@ export async function getAllProducts(): Promise<Product[]> {
 }
 
 export async function saveProducts(products: Product[]): Promise<boolean> {
-    const success = writeJson(PRODUCTS_FILE, products);
+    const localSuccess = writeJson(PRODUCTS_FILE, products);
     // Sync to Supabase - caution: this overwrites/upserts multiple
     try {
         const toUpsert = products.map(p => ({
@@ -182,11 +187,47 @@ export async function saveProducts(products: Product[]): Promise<boolean> {
         }));
 
         const { error } = await supabase.from('products').upsert(toUpsert);
-        if (error) console.error("❌ Supabase Products Sync Error:", error);
+        if (error) {
+            console.error("❌ Supabase Products Sync Error:", error);
+            return localSuccess;
+        }
+        return true;
     } catch (e) {
         console.error("❌ Supabase Products Sync Error:", e);
+        return localSuccess;
     }
-    return success;
+}
+
+export async function deleteProduct(id: string): Promise<boolean> {
+    const products = await getAllProducts();
+    const filtered = products.filter(p => p.id !== id);
+    const localSuccess = writeJson(PRODUCTS_FILE, filtered);
+    try {
+        const { error } = await supabase.from('products').delete().eq('id', id);
+        if (error) {
+            console.error("❌ Supabase Product Delete Error:", error);
+            return localSuccess;
+        }
+        return true;
+    } catch (e) {
+        console.error("❌ Supabase Product Delete Error:", e);
+        return localSuccess;
+    }
+}
+
+export async function deleteAllProducts(): Promise<boolean> {
+    const localSuccess = writeJson(PRODUCTS_FILE, []);
+    try {
+        const { error } = await supabase.from('products').delete().neq('id', '0');
+        if (error) {
+            console.error("❌ Supabase Delete All Products Error:", error);
+            return localSuccess;
+        }
+        return true;
+    } catch (e) {
+        console.error("❌ Supabase Delete All Products Error:", e);
+        return localSuccess;
+    }
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | undefined> {
@@ -466,7 +507,7 @@ export async function getAllCollections(): Promise<Collection[]> {
 }
 
 export async function saveCollections(collections: Collection[]): Promise<boolean> {
-    const success = writeJson(COLLECTIONS_FILE, collections);
+    const localSuccess = writeJson(COLLECTIONS_FILE, collections);
     try {
         const toUpsert = collections.map(c => ({
             id: c.id,
@@ -481,11 +522,32 @@ export async function saveCollections(collections: Collection[]): Promise<boolea
         }));
 
         const { error } = await supabase.from('collections').upsert(toUpsert);
-        if (error) console.error("❌ Supabase Collections Sync Error:", error);
+        if (error) {
+            console.error("❌ Supabase Collections Sync Error:", error);
+            return localSuccess;
+        }
+        return true;
     } catch (e) {
         console.error("❌ Supabase Collections Sync Error:", e);
+        return localSuccess;
     }
-    return success;
+}
+
+export async function deleteCollection(id: string): Promise<boolean> {
+    const collections = await getAllCollections();
+    const filtered = collections.filter(c => c.id !== id);
+    const localSuccess = writeJson(COLLECTIONS_FILE, filtered);
+    try {
+        const { error } = await supabase.from('collections').delete().eq('id', id);
+        if (error) {
+            console.error("❌ Supabase Collection Delete Error:", error);
+            return localSuccess;
+        }
+        return true;
+    } catch (e) {
+        console.error("❌ Supabase Collection Delete Error:", e);
+        return localSuccess;
+    }
 }
 
 // Categories API
@@ -517,24 +579,44 @@ export async function getAllCategories(): Promise<Category[]> {
 }
 
 export async function saveCategories(categories: Category[]): Promise<boolean> {
-    const success = writeJson(CATEGORIES_FILE, categories);
+    const localSuccess = writeJson(CATEGORIES_FILE, categories);
     try {
         const toUpsert = categories.map(c => ({
             id: c.id,
             name: c.name,
             slug: c.slug,
-            description: c.description,
-            image: c.image
+            description: c.description
+            // Nota: Se omite 'image' por ahora para coincidir con el esquema SUPABASE_SCHEMA.sql
+            // Si deseas imágenes en categorías, debes agregar la columna 'image' a la tabla 'categories'
         }));
 
         const { error } = await supabase.from('categories').upsert(toUpsert);
         if (error) {
             console.error("❌ Supabase Categories Sync Error:", error.message || error);
+            return localSuccess;
         }
+        return true;
     } catch (e) {
         console.error("❌ Supabase Categories Sync Error:", e);
+        return localSuccess;
     }
-    return success;
+}
+
+export async function deleteCategory(id: string): Promise<boolean> {
+    const categories = await getAllCategories();
+    const filtered = categories.filter(c => c.id !== id);
+    const localSuccess = writeJson(CATEGORIES_FILE, filtered);
+    try {
+        const { error } = await supabase.from('categories').delete().eq('id', id);
+        if (error) {
+            console.error("❌ Supabase Category Delete Error:", error);
+            return localSuccess;
+        }
+        return true;
+    } catch (e) {
+        console.error("❌ Supabase Category Delete Error:", e);
+        return localSuccess;
+    }
 }
 
 // Reviews API
