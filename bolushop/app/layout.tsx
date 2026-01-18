@@ -66,6 +66,11 @@ export async function generateMetadata(): Promise<Metadata> {
     verification: {
       google: "S8huFZQ1-Dj4hDM8duVC_mHJJCZscBb2wk-1SKhNqNw",
     },
+    icons: {
+      icon: '/icon.png',
+      shortcut: '/favicon.ico',
+      apple: '/icon.png',
+    },
   };
 }
 
@@ -98,6 +103,11 @@ export default async function RootLayout({
 
   return (
     <html lang="es">
+      <head>
+        <link rel="preconnect" href="https://www.mercadopago.com" />
+        <link rel="preconnect" href="https://www.mercadolivre.com" />
+        <link rel="preconnect" href="https://www.mercadolibre.com" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen bg-sand-white`}
       >
@@ -117,6 +127,7 @@ export default async function RootLayout({
         <Toaster position="top-center" richColors />
         <Script
           src="https://www.mercadopago.com/v2/security.js"
+          strategy="lazyOnload"
           {...({ view: "checkout" } as any)}
         />
       </body>
