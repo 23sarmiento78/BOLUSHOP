@@ -12,7 +12,11 @@ import {
     saveCategories,
     updateOrder,
     getNewsletterSubscribers,
-    deleteNewsletterSubscriber
+    deleteNewsletterSubscriber,
+    deleteProduct,
+    deleteCategory,
+    deleteCollection,
+    deleteAllProducts
 } from "@/lib/db";
 import { Product, Collection, Category, Order } from "@/lib/types";
 import { v4 as uuidv4 } from 'uuid';
@@ -20,11 +24,8 @@ import { supabase } from "@/lib/supabase";
 import { Resend } from 'resend';
 
 export async function deleteProductAction(id: string) {
-    const products = await getAllProducts();
-    const newProducts = products.filter(p => p.id !== id);
-    const success = await saveProducts(newProducts);
-
-    if (!success) return { success: false, error: "Vercel no permite borrar archivos en tiempo real. Esto solo funciona localmente." };
+    const success = await deleteProduct(id);
+    if (!success) return { success: false, error: "No se pudo eliminar el producto." };
 
     revalidatePath("/admin/products");
     revalidatePath("/admin");
@@ -33,9 +34,8 @@ export async function deleteProductAction(id: string) {
 }
 
 export async function deleteAllProductsAction() {
-    const success = await saveProducts([]); // Clear all
-
-    if (!success) return { success: false, error: "Vercel no permite borrar archivos en tiempo real. Esto solo funciona localmente." };
+    const success = await deleteAllProducts();
+    if (!success) return { success: false, error: "No se pudieron borrar los productos de la base de datos." };
 
     revalidatePath("/admin/products");
     revalidatePath("/admin");
@@ -44,16 +44,20 @@ export async function deleteAllProductsAction() {
 }
 
 export async function deleteMultipleProductsAction(idsToDelete: string[]) {
-    const products = await getAllProducts();
-    const newProducts = products.filter(p => !idsToDelete.includes(p.id));
-    const success = await saveProducts(newProducts);
+    try {
+        // En paralelo para velocidad
+        const results = await Promise.all(idsToDelete.map(id => deleteProduct(id)));
+        const allSuccess = results.every(r => r === true);
 
-    if (!success) return { success: false, error: "Vercel no permite borrar archivos en tiempo real. Esto solo funciona localmente." };
+        if (!allSuccess) return { success: false, error: "Algunos productos no pudieron ser eliminados." };
 
-    revalidatePath("/admin/products");
-    revalidatePath("/admin");
-    revalidatePath("/");
-    return { success: true };
+        revalidatePath("/admin/products");
+        revalidatePath("/admin");
+        revalidatePath("/");
+        return { success: true };
+    } catch (e) {
+        return { success: false, error: "Error al eliminar múltiples productos." };
+    }
 }
 
 export async function updateProductAction(updatedProduct: Product) {
@@ -63,7 +67,7 @@ export async function updateProductAction(updatedProduct: Product) {
     if (index !== -1) {
         products[index] = updatedProduct;
         const success = await saveProducts(products);
-        if (!success) return { success: false, error: "Vercel no permite editar archivos en tiempo real. Esto solo funciona localmente." };
+        if (!success) return { success: false, error: "Error al actualizar el producto." };
 
         revalidatePath("/admin/products");
         revalidatePath("/admin");
@@ -254,9 +258,7 @@ export async function createCollectionAction(collection: Omit<Collection, 'id'>)
 }
 
 export async function deleteCollectionAction(id: string) {
-    const collections = await getAllCollections();
-    const newCollections = collections.filter(c => c.id !== id);
-    const success = await saveCollections(newCollections);
+    const success = await deleteCollection(id);
     if (!success) return { success: false, error: "Error al borrar colección" };
     revalidatePath("/admin/collections");
     return { success: true };
@@ -291,9 +293,7 @@ export async function createCategoryAction(category: Omit<Category, 'id'>) {
 }
 
 export async function deleteCategoryAction(id: string) {
-    const categories = await getAllCategories();
-    const newCategories = categories.filter(c => c.id !== id);
-    const success = await saveCategories(newCategories);
+    const success = await deleteCategory(id);
     if (!success) return { success: false, error: "Error al borrar categoría" };
     revalidatePath("/admin/products");
     return { success: true };
