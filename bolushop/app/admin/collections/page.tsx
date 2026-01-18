@@ -1,6 +1,8 @@
 import { getAllCollections, getAllProducts } from "@/lib/db";
 import CollectionsClient from "./CollectionsClient";
 
+export const dynamic = "force-dynamic";
+
 export default async function CollectionsPage() {
     const collections = await getAllCollections();
     const products = await getAllProducts();

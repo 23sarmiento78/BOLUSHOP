@@ -85,6 +85,7 @@ export default function CheckoutPage() {
 
             if (data.init_point) {
                 // Redirigir al Checkout Pro de Mercado Pago
+                console.log("Redirigiendo a Mercado Pago...");
                 window.location.href = data.init_point;
             } else {
                 throw new Error(data.error || 'No se pudo generar el punto de inicio del pago');
@@ -309,7 +310,7 @@ export default function CheckoutPage() {
                         <button
                             type="submit"
                             disabled={isProcessing || !formData.province || !formData.city || !formData.name || !formData.email || !formData.street || !formData.streetNumber || !formData.phone}
-                            className="w-full mt-8 py-5 bg-black text-white rounded-xl font-black text-lg uppercase tracking-widest hover:bg-gray-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed transform hover:translate-y-px flex items-center justify-center gap-3"
+                            className="w-full mt-8 py-5 bg-black text-white rounded-xl font-black text-lg uppercase tracking-widest hover:bg-gray-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed transform hover:translate-y-px flex items-center justify-center gap-3 shadow-2xl shadow-black/10"
                         >
                             {isProcessing ? (
                                 <>
@@ -320,6 +321,24 @@ export default function CheckoutPage() {
                                 "Pagar con Mercado Pago"
                             )}
                         </button>
+
+                        {/* Improved Checkout Notice */}
+                        <div className="mt-8 relative group">
+                            <div className="absolute -inset-1 bg-gradient-to-r from-amber-500 to-amber-200 rounded-2xl blur opacity-10 group-hover:opacity-20 transition duration-1000 group-hover:duration-200"></div>
+                            <div className="relative flex gap-5 p-6 bg-white rounded-2xl border border-amber-100 shadow-sm transition-all duration-300 group-hover:border-amber-200">
+                                <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-2xl shrink-0 group-hover:rotate-12 transition-transform shadow-inner">
+                                    🚀
+                                </div>
+                                <div className="space-y-2">
+                                    <p className="text-xs font-black uppercase tracking-[0.15em] text-amber-800 flex items-center gap-2">
+                                        Pasos a seguir después del pago
+                                    </p>
+                                    <p className="text-sm font-bold text-gray-600 leading-relaxed italic">
+                                        "Al completar el pago, mantené la ventana abierta. La web te redirigirá automáticamente a la confirmación de WhatsApp, necesaria para procesar tu envío."
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
 
                         <div className="pt-8 mt-8 border-t border-gray-100 text-center">
                             <a href="/" className="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-black transition-colors">Volver a la tienda</a>
