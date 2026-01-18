@@ -1,59 +1,50 @@
 import { MetadataRoute } from 'next';
-import { getAllProducts } from '@/lib/db';
+import { getAllProducts, getAllCategories, getAllCollections } from '@/lib/db';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.vercel.app';
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com.ar';
+
+    // Base routes
+    const routes = [
+        '',
+        '/catalogo',
+        '/carrito',
+        '/seguimiento',
+    ].map((route) => ({
+        url: `${baseUrl}${route}`,
+        lastModified: new Date(),
+        changeFrequency: 'daily' as const,
+        priority: route === '' ? 1 : 0.8,
+    }));
+
+    // Products
     const products = await getAllProducts();
-    const activeProducts = products.filter(p => p.isActive !== false);
-
-    // Páginas estáticas
-    const staticPages: MetadataRoute.Sitemap = [
-        {
-            url: siteUrl,
-            lastModified: new Date(),
-            changeFrequency: 'daily',
-            priority: 1,
-        },
-        {
-            url: `${siteUrl}/productos`,
-            lastModified: new Date(),
-            changeFrequency: 'daily',
-            priority: 0.9,
-        },
-        {
-            url: `${siteUrl}/rastreo`,
-            lastModified: new Date(),
-            changeFrequency: 'weekly',
-            priority: 0.5,
-        },
-        {
-            url: `${siteUrl}/contacto`,
-            lastModified: new Date(),
-            changeFrequency: 'monthly',
-            priority: 0.5,
-        },
-    ];
-
-    // Páginas de productos dinámicas
-    const productPages: MetadataRoute.Sitemap = activeProducts.map((product) => {
-        // Validar que createdAt sea una fecha válida
-        let lastModified = new Date();
-        try {
-            const productDate = new Date(product.createdAt);
-            if (!isNaN(productDate.getTime())) {
-                lastModified = productDate;
-            }
-        } catch (e) {
-            // Si hay error, usar fecha actual
-        }
-
-        return {
-            url: `${siteUrl}/producto/${product.slug}`,
-            lastModified,
+    const productEntries = products
+        .filter(p => p.isActive !== false)
+        .map((product) => ({
+            url: `${baseUrl}/producto/${product.slug}`,
+            lastModified: new Date(product.createdAt),
             changeFrequency: 'weekly' as const,
-            priority: 0.8,
-        };
-    });
+            priority: 0.7,
+        }));
 
-    return [...staticPages, ...productPages];
+    // Categories
+    const categories = await getAllCategories();
+    const categoryEntries = categories.map((category) => ({
+        url: `${baseUrl}/catalogo?categoria=${category.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'monthly' as const,
+        priority: 0.6,
+    }));
+
+    // Collections
+    const collections = await getAllCollections();
+    const collectionEntries = collections.map((collection) => ({
+        url: `${baseUrl}/catalogo?coleccion=${collection.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'monthly' as const,
+        priority: 0.6,
+    }));
+
+    return [...routes, ...productEntries, ...categoryEntries, ...collectionEntries];
 }

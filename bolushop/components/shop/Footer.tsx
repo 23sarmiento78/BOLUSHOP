@@ -52,13 +52,13 @@ export default function Footer() {
                             Conectando calidad con tu hogar. Nuestra misión es elevar tu estilo de vida con productos exclusivos y envíos rápidos a todo el país.
                         </p>
                         <div className="flex gap-4">
-                            <a href="https://instagram.com/bolushop.arg" target="_blank" className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all">
+                            <a href="https://instagram.com/bolushop.arg" target="_blank" aria-label="Seguir en Instagram" className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all">
                                 <Instagram size={20} />
                             </a>
-                            <a href="https://tiktok.com/@bolushop.ok" target="_blank" className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all">
+                            <a href="https://tiktok.com/@bolushop.ok" target="_blank" aria-label="Seguir en TikTok" className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all">
                                 <Music2 size={20} />
                             </a>
-                            <a href="#" className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all">
+                            <a href="#" aria-label="Seguir en Facebook" className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all">
                                 <Facebook size={20} />
                             </a>
                         </div>
@@ -116,7 +116,7 @@ export default function Footer() {
                         <div className="pt-4">
                             <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Medios de Pago</p>
                             <div className="flex items-center gap-4">
-                                <img src="https://logodownload.org/wp-content/uploads/2019/06/mercado-pago-logo-1.png" alt="Mercado Pago" className="h-8 opacity-80" />
+                                <img src="https://logodownload.org/wp-content/uploads/2019/06/mercado-pago-logo-1.png" alt="Mercado Pago" width={128} height={32} className="h-8 w-auto opacity-80" />
                             </div>
                         </div>
                     </div>
