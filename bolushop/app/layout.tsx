@@ -66,6 +66,9 @@ export async function generateMetadata(): Promise<Metadata> {
     verification: {
       google: "S8huFZQ1-Dj4hDM8duVC_mHJJCZscBb2wk-1SKhNqNw",
     },
+    other: {
+      "google-adsense-account": "ca-pub-5416044136120955",
+    },
     icons: {
       icon: '/icon.png',
       shortcut: '/favicon.ico',
