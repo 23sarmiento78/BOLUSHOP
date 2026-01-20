@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "name": "\"PACK DECO: Silla Lumbar + Maceta Minimalista | Envío GRATIS a todo el País 🇦🇷\"",
+    "description": "Renová tu ambiente con un solo click. Comprando este pack, no solo te llevás nuestra silla estrella y la maceta de diseño para combinar, sino que nosotros nos hacemos cargo del envío, vivas donde vivas.\n\nPrecio del Pack: $69.900\n\nEnvío: $0 (Bonificado)\n\nAhorro estimado en flete: hasta $9.000 según tu zona",
+    "slug": "pack-deco-silla-lumbar--maceta-minimalista--envo-gratis-a-todo-el-pas-",
+    "discountType": "fixed",
+    "discountValue": 69000,
+    "isFeatured": true,
+    "productIds": [
+      "R6127",
+      "DL1203-9"
+    ],
+    "id": "8b17b42a-eccb-4cd0-a972-dad59e16ac81"
+  }
+]

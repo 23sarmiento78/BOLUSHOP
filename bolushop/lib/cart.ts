@@ -7,6 +7,7 @@ export interface CartItem {
     quantity: number;
     image: string;
     slug: string;
+    isCollection?: boolean;
 }
 
 const CART_KEY = 'bolushop_cart';
@@ -37,6 +38,27 @@ export function addToCart(product: Product, quantity: number = 1): void {
             quantity,
             image: product.image,
             slug: product.slug
+        });
+    }
+
+    saveCart(cart);
+}
+
+export function addCollectionToCart(collection: any, products: any[], totalPrice: number): void {
+    const cart = getCart();
+    const existingItem = cart.find(item => item.productId === collection.id && item.isCollection);
+
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({
+            productId: collection.id,
+            name: `Pack: ${collection.name}`,
+            price: totalPrice,
+            quantity: 1,
+            image: collection.image || (products.length > 0 ? products[0].image : "/bolushop.png"),
+            slug: collection.slug,
+            isCollection: true
         });
     }
 

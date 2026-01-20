@@ -4,8 +4,8 @@ import TrackingPageClient from "./TrackingPageClient";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Seguí tu Pedido | BoluShop",
-    description: "Consultá el estado de tu compra en tiempo real.",
+    title: "Seguí tu Pedido | BoluShop Argentina",
+    description: "Rastreá tu envío de Correo Argentino o Andreani en tiempo real. Ingresá tu número de pedido y consultá el estado de tu compra en BoluShop.",
 };
 
 export default function RastreoPage() {

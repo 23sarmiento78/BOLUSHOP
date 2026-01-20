@@ -7,7 +7,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Base routes
     const routes = [
         '',
-        '/catalogo',
+        '/productos',
         '/carrito',
         '/seguimiento',
     ].map((route) => ({
@@ -31,16 +31,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Categories
     const categories = await getAllCategories();
     const categoryEntries = categories.map((category) => ({
-        url: `${baseUrl}/catalogo?categoria=${category.slug}`,
+        url: `${baseUrl}/productos?categoria=${category.slug}`,
         lastModified: new Date(),
         changeFrequency: 'monthly' as const,
         priority: 0.6,
     }));
 
-    // Collections
+    // Collections (Dedicated Landing Pages)
     const collections = await getAllCollections();
     const collectionEntries = collections.map((collection) => ({
-        url: `${baseUrl}/catalogo?coleccion=${collection.slug}`,
+        url: `${baseUrl}/coleccion/${collection.slug}`,
         lastModified: new Date(),
         changeFrequency: 'monthly' as const,
         priority: 0.6,

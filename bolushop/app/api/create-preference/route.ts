@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
-import { createOrder } from '@/lib/db';
+import { createOrder, getSettings } from '@/lib/db';
+import { calculateShippingCost } from '@/lib/shipping';
 import { v4 as uuidv4 } from 'uuid';
 
 // Configuración mínima y directa
@@ -11,23 +12,24 @@ export async function POST(req: NextRequest) {
     try {
         const { cart, formData } = await req.json();
         const orderId = uuidv4();
-
-        // RECALCULAR ENVÍO EN SERVIDOR PARA SEGURIDAD
-        const { getSettings } = await import('@/lib/db');
-        const { getCityZone } = await import('@/lib/locations');
         const settings = await getSettings();
-        const zone = getCityZone(formData.province, formData.city);
 
-        let serverShippingCost = 0;
-        switch (zone) {
-            case 'caba': serverShippingCost = settings.shippingJson.caba; break;
-            case 'gba1': serverShippingCost = settings.shippingJson.gba1; break;
-            case 'gba2': serverShippingCost = settings.shippingJson.gba2; break;
-            case 'gba3': serverShippingCost = settings.shippingJson.gba3; break;
-            default: serverShippingCost = settings.shippingJson.rest;
+        // VALIDAR COMPRA MÍNIMA
+        const cartTotal = cart.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0);
+        const minAmount = settings.minPurchaseAmount || 0;
+        if (cartTotal < minAmount) {
+            return NextResponse.json({
+                error: `La compra mínima es de $${minAmount.toLocaleString('es-AR')}. Tu pedido es de $${cartTotal.toLocaleString('es-AR')}.`
+            }, { status: 400 });
         }
 
-        console.log(`🚚 Envío Recalculado (${zone}): $${serverShippingCost}`);
+        const serverShippingCost = calculateShippingCost({
+            locality: formData.city,
+            province: formData.province,
+            postalCode: formData.zipCode
+        }, settings);
+
+        console.log(`🚚 Envío Recalculado: $${serverShippingCost} (Free Shipping: ${settings.isFreeShippingEnabled})`);
 
         // 1. Detección de URL Base (Simpificada para Localhost)
         const host = req.headers.get('host') || 'localhost:3000';
@@ -81,10 +83,12 @@ export async function POST(req: NextRequest) {
             metadata: {
                 order_id: orderId
             },
-            shipments: {
-                cost: serverShippingCost,
-                mode: "not_specified",
-            },
+            ...(serverShippingCost > 0 ? {
+                shipments: {
+                    cost: serverShippingCost,
+                    mode: "not_specified",
+                }
+            } : {}),
             // NOTA: notification_url NO puede ser localhost para que MP lo acepte
             notification_url: host.includes('localhost') ? undefined : `${baseUrl}/api/webhook/mercadopago`,
             binary_mode: true // Mejora la experiencia en Checkout Pro

@@ -177,8 +177,9 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
                                                     {product.price.toLocaleString('es-AR')}
                                                 </span>
                                             </div>
-                                            <p className="text-green-600 font-black text-sm uppercase tracking-widest">
-                                                ¡Envío disponible hoy!
+                                            <p className="text-emerald-600 font-black text-sm uppercase tracking-[0.1em] flex items-center gap-2">
+                                                <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                                Envío Gratis a TODO el País
                                             </p>
                                         </div>
 
@@ -216,8 +217,8 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
                                                             <Truck size={20} />
                                                         </div>
                                                         <div className="text-xs">
-                                                            <p className="font-black text-gray-900">Envío Gratis</p>
-                                                            <p className="text-gray-400 font-bold">En pedidos seleccionados</p>
+                                                            <p className="font-black text-gray-900">Envío 100% Gratis</p>
+                                                            <p className="text-gray-400 font-bold italic">"Sin costos ocultos, vivas donde vivas"</p>
                                                         </div>
                                                     </div>
                                                     <div className="flex items-center gap-4 group">

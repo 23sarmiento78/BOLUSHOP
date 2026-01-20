@@ -1,8 +1,10 @@
 {
   "profitMargin": 1.11,
   "shippingCost": 7500,
+  "averageShippingCost": 6000,
+  "isFreeShippingEnabled": true,
   "shippingJson": {
-    "caba": 100,
+    "caba": 3000,
     "gba1": 5000,
     "gba2": 5500,
     "gba3": 8500,
@@ -10,5 +12,6 @@
   },
   "siteName": "BoluShop",
   "siteDescription": "La mejor tienda de dropshipping en Argentina",
-  "whatsappNumber": "3541237972"
+  "whatsappNumber": "3541237972",
+  "minPurchaseAmount": 2000
 }

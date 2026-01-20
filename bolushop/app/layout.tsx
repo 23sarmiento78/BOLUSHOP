@@ -29,8 +29,8 @@ export async function generateMetadata(): Promise<Metadata> {
       default: `${settings.siteName} | Tu Marketplace de Confianza en Argentina`,
       template: `%s | ${settings.siteName}`
     },
-    description: settings.siteDescription,
-    keywords: "marketplace, tienda virtual, argentina, compras online, envios gratis, bolushop, calidad garantizada, mejores precios",
+    description: settings.siteDescription || "BoluShop es el marketplace líder en Argentina. Comprá con confianza y recibí tus productos con envío gratis a todo el país. Calidad garantizada y los mejores precios del mercado.",
+    keywords: "marketplace argentina, comprar online argentina, tienda virtual argentina, envios gratis argentina, bolushop, ofertas argentina, productos importados argentina, compras por internet argentina, mercado pago cuotas, mejores precios argentina",
     authors: [{ name: settings.siteName }],
     creator: settings.siteName,
     publisher: settings.siteName,
@@ -101,11 +101,15 @@ export default async function RootLayout({
     "sameAs": [
       "https://www.instagram.com/bolushop.arg",
       "https://www.tiktok.com/@bolushop.ok"
-    ]
+    ],
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "AR"
+    }
   };
 
   return (
-    <html lang="es">
+    <html lang="es-AR">
       <head>
         <link rel="preconnect" href="https://www.mercadopago.com" />
         <link rel="preconnect" href="https://www.mercadolivre.com" />

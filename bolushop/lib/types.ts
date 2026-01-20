@@ -23,6 +23,7 @@ export interface Product {
     name: string;
     slug: string;
     price: number;
+    cost?: number; // Added for new pricing logic
     image: string;
     category: string;
     categoryId?: string;
@@ -53,6 +54,8 @@ export interface Order {
 export interface Settings {
     profitMargin: number;
     shippingCost: number; // Base
+    averageShippingCost?: number; // Added for bundled pricing
+    isFreeShippingEnabled?: boolean; // Added for "Free Shipping Total" mode
     shippingJson: {
         caba: number;
         gba1: number;
@@ -63,6 +66,7 @@ export interface Settings {
     siteName: string;
     siteDescription: string;
     whatsappNumber: string;
+    minPurchaseAmount?: number;
 }
 
 export interface Review {

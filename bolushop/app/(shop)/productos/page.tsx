@@ -6,14 +6,27 @@ import ProductSorter from "@/components/shop/ProductSorter";
 import Link from "next/link";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-    title: "Productos | BoluShop",
-    description: "Explorá nuestro catálogo completo de productos con envío a todo Argentina.",
-};
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+    const { categoria, coleccion } = await searchParams;
+    let title = "Catálogo de Productos | BoluShop Argentina";
+
+    if (categoria) {
+        title = `${categoria} | Productos BoluShop Argentina`;
+    } else if (coleccion) {
+        title = `Colección ${coleccion} | BoluShop Argentina`;
+    }
+
+    return {
+        title,
+        description: "Explorá nuestro catálogo completo en Argentina. Envíos gratis a todo el país, cuotas sin interés y la mejor calidad en productos seleccionados.",
+        keywords: "comprar productos online argentina, catalogo bolushop, ofertas marketplace argentina, envios gratis",
+    };
+}
 
 interface Props {
     searchParams: Promise<{
         categoria?: string;
+        coleccion?: string;
         sort?: string;
     }>;
 }
@@ -23,10 +36,31 @@ export default async function ProductosPage({ searchParams }: Props) {
     const activeProducts = allProducts.filter(p => p.isActive !== false);
 
     // Filtering
-    const { categoria, sort } = await searchParams;
-    let filteredProducts = categoria
-        ? activeProducts.filter(p => p.category.toLowerCase() === categoria.toLowerCase())
-        : activeProducts;
+    const { categoria, coleccion, sort } = await searchParams;
+    let filteredProducts = activeProducts;
+
+    let activeCollectionName = "";
+
+    if (categoria) {
+        filteredProducts = filteredProducts.filter(p => p.category.toLowerCase() === categoria.toLowerCase());
+        activeCollectionName = categoria;
+    } else if (coleccion) {
+        // Mejoramos el filtrado por colección: Buscamos la colección para obtener sus productos vinculados
+        const collections = await (await import("@/lib/db")).getAllCollections();
+        const foundColl = collections.find(c => c.id === coleccion || c.slug === coleccion);
+
+        if (foundColl) {
+            activeCollectionName = foundColl.name;
+            const collProductIds = foundColl.productIds || [];
+            filteredProducts = filteredProducts.filter(p =>
+                collProductIds.includes(p.id) ||
+                (p.collections && (p.collections.includes(foundColl.id) || p.collections.includes(foundColl.slug)))
+            );
+        } else {
+            // Fallback si no se encuentra la colección
+            filteredProducts = filteredProducts.filter(p => p.collections && p.collections.includes(coleccion));
+        }
+    }
 
     // Sorting
     if (sort) {
@@ -64,8 +98,8 @@ export default async function ProductosPage({ searchParams }: Props) {
                             <span className="text-xs font-black uppercase tracking-[0.3em] text-primary">Catálogo Exclusivo</span>
                         </div>
                         <h1 className="text-6xl md:text-7xl font-black mb-8 tracking-tighter text-gray-900">
-                            {categoria ? (
-                                <>Colección <span className="text-primary italic">{categoria}</span></>
+                            {activeCollectionName ? (
+                                <>Colección <span className="text-primary italic">{activeCollectionName}</span></>
                             ) : 'Nuestra Tienda'}
                         </h1>
                         <p className="text-gray-500 text-lg md:text-xl font-medium max-w-2xl leading-relaxed">
