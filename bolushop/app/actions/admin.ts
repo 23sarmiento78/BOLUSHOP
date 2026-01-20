@@ -136,9 +136,12 @@ export async function importProductsAction(rawProducts: any[], source: string) {
                     // Business Rule: Skip products below minimum base price
                     if (price < MIN_BASE_PRICE) return null;
 
-                    // Formula: Base * Profit Margin (simplified)
-                    price = Math.round(price * PROFIT_MARGIN);
+                    const productCost = price; // Current price is the acquisition cost
+                    price = productCost; // No automatic increase, user will adjust manually
                     features.push("Envío Gratis 🚚");
+
+                    // Re-assign the cost for persistence
+                    row._cost = productCost;
                 }
 
                 const description = row['Descripción'] || '';
@@ -210,6 +213,7 @@ export async function importProductsAction(rawProducts: any[], source: string) {
                     name: row['Nombre'] || 'Sin Nombre',
                     slug: row['Identificador de URL'] || (row['Nombre'] ? row['Nombre'].toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '') : uuidv4()),
                     price: price,
+                    cost: row._cost || 0,
                     image: finalImage,
                     category: finalCategory,
                     categoryId: finalCategoryId,
@@ -318,19 +322,50 @@ export async function updateCategoryAction(updatedCategory: Category) {
 }
 
 // Bulk Actions
-export async function bulkUpdatePricesAction(percentage: number, categoryId?: string) {
+export async function bulkUpdatePricesAction(percentage: number, productIds?: string[], categoryId?: string) {
     const products = await getAllProducts();
     const multiplier = 1 + (percentage / 100);
 
     const updatedProducts = products.map(p => {
-        if (!categoryId || p.categoryId === categoryId || p.category === categoryId) {
-            return { ...p, price: Math.round(p.price * multiplier) };
+        const isInSelection = productIds && productIds.length > 0 ? productIds.includes(p.id) : true;
+        const isInCategory = !categoryId || p.categoryId === categoryId || p.category === categoryId;
+
+        if (isInSelection && isInCategory) {
+            return { ...p, price: Math.ceil(p.price * multiplier) };
         }
         return p;
     });
 
     const result = await saveProducts(updatedProducts);
     if (!result.success) return { success: false, error: result.error || "Error al actualizar precios masivamente" };
+
+    revalidatePath("/admin/products");
+    revalidatePath("/");
+    return { success: true, count: updatedProducts.length };
+}
+
+export async function bulkResetPricesAction(productIds?: string[], categoryId?: string) {
+    const [products, settings] = await Promise.all([
+        getAllProducts(),
+        getSettings()
+    ]);
+
+    const margin = settings.profitMargin || 1.0;
+    const shipping = settings.averageShippingCost || 0;
+
+    const updatedProducts = products.map(p => {
+        const isInSelection = productIds && productIds.length > 0 ? productIds.includes(p.id) : true;
+        const isInCategory = !categoryId || p.categoryId === categoryId || p.category === categoryId;
+
+        if (isInSelection && isInCategory && p.cost) {
+            const newPrice = Math.ceil((p.cost * margin) + shipping);
+            return { ...p, price: newPrice };
+        }
+        return p;
+    });
+
+    const result = await saveProducts(updatedProducts);
+    if (!result.success) return { success: false, error: result.error || "Error al restaurar precios" };
 
     revalidatePath("/admin/products");
     revalidatePath("/");

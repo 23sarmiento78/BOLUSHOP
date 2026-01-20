@@ -3,8 +3,10 @@ import React, { useState, useEffect } from 'react';
 
 export default function SettingsPage() {
     const [settings, setSettings] = useState({
-        profitMargin: 1.05,
-        shippingCost: 5000,
+        profitMargin: 1.0,
+        shippingCost: 0,
+        averageShippingCost: 6000,
+        isFreeShippingEnabled: true,
         shippingJson: {
             caba: 3000,
             gba1: 5000,
@@ -14,7 +16,8 @@ export default function SettingsPage() {
         },
         siteName: "BoluShop",
         siteDescription: "",
-        whatsappNumber: ""
+        whatsappNumber: "",
+        minPurchaseAmount: 35000
     });
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -82,17 +85,33 @@ export default function SettingsPage() {
     return (
         <div className="max-w-4xl">
             <div className="mb-10">
-                <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-2">Configuración Global</h1>
-                <p className="text-gray-500 font-medium">Ajustá los parámetros base de tu tienda.</p>
+                <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-2">Estrategia Comercial</h1>
+                <p className="text-gray-500 font-medium">Configurá el margen, costos de envío y la lógica de "Envío Gratis".</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-8">
-                {/* Rentabilidad y Envío */}
-                <div className="bg-white p-8 md:p-12 rounded-[3rem] shadow-sm border border-gray-100">
+                {/* Lógica de Precios y Envío Gratis */}
+                <div className="bg-white p-8 md:p-12 rounded-[3rem] shadow-sm border border-gray-100 ring-4 ring-emerald-50/50">
                     <h2 className="text-xl font-black text-gray-900 mb-8 flex items-center gap-3">
-                        <span className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">💰</span>
-                        Rentabilidad y Envío Regional
+                        <span className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">🚀</span>
+                        Lógica de "Envío Gratis Total"
                     </h2>
+
+                    <div className="mb-10 p-6 bg-emerald-50/50 rounded-3xl border border-emerald-100 space-y-4">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-black text-emerald-900">Activar Envío Gratis en toda la tienda</p>
+                                <p className="text-xs font-bold text-emerald-600">Al activar esto, el costo de envío en el checkout será $0.</p>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setSettings({ ...settings, isFreeShippingEnabled: !settings.isFreeShippingEnabled })}
+                                className={`w-14 h-8 rounded-full transition-all relative ${settings.isFreeShippingEnabled ? 'bg-emerald-500' : 'bg-gray-200'}`}
+                            >
+                                <div className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-all ${settings.isFreeShippingEnabled ? 'left-7' : 'left-1'}`} />
+                            </button>
+                        </div>
+                    </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
                         <div>
@@ -103,28 +122,50 @@ export default function SettingsPage() {
                                     step="0.01"
                                     value={settings.profitMargin}
                                     onChange={(e) => setSettings({ ...settings, profitMargin: Number(e.target.value) })}
-                                    className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20 font-black text-gray-900"
+                                    className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20 font-black text-gray-900 text-lg"
                                 />
-                                <span className="absolute right-6 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">Ej: 1.05 = 5%</span>
+                                <span className="absolute right-6 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">Ej: 1.35 = 35%</span>
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3 px-1">Costo de Envío Base (Fallback)</label>
-                            <input
-                                type="number"
-                                value={settings.shippingCost}
-                                onChange={(e) => setSettings({ ...settings, shippingCost: Number(e.target.value) })}
-                                className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20 font-black text-gray-900"
-                            />
+                            <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3 px-1">Costo de Envío Promedio (Bundled)</label>
+                            <div className="relative">
+                                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-lg font-black text-emerald-600">$</span>
+                                <input
+                                    type="number"
+                                    value={settings.averageShippingCost}
+                                    onChange={(e) => setSettings({ ...settings, averageShippingCost: Number(e.target.value) })}
+                                    className="w-full pl-12 pr-6 py-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20 font-black text-gray-900 text-lg"
+                                />
+                            </div>
+                            <p className="mt-2 text-[10px] font-bold text-gray-400 px-1 italic">Monto a sumar directamente al precio final para absorber el flete.</p>
                         </div>
                     </div>
 
-                    <div className="space-y-6 pt-6 border-t border-gray-50">
-                        <h3 className="text-sm font-black uppercase tracking-widest text-gray-900 mb-4 px-1 flex items-center gap-2">
-                            <span className="w-1.5 h-4 bg-emerald-500 rounded-full"></span>
-                            Tarifas por Zonas (Argentina)
-                        </h3>
+                    <div className="pt-8 border-t border-gray-100">
+                        <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3 px-1">Compra Mínima Requerida</label>
+                        <div className="relative max-w-xs">
+                            <span className="absolute left-6 top-1/2 -translate-y-1/2 text-lg font-black text-primary">$</span>
+                            <input
+                                type="number"
+                                value={settings.minPurchaseAmount}
+                                onChange={(e) => setSettings({ ...settings, minPurchaseAmount: Number(e.target.value) })}
+                                className="w-full pl-12 pr-6 py-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20 font-black text-gray-900 text-lg"
+                            />
+                        </div>
+                        <p className="mt-2 text-[10px] font-bold text-gray-400 px-1 italic">El cliente no podrá avanzar al checkout si el total del carrito es menor a este valor.</p>
+                    </div>
+
+                    {/* Tarifas Regionales (Solo se usan si el envío gratis está desactivado) */}
+                    <div className={`mt-10 space-y-6 pt-10 border-t border-gray-100 transition-opacity ${settings.isFreeShippingEnabled ? 'opacity-40 grayscale pointer-events-none' : ''}`}>
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-sm font-black uppercase tracking-widest text-gray-900 px-1 flex items-center gap-2">
+                                <span className="w-1.5 h-4 bg-emerald-500 rounded-full"></span>
+                                Tarifas por Zonas (Manual)
+                            </h3>
+                            {settings.isFreeShippingEnabled && <span className="text-[10px] font-black bg-gray-100 px-3 py-1 rounded-full text-gray-400 uppercase">Desactivado por Envío Gratis</span>}
+                        </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             {[
@@ -137,7 +178,7 @@ export default function SettingsPage() {
                                 <div key={zone.key}>
                                     <label className="block text-[9px] font-black uppercase tracking-[0.1em] text-gray-400 mb-2 px-1">{zone.label}</label>
                                     <div className="relative">
-                                        <span className="absolute left-6 top-1/2 -translate-y-1/2 text-xs font-black text-emerald-600">$</span>
+                                        <span className="absolute left-6 top-1/2 -translate-y-1/2 text-xs font-black text-gray-400">$</span>
                                         <input
                                             type="number"
                                             value={zone.price}

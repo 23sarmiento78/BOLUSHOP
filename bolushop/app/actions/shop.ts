@@ -49,6 +49,8 @@ export async function getShippingRate(province: string, city: string = ""): Prom
     const settings = await getSettings();
     const zone = getCityZone(province, city);
 
+    if (settings.isFreeShippingEnabled) return 0;
+
     switch (zone) {
         case 'caba': return settings.shippingJson.caba;
         case 'gba1': return settings.shippingJson.gba1;

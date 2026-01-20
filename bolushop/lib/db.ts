@@ -16,8 +16,10 @@ const NEWSLETTER_FILE = path.join(DATA_DIR, 'newsletter.json');
 import { Category, Collection, Product, Order, Settings, Review, Newsletter } from './types';
 
 const DEFAULT_SETTINGS: Settings = {
-    profitMargin: 1.05,
-    shippingCost: 5000,
+    profitMargin: 1.0, // Changed from 1.35 to 1.0 (no automatic increase)
+    shippingCost: 0,
+    averageShippingCost: 6000,
+    isFreeShippingEnabled: true,
     shippingJson: {
         caba: 3000,
         gba1: 5000,
@@ -27,7 +29,8 @@ const DEFAULT_SETTINGS: Settings = {
     },
     siteName: "BoluShop",
     siteDescription: "Tu Marketplace Premium en Argentina. Calidad, confianza y envíos rápidos a todo el país.",
-    whatsappNumber: "3541237972"
+    whatsappNumber: "3541237972",
+    minPurchaseAmount: 35000
 };
 
 // Ensure data dir exists
@@ -87,10 +90,13 @@ export async function getSettings(): Promise<Settings> {
             return {
                 profitMargin: data.profit_margin,
                 shippingCost: data.shipping_cost,
+                averageShippingCost: data.average_shipping_cost || DEFAULT_SETTINGS.averageShippingCost,
+                isFreeShippingEnabled: data.is_free_shipping_enabled ?? DEFAULT_SETTINGS.isFreeShippingEnabled,
                 shippingJson: data.shipping_json || DEFAULT_SETTINGS.shippingJson,
                 siteName: data.site_name,
                 siteDescription: data.site_description,
-                whatsappNumber: data.whatsapp_number
+                whatsappNumber: data.whatsapp_number,
+                minPurchaseAmount: data.min_purchase_amount || DEFAULT_SETTINGS.minPurchaseAmount
             };
         }
     } catch (e) {
@@ -108,10 +114,13 @@ export async function saveSettings(settings: Settings): Promise<{ success: boole
                 id: 1,
                 profit_margin: settings.profitMargin,
                 shipping_cost: settings.shippingCost,
+                average_shipping_cost: settings.averageShippingCost,
+                is_free_shipping_enabled: settings.isFreeShippingEnabled,
                 shipping_json: settings.shippingJson,
                 site_name: settings.siteName,
                 site_description: settings.siteDescription,
                 whatsapp_number: settings.whatsappNumber,
+                min_purchase_amount: settings.minPurchaseAmount,
                 updated_at: new Date().toISOString()
             }, { onConflict: 'id' });
 
@@ -147,6 +156,7 @@ export async function getAllProducts(): Promise<Product[]> {
                 name: p.name,
                 slug: p.slug,
                 price: p.price,
+                cost: p.cost,
                 image: p.image,
                 category: p.category,
                 categoryId: p.category_id,
@@ -181,6 +191,7 @@ export async function saveProducts(products: Product[]): Promise<{ success: bool
             name: p.name,
             slug: p.slug,
             price: p.price,
+            cost: p.cost,
             image: p.image,
             category: p.category,
             category_id: p.categoryId,
@@ -516,6 +527,11 @@ export async function getAllCollections(): Promise<Collection[]> {
         console.error("❌ Supabase Collections Fetch Error:", e);
     }
     return localCollections;
+}
+
+export async function getCollectionBySlug(slug: string): Promise<Collection | undefined> {
+    const collections = await getAllCollections();
+    return collections.find(c => c.slug === slug);
 }
 
 export async function saveCollections(collections: Collection[]): Promise<{ success: boolean, error?: string }> {

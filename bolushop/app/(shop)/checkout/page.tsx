@@ -13,6 +13,7 @@ export default function CheckoutPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [shippingCost, setShippingCost] = useState(0);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [isFreeShipping, setIsFreeShipping] = useState(true); // Default to true as per new strategy
 
     const [formData, setFormData] = useState({
         name: "",
@@ -32,6 +33,19 @@ export default function CheckoutPage() {
         initMercadoPago(process.env.NEXT_PUBLIC_MP_PRO_PUBLIC_KEY || '', {
             locale: 'es-AR'
         });
+
+        // Fetch settings to check free shipping status and min purchase
+        fetch('/api/admin/settings')
+            .then(res => res.json())
+            .then(data => {
+                if (data.settings) {
+                    setIsFreeShipping(data.settings.isFreeShippingEnabled ?? true);
+                    const minAmount = data.settings.minPurchaseAmount ?? 35000;
+                    if (getCartTotal() < minAmount) {
+                        router.push('/carrito');
+                    }
+                }
+            });
     }, []);
 
     const availableCities = useMemo(() => {
@@ -144,8 +158,15 @@ export default function CheckoutPage() {
                                 <span className="text-3xl font-black text-gray-900">${total.toLocaleString('es-AR')}</span>
                                 <span className="text-sm font-medium text-gray-500">{cart.length} productos</span>
                             </div>
-                            {shippingCost === 0 && (
-                                <p className="text-xs text-orange-500 font-bold mt-2">Calculando envío según tu dirección...</p>
+                            {isFreeShipping ? (
+                                <p className="text-xs text-emerald-600 font-black mt-2 flex items-center gap-1">
+                                    <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                                    ¡Tenés ENVÍO GRATIS asegurado!
+                                </p>
+                            ) : (
+                                shippingCost === 0 && (
+                                    <p className="text-xs text-orange-500 font-bold mt-2">Calculando envío según tu dirección...</p>
+                                )
                             )}
                             <div className="mt-4 flex -space-x-2 overflow-hidden">
                                 {cart.slice(0, 5).map((item, i) => (

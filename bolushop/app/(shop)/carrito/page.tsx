@@ -10,10 +10,23 @@ import { getCart, updateQuantity, removeFromCart, getCartTotal, CartItem } from 
 export default function CarritoPage() {
     const [cart, setCart] = useState<CartItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isFreeShipping, setIsFreeShipping] = useState(true);
+    const [minPurchase, setMinPurchase] = useState(35000);
 
     useEffect(() => {
         setCart(getCart());
-        setIsLoading(false);
+
+        // Fetch settings to check free shipping
+        fetch('/api/admin/settings')
+            .then(res => res.json())
+            .then(data => {
+                if (data.settings) {
+                    setIsFreeShipping(data.settings.isFreeShippingEnabled ?? true);
+                    setMinPurchase(data.settings.minPurchaseAmount ?? 35000);
+                }
+                setIsLoading(false);
+            })
+            .catch(() => setIsLoading(false));
 
         const handleCartUpdate = () => {
             setCart(getCart());
@@ -97,7 +110,7 @@ export default function CarritoPage() {
                                     <div className="flex gap-6">
                                         {/* Image */}
                                         <Link
-                                            href={`/producto/${item.slug}`}
+                                            href={item.isCollection ? `/coleccion/${item.slug}` : `/producto/${item.slug}`}
                                             className="relative w-24 h-24 rounded-2xl overflow-hidden bg-gray-50 flex-shrink-0"
                                         >
                                             <Image
@@ -111,11 +124,16 @@ export default function CarritoPage() {
 
                                         {/* Info */}
                                         <div className="flex-grow">
-                                            <Link href={`/producto/${item.slug}`}>
+                                            <Link href={item.isCollection ? `/coleccion/${item.slug}` : `/producto/${item.slug}`}>
                                                 <h3 className="font-black text-lg text-gray-900 hover:text-primary transition-colors mb-2">
                                                     {item.name}
                                                 </h3>
                                             </Link>
+                                            {item.isCollection && (
+                                                <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest inline-block mb-3">
+                                                    Pack Ahorro
+                                                </span>
+                                            )}
                                             <p className="text-2xl font-black text-primary mb-4">
                                                 ${item.price.toLocaleString('es-AR')}
                                             </p>
@@ -174,7 +192,9 @@ export default function CarritoPage() {
                                     </div>
                                     <div className="flex justify-between text-lg">
                                         <span className="text-gray-600">Envío</span>
-                                        <span className="font-bold text-sm text-gray-500">A calcular</span>
+                                        <span className={`font-black uppercase tracking-widest text-sm ${isFreeShipping ? 'text-emerald-500' : 'text-gray-500'}`}>
+                                            {isFreeShipping ? 'Gratis' : 'A calcular'}
+                                        </span>
                                     </div>
                                 </div>
 
@@ -183,18 +203,45 @@ export default function CarritoPage() {
                                         <span className="font-black">Total</span>
                                         <span className="font-black text-primary">${subtotal.toLocaleString('es-AR')}</span>
                                     </div>
-                                    <p className="text-xs text-gray-500 mt-2">+ Costo de envío</p>
+                                    {!isFreeShipping && <p className="text-xs text-gray-500 mt-2">+ Costo de envío</p>}
                                 </div>
 
-                                <div className="bg-blue-50 rounded-2xl p-4 mb-6">
-                                    <p className="text-sm text-blue-900 font-medium">
-                                        💡 El costo de envío se calculará en el checkout según tu ubicación
-                                    </p>
-                                </div>
+                                {isFreeShipping ? (
+                                    <div className="bg-emerald-50 rounded-2xl p-4 mb-6 border border-emerald-100 flex items-center gap-3">
+                                        <span className="text-2xl">🚚</span>
+                                        <p className="text-sm text-emerald-900 font-bold">
+                                            ¡Tu pedido califica para <span className="text-emerald-600 uppercase">Envío Gratis</span> a todo el país!
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <div className="bg-blue-50 rounded-2xl p-4 mb-6">
+                                        <p className="text-sm text-blue-900 font-medium">
+                                            💡 El costo de envío se calculará en el checkout según tu ubicación
+                                        </p>
+                                    </div>
+                                )}
+
+                                {subtotal < minPurchase && (
+                                    <div className="bg-red-50 rounded-2xl p-4 mb-6 border border-red-100 flex items-center gap-3">
+                                        <span className="text-2xl">⚠️</span>
+                                        <p className="text-sm text-red-900 font-bold">
+                                            La compra mínima es de <span className="text-red-600">${minPurchase.toLocaleString('es-AR')}</span>. Te faltan <span className="text-red-600">${(minPurchase - subtotal).toLocaleString('es-AR')}</span>.
+                                        </p>
+                                    </div>
+                                )}
 
                                 <Link
-                                    href="/checkout"
-                                    className="block w-full py-4 bg-primary text-white text-center rounded-2xl font-black text-sm uppercase tracking-widest hover:scale-105 transition-transform shadow-xl shadow-primary/30"
+                                    href={subtotal < minPurchase ? "#" : "/checkout"}
+                                    className={`block w-full py-4 text-white text-center rounded-2xl font-black text-sm uppercase tracking-widest transition-all shadow-xl ${subtotal < minPurchase
+                                            ? 'bg-gray-300 cursor-not-allowed opacity-70 grayscale'
+                                            : 'bg-primary hover:scale-105 shadow-primary/30'
+                                        }`}
+                                    onClick={(e) => {
+                                        if (subtotal < minPurchase) {
+                                            e.preventDefault();
+                                            alert(`La compra mínima requerida es de $${minPurchase.toLocaleString('es-AR')}`);
+                                        }
+                                    }}
                                 >
                                     Continuar al Checkout
                                 </Link>

@@ -74,6 +74,11 @@ export function calculateShippingCost(params: {
     province: string,
     postalCode?: string | number
 }, settings: Settings): number {
+    // If global Free Shipping is enabled, cost is always 0
+    if (settings.isFreeShippingEnabled) {
+        return 0;
+    }
+
     try {
         const zone = getZoneByAddress(params);
 

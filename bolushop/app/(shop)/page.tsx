@@ -1,4 +1,4 @@
-import { getAllProducts, getAllCategories } from "@/lib/db";
+import { getAllProducts, getAllCategories, getAllCollections } from "@/lib/db";
 import Header from "@/components/shop/Header";
 import Footer from "@/components/shop/Footer";
 import ProductCard from "@/components/shop/ProductCard";
@@ -8,12 +8,12 @@ import type { Metadata } from "next";
 import Newsletter from "@/components/shop/Newsletter";
 
 export const metadata: Metadata = {
-    title: "BoluShop | Tu Marketplace de Confianza en Argentina",
-    description: "Descubrí los mejores productos con envío a todo el país. Calidad garantizada, precios increíbles y atención personalizada.",
-    keywords: "marketplace, tienda online, argentina, compras, envíos gratis, productos, calidad",
+    title: "BoluShop | El Marketplace N°1 con Envío Gratis en Argentina",
+    description: "Comprá los mejores productos en BoluShop. Envío 100% gratis a todo el país, cuotas sin interés con Mercado Pago y calidad garantizada en cada pedido.",
+    keywords: "tienda online argentina, comprar por internet argentina, marketplace argentina, envios gratis correo argentino, ofertas hoy argentina, bolushop productos, cuotas sin interes",
     openGraph: {
-        title: "BoluShop - Tu Marketplace de Confianza",
-        description: "Los mejores productos con envío a todo Argentina",
+        title: "BoluShop - Marketplace Líder en Argentina",
+        description: "Envío GRATIS a todo el país. Calidad y confianza en tus compras online.",
         type: "website",
     },
 };
@@ -21,6 +21,7 @@ export const metadata: Metadata = {
 export default async function HomePage() {
     const allProducts = await getAllProducts();
     const categories = await getAllCategories();
+    const collections = await getAllCollections();
     // Prioritize products that are active and have essential data
     const featuredProducts = allProducts
         .filter(p => p.isActive !== false && p.price > 0)
@@ -189,6 +190,82 @@ export default async function HomePage() {
                         ))}
                     </div>
                 </section>
+
+                {/* Collections Section */}
+                {collections && collections.length > 0 && (
+                    <section className="bg-gray-900 py-24 overflow-hidden border-y border-white/5">
+                        <div className="container mx-auto px-4 mb-16 text-center">
+                            <span className="text-secondary font-black uppercase tracking-[0.4em] text-[10px] mb-4 inline-block">Selección Exclusiva</span>
+                            <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter">Nuestras <span className="italic text-secondary">Colecciones</span></h2>
+                        </div>
+
+                        <div className="flex flex-wrap justify-center gap-6 px-4 max-w-7xl mx-auto">
+                            {collections.map((coll) => {
+                                // 1. Buscamos productos vinculados a esta colección
+                                const collectionProducts = allProducts.filter(p =>
+                                    p.isActive !== false &&
+                                    ((coll.productIds || []).includes(p.id) ||
+                                        p.collections?.includes(coll.id) ||
+                                        p.collections?.includes(coll.slug))
+                                );
+
+                                // 2. Selección de imagen inteligente
+                                let displayImage = "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?q=80&w=2070&auto=format&fit=crop"; // Placeholder premium
+
+                                if (coll.image && !coll.image.includes('bolushop.png')) {
+                                    // Imagen manual subida por el admin
+                                    displayImage = coll.image;
+                                } else if (collectionProducts.length > 0) {
+                                    // Imagen del primer producto de LA colección
+                                    displayImage = collectionProducts[0].image;
+                                }
+
+                                return (
+                                    <Link
+                                        key={coll.id}
+                                        href={`/coleccion/${coll.slug}`}
+                                        className={`group relative flex-grow min-w-[280px] h-[450px] md:h-[550px] rounded-[3rem] overflow-hidden transition-all duration-700 ${coll.isFeatured ? 'flex-[1.5] lg:flex-[2] ring-2 ring-secondary/30 ring-offset-4 ring-offset-gray-900' : 'flex-1 opacity-90 hover:opacity-100'}`}
+                                    >
+                                        <Image
+                                            src={displayImage}
+                                            alt={coll.name}
+                                            fill
+                                            className="object-cover transition-transform duration-[4000ms] group-hover:scale-110"
+                                        />
+                                        <div className={`absolute inset-0 bg-gradient-to-t ${coll.isFeatured ? 'from-gray-950 via-gray-950/20 to-transparent' : 'from-black/90 via-transparent to-transparent'}`} />
+
+                                        <div className="absolute inset-x-0 bottom-0 p-8 md:p-12 flex flex-col justify-end h-full text-white">
+                                            {coll.isFeatured && (
+                                                <span className="bg-secondary text-gray-900 w-fit px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest mb-4 animate-pulse-subtle">
+                                                    ★ Oferta Especial 2026
+                                                </span>
+                                            )}
+                                            <h3 className={`font-black tracking-tighter leading-[0.9] ${coll.isFeatured ? 'text-4xl md:text-6xl' : 'text-3xl md:text-4xl'}`}>
+                                                {coll.name}
+                                            </h3>
+
+                                            {coll.discountType !== 'none' && (
+                                                <div className="mt-4 flex items-center gap-3">
+                                                    <span className="bg-emerald-500 text-white px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest">
+                                                        {coll.discountType === 'percentage' ? `${coll.discountValue}% OFF` : `$${coll.discountValue} OFF`}
+                                                    </span>
+                                                    <span className="text-emerald-400 text-xs font-bold uppercase tracking-widest antialiased">Válido Hoy</span>
+                                                </div>
+                                            )}
+
+                                            <p className="text-gray-300 mt-5 font-medium max-w-sm line-clamp-3 text-sm md:text-base">
+                                                {coll.description}
+                                            </p>
+                                            <div className="mt-8 flex items-center gap-2 text-secondary font-black uppercase tracking-widest text-[10px] transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                                                Explorar colección <span>→</span>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                );
+                            })}
+                        </div>
+                    </section>
+                )}
 
                 {/* Featured Products - Performance Optimized */}
                 <section className="bg-gray-50/50 py-24 md:py-32 rounded-[3rem] md:rounded-[5rem] mx-0 md:mx-4">

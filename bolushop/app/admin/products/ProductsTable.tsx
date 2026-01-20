@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Product, Category } from "@/lib/types";
-import { deleteProductAction, updateProductAction, deleteAllProductsAction, deleteMultipleProductsAction, createProductAction, bulkUpdatePricesAction, uploadImageAction, getCategoriesAction, bulkUpdateCategoriesAction } from "@/app/actions/admin";
+import { deleteProductAction, updateProductAction, deleteAllProductsAction, deleteMultipleProductsAction, createProductAction, bulkUpdatePricesAction, bulkResetPricesAction, uploadImageAction, getCategoriesAction, bulkUpdateCategoriesAction } from "@/app/actions/admin";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -39,12 +39,18 @@ export default function ProductsTable({ initialProducts }: Props) {
 
     const router = useRouter();
 
+    const [globalSettings, setGlobalSettings] = useState<any>(null);
+
     useEffect(() => {
-        const fetchCats = async () => {
-            const res = await getCategoriesAction() as any;
-            if (res) setDbCategories(res);
+        const fetchData = async () => {
+            const [catsRes, settingsRes] = await Promise.all([
+                getCategoriesAction(),
+                fetch('/api/admin/settings').then(res => res.json())
+            ]);
+            if (catsRes) setDbCategories(catsRes as any);
+            if (settingsRes && settingsRes.settings) setGlobalSettings(settingsRes.settings);
         };
-        fetchCats();
+        fetchData();
     }, []);
 
     const categories = useMemo(() => {
@@ -158,12 +164,44 @@ export default function ProductsTable({ initialProducts }: Props) {
     }
 
     const handleBulkPriceUpdate = async () => {
-        if (!confirm(`¿Seguro que querés aplicar un aumento del ${bulkPercentage}% a los productos seleccionados?`)) return;
+        const actionText = bulkPercentage > 0 ? `aumentar un ${bulkPercentage}%` : `bajar un ${Math.abs(bulkPercentage)}%`;
+        const scopeText = selectedIds.size > 0 ? `los ${selectedIds.size} productos seleccionados` : (selectedCategory === 'all' ? 'TODOS los productos' : `la categoría ${selectedCategory}`);
+
+        if (!confirm(`¿Seguro que querés ${actionText} a ${scopeText}?`)) return;
+
         setIsSaving(true);
         try {
-            const result = await bulkUpdatePricesAction(bulkPercentage, selectedCategory !== 'all' ? selectedCategory : undefined);
+            const result = await bulkUpdatePricesAction(
+                bulkPercentage,
+                selectedIds.size > 0 ? Array.from(selectedIds) : undefined,
+                selectedCategory !== 'all' ? selectedCategory : undefined
+            );
             if (result.success) {
                 setIsBulkPriceModalOpen(false);
+                setSelectedIds(new Set());
+                handleRefresh();
+            } else {
+                alert(result.error);
+            }
+        } finally {
+            setIsSaving(false);
+        }
+    }
+
+    const handleBulkReset = async () => {
+        const scopeText = selectedIds.size > 0 ? `los ${selectedIds.size} productos seleccionados` : (selectedCategory === 'all' ? 'TODOS los productos' : `la categoría ${selectedCategory}`);
+
+        if (!confirm(`¿Seguro que querés resetear al PRECIO ORIGINAL (Costo + Estrategia) a ${scopeText}?`)) return;
+
+        setIsSaving(true);
+        try {
+            const result = await bulkResetPricesAction(
+                selectedIds.size > 0 ? Array.from(selectedIds) : undefined,
+                selectedCategory !== 'all' ? selectedCategory : undefined
+            );
+            if (result.success) {
+                setIsBulkPriceModalOpen(false);
+                setSelectedIds(new Set());
                 handleRefresh();
             } else {
                 alert(result.error);
@@ -426,6 +464,7 @@ export default function ProductsTable({ initialProducts }: Props) {
                     onSubmit={handleCreateProduct}
                     isSaving={isSaving}
                     dbCategories={dbCategories}
+                    globalSettings={globalSettings}
                 />
             )}
 
@@ -440,6 +479,7 @@ export default function ProductsTable({ initialProducts }: Props) {
                     isSaving={isSaving}
                     isEditing={true}
                     dbCategories={dbCategories}
+                    globalSettings={globalSettings}
                 />
             )}
 
@@ -447,32 +487,64 @@ export default function ProductsTable({ initialProducts }: Props) {
             {isBulkPriceModalOpen && (
                 <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-[70] animate-in zoom-in duration-200">
                     <div className="bg-white rounded-[2.5rem] shadow-2xl max-w-md w-full p-10 text-center">
-                        <div className="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-3xl flex items-center justify-center text-3xl mx-auto mb-6">📈</div>
+                        <div className="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-3xl flex items-center justify-center text-3xl mx-auto mb-6">📉</div>
                         <h2 className="text-2xl font-black text-gray-900 mb-2">Ajuste Masivo de Precios</h2>
-                        <p className="text-gray-500 text-sm mb-8">Aplicar aumento porcentual a {selectedCategory === 'all' ? 'todos los productos' : `categoría ${selectedCategory}`}.</p>
+                        <p className="text-gray-500 text-sm mb-8">
+                            Afectará a {selectedIds.size > 0 ? `los ${selectedIds.size} productos seleccionados` : (selectedCategory === 'all' ? 'todos los productos' : `la categoría ${selectedCategory}`)}.
+                        </p>
 
-                        <div className="mb-8">
-                            <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Porcentaje de aumento (%)</label>
-                            <div className="relative">
-                                <input
-                                    type="number"
-                                    value={bulkPercentage}
-                                    onChange={(e) => setBulkPercentage(Number(e.target.value))}
-                                    className="w-full px-6 py-5 rounded-2xl bg-gray-50 border-none focus:ring-4 focus:ring-emerald-100 font-black text-3xl text-center text-emerald-600"
-                                />
-                                <span className="absolute right-6 top-1/2 -translate-y-1/2 text-2xl font-black text-emerald-200">%</span>
+                        <div className="mb-8 p-6 bg-gray-50 rounded-[2rem] border border-gray-100">
+                            <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Ajuste Porcentual (%)</label>
+                            <div className="relative flex items-center gap-4">
+                                <button
+                                    onClick={() => setBulkPercentage(prev => prev - 1)}
+                                    className="w-12 h-12 rounded-xl bg-white shadow-sm border border-gray-100 font-black text-xl hover:bg-red-50 hover:text-red-500 transition-colors"
+                                >-</button>
+                                <div className="relative flex-grow">
+                                    <input
+                                        type="number"
+                                        value={bulkPercentage}
+                                        onChange={(e) => setBulkPercentage(Number(e.target.value))}
+                                        className={`w-full px-4 py-4 rounded-xl border-none focus:ring-4 font-black text-2xl text-center ${bulkPercentage >= 0 ? 'text-emerald-600 focus:ring-emerald-100' : 'text-red-600 focus:ring-red-100'}`}
+                                    />
+                                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xl font-black opacity-20">%</span>
+                                </div>
+                                <button
+                                    onClick={() => setBulkPercentage(prev => prev + 1)}
+                                    className="w-12 h-12 rounded-xl bg-white shadow-sm border border-gray-100 font-black text-xl hover:bg-emerald-50 hover:text-emerald-500 transition-colors"
+                                >+</button>
                             </div>
+                            <p className="mt-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                                {bulkPercentage > 0 ? '📈 Aumento de precio' : bulkPercentage < 0 ? '📉 Rebaja de precio' : 'Sin cambios'}
+                            </p>
                         </div>
 
-                        <div className="flex gap-4">
-                            <button onClick={() => setIsBulkPriceModalOpen(false)} className="flex-1 py-4 font-black text-xs uppercase tracking-widest text-gray-400">Cancelar</button>
+                        <div className="space-y-3">
                             <button
                                 onClick={handleBulkPriceUpdate}
-                                disabled={isSaving}
-                                className="flex-[2] py-4 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-emerald-200 hover:scale-105 transition-all"
+                                disabled={isSaving || bulkPercentage === 0}
+                                className={`w-full py-5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-xl disabled:opacity-50 ${bulkPercentage >= 0 ? 'bg-emerald-600 text-white shadow-emerald-200' : 'bg-red-600 text-white shadow-red-200'}`}
                             >
-                                {isSaving ? 'Procesando...' : 'Aplicar Aumento'}
+                                {isSaving ? 'Procesando...' : (bulkPercentage >= 0 ? 'Aplicar Aumento' : 'Aplicar Descuento')}
                             </button>
+
+                            <div className="flex items-center gap-4 py-2">
+                                <div className="h-px bg-gray-100 flex-grow" />
+                                <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest">O también</span>
+                                <div className="h-px bg-gray-100 flex-grow" />
+                            </div>
+
+                            <button
+                                onClick={handleBulkReset}
+                                disabled={isSaving}
+                                className="w-full py-5 bg-gray-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-black transition-all shadow-xl shadow-gray-200 flex items-center justify-center gap-3"
+                            >
+                                🔄 Restaurar Precio Original
+                            </button>
+
+                            <p className="text-[9px] font-bold text-gray-400 italic">Recalcula basado en Costo + Estrategia (Margen y Envío)</p>
+
+                            <button onClick={() => setIsBulkPriceModalOpen(false)} className="w-full py-3 font-black text-[10px] uppercase tracking-widest text-gray-400 hover:text-gray-600">Cancelar</button>
                         </div>
                     </div>
                 </div>
@@ -523,7 +595,17 @@ export default function ProductsTable({ initialProducts }: Props) {
 }
 
 // Reusable Modal Component
-function ProductFormModal({ title, product, setProduct, onClose, onSubmit, isSaving, isEditing = false, dbCategories = [] }: any) {
+function ProductFormModal({ title, product, setProduct, onClose, onSubmit, isSaving, isEditing = false, dbCategories = [], globalSettings }: any) {
+    const calculateRecommendedPrice = () => {
+        if (!product.cost || !globalSettings) return;
+
+        const margin = globalSettings.profitMargin || 1.0;
+        const shipping = globalSettings.averageShippingCost || 0;
+
+        // Logic: Price = (Cost * Margin) + Average Shipping
+        const recommended = Math.ceil((product.cost * margin) + shipping);
+        setProduct({ ...product, price: recommended });
+    };
     return (
         <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-[60] animate-in fade-in duration-300">
             <div className="bg-white rounded-[3rem] shadow-2xl max-w-5xl w-full max-h-[95vh] overflow-hidden flex flex-col md:flex-row">
@@ -590,15 +672,36 @@ function ProductFormModal({ title, product, setProduct, onClose, onSubmit, isSav
                                     className="w-full px-5 py-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20 font-bold text-gray-900"
                                 />
                             </div>
-                            <div>
-                                <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 px-1">Precio (ARS)</label>
-                                <input
-                                    required
-                                    type="number"
-                                    value={product.price}
-                                    onChange={(e) => setProduct({ ...product, price: Number(e.target.value) })}
-                                    className="w-full px-5 py-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20 font-black text-gray-900 text-lg"
-                                />
+                            <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-6 bg-emerald-50/30 p-6 rounded-[2rem] border border-emerald-100/50">
+                                <div>
+                                    <label className="block text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-2 px-1">Costo (ARS)</label>
+                                    <input
+                                        type="number"
+                                        value={product.cost || ""}
+                                        onChange={(e) => setProduct({ ...product, cost: Number(e.target.value) })}
+                                        className="w-full px-5 py-4 rounded-2xl bg-white border-none focus:ring-2 focus:ring-emerald-500/20 font-black text-emerald-900 text-lg"
+                                        placeholder="0"
+                                    />
+                                </div>
+                                <div className="flex items-end">
+                                    <button
+                                        type="button"
+                                        onClick={calculateRecommendedPrice}
+                                        className="w-full py-4 px-4 bg-emerald-500 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-200 flex items-center justify-center gap-2"
+                                    >
+                                        ⚡ Calcular Precio
+                                    </button>
+                                </div>
+                                <div>
+                                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 px-1">Precio Final (ARS)</label>
+                                    <input
+                                        required
+                                        type="number"
+                                        value={product.price}
+                                        onChange={(e) => setProduct({ ...product, price: Number(e.target.value) })}
+                                        className="w-full px-5 py-4 rounded-2xl bg-white border-none focus:ring-2 focus:ring-primary/20 font-black text-gray-900 text-lg"
+                                    />
+                                </div>
                             </div>
                             <div>
                                 <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 px-1">Stock disponible</label>
