@@ -233,47 +233,47 @@ export default function ProductsTable({ initialProducts }: Props) {
     return (
         <div className="space-y-6">
             {/* Header / Actions Bar */}
-            <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 mt-2">
+            <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 bg-white p-5 rounded-2xl shadow-sm border border-gray-100 mt-2">
                 <div>
-                    <h2 className="text-2xl font-black text-gray-900">Gestión de Productos</h2>
-                    <p className="text-xs font-bold text-gray-600 uppercase tracking-widest">{filteredProducts.length} productos en catálogo</p>
+                    <h2 className="text-xl font-bold text-gray-900">Gestión de Productos</h2>
+                    <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-widest">{filteredProducts.length} productos en catálogo</p>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex flex-col sm:flex-row gap-2">
                     <button
                         onClick={() => setIsBulkPriceModalOpen(true)}
-                        className="px-6 py-4 bg-gray-900 text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest hover:scale-105 transition-all flex items-center justify-center gap-3"
+                        className="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-gray-200 transition-all flex items-center justify-center gap-2"
                     >
                         📈 Ajuste Masivo
                     </button>
                     <button
                         onClick={() => setIsCreating(true)}
-                        className="px-8 py-4 bg-primary text-white rounded-[1.5rem] font-black text-sm uppercase tracking-widest shadow-xl shadow-primary/30 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3"
+                        className="px-6 py-3 bg-primary text-white rounded-xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-primary/10 hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2"
                     >
-                        <span className="text-xl">+</span> Nuevo Producto
+                        + Nuevo Producto
                     </button>
                 </div>
             </div>
 
             {/* Controls Bar */}
-            <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 items-center">
+            <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-3 items-center">
                 <div className="relative flex-grow w-full">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs">🔍</span>
                     <input
                         type="text"
                         placeholder="Buscar por nombre..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-12 pr-4 py-3 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20 transition-all font-medium text-sm"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-gray-50 border-none focus:ring-1 focus:ring-primary/20 transition-all font-medium text-xs"
                     />
                 </div>
 
                 <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="w-full md:w-48 py-3 px-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20 transition-all font-bold text-xs uppercase tracking-widest text-gray-500"
+                    className="w-full md:w-44 py-2.5 px-4 rounded-xl bg-gray-50 border-none focus:ring-1 focus:ring-primary/20 transition-all font-bold text-[10px] uppercase tracking-wider text-gray-500"
                 >
                     {categories.map(cat => (
-                        <option key={cat} value={cat}>{cat === 'all' ? 'Todas las Categorías' : cat}</option>
+                        <option key={cat} value={cat}>{cat === 'all' ? 'Categorías' : cat}</option>
                     ))}
                 </select>
 
@@ -282,59 +282,53 @@ export default function ProductsTable({ initialProducts }: Props) {
                         <>
                             <button
                                 onClick={() => setIsBulkCategoryModalOpen(true)}
-                                className="flex-grow md:flex-none px-4 py-3 bg-blue-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-blue-200"
+                                className="flex-grow md:flex-none px-4 py-2 bg-blue-50 text-blue-600 rounded-xl font-bold text-[10px] uppercase tracking-wider hover:bg-blue-600 hover:text-white transition-all"
                             >
-                                Re-Categorizar ({selectedIds.size})
+                                Mover ({selectedIds.size})
                             </button>
                             <button
                                 onClick={handleDeleteSelected}
-                                className="flex-grow md:flex-none px-4 py-3 bg-red-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-red-200"
+                                className="flex-grow md:flex-none px-4 py-2 bg-red-50 text-red-600 rounded-xl font-bold text-[10px] uppercase tracking-wider hover:bg-red-600 hover:text-white transition-all"
                             >
-                                Eliminar ({selectedIds.size})
+                                Borrar ({selectedIds.size})
                             </button>
                         </>
                     )}
                     <button
                         onClick={handleDeleteAll}
-                        className="flex-grow md:flex-none px-4 py-3 bg-red-50 text-red-600 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all"
+                        className="flex-grow md:flex-none px-4 py-2 text-gray-400 hover:text-red-500 rounded-xl font-bold text-[10px] uppercase tracking-wider transition-all"
                     >
-                        Borrar Todo
+                        Limpiar Todo
                     </button>
                 </div>
             </div>
 
             {/* Table */}
-            <div className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 overflow-hidden">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 {/* Mobile Cards View */}
-                <div className="md:hidden divide-y divide-gray-100">
+                <div className="md:hidden divide-y divide-gray-50">
                     {filteredProducts.map((product) => (
                         <div key={product.id} className={`p-4 ${selectedIds.has(product.id) ? 'bg-primary/5' : ''}`}>
-                            <div className="flex items-start gap-4">
+                            <div className="flex items-start gap-3">
                                 <input
                                     type="checkbox"
                                     checked={selectedIds.has(product.id)}
                                     onChange={() => toggleSelect(product.id)}
-                                    className="mt-1 w-5 h-5 rounded-lg border-gray-200 text-primary focus:ring-primary/20"
+                                    className="mt-1 w-4 h-4 rounded border-gray-200 text-primary focus:ring-0"
                                 />
-                                <div className="w-20 h-20 rounded-2xl bg-gray-50 border border-gray-100 overflow-hidden flex-shrink-0">
+                                <div className="w-16 h-16 rounded-xl bg-gray-50 border border-gray-100 overflow-hidden flex-shrink-0">
                                     {product.image ? (
                                         <img src={product.image} alt="" className="w-full h-full object-cover" />
                                     ) : (
-                                        <div className="w-full h-full flex items-center justify-center text-2xl opacity-30">📦</div>
+                                        <div className="w-full h-full flex items-center justify-center text-xl opacity-30">📦</div>
                                     )}
                                 </div>
                                 <div className="flex-grow min-w-0">
-                                    <h3 className="font-black text-gray-900 text-base mb-1 line-clamp-2">{product.name}</h3>
+                                    <h3 className="font-bold text-gray-900 text-sm mb-0.5 line-clamp-1">{product.name}</h3>
                                     <div className="flex items-center gap-2 mb-2">
-                                        <span className="font-black text-primary text-lg">${product.price.toLocaleString("es-AR")}</span>
-                                        <span className={`text-xs font-black px-2 py-1 rounded-full ${product.stock > 10 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                        <span className="font-bold text-primary text-base">${product.price.toLocaleString("es-AR")}</span>
+                                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${product.stock > 10 ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'}`}>
                                             {product.stock} uts.
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center gap-2 mb-3">
-                                        <span className={`w-2 h-2 rounded-full ${product.isActive !== false ? 'bg-green-500' : 'bg-gray-300'}`}></span>
-                                        <span className="text-xs font-bold text-gray-600">
-                                            {product.isActive !== false ? 'Activo' : 'Pausado'}
                                         </span>
                                     </div>
                                     <div className="flex gap-2">
@@ -367,79 +361,67 @@ export default function ProductsTable({ initialProducts }: Props) {
                 <table className="hidden md:table w-full text-left border-collapse">
                     <thead className="bg-gray-50/50 border-b border-gray-100">
                         <tr>
-                            <th className="px-8 py-5 w-16">
+                            <th className="px-6 py-4 w-12">
                                 <input
                                     type="checkbox"
                                     checked={filteredProducts.length > 0 && selectedIds.size === filteredProducts.length}
                                     onChange={toggleSelectAll}
-                                    className="w-5 h-5 rounded-lg border-gray-200 text-primary focus:ring-primary/20"
+                                    className="w-4 h-4 rounded border-gray-200 text-primary focus:ring-0"
                                 />
                             </th>
-                            <th className="px-4 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400">Producto</th>
-                            <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400">Precio</th>
-                            <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400">Stock</th>
-                            <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400">Estado</th>
-                            <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400 text-right">Acciones</th>
+                            <th className="px-4 py-4 text-[9px] font-bold uppercase tracking-widest text-gray-400">Producto</th>
+                            <th className="px-6 py-4 text-[9px] font-bold uppercase tracking-widest text-gray-400">Precio</th>
+                            <th className="px-6 py-4 text-[9px] font-bold uppercase tracking-widest text-gray-400">Stock</th>
+                            <th className="px-6 py-4 text-[9px] font-bold uppercase tracking-widest text-gray-400">Estado</th>
+                            <th className="px-6 py-4 text-[9px] font-bold uppercase tracking-widest text-gray-400 text-right">Acciones</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-50">
                         {filteredProducts.map((product) => (
-                            <tr key={product.id} className={`hover:bg-gray-50/50 transition-colors group ${selectedIds.has(product.id) ? 'bg-primary/5' : ''}`}>
-                                <td className="px-8 py-5">
+                            <tr key={product.id} className={`hover:bg-gray-50/30 transition-colors group ${selectedIds.has(product.id) ? 'bg-primary/5' : ''}`}>
+                                <td className="px-6 py-3.5">
                                     <input
                                         type="checkbox"
                                         checked={selectedIds.has(product.id)}
                                         onChange={() => toggleSelect(product.id)}
-                                        className="w-5 h-5 rounded-lg border-gray-200 text-primary focus:ring-primary/20"
+                                        className="w-4 h-4 rounded border-gray-200 text-primary focus:ring-0"
                                     />
                                 </td>
-                                <td className="px-4 py-5">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-14 h-14 rounded-2xl bg-gray-50 border border-gray-100 overflow-hidden flex-shrink-0 shadow-inner">
+                                <td className="px-4 py-3.5">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-lg bg-gray-50 border border-gray-100 overflow-hidden flex-shrink-0">
                                             {product.image ? (
-                                                <img src={product.image} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                                <img src={product.image} alt="" className="w-full h-full object-cover transition-transform group-hover:scale-105" />
                                             ) : (
-                                                <div className="w-full h-full flex items-center justify-center text-xl grayscale opacity-30">📦</div>
+                                                <div className="w-full h-full flex items-center justify-center text-xs opacity-20">📦</div>
                                             )}
                                         </div>
                                         <div>
-                                            <div className="font-black text-gray-900 text-sm mb-0.5 line-clamp-1">{product.name}</div>
-                                            <div className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">ID: {product.id.slice(0, 8)}</div>
+                                            <div className="font-bold text-gray-900 text-xs mb-0.5 line-clamp-1">{product.name}</div>
+                                            <div className="text-[9px] font-medium text-gray-400 uppercase tracking-tight">{product.category}</div>
                                         </div>
                                     </div>
                                 </td>
-                                <td className="px-8 py-5">
-                                    <div className="font-black text-gray-900">${product.price.toLocaleString("es-AR")}</div>
+                                <td className="px-6 py-3.5 text-xs font-bold text-gray-900">
+                                    ${product.price.toLocaleString("es-AR")}
                                 </td>
-                                <td className="px-8 py-5">
-                                    <div className={`text-xs font-black px-3 py-1 rounded-full inline-block ${product.stock > 10 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                <td className="px-6 py-3.5">
+                                    <div className={`text-[10px] font-bold px-2 py-0.5 rounded inline-block ${product.stock > 10 ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'}`}>
                                         {product.stock} uts.
                                     </div>
                                 </td>
-                                <td className="px-8 py-5">
-                                    <div className="flex items-center gap-2">
-                                        <span className={`w-3 h-3 rounded-full ${product.isActive !== false ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]' : 'bg-gray-300'}`}></span>
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">
+                                <td className="px-6 py-3.5">
+                                    <div className="flex items-center gap-1.5">
+                                        <span className={`w-1.5 h-1.5 rounded-full ${product.isActive !== false ? 'bg-emerald-500' : 'bg-gray-300'}`}></span>
+                                        <span className="text-[10px] font-bold uppercase tracking-wide text-gray-400">
                                             {product.isActive !== false ? 'Activo' : 'Pausado'}
                                         </span>
                                     </div>
                                 </td>
-                                <td className="px-8 py-5">
-                                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button
-                                            onClick={() => setEditingProduct(product)}
-                                            className="p-2.5 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-600 hover:text-white transition-all shadow-sm"
-                                            title="Editar"
-                                        >
-                                            ✏️
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(product.id)}
-                                            className="p-2.5 bg-red-50 text-red-600 rounded-xl hover:bg-red-600 hover:text-white transition-all shadow-sm"
-                                            title="Eliminar"
-                                        >
-                                            🗑️
-                                        </button>
+                                <td className="px-6 py-3.5 text-right">
+                                    <div className="flex items-center justify-end gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button onClick={() => setEditingProduct(product)} className="p-1.5 text-gray-400 hover:text-blue-600 transition-colors">✏️</button>
+                                        <button onClick={() => handleDelete(product.id)} className="p-1.5 text-gray-400 hover:text-red-600 transition-colors">🗑️</button>
                                     </div>
                                 </td>
                             </tr>
@@ -485,38 +467,34 @@ export default function ProductsTable({ initialProducts }: Props) {
 
             {/* Bulk Price Modal */}
             {isBulkPriceModalOpen && (
-                <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-[70] animate-in zoom-in duration-200">
-                    <div className="bg-white rounded-[2.5rem] shadow-2xl max-w-md w-full p-10 text-center">
-                        <div className="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-3xl flex items-center justify-center text-3xl mx-auto mb-6">📉</div>
-                        <h2 className="text-2xl font-black text-gray-900 mb-2">Ajuste Masivo de Precios</h2>
-                        <p className="text-gray-500 text-sm mb-8">
-                            Afectará a {selectedIds.size > 0 ? `los ${selectedIds.size} productos seleccionados` : (selectedCategory === 'all' ? 'todos los productos' : `la categoría ${selectedCategory}`)}.
+                <div className="fixed inset-0 bg-gray-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-[70] animate-in zoom-in duration-200">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-8 text-center border border-gray-100">
+                        <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-2xl mx-auto mb-6">📉</div>
+                        <h2 className="text-xl font-bold text-gray-900 mb-2">Ajuste de Precios</h2>
+                        <p className="text-gray-400 text-xs mb-8">
+                            Afectará a {selectedIds.size > 0 ? `${selectedIds.size} seleccionados` : (selectedCategory === 'all' ? 'todo el catálogo' : `categoría ${selectedCategory}`)}.
                         </p>
 
-                        <div className="mb-8 p-6 bg-gray-50 rounded-[2rem] border border-gray-100">
-                            <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Ajuste Porcentual (%)</label>
-                            <div className="relative flex items-center gap-4">
+                        <div className="mb-8 p-6 bg-gray-50 rounded-xl border border-gray-100">
+                            <label className="block text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-4">Ajuste Porcentual (%)</label>
+                            <div className="relative flex items-center gap-3">
                                 <button
                                     onClick={() => setBulkPercentage(prev => prev - 1)}
-                                    className="w-12 h-12 rounded-xl bg-white shadow-sm border border-gray-100 font-black text-xl hover:bg-red-50 hover:text-red-500 transition-colors"
+                                    className="w-10 h-10 rounded-lg bg-white shadow-sm border border-gray-100 font-bold text-lg hover:bg-gray-50 transition-colors"
                                 >-</button>
                                 <div className="relative flex-grow">
                                     <input
                                         type="number"
                                         value={bulkPercentage}
                                         onChange={(e) => setBulkPercentage(Number(e.target.value))}
-                                        className={`w-full px-4 py-4 rounded-xl border-none focus:ring-4 font-black text-2xl text-center ${bulkPercentage >= 0 ? 'text-emerald-600 focus:ring-emerald-100' : 'text-red-600 focus:ring-red-100'}`}
+                                        className={`w-full px-3 py-3 rounded-lg border-none focus:ring-1 font-bold text-xl text-center ${bulkPercentage >= 0 ? 'text-emerald-600 focus:ring-emerald-100' : 'text-red-600 focus:ring-red-100'}`}
                                     />
-                                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xl font-black opacity-20">%</span>
                                 </div>
                                 <button
                                     onClick={() => setBulkPercentage(prev => prev + 1)}
-                                    className="w-12 h-12 rounded-xl bg-white shadow-sm border border-gray-100 font-black text-xl hover:bg-emerald-50 hover:text-emerald-500 transition-colors"
+                                    className="w-10 h-10 rounded-lg bg-white shadow-sm border border-gray-100 font-bold text-lg hover:bg-gray-50 transition-colors"
                                 >+</button>
                             </div>
-                            <p className="mt-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                                {bulkPercentage > 0 ? '📈 Aumento de precio' : bulkPercentage < 0 ? '📉 Rebaja de precio' : 'Sin cambios'}
-                            </p>
                         </div>
 
                         <div className="space-y-3">
@@ -610,15 +588,15 @@ function ProductFormModal({ title, product, setProduct, onClose, onSubmit, isSav
         <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-[60] animate-in fade-in duration-300">
             <div className="bg-white rounded-[3rem] shadow-2xl max-w-5xl w-full max-h-[95vh] overflow-hidden flex flex-col md:flex-row">
                 {/* Image Side */}
-                <div className="w-full md:w-2/5 bg-gray-50 p-8 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-gray-100">
-                    <div className="w-full aspect-square bg-white rounded-[2.5rem] shadow-inner overflow-hidden border-4 border-white mb-6 group relative">
+                <div className="w-full md:w-1/3 bg-gray-50 p-6 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-gray-100">
+                    <div className="w-full aspect-square bg-white rounded-2xl shadow-inner overflow-hidden border border-gray-200 mb-6 group relative">
                         {product.image ? (
                             <img src={product.image} alt="Preview" className="w-full h-full object-contain" />
                         ) : (
-                            <div className="w-full h-full flex items-center justify-center text-6xl opacity-10">🖼️</div>
+                            <div className="w-full h-full flex items-center justify-center text-4xl opacity-10">🖼️</div>
                         )}
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <label htmlFor="file-upload" className="cursor-pointer bg-white px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-110 transition-transform">
+                            <label htmlFor="file-upload" className="cursor-pointer bg-white px-4 py-2 rounded-xl font-bold text-[10px] uppercase tracking-wider hover:scale-105 transition-transform">
                                 Subir Imagen
                             </label>
                         </div>
@@ -652,13 +630,13 @@ function ProductFormModal({ title, product, setProduct, onClose, onSubmit, isSav
                 </div>
 
                 {/* Form Side */}
-                <div className="w-full md:w-3/5 p-8 md:p-12 overflow-y-auto">
-                    <div className="flex justify-between items-start mb-8">
+                <div className="w-full md:w-2/3 p-6 md:p-10 overflow-y-auto">
+                    <div className="flex justify-between items-start mb-6">
                         <div>
-                            <h2 className="text-3xl font-black text-gray-900 tracking-tight">{title}</h2>
-                            {isEditing && <p className="text-sm text-gray-400 font-bold uppercase tracking-widest mt-1">ID: {product.id}</p>}
+                            <h2 className="text-xl font-bold text-gray-900 tracking-tight">{title}</h2>
+                            {isEditing && <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">ID: {product.id}</p>}
                         </div>
-                        <button onClick={onClose} className="p-3 bg-gray-100 rounded-2xl hover:bg-gray-200 transition-colors text-xl">✕</button>
+                        <button onClick={onClose} className="p-2 text-gray-400 hover:text-gray-900 transition-colors">✕</button>
                     </div>
 
                     <form onSubmit={onSubmit} className="space-y-6">

@@ -95,7 +95,7 @@ export default function CarritoPage() {
 
             <main className="min-h-screen bg-gray-50 pt-28 pb-12">
                 <div className="container mx-auto px-4">
-                    <h1 className="text-5xl font-black mb-12">
+                    <h1 className="text-3xl md:text-5xl font-bold mb-10 tracking-tight">
                         Tu <span className="text-primary italic">Carrito</span>
                     </h1>
 
@@ -105,7 +105,7 @@ export default function CarritoPage() {
                             {cart.map((item) => (
                                 <div
                                     key={item.productId}
-                                    className="bg-white rounded-[2rem] p-6 shadow-sm hover:shadow-lg transition-shadow"
+                                    className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100/50 hover:shadow-md transition-shadow"
                                 >
                                     <div className="flex gap-6">
                                         {/* Image */}
@@ -125,7 +125,7 @@ export default function CarritoPage() {
                                         {/* Info */}
                                         <div className="flex-grow">
                                             <Link href={item.isCollection ? `/coleccion/${item.slug}` : `/producto/${item.slug}`}>
-                                                <h3 className="font-black text-lg text-gray-900 hover:text-primary transition-colors mb-2">
+                                                <h3 className="font-bold text-base md:text-lg text-gray-900 hover:text-primary transition-colors mb-1">
                                                     {item.name}
                                                 </h3>
                                             </Link>
@@ -134,25 +134,25 @@ export default function CarritoPage() {
                                                     Pack Ahorro
                                                 </span>
                                             )}
-                                            <p className="text-2xl font-black text-primary mb-4">
+                                            <p className="text-lg md:text-xl font-bold text-primary mb-4">
                                                 ${item.price.toLocaleString('es-AR')}
                                             </p>
 
-                                            <div className="flex items-center gap-4">
+                                            <div className="flex items-center gap-6">
                                                 {/* Quantity Controls */}
-                                                <div className="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-2">
+                                                <div className="flex items-center gap-3 bg-gray-50 rounded-lg px-3 py-1.5 border border-gray-100">
                                                     <button
                                                         onClick={() => handleQuantityChange(item.productId, item.quantity - 1)}
-                                                        className="text-xl font-black text-gray-600 hover:text-primary transition-colors"
+                                                        className="text-lg font-bold text-gray-400 hover:text-primary transition-colors"
                                                     >
                                                         −
                                                     </button>
-                                                    <span className="text-lg font-black w-8 text-center">
+                                                    <span className="text-sm font-bold w-6 text-center">
                                                         {item.quantity}
                                                     </span>
                                                     <button
                                                         onClick={() => handleQuantityChange(item.productId, item.quantity + 1)}
-                                                        className="text-xl font-black text-gray-600 hover:text-primary transition-colors"
+                                                        className="text-lg font-bold text-gray-400 hover:text-primary transition-colors"
                                                     >
                                                         +
                                                     </button>
@@ -161,17 +161,17 @@ export default function CarritoPage() {
                                                 {/* Remove Button */}
                                                 <button
                                                     onClick={() => handleRemove(item.productId)}
-                                                    className="text-red-500 hover:text-red-700 transition-colors font-bold text-sm"
+                                                    className="text-gray-400 hover:text-red-500 transition-colors font-semibold text-[10px] uppercase tracking-wider"
                                                 >
-                                                    🗑️ Eliminar
+                                                    Eliminar
                                                 </button>
                                             </div>
                                         </div>
 
-                                        {/* Subtotal */}
-                                        <div className="text-right">
-                                            <p className="text-xs text-gray-400 font-bold mb-1">Subtotal</p>
-                                            <p className="text-2xl font-black text-gray-900">
+                                        {/* Subtotal Item */}
+                                        <div className="text-right flex flex-col justify-center">
+                                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">Subtotal</p>
+                                            <p className="text-lg md:text-xl font-bold text-gray-900">
                                                 ${(item.price * item.quantity).toLocaleString('es-AR')}
                                             </p>
                                         </div>
@@ -182,8 +182,8 @@ export default function CarritoPage() {
 
                         {/* Summary */}
                         <div className="lg:col-span-1">
-                            <div className="bg-white rounded-[2rem] p-8 shadow-lg sticky top-24">
-                                <h2 className="text-2xl font-black mb-6">Resumen</h2>
+                            <div className="bg-white rounded-3xl p-8 shadow-xl shadow-black/5 sticky top-24 border border-gray-100">
+                                <h2 className="text-xl font-bold mb-6">Resumen</h2>
 
                                 <div className="space-y-4 mb-6">
                                     <div className="flex justify-between text-lg">
@@ -198,43 +198,43 @@ export default function CarritoPage() {
                                     </div>
                                 </div>
 
-                                <div className="border-t border-gray-200 pt-4 mb-6">
+                                <div className="border-t border-gray-100 pt-6 mb-8">
                                     <div className="flex justify-between text-2xl">
-                                        <span className="font-black">Total</span>
-                                        <span className="font-black text-primary">${subtotal.toLocaleString('es-AR')}</span>
+                                        <span className="font-bold">Total</span>
+                                        <span className="font-bold text-primary">${subtotal.toLocaleString('es-AR')}</span>
                                     </div>
-                                    {!isFreeShipping && <p className="text-xs text-gray-500 mt-2">+ Costo de envío</p>}
+                                    {!isFreeShipping && <p className="text-[10px] text-gray-400 mt-2">+ Costo de envío</p>}
                                 </div>
 
                                 {isFreeShipping ? (
-                                    <div className="bg-emerald-50 rounded-2xl p-4 mb-6 border border-emerald-100 flex items-center gap-3">
-                                        <span className="text-2xl">🚚</span>
-                                        <p className="text-sm text-emerald-900 font-bold">
-                                            ¡Tu pedido califica para <span className="text-emerald-600 uppercase">Envío Gratis</span> a todo el país!
+                                    <div className="bg-emerald-50 rounded-2xl p-4 mb-8 border border-emerald-100/50 flex items-center gap-3">
+                                        <span className="text-xl">🚚</span>
+                                        <p className="text-xs text-emerald-900 font-semibold leading-relaxed">
+                                            ¡Tu pedido califica para <span className="text-emerald-600 font-bold uppercase">Envío Gratis</span>!
                                         </p>
                                     </div>
                                 ) : (
-                                    <div className="bg-blue-50 rounded-2xl p-4 mb-6">
-                                        <p className="text-sm text-blue-900 font-medium">
-                                            💡 El costo de envío se calculará en el checkout según tu ubicación
+                                    <div className="bg-blue-50 rounded-2xl p-4 mb-8">
+                                        <p className="text-xs text-blue-900 font-medium">
+                                            💡 El costo de envío se calculará en el checkout.
                                         </p>
                                     </div>
                                 )}
 
                                 {subtotal < minPurchase && (
-                                    <div className="bg-red-50 rounded-2xl p-4 mb-6 border border-red-100 flex items-center gap-3">
-                                        <span className="text-2xl">⚠️</span>
-                                        <p className="text-sm text-red-900 font-bold">
-                                            La compra mínima es de <span className="text-red-600">${minPurchase.toLocaleString('es-AR')}</span>. Te faltan <span className="text-red-600">${(minPurchase - subtotal).toLocaleString('es-AR')}</span>.
+                                    <div className="bg-red-50 rounded-2xl p-4 mb-8 border border-red-100/50 flex items-center gap-3">
+                                        <span className="text-xl">⚠️</span>
+                                        <p className="text-xs text-red-900 font-semibold leading-relaxed">
+                                            La compra mínima es de <span className="font-bold">${minPurchase.toLocaleString('es-AR')}</span>.
                                         </p>
                                     </div>
                                 )}
 
                                 <Link
                                     href={subtotal < minPurchase ? "#" : "/checkout"}
-                                    className={`block w-full py-4 text-white text-center rounded-2xl font-black text-sm uppercase tracking-widest transition-all shadow-xl ${subtotal < minPurchase
-                                            ? 'bg-gray-300 cursor-not-allowed opacity-70 grayscale'
-                                            : 'bg-primary hover:scale-105 shadow-primary/30'
+                                    className={`block w-full py-4 text-white text-center rounded-2xl font-bold text-xs uppercase tracking-widest transition-all shadow-lg ${subtotal < minPurchase
+                                        ? 'bg-gray-200 cursor-not-allowed grayscale'
+                                        : 'bg-primary hover:bg-gold-accent shadow-primary/10'
                                         }`}
                                     onClick={(e) => {
                                         if (subtotal < minPurchase) {
@@ -243,14 +243,14 @@ export default function CarritoPage() {
                                         }
                                     }}
                                 >
-                                    Continuar al Checkout
+                                    Continuar Pago
                                 </Link>
 
                                 <Link
                                     href="/productos"
-                                    className="block w-full py-3 text-center text-gray-600 font-bold text-sm mt-4 hover:text-primary transition-colors"
+                                    className="block w-full py-3 text-center text-gray-400 font-bold text-[10px] uppercase tracking-widest mt-4 hover:text-primary transition-colors"
                                 >
-                                    ← Seguir Comprando
+                                    ← Seguir Explorando
                                 </Link>
                             </div>
                         </div>

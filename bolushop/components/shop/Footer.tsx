@@ -13,7 +13,7 @@ export default function Footer() {
                             <Truck size={32} />
                         </div>
                         <div>
-                            <h4 className="font-black text-gray-900 uppercase tracking-wider text-sm">Envío Nacional</h4>
+                            <h4 className="font-bold text-gray-900 uppercase tracking-wider text-xs">Envío Nacional</h4>
                             <p className="text-gray-500 text-sm">A todo Argentina por Correo Argentino</p>
                         </div>
                     </div>
@@ -22,7 +22,7 @@ export default function Footer() {
                             <ShieldCheck size={32} />
                         </div>
                         <div>
-                            <h4 className="font-black text-gray-900 uppercase tracking-wider text-sm">Compra Segura</h4>
+                            <h4 className="font-bold text-gray-900 uppercase tracking-wider text-xs">Compra Segura</h4>
                             <p className="text-gray-500 text-sm">Protección de datos y garantía oficial</p>
                         </div>
                     </div>
@@ -31,7 +31,7 @@ export default function Footer() {
                             <CreditCard size={32} />
                         </div>
                         <div>
-                            <h4 className="font-black text-gray-900 uppercase tracking-wider text-sm">Cuotas Sin Interés</h4>
+                            <h4 className="font-bold text-gray-900 uppercase tracking-wider text-xs">Cuotas Sin Interés</h4>
                             <p className="text-gray-500 text-sm">Con tarjetas seleccionadas vía MP</p>
                         </div>
                     </div>
@@ -110,7 +110,7 @@ export default function Footer() {
                             </div>
                         </div>
                         <div className="pt-4">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Medios de Pago</p>
+                            <p className="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-4">Medios de Pago</p>
                             <div className="flex items-center gap-4">
                                 <img src="https://logodownload.org/wp-content/uploads/2019/06/mercado-pago-logo-1.png" alt="Mercado Pago" width={128} height={32} className="h-8 w-auto opacity-80" />
                             </div>

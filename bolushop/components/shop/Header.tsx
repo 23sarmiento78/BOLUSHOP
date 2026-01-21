@@ -50,26 +50,26 @@ export default function Header() {
     return (
         <>
             {/* Top Info Bar */}
-            <div className={`fixed top-0 left-0 right-0 z-[60] py-2 px-4 transition-all duration-500 overflow-hidden ${isScrolled || !isHome ? 'bg-black text-white' : 'bg-white/10 backdrop-blur-md text-white border-b border-white/10'
+            <div className={`fixed top-0 left-0 right-0 z-[60] py-1.5 px-4 transition-all duration-500 overflow-hidden ${isScrolled || !isHome ? 'bg-royal-navy text-white' : 'bg-white/5 backdrop-blur-md text-white border-b border-white/10'
                 }`}>
                 <div className="container mx-auto">
                     <div className="flex items-center justify-center gap-6 whitespace-nowrap animate-marquee">
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2">
+                        <span className="text-[9px] font-bold uppercase tracking-wider flex items-center gap-2">
                             <span className="w-1 h-1 bg-primary rounded-full animate-ping"></span>
-                            IMPORTANTE: Al comprar, esperá la redirección y confirmá por WhatsApp
+                            Al comprar, esperá la redirección y confirmá por WhatsApp
                         </span>
-                        <span className="hidden md:inline text-[10px] font-black uppercase tracking-[0.2em] opacity-30">|</span>
-                        <span className="hidden md:inline text-[10px] font-black uppercase tracking-[0.2em]">Envíos a todo el país</span>
-                        <span className="hidden md:inline text-[10px] font-black uppercase tracking-[0.2em] opacity-30">|</span>
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">Soporte 24/7 vía WhatsApp</span>
+                        <span className="hidden md:inline text-[9px] font-bold uppercase tracking-wider opacity-30">|</span>
+                        <span className="hidden md:inline text-[9px] font-bold uppercase tracking-wider">Envíos a todo el país</span>
+                        <span className="hidden md:inline text-[9px] font-bold uppercase tracking-wider opacity-30">|</span>
+                        <span className="text-[9px] font-bold uppercase tracking-wider">Soporte 24/7</span>
                     </div>
                 </div>
             </div>
 
             <header
-                className={`fixed left-0 right-0 z-50 transition-all duration-500 ${isScrolled || !isHome
-                    ? "bg-white/80 backdrop-blur-xl shadow-2xl py-4 top-[34px]"
-                    : "bg-transparent py-8 md:py-10 top-[40px]"
+                className={`fixed left-0 right-0 z-50 transition-all duration-300 ${isScrolled || !isHome
+                    ? "bg-white/90 backdrop-blur-xl shadow-lg shadow-black/5 py-3 top-[28px]"
+                    : "bg-transparent py-6 md:py-8 top-[32px]"
                     }`}
             >
                 <div className="container mx-auto px-6 md:px-12">
@@ -80,26 +80,26 @@ export default function Header() {
                         </Link>
 
                         {/* Desktop Search Center */}
-                        <div className="hidden lg:flex flex-grow max-w-xl mx-8">
+                        <div className="hidden lg:flex flex-grow max-w-lg mx-8">
                             <form onSubmit={handleSearch} className="relative w-full group">
                                 <input
                                     type="text"
-                                    placeholder="¿Qué estás buscando hoy?"
+                                    placeholder="¿Qué estás buscando?"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className={`w-full rounded-2xl py-3 pl-6 pr-12 transition-all duration-300 outline-none border ${isScrolled || !isHome
-                                        ? "bg-gray-50 border-gray-200 focus:bg-white focus:ring-2 ring-primary/20 text-gray-900"
-                                        : "bg-white/10 backdrop-blur-md border-white/20 text-white placeholder:text-gray-300 focus:bg-white/20"
+                                    className={`w-full rounded-xl py-2.5 pl-5 pr-10 transition-all duration-300 outline-none border text-sm ${isScrolled || !isHome
+                                        ? "bg-gray-50 border-gray-100 focus:bg-white focus:border-primary/30 text-gray-900"
+                                        : "bg-white/10 backdrop-blur-md border-white/10 text-white placeholder:text-gray-300 focus:bg-white/20"
                                         }`}
                                 />
-                                <button type="submit" aria-label="Buscar" className={`absolute right-4 top-1/2 -translate-y-1/2 transition-colors ${isScrolled || !isHome ? 'text-gray-400 hover:text-primary' : 'text-white/70 hover:text-white'}`}>
-                                    <Search size={20} />
+                                <button type="submit" aria-label="Buscar" className={`absolute right-3 top-1/2 -translate-y-1/2 transition-colors ${isScrolled || !isHome ? 'text-gray-400 hover:text-primary' : 'text-white/70 hover:text-white'}`}>
+                                    <Search size={18} />
                                 </button>
                             </form>
                         </div>
 
                         {/* Desktop Navigation */}
-                        <nav className="hidden md:flex items-center gap-8 mr-6">
+                        <nav className="hidden md:flex items-center gap-6 mr-6">
                             {[
                                 { label: 'Productos', href: '/productos' },
                                 { label: 'Rastreo', href: '/rastreo' },
@@ -107,7 +107,7 @@ export default function Header() {
                                 <Link
                                     key={link.href}
                                     href={link.href}
-                                    className={`text-sm font-black uppercase tracking-widest hover:text-primary transition-colors ${isScrolled || !isHome ? 'text-gray-600' : 'text-gray-200'
+                                    className={`text-xs font-bold uppercase tracking-widest hover:text-primary transition-colors ${isScrolled || !isHome ? 'text-gray-600' : 'text-gray-200'
                                         }`}
                                 >
                                     {link.label}

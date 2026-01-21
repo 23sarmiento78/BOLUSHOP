@@ -5,16 +5,22 @@ html {
 }
 
 :root {
-  /* Exclusive Premium Theme */
+  /* Refined Premium Theme - BoluShop 2026 */
   --royal-navy: #0F172A;
   --gold-accent: #D4AF37;
   --success-emerald: #10B981;
-  --sand-white: #F8FAFC;
+  --sand-white: #FDFDFD;
   --text-main: #1E293B;
   --text-secondary: #64748B;
+  --border-subtle: #E2E8F0;
 
   --background: var(--sand-white);
   --foreground: var(--text-main);
+  
+  /* Spacing system */
+  --spacing-compact: 0.75rem;
+  --spacing-normal: 1rem;
+  --spacing-wide: 1.5rem;
 }
 
 @theme {
@@ -23,7 +29,8 @@ html {
   --color-primary: var(--royal-navy);
   --color-secondary: var(--gold-accent);
   --color-accent: var(--success-emerald);
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Outfit', var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 body {
