@@ -56,7 +56,7 @@ export function addCollectionToCart(collection: any, products: any[], totalPrice
             name: `Pack: ${collection.name}`,
             price: totalPrice,
             quantity: 1,
-            image: collection.image || (products.length > 0 ? products[0].image : "/bolushop.png"),
+            image: collection.image || (products.length > 0 ? products[0].image : "/icon.png"),
             slug: collection.slug,
             isCollection: true
         });

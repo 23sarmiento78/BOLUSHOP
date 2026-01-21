@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
                 const description = row['Descripción'] || '';
 
                 // Fallback image logic
-                const image = row['Imagen'] || '/bolushop.png';
+                const image = row['Imagen'] || '/icon.png';
 
                 return {
                     id: String(row['SKU'] || uuidv4()),
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
                 name: p.name || 'Sin Nombre',
                 slug: p.slug || uuidv4(),
                 price: Number(p.price) || 0,
-                image: p.image || '/bolushop.png',
+                image: p.image || '/icon.png',
                 category: p.category || 'otros',
                 description: p.description || '',
                 features: []

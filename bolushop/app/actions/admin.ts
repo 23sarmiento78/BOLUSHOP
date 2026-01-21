@@ -145,7 +145,7 @@ export async function importProductsAction(rawProducts: any[], source: string) {
                 }
 
                 const description = row['Descripción'] || '';
-                const image = row['Imagen'] || '/bolushop.png';
+                const image = row['Imagen'] || '/icon.png';
 
                 // Clean HTML from description
                 const cleanHtmlDescription = (html: string): string => {
@@ -203,7 +203,7 @@ export async function importProductsAction(rawProducts: any[], source: string) {
                 let finalImage = image;
                 if (existingProduct &&
                     existingProduct.image &&
-                    existingProduct.image !== '/bolushop.png' &&
+                    existingProduct.image !== '/icon.png' &&
                     !existingProduct.image.includes('dropers')) {
                     finalImage = existingProduct.image; // Preserve custom image
                 }

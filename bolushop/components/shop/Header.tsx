@@ -123,7 +123,7 @@ export default function Header() {
                                         }`}
                                 />
                                 {cartCount > 0 && (
-                                    <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full shadow-lg scale-100 animate-in zoom-in">
+                                    <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-lg scale-100 animate-in zoom-in">
                                         {cartCount}
                                     </span>
                                 )}
@@ -175,7 +175,7 @@ export default function Header() {
                                     <Link
                                         key={item.href}
                                         href={item.href}
-                                        className="flex items-center justify-between p-5 rounded-2xl bg-gray-50/50 hover:bg-primary hover:text-white font-black text-lg transition-all active:scale-95 group"
+                                        className="flex items-center justify-between p-5 rounded-2xl bg-gray-50/50 hover:bg-primary hover:text-white font-bold text-lg transition-all active:scale-95 group"
                                         onClick={() => setIsMobileMenuOpen(false)}
                                         style={{ animationDelay: `${idx * 50}ms` }}
                                     >
@@ -185,9 +185,9 @@ export default function Header() {
                                 ))}
                             </nav>
 
-                            <div className="mt-12 p-8 bg-primary rounded-[2.5rem] text-white text-center">
-                                <p className="text-[10px] font-black uppercase tracking-[0.3em] mb-4 opacity-60">Ayuda Directa</p>
-                                <a href="https://wa.me/3541237972" className="text-xl font-black block mb-2">WhatsApp 24/7</a>
+                            <div className="mt-12 p-8 bg-primary rounded-3xl text-white text-center">
+                                <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-4 opacity-60">Ayuda Directa</p>
+                                <a href="https://wa.me/3541237972" className="text-xl font-bold block mb-2">WhatsApp 24/7</a>
                                 <p className="text-sm opacity-80">Estamos online para ayudarte</p>
                             </div>
                         </div>
