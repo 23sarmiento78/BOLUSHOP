@@ -100,12 +100,12 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
             <main className="min-h-screen bg-white pt-28 pb-12">
                 <div className="container mx-auto px-4">
                     {/* Breadcrumb */}
-                    <div className="mb-8 flex items-center gap-2 text-sm text-gray-500">
-                        <Link href="/" className="hover:text-primary">Inicio</Link>
-                        <span>/</span>
-                        <Link href="/productos" className="hover:text-primary">Productos</Link>
-                        <span>/</span>
-                        <span className="text-gray-900 font-bold">{product.name}</span>
+                    <div className="mb-6 flex items-center gap-2 text-xs text-gray-400">
+                        <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
+                        <span className="opacity-30">/</span>
+                        <Link href="/productos" className="hover:text-primary transition-colors">Productos</Link>
+                        <span className="opacity-30">/</span>
+                        <span className="text-gray-900 font-semibold">{product.name}</span>
                     </div>
 
                     {/* Product Detail */}
@@ -150,16 +150,16 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
                                     </div>
 
                                     {product.features && product.features.length > 0 && (
-                                        <div className="bg-gray-50 rounded-[2.5rem] p-10">
-                                            <h3 className="font-black text-xl mb-8 flex items-center gap-3">
-                                                <span className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white text-sm">✓</span>
+                                        <div className="bg-gray-50/50 rounded-3xl p-8 border border-gray-100">
+                                            <h3 className="font-bold text-lg mb-6 flex items-center gap-3">
+                                                <span className="w-6 h-6 bg-primary rounded flex items-center justify-center text-white text-xs">✓</span>
                                                 Características Principales
                                             </h3>
-                                            <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                 {product.features.map((feature, index) => (
-                                                    <li key={index} className="flex items-start gap-3 group">
-                                                        <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:bg-primary transition-colors" />
-                                                        <span className="text-gray-700 font-medium">{feature}</span>
+                                                    <li key={index} className="flex items-start gap-3 group text-sm">
+                                                        <div className="mt-1.5 w-1 h-1 rounded-full bg-primary/40 group-hover:bg-primary transition-colors" />
+                                                        <span className="text-gray-600 font-medium">{feature}</span>
                                                     </li>
                                                 ))}
                                             </ul>
@@ -167,35 +167,35 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
                                     )}
                                 </div>
 
-                                {/* Right: Purchase Card (Amazon style) */}
+                                {/* Right: Purchase Card */}
                                 <div className="lg:col-span-1">
-                                    <div className="sticky top-32 bg-white border border-gray-100 rounded-[2.5rem] p-8 shadow-2xl shadow-gray-200/50">
-                                        <div className="mb-8">
-                                            <div className="flex items-baseline gap-2 mb-2">
-                                                <span className="text-sm font-black text-primary">$</span>
-                                                <span className="text-5xl font-black text-gray-900 tracking-tighter">
+                                    <div className="sticky top-32 bg-white border border-gray-100 rounded-3xl p-6 shadow-xl shadow-black/5">
+                                        <div className="mb-6">
+                                            <div className="flex items-baseline gap-1.5 mb-2">
+                                                <span className="text-xs font-bold text-primary">$</span>
+                                                <span className="text-4xl font-bold text-gray-900 tracking-tight">
                                                     {product.price.toLocaleString('es-AR')}
                                                 </span>
                                             </div>
-                                            <p className="text-emerald-600 font-black text-sm uppercase tracking-[0.1em] flex items-center gap-2">
-                                                <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                                                Envío Gratis a TODO el País
+                                            <p className="text-emerald-600 font-bold text-[10px] uppercase tracking-wider flex items-center gap-2">
+                                                <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
+                                                Envío Gratis
                                             </p>
                                         </div>
 
                                         {product.stock > 0 ? (
                                             <div className="space-y-6">
-                                                <div className="space-y-4">
-                                                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Cantidad</label>
-                                                    <div className="flex items-center justify-between bg-gray-50 rounded-2xl p-2 px-4 border border-gray-100">
+                                                <div className="space-y-3">
+                                                    <label className="text-[9px] font-bold uppercase tracking-widest text-gray-400">Cantidad</label>
+                                                    <div className="flex items-center justify-between bg-gray-50 rounded-xl p-1.5 px-3 border border-gray-100">
                                                         <button
                                                             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                                            className="w-10 h-10 flex items-center justify-center text-xl font-black text-gray-400 hover:text-primary"
+                                                            className="w-8 h-8 flex items-center justify-center text-lg font-bold text-gray-400 hover:text-primary"
                                                         >−</button>
-                                                        <span className="font-black text-lg">{quantity}</span>
+                                                        <span className="font-bold text-base">{quantity}</span>
                                                         <button
                                                             onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
-                                                            className="w-10 h-10 flex items-center justify-center text-xl font-black text-gray-400 hover:text-primary"
+                                                            className="w-8 h-8 flex items-center justify-center text-lg font-bold text-gray-400 hover:text-primary"
                                                         >+</button>
                                                     </div>
                                                 </div>
@@ -203,12 +203,12 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
                                                 <button
                                                     onClick={handleAddToCart}
                                                     disabled={isAdding}
-                                                    className={`w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all duration-500 shadow-xl ${isAdding
-                                                        ? 'bg-green-500 text-white scale-[0.98]'
-                                                        : 'bg-gray-900 text-white hover:bg-primary shadow-gray-900/20 hover:shadow-primary/30'
+                                                    className={`w-full py-4 rounded-xl font-bold text-[11px] uppercase tracking-widest transition-all duration-300 shadow-lg ${isAdding
+                                                        ? 'bg-green-500 text-white'
+                                                        : 'bg-primary text-white hover:bg-gold-accent shadow-primary/10'
                                                         }`}
                                                 >
-                                                    {isAdding ? '¡Agregado con éxito!' : 'Comprar Ahora'}
+                                                    {isAdding ? '¡Agregado!' : 'Comprar Ahora'}
                                                 </button>
 
                                                 <div className="space-y-4 pt-6 border-t border-gray-50">
@@ -249,8 +249,8 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
 
                     {/* Related Products */}
                     {relatedProducts.length > 0 && (
-                        <section className="py-12 border-t border-gray-200">
-                            <h2 className="text-3xl font-black mb-8">
+                        <section className="py-12 border-t border-gray-100">
+                            <h2 className="text-2xl font-bold mb-8">
                                 Productos <span className="text-primary italic">Relacionados</span>
                             </h2>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

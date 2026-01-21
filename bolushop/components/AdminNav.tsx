@@ -57,34 +57,30 @@ export default function AdminNav() {
 
             {/* Sidebar Navigation */}
             <nav className={`
-                fixed inset-y-0 left-0 z-50 lg:relative lg:translate-x-0 transition-all duration-500 ease-in-out
-                w-80 bg-white border-r border-gray-100 flex flex-col h-screen shadow-2xl lg:shadow-none
+                fixed inset-y-0 left-0 z-50 lg:relative lg:translate-x-0 transition-all duration-300 ease-in-out
+                w-72 bg-white border-r border-gray-100 flex flex-col h-screen
                 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
             `}>
                 {/* Logo Section */}
-                <div className="p-10">
+                <div className="p-8">
                     <Link href="/" target="_blank" className="group block">
-                        <div className="flex items-center gap-4 mb-2">
-                            <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-xl shadow-primary/20 group-hover:rotate-6 transition-transform duration-500">
+                        <div className="flex items-center gap-3 mb-2">
+                            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary/10 transition-transform duration-300">
                                 B
                             </div>
                             <div className="flex flex-col">
-                                <h1 className="font-black text-2xl tracking-tighter leading-none text-gray-900">
-                                    Bolu<span className="text-primary italic">Shop</span>
+                                <h1 className="font-bold text-xl tracking-tight leading-none text-gray-900">
+                                    Bolu<span className="text-primary">Shop</span>
                                 </h1>
-                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">Control Center</span>
+                                <span className="text-[9px] font-semibold uppercase tracking-widest text-gray-400">Admin</span>
                             </div>
                         </div>
                     </Link>
-                    <div className="mt-6 flex items-center gap-2 p-3 bg-gray-50 rounded-2xl text-gray-500 hover:text-primary transition-colors cursor-pointer group">
-                        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                        <span className="text-xs font-black uppercase tracking-widest">Sistema Operativo</span>
-                    </div>
                 </div>
 
                 {/* Navigation Links */}
-                <div className="flex-grow px-6 space-y-1 overflow-y-auto custom-scrollbar">
-                    <p className="px-4 text-[10px] font-black uppercase tracking-[0.3em] text-gray-300 mb-4">Módulos Principales</p>
+                <div className="flex-grow px-4 space-y-1 overflow-y-auto custom-scrollbar">
+                    <p className="px-3 text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-3 opacity-70">Menú Administrador</p>
                     {links.map(link => {
                         const isActive = pathname === link.href;
                         const Icon = link.icon;
@@ -94,41 +90,36 @@ export default function AdminNav() {
                                 href={link.href}
                                 onClick={() => setIsMobileMenuOpen(false)}
                                 className={`
-                                    flex items-center justify-between group px-5 py-4 rounded-[1.5rem] font-bold text-sm transition-all duration-300
+                                    flex items-center justify-between group px-3 py-2.5 rounded-xl text-sm transition-all duration-200
                                     ${isActive
-                                        ? 'bg-gray-900 text-white shadow-2xl shadow-gray-900/20 scale-[1.02]'
-                                        : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'}
+                                        ? 'bg-primary text-white shadow-lg shadow-primary/15'
+                                        : 'text-gray-600 hover:text-primary hover:bg-gray-50'}
                                 `}
                             >
-                                <div className="flex items-center gap-4">
-                                    <div className={`p-2 rounded-xl transition-colors ${isActive ? 'bg-white/10 text-white' : 'bg-gray-100 text-gray-400 group-hover:bg-primary/10 group-hover:text-primary'}`}>
-                                        <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
+                                <div className="flex items-center gap-3">
+                                    <div className={`p-1.5 rounded-lg transition-colors ${isActive ? 'bg-white/15 text-white' : 'bg-gray-100 text-gray-400 group-hover:bg-primary/10 group-hover:text-primary'}`}>
+                                        <Icon size={16} strokeWidth={isActive ? 2 : 1.5} />
                                     </div>
-                                    <span className={isActive ? 'font-black' : 'font-bold'}>{link.label}</span>
+                                    <span className={isActive ? 'font-semibold' : 'font-medium'}>{link.label}</span>
                                 </div>
-                                {isActive && <ChevronRight size={16} className="text-primary" />}
+                                {isActive && <ChevronRight size={14} className="opacity-70" />}
                             </Link>
                         )
                     })}
                 </div>
 
                 {/* Footer Section */}
-                <div className="p-8 mt-auto">
-                    <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-[2rem] p-6 text-white relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 w-24 h-24 bg-primary/10 rounded-full blur-3xl -mr-8 -mt-8" />
+                <div className="p-6 mt-auto">
+                    <div className="bg-gradient-to-br from-gray-900 to-primary rounded-2xl p-4 text-white relative overflow-hidden group">
                         <div className="relative z-10">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-primary/80 mb-1">Status</p>
-                            <h4 className="font-black text-sm mb-4">Servidor Online</h4>
+                            <h4 className="font-semibold text-xs mb-3">BoluShop v2.6</h4>
                             <Link
                                 href="/"
-                                className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest bg-white/10 py-2.5 px-4 rounded-xl hover:bg-white/20 transition-all text-center justify-center"
+                                className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-widest bg-white/10 py-2 rounded-lg hover:bg-white/20 transition-all text-center justify-center"
                             >
-                                Ver Tienda <ExternalLink size={12} />
+                                Ver Tienda <ExternalLink size={10} />
                             </Link>
                         </div>
-                    </div>
-                    <div className="mt-6 flex justify-center text-[10px] font-black uppercase tracking-widest text-gray-300">
-                        BoluShop Master v2.6.0
                     </div>
                 </div>
             </nav>

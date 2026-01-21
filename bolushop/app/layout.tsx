@@ -19,6 +19,13 @@ const geistMono = Geist_Mono({
   display: 'swap',
 });
 
+import { Outfit } from 'next/font/google';
+
+const outfit = Outfit({
+  subsets: ['latin'],
+  display: 'swap',
+});
+
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
@@ -116,7 +123,7 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://www.mercadolibre.com" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen bg-sand-white`}
+        className={`${geistSans.variable} ${geistMono.variable} ${outfit.className} antialiased flex flex-col min-h-screen bg-sand-white`}
       >
         <NextTopLoader
           color="#0F172A"
