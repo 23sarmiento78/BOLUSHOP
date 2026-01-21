@@ -70,7 +70,7 @@ export default function CarritoPage() {
                 <main className="min-h-screen bg-gray-50 flex items-center justify-center pt-20">
                     <div className="text-center px-4">
                         <div className="text-9xl mb-6 opacity-20">🛒</div>
-                        <h1 className="text-4xl font-black text-gray-900 mb-4">
+                        <h1 className="text-4xl font-bold text-gray-900 mb-4">
                             Tu carrito está vacío
                         </h1>
                         <p className="text-gray-600 mb-8 text-lg">
@@ -78,7 +78,7 @@ export default function CarritoPage() {
                         </p>
                         <Link
                             href="/productos"
-                            className="inline-block px-8 py-4 bg-primary text-white rounded-full font-black text-sm uppercase tracking-widest hover:scale-105 transition-transform shadow-xl shadow-primary/30"
+                            className="inline-block px-8 py-4 bg-primary text-white rounded-full font-bold text-sm uppercase tracking-widest hover:scale-105 transition-transform shadow-xl shadow-primary/30"
                         >
                             Ver Productos
                         </Link>
@@ -130,7 +130,7 @@ export default function CarritoPage() {
                                                 </h3>
                                             </Link>
                                             {item.isCollection && (
-                                                <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest inline-block mb-3">
+                                                <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest inline-block mb-3">
                                                     Pack Ahorro
                                                 </span>
                                             )}
@@ -188,11 +188,11 @@ export default function CarritoPage() {
                                 <div className="space-y-4 mb-6">
                                     <div className="flex justify-between text-lg">
                                         <span className="text-gray-600">Subtotal</span>
-                                        <span className="font-black">${subtotal.toLocaleString('es-AR')}</span>
+                                        <span className="font-bold">${subtotal.toLocaleString('es-AR')}</span>
                                     </div>
                                     <div className="flex justify-between text-lg">
                                         <span className="text-gray-600">Envío</span>
-                                        <span className={`font-black uppercase tracking-widest text-sm ${isFreeShipping ? 'text-emerald-500' : 'text-gray-500'}`}>
+                                        <span className={`font-bold uppercase tracking-widest text-sm ${isFreeShipping ? 'text-emerald-500' : 'text-gray-500'}`}>
                                             {isFreeShipping ? 'Gratis' : 'A calcular'}
                                         </span>
                                     </div>

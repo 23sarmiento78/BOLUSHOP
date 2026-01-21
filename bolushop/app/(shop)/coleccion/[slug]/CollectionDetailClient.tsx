@@ -38,19 +38,19 @@ export default function CollectionDetailClient({ collection, products, totalPric
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             {/* Left: Bundle Visual */}
             <div className="space-y-8">
-                <div className="relative aspect-square rounded-[3rem] overflow-hidden shadow-2xl border border-gray-100">
+                <div className="relative aspect-square rounded-3xl overflow-hidden shadow-2xl border border-gray-100">
                     <Image
-                        src={collection.image || (products[0]?.image) || "/bolushop.png"}
+                        src={collection.image || (products[0]?.image) || "/icon.png"}
                         alt={collection.name}
                         fill
                         className="object-cover"
                         priority
                     />
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 p-10 text-white">
-                        <span className="bg-primary text-white px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-4 inline-block">
+                        <span className="bg-primary text-white px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 inline-block">
                             Pack Exclusivo
                         </span>
-                        <h1 className="text-4xl md:text-5xl font-black tracking-tighter">{collection.name}</h1>
+                        <h1 className="text-4xl md:text-5xl font-bold tracking-tighter">{collection.name}</h1>
                     </div>
                 </div>
 
@@ -73,7 +73,7 @@ export default function CollectionDetailClient({ collection, products, totalPric
             <div className="flex flex-col">
                 <div className="mb-8">
                     <div className="flex items-center gap-4 mb-4">
-                        <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-lg text-xs font-black uppercase tracking-widest">
+                        <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-widest">
                             Ahorro Garantizado
                         </span>
                         <span className="text-gray-400 font-bold text-sm">
@@ -96,11 +96,11 @@ export default function CollectionDetailClient({ collection, products, totalPric
                             </>
                         )}
                         <div className="flex items-end gap-4">
-                            <span className="text-5xl md:text-6xl font-black text-gray-900 tracking-tighter">
+                            <span className="text-5xl md:text-6xl font-bold text-gray-900 tracking-tighter">
                                 ${totalPrice.toLocaleString('es-AR')}
                             </span>
                             {totalPrice < originalPrice && originalPrice > 0 && (
-                                <span className="bg-primary text-white px-3 py-1 rounded-lg text-sm font-black mb-2 animate-bounce">
+                                <span className="bg-primary text-white px-3 py-1 rounded-lg text-sm font-bold mb-2 animate-bounce">
                                     -{Math.round((1 - totalPrice / originalPrice) * 100)}%
                                 </span>
                             )}
@@ -110,7 +110,7 @@ export default function CollectionDetailClient({ collection, products, totalPric
                     <button
                         onClick={handleAddToCart}
                         disabled={isAdding}
-                        className={`w-full py-6 rounded-3xl font-black text-sm uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-4 shadow-xl ${isAdding
+                        className={`w-full py-6 rounded-2xl font-bold text-sm uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-4 shadow-xl ${isAdding
                             ? 'bg-emerald-500 text-white translate-y-1'
                             : 'bg-primary text-white hover:scale-105 active:scale-95 shadow-primary/25'
                             }`}
@@ -134,7 +134,7 @@ export default function CollectionDetailClient({ collection, products, totalPric
                             <ShieldCheck size={24} />
                         </div>
                         <div>
-                            <h4 className="font-black text-sm tracking-tight mb-1">Garantía BoluShop</h4>
+                            <h4 className="font-bold text-sm tracking-tight mb-1">Garantía BoluShop</h4>
                             <p className="text-xs text-gray-500 font-medium">Todos los productos del pack cuentan con soporte 24/7.</p>
                         </div>
                     </div>
@@ -143,7 +143,7 @@ export default function CollectionDetailClient({ collection, products, totalPric
                             <Truck size={24} />
                         </div>
                         <div>
-                            <h4 className="font-black text-sm tracking-tight mb-1">Envío Flash Incluido</h4>
+                            <h4 className="font-bold text-sm tracking-tight mb-1">Envío Flash Incluido</h4>
                             <p className="text-xs text-gray-500 font-medium">Recibí todo el pack junto en un solo envío protegido.</p>
                         </div>
                     </div>

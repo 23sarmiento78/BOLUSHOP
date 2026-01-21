@@ -202,7 +202,7 @@ export default async function HomePage() {
                                 // 2. Selección de imagen inteligente
                                 let displayImage = "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?q=80&w=2070&auto=format&fit=crop"; // Placeholder premium
 
-                                if (coll.image && !coll.image.includes('bolushop.png')) {
+                                if (coll.image && !coll.image.includes('icon.png')) {
                                     // Imagen manual subida por el admin
                                     displayImage = coll.image;
                                 } else if (collectionProducts.length > 0) {

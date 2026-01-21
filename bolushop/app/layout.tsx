@@ -57,18 +57,18 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: settings.siteName,
       images: [
         {
-          url: "/bolushop.png",
-          width: 1200,
-          height: 630,
+          url: "/icon.png",
+          width: 512,
+          height: 512,
           alt: settings.siteName,
         },
       ],
     },
     twitter: {
-      card: "summary_large_image",
+      card: "summary",
       title: settings.siteName,
       description: settings.siteDescription,
-      images: ["/bolushop.png"],
+      images: ["/icon.png"],
     },
     verification: {
       google: "S8huFZQ1-Dj4hDM8duVC_mHJJCZscBb2wk-1SKhNqNw",
@@ -97,7 +97,7 @@ export default async function RootLayout({
     "@type": "Organization",
     "name": settings.siteName,
     "url": siteUrl,
-    "logo": `${siteUrl}/bolushop.png`,
+    "logo": `${siteUrl}/icon.png`,
     "contactPoint": {
       "@type": "ContactPoint",
       "telephone": "+54-354-123-7972",

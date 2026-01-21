@@ -62,7 +62,7 @@ export default function Footer() {
 
                     {/* Navigation */}
                     <div>
-                        <h4 className="font-black text-gray-900 uppercase tracking-widest text-xs mb-8">Navegación</h4>
+                        <h4 className="font-bold text-gray-900 uppercase tracking-widest text-xs mb-8">Navegación</h4>
                         <ul className="space-y-4">
                             {['Inicio', 'Productos', 'Rastreo', 'Carrito', 'Garantías'].map((item) => (
                                 <li key={item}>
@@ -76,7 +76,7 @@ export default function Footer() {
 
                     {/* Support */}
                     <div>
-                        <h4 className="font-black text-gray-900 uppercase tracking-widest text-xs mb-8">Soporte</h4>
+                        <h4 className="font-bold text-gray-900 uppercase tracking-widest text-xs mb-8">Soporte</h4>
                         <ul className="space-y-4">
                             <li>
                                 <Link href="/garantias" className="text-gray-500 hover:text-primary font-bold text-sm transition-colors">Centro de Devoluciones</Link>
@@ -93,7 +93,7 @@ export default function Footer() {
                     {/* Contact Info */}
                     <div className="space-y-8">
                         <div>
-                            <h4 className="font-black text-gray-900 uppercase tracking-widest text-xs mb-6">Contacto Directo</h4>
+                            <h4 className="font-bold text-gray-900 uppercase tracking-widest text-xs mb-6">Contacto Directo</h4>
                             <div className="space-y-4">
                                 <a href="mailto:sarmientoisrael118@gmail.com" className="flex items-center gap-4 text-gray-500 hover:text-primary transition-colors group">
                                     <div className="p-2 bg-gray-50 rounded-lg group-hover:bg-primary/10 transition-colors">
@@ -124,8 +124,8 @@ export default function Footer() {
                         © {new Date().getFullYear()} BoluShop Argentina · Todos los derechos reservados.
                     </p>
                     <div className="flex gap-8">
-                        <span className="text-gray-400 text-[10px] font-black uppercase tracking-widest hover:text-gray-900 cursor-pointer">Privacidad</span>
-                        <span className="text-gray-400 text-[10px] font-black uppercase tracking-widest hover:text-gray-900 cursor-pointer">Términos</span>
+                        <span className="text-gray-400 text-[10px] font-bold uppercase tracking-widest hover:text-gray-900 cursor-pointer">Privacidad</span>
+                        <span className="text-gray-400 text-[10px] font-bold uppercase tracking-widest hover:text-gray-900 cursor-pointer">Términos</span>
                     </div>
                 </div>
             </div>
