@@ -26,6 +26,7 @@ create table if not exists public.products (
   price numeric not null,
   cost numeric, -- Costo del producto para cálculo de márgenes
   image text,
+  images jsonb, -- Array de URLs de imagenes
   category text,
   category_id text,
   description text,

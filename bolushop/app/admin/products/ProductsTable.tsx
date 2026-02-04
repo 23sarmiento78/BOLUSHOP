@@ -20,7 +20,7 @@ const EMPTY_PRODUCT: Omit<Product, 'id' | 'createdAt'> = {
     features: [],
     stock: 99,
     collections: [],
-    isActive: true
+    isActive: false
 };
 
 export default function ProductsTable({ initialProducts }: Props) {
@@ -588,45 +588,126 @@ function ProductFormModal({ title, product, setProduct, onClose, onSubmit, isSav
         <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-[60] animate-in fade-in duration-300">
             <div className="bg-white rounded-[3rem] shadow-2xl max-w-5xl w-full max-h-[95vh] overflow-hidden flex flex-col md:flex-row">
                 {/* Image Side */}
-                <div className="w-full md:w-1/3 bg-gray-50 p-6 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-gray-100">
-                    <div className="w-full aspect-square bg-white rounded-2xl shadow-inner overflow-hidden border border-gray-200 mb-6 group relative">
-                        {product.image ? (
-                            <img src={product.image} alt="Preview" className="w-full h-full object-contain" />
-                        ) : (
-                            <div className="w-full h-full flex items-center justify-center text-4xl opacity-10">🖼️</div>
-                        )}
-                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <label htmlFor="file-upload" className="cursor-pointer bg-white px-4 py-2 rounded-xl font-bold text-[10px] uppercase tracking-wider hover:scale-105 transition-transform">
-                                Subir Imagen
-                            </label>
+                {/* Image Side */}
+                <div className="w-full md:w-1/3 bg-gray-50 p-6 flex flex-col items-center border-b md:border-b-0 md:border-r border-gray-100 overflow-y-auto">
+                    {/* Main Image */}
+                    <div className="w-full mb-6">
+                        <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 px-1">Imagen Principal</label>
+                        <div className="w-full aspect-square bg-white rounded-2xl shadow-inner overflow-hidden border border-gray-200 mb-3 group relative">
+                            {product.image ? (
+                                <img src={product.image} alt="Preview" className="w-full h-full object-contain" />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center text-4xl opacity-10">🖼️</div>
+                            )}
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <label htmlFor="file-upload-main" className="cursor-pointer bg-white px-4 py-2 rounded-xl font-bold text-[10px] uppercase tracking-wider hover:scale-105 transition-transform">
+                                    Cambiar Imagen
+                                </label>
+                            </div>
                         </div>
+                        <input
+                            type="text"
+                            placeholder="URL de imagen principal"
+                            value={product.image}
+                            onChange={(e) => setProduct({ ...product, image: e.target.value })}
+                            className="w-full px-4 py-3 rounded-2xl bg-white border-none focus:ring-2 focus:ring-primary/20 text-xs font-medium text-gray-500 shadow-sm mb-2"
+                        />
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={async (e) => {
+                                const file = e.target.files?.[0];
+                                if (!file) return;
+                                const formData = new FormData();
+                                formData.append('file', file);
+                                try {
+                                    const result = await uploadImageAction(formData);
+                                    if (result.success) setProduct({ ...product, image: result.url });
+                                    else alert(result.error);
+                                } catch (err) { alert('Error al subir imagen'); }
+                            }}
+                            className="hidden"
+                            id="file-upload-main"
+                        />
                     </div>
 
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={async (e) => {
-                            const file = e.target.files?.[0];
-                            if (!file) return;
-                            const formData = new FormData();
-                            formData.append('file', file);
-                            try {
-                                const result = await uploadImageAction(formData);
-                                if (result.success) setProduct({ ...product, image: result.url });
-                                else alert(result.error);
-                            } catch (err) { alert('Error al subir imagen'); }
-                        }}
-                        className="hidden"
-                        id="file-upload"
-                    />
+                    {/* Additional Images */}
+                    <div className="w-full border-t border-gray-200 pt-6">
+                        <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1">Galería de Imágenes ({product.images?.length || 0})</label>
 
-                    <input
-                        type="text"
-                        placeholder="O pegá una URL aquí"
-                        value={product.image}
-                        onChange={(e) => setProduct({ ...product, image: e.target.value })}
-                        className="w-full px-4 py-3 rounded-2xl bg-white border-none focus:ring-2 focus:ring-primary/20 text-xs font-medium text-gray-500 shadow-sm"
-                    />
+                        <div className="grid grid-cols-3 gap-2 mb-4">
+                            {product.images?.map((img: string, idx: number) => (
+                                <div key={idx} className="relative aspect-square bg-white rounded-xl border border-gray-200 overflow-hidden group">
+                                    <img src={img} alt={`Gallery ${idx}`} className="w-full h-full object-cover" />
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            const newImages = [...(product.images || [])];
+                                            newImages.splice(idx, 1);
+                                            setProduct({ ...product, images: newImages });
+                                        }}
+                                        className="absolute top-1 right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                            ))}
+                            <label className="aspect-square bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors">
+                                <span className="text-xl text-gray-400">+</span>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={async (e) => {
+                                        const file = e.target.files?.[0];
+                                        if (!file) return;
+                                        const formData = new FormData();
+                                        formData.append('file', file);
+                                        try {
+                                            const result = await uploadImageAction(formData);
+                                            if (result.success) {
+                                                const currentImages = product.images || [];
+                                                setProduct({ ...product, images: [...currentImages, result.url] });
+                                            } else alert(result.error);
+                                        } catch (err) { alert('Error al subir imagen'); }
+                                    }}
+                                    className="hidden"
+                                />
+                            </label>
+                        </div>
+
+                        <div className="flex gap-2">
+                            <input
+                                type="text"
+                                placeholder="Agregar URL de imagen extra..."
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        e.preventDefault();
+                                        const val = (e.target as HTMLInputElement).value;
+                                        if (val) {
+                                            const currentImages = product.images || [];
+                                            setProduct({ ...product, images: [...currentImages, val] });
+                                            (e.target as HTMLInputElement).value = '';
+                                        }
+                                    }
+                                }}
+                                className="w-full px-4 py-3 rounded-2xl bg-white border-none focus:ring-2 focus:ring-primary/20 text-xs font-medium text-gray-500 shadow-sm"
+                            />
+                            <button
+                                type="button"
+                                onClick={(e) => {
+                                    const input = e.currentTarget.previousElementSibling as HTMLInputElement;
+                                    if (input.value) {
+                                        const currentImages = product.images || [];
+                                        setProduct({ ...product, images: [...currentImages, input.value] });
+                                        input.value = '';
+                                    }
+                                }}
+                                className="px-3 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors"
+                            >
+                                +
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Form Side */}

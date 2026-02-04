@@ -85,7 +85,8 @@ export async function createProductAction(product: Omit<Product, 'id' | 'created
         id: uuidv4(),
         createdAt: new Date().toISOString(),
         stock: product.stock || 0,
-        collections: product.collections || []
+        collections: product.collections || [],
+        isActive: product.isActive ?? false
     };
 
     products.push(newProduct);
@@ -222,7 +223,7 @@ export async function importProductsAction(rawProducts: any[], source: string) {
                     stock: 99,
                     createdAt: existingProduct?.createdAt || new Date().toISOString(),
                     collections: existingProduct?.collections || [],
-                    isActive: existingProduct?.isActive ?? true
+                    isActive: existingProduct?.isActive ?? false
                 } as Product;
             });
         }

@@ -25,6 +25,7 @@ export interface Product {
     price: number;
     cost?: number; // Added for new pricing logic
     image: string;
+    images?: string[];
     category: string;
     categoryId?: string;
     description: string;
