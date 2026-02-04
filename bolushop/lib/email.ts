@@ -92,3 +92,34 @@ export async function sendOrderConfirmationEmail(order: Order, payLink?: string)
         console.error("❌ Error enviando email con Resend:", error);
     }
 }
+
+export async function sendRefundRequestEmail(orderId: string, email: string) {
+    if (!process.env.RESEND_API_KEY) {
+        console.warn("⚠️ RESEND_API_KEY is missing. Skipping refund email.");
+        return;
+    }
+
+    const senderEmail = process.env.RESEND_SENDER_EMAIL || 'onboarding@resend.dev';
+
+    try {
+        await resend.emails.send({
+            from: `BoluShop <${senderEmail}>`,
+            to: [email],
+            subject: `Cancelación de pedido #${orderId.slice(0, 8)} - BoluShop`,
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+                    <h2 style="color: #c62828; text-align: center;">Pedido Cancelado</h2>
+                    <p>Tu pedido <strong>#${orderId}</strong> ha sido cancelado.</p>
+                    <p>Si ya habías realizado el pago, el dinero será devuelto a tu medio de pago original en los plazos establecidos por Mercado Pago.</p>
+                    <p>Por cualquier consulta, no dudes en contactarnos.</p>
+                    <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
+                    <p style="text-align: center; font-size: 12px; color: #999;">BoluShop - Tienda Online</p>
+                </div>
+            `
+        });
+        console.log(`📧 Email de cancelación enviado a ${email} para orden ${orderId}`);
+    } catch (error) {
+        console.error("❌ Error enviando email de cancelación:", error);
+    }
+}
+
