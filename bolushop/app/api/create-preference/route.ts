@@ -121,8 +121,15 @@ export async function POST(req: NextRequest) {
         try {
             await createOrder(orderData as any);
             console.log('✅ Orden guardada en DB');
+
+            // 5. Enviar Email con Resend (Async)
+            // No usamos await para no bloquear la redirección, o sí si queremos asegurar el envío.
+            // Para "seguridad" de que llegue, mejor usamos await rápido.
+            const { sendOrderConfirmationEmail } = await import('@/lib/email');
+            await sendOrderConfirmationEmail(orderData as any, response.init_point!);
+
         } catch (dbError) {
-            console.error('⚠️ Error al guardar en DB (continuando con el pago):', dbError);
+            console.error('⚠️ Error al guardar/enviar email (continuando con el pago):', dbError);
         }
 
         return NextResponse.json({

@@ -1,11 +1,94 @@
 [
   {
+    "id": "1668ab7e-a18b-41a7-9d5a-21e50a2a2207",
+    "name": "Botella siliconada térmica 1000 ML",
+    "slug": "botella-siliconada-trmica-1000-ml",
+    "price": 55000,
+    "cost": null,
+    "image": "https://droppers.com.ar/media/catalog/product/cache/67600a7cb63ab5e7d82f8b09de44ce0c/w/h/wh7280_4_.jpg",
+    "images": [
+      "https://droppers.com.ar/media/catalog/product/cache/67600a7cb63ab5e7d82f8b09de44ce0c/w/h/wh7280_3_.jpg",
+      "https://droppers.com.ar/media/catalog/product/cache/fc7aedf049e376cd3ffcfea4b9c6abee/w/h/wh7280_2_.jpg",
+      "https://droppers.com.ar/media/catalog/product/cache/fc7aedf049e376cd3ffcfea4b9c6abee/c/h/chatgpt_image_27_jun_2025_13_55_38.png"
+    ],
+    "category": "Hogar",
+    "categoryId": "hogar",
+    "description": "BOTELLA TÉRMICA DE DISEÑO MODERNO\nDisfrutá tus bebidas favoritas a la temperatura ideal con esta botella térmica de acero inoxidable. Su acabado blanco y tapa de madera le dan un estilo elegante y minimalista, perfecta para llevar a la oficina, gimnasio o en tus salidas diarias.\n\nESPECIFICACIONES\n- Material: Acero inoxidable y tapa de madera\n- Color: Blanco/Crema/Gris/Negro\n- Manija superior para fácil transporte\n- Boca estándar para beber cómodamente\n- Ideal para bebidas frías y calientes\n\nRECOMENDACIONES DE USO\nLavar antes del primer uso. No apta para microondas. Se recomienda transportar en posición vertical para evitar derrames.\n\nACCESORIOS INCLUIDOS\nIncluye tapa de madera con manija integrada.\n\nAnte cualquier duda podés preguntar\nHacemos envíos a todo el país",
+    "features": [],
+    "stock": 99,
+    "collections": [],
+    "createdAt": "2026-02-04T02:05:59.126+00:00",
+    "isActive": true
+  },
+  {
+    "id": "87264ee9-83e4-428f-b4af-fb7b32f9ca54",
+    "name": "Morral Antirrobo Oxford Negro con Bronce",
+    "slug": "morral-antirrobo-oxford-negro-con-bronce",
+    "price": 41200,
+    "cost": null,
+    "image": "https://droppers.com.ar/media/catalog/product/cache/fc7aedf049e376cd3ffcfea4b9c6abee/6/0/600111.png",
+    "images": [
+      "https://droppers.com.ar/media/catalog/product/cache/fc7aedf049e376cd3ffcfea4b9c6abee/d/_/d_nq_np_2x_743461-mla78248764689_082024-f_1.png",
+      "https://droppers.com.ar/media/catalog/product/cache/fc7aedf049e376cd3ffcfea4b9c6abee/6/0/600111_1_.jpg"
+    ],
+    "category": "Varios",
+    "categoryId": "varios",
+    "description": "Tamaño del producto: 31 x 18 x 9 cm\nTirantes: ajustables\nColores Disponibles: Negro con Bronce\nBloqueo antirrobo: con función antirrobo, es práctico y conveniente. Protección de privacidad con bloqueo de contraseña, utiliza una contraseña de tres dígitos para bloquear el control deslizante y evitar que la bolsa del pecho se abra para robar artículos.\n\nÁrea de almacenamiento múltiple: las bolsas cruzadas para hombre tienen un compartimento principal para tu ropa, libros, lonchera y otras necesidades diarias. Con varios bolsillos funcionales, puedes guardar tus objetos pequeños perfectamente, como monedas, teléfono celular, llaves, bolígrafos, etc. Bolsillos laterales para un acceso rápido a tus artículos diarios.\n\nPráctica y segura: instrucciones incluidas en el paquete. Compartimento principal de la mochila antirrobo con diseño de cierre bloqueable, conveniente para bloquear tus objetos de valor. Bolsillo antirrobo oculto en la parte posterior de esta mochila de negocios, protege tus artículos de los ladrones. La superficie del paquete está impresa con diseño reflectante, y la advertencia nocturna es más segura.\n\nMaterial duradero: nuestra bolsa está hecha de tela Oxford de alta densidad resistente al agua y al desgarro. Cremalleras de metal duraderas que se cierran y abren suavemente, garantizan un uso seguro y duradero todos los días o fines de semana.\n\nDiseño de puerto de carga USB: dos sencillos pasos para cargar tus electrónicos: Primero, conecta tu propio banco de energía con el cable de extensión USB integrado dentro de la bolsa del pecho. En segundo lugar, haz que tu cable USB externo se conecte con el puerto de carga USB externo, y luego puede cargar tu teléfono celular u otros dispositivos electrónicos.(Nota: ¡el banco de energía no está incluido!)\n\nBolsa multiusos: la bolsa antirrobo se puede utilizar como una bolsa de mensajero de negocios y una bolsa de hombro diaria, también un gran compañero para actividades al aire libre, como escapadas de fin de semana, viajes, senderismo, camping, caza, ciclismo, motociclismo, etc.\n\nCambio de contraseña.\nPaso 1: La contraseña inicial es 000.\nPaso 2: Mantenga pulsado el botón de desbloqueo en el estado correcto de la contraseña.\nPaso 3: Utilice dos dedos para girar el engranaje numérico y suelte el botón de desbloqueo para generar una nueva contraseña girando al número deseado.\nPaso 4: El cambio de contraseña se ha completado, se recomienda que ambos cierres establezcan la misma contraseña para evitar olvidos, asegúrese de recordar la contraseña Oh.",
+    "features": [],
+    "stock": 99,
+    "collections": [],
+    "createdAt": "2026-02-04T00:31:01.825+00:00",
+    "isActive": true
+  },
+  {
+    "id": "DL1203-9",
+    "name": "Silla de Oficina Ergonómica Lumbar",
+    "slug": "silla-de-oficina-ergonomica-lumbar",
+    "price": 85175,
+    "cost": 65175,
+    "image": "https://droppers.com.ar/media/catalog/product/cache/fc7aedf049e376cd3ffcfea4b9c6abee/d/l/dl1203-9_1_.png",
+    "images": [
+      "https://droppers.com.ar/media/catalog/product/cache/fc7aedf049e376cd3ffcfea4b9c6abee/d/l/dl1203-9_2_.png",
+      "https://droppers.com.ar/media/catalog/product/cache/fc7aedf049e376cd3ffcfea4b9c6abee/d/l/dl1203-9_1_.1.png"
+    ],
+    "category": "Varios",
+    "categoryId": null,
+    "description": "Silla de oficina Ergonómica. Base cruceta plástico reforzado. Medidas: 100 x 50 cm. Color negro",
+    "features": [
+      "Envío Gratis 🚚"
+    ],
+    "stock": 99,
+    "collections": [],
+    "createdAt": "2026-01-20T02:47:53.736+00:00",
+    "isActive": true
+  },
+  {
+    "id": "R6127",
+    "name": "Maceta Simple Decorativa ",
+    "slug": "maceta-simple-decorativa-",
+    "price": 11525,
+    "cost": 11525,
+    "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/r/6/r6127.png",
+    "images": [],
+    "category": "Varios",
+    "categoryId": null,
+    "description": "Maceta deco para el hogar. Medidas:. Colores Blanco y negro.. Se envían surtidos.. 12cm Alto,10cm ancho",
+    "features": [
+      "Envío Gratis 🚚"
+    ],
+    "stock": 99,
+    "collections": [],
+    "createdAt": "2026-01-20T02:27:46.837+00:00",
+    "isActive": false
+  },
+  {
     "id": "DL2034-BL",
     "name": "Organizador Calzado Perchero Mediano BLANCO",
     "slug": "organizador-calzado-perchero-mediano-blanco",
     "price": 22800,
     "cost": 22800,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/d/l/dl2034_1__2.png",
+    "images": [],
     "category": "Organización",
     "categoryId": "organizacion",
     "description": "Organizador Zapatos Perchero Metálico. 4 Estantes 7 Percheros. Medidas: Ancho 60Cm X 1,72Mt Alto X 26Cm Profundidad. Colores: Blanco",
@@ -13,151 +96,8 @@
       "Envío Gratis 🚚"
     ],
     "stock": 99,
-    "createdAt": "2026-01-20T02:27:46.833Z",
     "collections": [],
-    "isActive": false
-  },
-  {
-    "id": "DL2035-BL",
-    "name": "Organizador Calzado Perchero Grande BLANCO",
-    "slug": "organizador-calzado-perchero-grande-blanco",
-    "price": 26250,
-    "cost": 26250,
-    "image": "/products/46eae8f8-f6bb-448b-87dd-1fdffb9b565c-Organizador-Calzado-Perchero-Mediano-BLANCO.png",
-    "category": "Organización",
-    "categoryId": "organizacion",
-    "description": "Organizador Zapatos Perchero Metálico. 4 Estantes 7 Percheros. Medidas: Ancho 80Cm X 1,72Mt Alto X 26Cm Profundidad. Colores: Blanco",
-    "features": [
-      "Envío Gratis 🚚"
-    ],
-    "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.221Z",
-    "collections": [],
-    "isActive": false
-  },
-  {
-    "id": "DL2034-NE",
-    "name": "Organizador Calzado Perchero Mediano NEGRO",
-    "slug": "organizador-calzado-perchero-mediano-negro",
-    "price": 22800,
-    "cost": 22800,
-    "image": "/products/97f5821f-d737-4fa9-b7b2-27e15ac34527-Organizador-Calzado-Perchero-Grande-negro.jpg",
-    "category": "Varios",
-    "description": "Organizador Zapatos Perchero Metálico. 4 Estantes 7 Percheros. Medidas: Ancho 60Cm X 1,72Mt Alto X 26Cm Profundidad. Colores: Negro",
-    "features": [
-      "Envío Gratis 🚚"
-    ],
-    "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.221Z",
-    "collections": [],
-    "isActive": false
-  },
-  {
-    "id": "DL2035-NE",
-    "name": "Organizador Calzado Perchero Grande NEGRO",
-    "slug": "organizador-calzado-perchero-grande-negro",
-    "price": 26250,
-    "cost": 26250,
-    "image": "/products/0e1204c3-d8cb-4e51-8017-8589f64ccd87-Organizador-Calzado-Perchero-Grande-negro.jpg",
-    "category": "Organización",
-    "categoryId": "organizacion",
-    "description": "Organizador Zapatos Perchero Metálico. 4 Estantes 7 Percheros. Medidas: Ancho 80Cm X 1,72Mt Alto X 26Cm Profundidad. Colores: Negro",
-    "features": [
-      "Envío Gratis 🚚"
-    ],
-    "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.221Z",
-    "collections": [],
-    "isActive": false
-  },
-  {
-    "id": "DL2018",
-    "name": "Carrito Organizador con Ruedas y 4 Estantes",
-    "slug": "carrito-organizador-con-ruedas-y-4-estantes",
-    "price": 42000,
-    "cost": 42000,
-    "image": "/products/1c2b1575-d4f2-4f94-8162-1dc207707fe7-Carrito-Organizador-con-Ruedas-y-4-Estantes.png",
-    "category": "Organización",
-    "categoryId": "organizacion",
-    "description": "Estantería Carrito Con Rueda De 4 Estantes Para Organizar. Material Plástico Alto Impacto. Color Blanco.. Medidas: 95Cm X 54Cm X 12,5Cm",
-    "features": [
-      "Envío Gratis 🚚"
-    ],
-    "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.221Z",
-    "collections": [],
-    "isActive": false
-  },
-  {
-    "id": "DL2017",
-    "name": "Carrito Organizador Con Ruedas  y 3 Estantes",
-    "slug": "carrito-organizador-con-ruedas--y-3-estantes",
-    "price": 33000,
-    "cost": 33000,
-    "image": "/products/334d3133-7b50-4dd4-8d7e-884ce8d2f793-Carrito-Organizador-con-Ruedas-y-3-Estantes.png",
-    "category": "Organización",
-    "categoryId": "organizacion",
-    "description": "Estantería Carrito Con Rueda De 3 Estantes Para Organizar. Material Plastico Alto Impacto. Color Blanco.. Medidas: 70Cm X 54Cm X 12,5Cm",
-    "features": [
-      "Envío Gratis 🚚"
-    ],
-    "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.221Z",
-    "collections": [],
-    "isActive": false
-  },
-  {
-    "id": "DL1203-2",
-    "name": "Silla de Oficina Ergonómica",
-    "slug": "silla-de-oficina-ergonomica",
-    "price": 96525,
-    "cost": 96525,
-    "image": "/products/6d680410-a2c3-43bd-b734-63e81d43d174-Silla-de-Oficina-Ergonómica.jpg",
-    "category": "Oficina",
-    "categoryId": "oficina",
-    "description": "Silla de oficina Ergonómica. Medidas: 107 x 64 cm. Color Negro",
-    "features": [
-      "Envío Gratis 🚚"
-    ],
-    "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.221Z",
-    "collections": [],
-    "isActive": false
-  },
-  {
-    "id": "DL1183-L",
-    "name": "Puerta Para Mascotas Calidad Superior",
-    "slug": "puerta-para-mascotas-calidad-superior",
-    "price": 51000,
-    "cost": 51000,
-    "image": "/products/67fbccb8-ed09-48c0-a12c-6eb20765b802-Puerta-Para-Mascotas-Calidad-Superior.jpg",
-    "category": "Hogar",
-    "categoryId": "hogar",
-    "description": "Puerta para mascotas calidad superior. Tamaño XL ( 25 x 23,5 x 5,3 cm ). Color: Blanco",
-    "features": [
-      "Envío Gratis 🚚"
-    ],
-    "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.221Z",
-    "collections": [],
-    "isActive": false
-  },
-  {
-    "id": "DL1255",
-    "name": "Reflector Linterna Led",
-    "slug": "reflector-linterna-led",
-    "price": 35475,
-    "cost": 35475,
-    "image": "/products/0cfccb46-110b-4057-a6d5-d27e339b9505-Reflector-Linterna-Led.jpg",
-    "category": "Hogar",
-    "categoryId": "hogar",
-    "description": "Reflector linterna led busca huella. Modelo W5119. Alta potencia - Incluye trípode. Recargable USB. Color negro",
-    "features": [
-      "Envío Gratis 🚚"
-    ],
-    "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.221Z",
-    "collections": [],
+    "createdAt": "2026-01-20T02:27:46.833+00:00",
     "isActive": false
   },
   {
@@ -167,6 +107,7 @@
     "price": 163334,
     "cost": 163334,
     "image": "/products/161dc3c2-f923-4074-8387-bed0d81e04d0-Cama-Catre-Plegable-185x68.png",
+    "images": [],
     "category": "Hogar",
     "categoryId": "hogar",
     "description": "Cama catre plegable hogar camping. Medidas: 185 x 68 cm. Material soporte: Acero inoxidable. Color gris",
@@ -174,8 +115,8 @@
       "Envío Gratis 🚚"
     ],
     "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
+    "createdAt": "2026-01-02T19:35:55.222+00:00",
     "isActive": false
   },
   {
@@ -185,14 +126,16 @@
     "price": 36960,
     "cost": 36960,
     "image": "/products/3a3c9aaa-82b7-4370-b057-5bc6f83fdd14-Placa-Piso-De-Goma-Símil-Madera-30X30-GRIS-PACK-X16.jpg",
+    "images": [],
     "category": "Varios",
+    "categoryId": null,
     "description": "Placa piso de goma símil madera. Medidas: 30 x 30 cm. Material: EVA. Color gris. Incluye bordes. PACK X16",
     "features": [
       "Envío Gratis 🚚"
     ],
     "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
+    "createdAt": "2026-01-02T19:35:55.222+00:00",
     "isActive": false
   },
   {
@@ -202,31 +145,16 @@
     "price": 36960,
     "cost": 36960,
     "image": "/products/452f316c-88d8-4f84-80f1-7dd585fc2e99-Placa-Piso-De-Goma-Símil-Madera-30X30-CRUDO-PACK-X16.png",
+    "images": [],
     "category": "Varios",
+    "categoryId": null,
     "description": "Placa piso de goma símil madera. Medidas: 30 x 30 cm. Material: EVA. Color crudo. Incluye bordes. PACK X16",
     "features": [
       "Envío Gratis 🚚"
     ],
     "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
-    "isActive": false
-  },
-  {
-    "id": "DL1203-9",
-    "name": "Silla de Oficina Ergonómica Lumbar",
-    "slug": "silla-de-oficina-ergonomica-lumbar",
-    "price": 65175,
-    "cost": 65175,
-    "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/d/l/dl1203-9_1_.1.png",
-    "category": "Varios",
-    "description": "Silla de oficina Ergonómica. Base cruceta plástico reforzado. Medidas: 100 x 50 cm. Color negro",
-    "features": [
-      "Envío Gratis 🚚"
-    ],
-    "stock": 99,
-    "createdAt": "2026-01-20T02:47:53.736Z",
-    "collections": [],
+    "createdAt": "2026-01-02T19:35:55.222+00:00",
     "isActive": false
   },
   {
@@ -236,6 +164,7 @@
     "price": 110550,
     "cost": 110550,
     "image": "/products/730e7e94-a502-4985-be73-780abf3a3ab5-Silla-Ergonómica-de-Oficina.jpg",
+    "images": [],
     "category": "Oficina",
     "categoryId": "oficina",
     "description": "Silla de oficina Ergonómica. Con soporte de cabeza. Medidas: 107 x 64 cm + soporte. Color Negro",
@@ -243,8 +172,8 @@
       "Envío Gratis 🚚"
     ],
     "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
+    "createdAt": "2026-01-02T19:35:55.222+00:00",
     "isActive": false
   },
   {
@@ -254,6 +183,7 @@
     "price": 25950,
     "cost": 25950,
     "image": "https://droppers.com.ar/media/catalog/product/cache/180de48b51213f2b31b6fc04fceb91c7/6/0/600184_2_.jpg",
+    "images": [],
     "category": "Baño",
     "categoryId": "bano",
     "description": "Nueva Herramienta De Eliminación De Obstrucciones En Los Drenaje. Limpiador De Aire Comprimido. Ideal Aseos Baño Ducha De Baño Cocina Tubería Obstruida Bañera. La Destapadora De Presión Utiliza La Potencia Del Aire Comprimido A Alta Presión Para Eliminar Las Obstrucciones Más Difíciles De Forma Rápida Y Fácil. Se Llena Del Aire Comprimido Mediante Una Carga Manual Y Segura. Mucho Más Efectivo Que Las Sopapas Tradicionales. Múltiples Ocasiones: Adecuado Para Una Variedad De Ocasiones- Inodoro- Cocina- Lavabo- Rejilla. Ideal Para Todo Tipo De Tuberías. Puede Hacer Frente A Varios Bloqueos Causados Por Todo Tipo De Basura- Como Pelo- Tela- Té- Hojas- Grasa- Suciedad De Aceite- Etc..  Fácil De Usar Y Efectivo) El Desintegrador Utiliza La Potencia Del Aire Comprimido A Alta Presión Para Eliminar Las Obstrucciones Más Difíciles En Sus Drenajes En Solo Segundos. Simplemente Bombee La Desintegradora Y Apriete El Gatillo- La Obstrucción Se Elimina Instantáneamente. Mucho Más Rápido Que Los Émbolos Y Las Serpientes Tradicionales Y No Más Tiempo De Cintura En Los Abridores De Drenaje..  (Multifunción Puede Lidiar Con Diversos Bloqueos Causados Por Todo Tipo De Desperdicios Como Pelo- Tela- Té- Hojas- Grasa- Suciedad De Aceite- Etc.). Con Poder De Aire A Alta Presión- Limpia Los Desagües De Forma Rápida Y Sencilla. Perfecto Para Trabajos En Fregaderos- Bañeras Y Aseos..  (Calidad Duradera) ¡Vencer A Usar Químicos Dañinos Que Pueden Corroer Sus Tuberías O Poner En Peligro A Su Familia! Es Reutilizable Y Puede Durar Años Y Elimina Las Obstrucciones Sin Necesidad De Llamar Al Plomero- Lo Que Le Evita Tener Que Pagar Grandes Sumas De Dinero Por Un Plomero..  Amplio Rango De Uso Viene Con Accesorio Para Destapar Inodoro- Rejilla- Bachas- Bañeras - Etc. -.  Función Principal: Eliminar Obstrucciones En Las Cañerías.  Consejos: Simplemente Bombee Aire En Él- Inclínela Hacia El Inodoro En Estado Vertical- Presione El Botón De Aire Para Desatascar El Inodoro La Rejilla - La Bacha O El Fregadero..  Fácil De Conservar Y Limpiar: Fácil De Limpiar Sin Salpicaduras Y Perfecto Para Almacenar Con Un Diseño Compacto.",
@@ -261,8 +191,8 @@
       "Envío Gratis 🚚"
     ],
     "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
+    "createdAt": "2026-01-02T19:35:55.222+00:00",
     "isActive": false
   },
   {
@@ -272,6 +202,7 @@
     "price": 39750,
     "cost": 39750,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/h/4/h4bccd774c9f4417b852ea81794946848d.jpg_960x960q75.jpg__2.png",
+    "images": [],
     "category": "Baño",
     "categoryId": "bano",
     "description": "Balde trapeador centrifugo con cuba giratoria de acero inoxidable. Posee ruedas y manija transportadora, tapón de desagote. Incluye 2 mopas lavables. Medidas: balde 45,5cm x 25,5cm x 21,5cm. Color: Blanco con verde",
@@ -279,17 +210,23 @@
       "Envío Gratis 🚚"
     ],
     "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
+    "createdAt": "2026-01-02T19:35:55.222+00:00",
     "isActive": false
   },
   {
     "id": "600047",
     "name": "Destapa Cañerías de Alta Presión",
     "slug": "destapa-canerias-de-alta-presion",
-    "price": 45000,
+    "price": 65000,
     "cost": 45000,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/d/i/dise_o_sin_t_tulo_16__1.jpg",
+    "images": [
+      "https://droppers.com.ar/media/catalog/product/cache/fc7aedf049e376cd3ffcfea4b9c6abee/6/1/61-8qbjnirl._ac_sl1500_.jpg",
+      "https://droppers.com.ar/media/catalog/product/cache/fc7aedf049e376cd3ffcfea4b9c6abee/7/1/71flt0kf8vl._ac_sl1500_.jpg",
+      "https://droppers.com.ar/media/catalog/product/cache/fc7aedf049e376cd3ffcfea4b9c6abee/7/1/71jg_kscsss._ac_sl1500_.jpg",
+      "https://droppers.com.ar/media/catalog/product/cache/fc7aedf049e376cd3ffcfea4b9c6abee/6/1/61cmmy1n_ks._ac_sl1500_.jpg"
+    ],
     "category": "Baño",
     "categoryId": "bano",
     "description": "Función principal: destapa cañeria por medio de inflación y el flujo de aire de alta presión.. Puede eliminar eficazmente los obstáculos en la tubería.. Consejo: simplemente conecte la bomba al dispositivo, bombee el aire en el dispositivo, incline en el inodoro en una posición vertical y presione el botón de aire para limpiar el inodoro o el fregadero.. Para una variedad de ocasiones: inodoros, sentadillas, cocinas, lavabos, lavabos. Adecuado para todo tipo de tuberías. Puede manejar una variedad de obstrucciones causadas por varios tipos de basura, como Cabello, tela, té, grasa, aceite, etc.. Diseño de alta presión: el eyector de drenaje utiliza la potencia del aire comprimido de alta presión para impactar rápida y fácilmente el bloqueo más fuerte. Está lleno de gas mediante una carga segura.. Más efectivo que los émbolos tradicionales.. Fácil de almacenar y limpiar: fácil de limpiar, sin salpicaduras, ideal para almacenamiento y diseño compacto. Es fácil dragar las tuberías en unos minutos, haciendo que el drenaje del fregadero sea más rápido.",
@@ -297,8 +234,8 @@
       "Envío Gratis 🚚"
     ],
     "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
+    "createdAt": "2026-01-02T19:35:55.222+00:00",
     "isActive": true
   },
   {
@@ -308,6 +245,7 @@
     "price": 1014,
     "cost": 1014,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/9/c/9cm_5_.jpg",
+    "images": [],
     "category": "Baño",
     "categoryId": "bano",
     "description": "Tapon de silicona atrapapelos para rejilla bañera. - previene drenajes de tina obstruidos: este protector de desague y recogedor de cabello tubshroom esta diseñado para atrapar sin esfuerzo cualquier tipo de cabello humano o de mascotas, evitando desagues obstruidos y costosas visitas al plomero, sin interrumpir el flujo de agua.. - sin receptor de drenajes: tubshroom cabe dentro del desague, recolectando y ocultando cuidadosamente el cabello a su alrededor, a diferencia de los antiesteticos tapones normales para atrapar el cabello que se colocan sobre el desague. Se adapta a desagues de bañera estandar de hasta 4.5cm de ancho.. Color: Gris. Medidas: 5.5cm x 5cm",
@@ -315,8 +253,8 @@
       "Envío Gratis 🚚"
     ],
     "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
+    "createdAt": "2026-01-02T19:35:55.222+00:00",
     "isActive": false
   },
   {
@@ -326,6 +264,7 @@
     "price": 2175,
     "cost": 2175,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/6/1/61u651pukcl._ac_sl1500__2.png",
+    "images": [],
     "category": "Varios",
     "categoryId": "varios",
     "description": "1. Singularidad: hecho de material de PVC de buena calidad, impermeable, a prueba de humedad, a prueba de moho.. 2.Flexible y suave: tira de sellado de PVC Flexible, plegable a 90 grados, herméticamente sellada en la costura entre las paredes.. 3. Cómodo de usar: tiene pegamento en la parte posterior y es muy cómodo de usar. Se puede rasgar y pegar directamente en el área correspondiente.. 4. Consejos: pero antes de pegar, mantenga la superficie de la pasta limpia y seca.. 5. Fácil de usar y recortar: puedes recortarlo a la longitud que necesites, práctico y reducir el desperdicio.. Ampliamente utilizado para sellar las juntas de estufas de gas, lavabos, lavabos, bañeras y paredes para evitar el moho y el negro, mantener la cocina y el baño limpios y ordenados.. Cinta Autoadhesiva selladora. Color: Blanco. Medidas: 3.8cm de ancho y 3.2mt",
@@ -333,8 +272,8 @@
       "Envío Gratis 🚚"
     ],
     "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
+    "createdAt": "2026-01-02T19:35:55.222+00:00",
     "isActive": false
   },
   {
@@ -344,6 +283,7 @@
     "price": 15990,
     "cost": 15990,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/s/e/se1a2362678f9495ea6a5379b41caebf1x.jpg_640x640q90_1_.jpg",
+    "images": [],
     "category": "Baño",
     "categoryId": "bano",
     "description": "Bonita forma de oso: la botella con bomba de espuma está diseñada en la forma de un oso lindo, este dispensador de jabón para niños interesante y vívido, puede alentar a su bebé a lavarse las manos con burbujas cada vez, se puede utilizar como accesorios de baño para la decoración de la familia u hotel.. BOTELLA DE CHAMPÚ DE LOCIÓN: Este dispensador de jabón para niños utiliza un diseño de forma de oso 3D de moda, y los dispensadores de líquidos están hechos de material de polipropileno y pe premium, portátil y duradero, con una larga vida útil.. GRAN CAPACIDAD: Esta botella dispensadora de jabón espumosa reutilizable está diseñada con gran capacidad, ideal para champú, acondicionador, lavado facial, jabón líquido y gel de baño.. BOTELLA DISPENSADORA DE ESPUMA: Este dispensador de champú de jabón como un bonito juguete de dibujos animados de animales hace que su estado de ánimo sea hermoso para todo el día, pequeño en tamaño y ligero en peso, no ocupa espacio, fácil de transportar y usar.. Dispensador de jabón rellenable: esta botella de jabón con bomba adopta un diseño prensado y tiene un cabezal de bomba fuerte, conveniente para que llene varios líquidos, puede utilizar esta botella de bomba espumosa con confianza.. Capacidad en volumen: 250 mL. Material: Plástico. Tipos de productos compatibles: Jabón. Consistencias del producto: Líquido. Altura: x Largo x Ancho 18 cm x 0 cm x 8 cm. Peso: 83 g",
@@ -351,8 +291,8 @@
       "Envío Gratis 🚚"
     ],
     "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
+    "createdAt": "2026-01-02T19:35:55.222+00:00",
     "isActive": false
   },
   {
@@ -362,6 +302,7 @@
     "price": 62250,
     "cost": 62250,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/6/0/600086_1_.jpg",
+    "images": [],
     "category": "Baño",
     "categoryId": "bano",
     "description": "Bidet para inodoro universal con variador de presion.. Dos modalidades de chorro de agua.. Incluye elementos de colocación:. - Flexible 1/4 mallado metalico de 68cm -. - Niple T de 3/8 (hembra/macho) a salida 1/4 macho. - O rings (Juntas de goma). - Cinta de Teflon. - Manual de instalacion",
@@ -369,8 +310,8 @@
       "Envío Gratis 🚚"
     ],
     "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
+    "createdAt": "2026-01-02T19:35:55.222+00:00",
     "isActive": false
   },
   {
@@ -380,6 +321,7 @@
     "price": 7950,
     "cost": 7950,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/9/c/9cm_59__2.png",
+    "images": [],
     "category": "Baño",
     "categoryId": "bano",
     "description": "Ideal para optimizar el espacio en tu baño o ducha.. Fabricado en resistente aluminio, este organizador no solo es duradero, sino que también es completamente resistente al agua, lo que lo convierte en la opción perfecta para ambientes húmedos.. Medidas: 5 cm de alto - 21 cm de profundidad - 29 cm de ancho. Su instalación en pared es sencilla y práctica, permitiendo un acceso rápido a tus productos de higiene personal.. Incluye kit de montaje.",
@@ -387,8 +329,8 @@
       "Envío Gratis 🚚"
     ],
     "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
+    "createdAt": "2026-01-02T19:35:55.222+00:00",
     "isActive": false
   },
   {
@@ -398,6 +340,7 @@
     "price": 8025,
     "cost": 8025,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/d/_/d_nq_np_2x_608747-mla71345550618_082023-f.png",
+    "images": [],
     "category": "Baño",
     "categoryId": "bano",
     "description": "- Repisa simple para ducha.. - Material: Totalmente de aluminio. - Resistente al agua. No se Oxida. - Apto para ducha. - Excelente terminación y calidad.. - Soporta hasta 5kg. Medidas : Alto 5 cm Ancho 31.5 cm Profundidad 14 cm",
@@ -405,8 +348,8 @@
       "Envío Gratis 🚚"
     ],
     "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
+    "createdAt": "2026-01-02T19:35:55.222+00:00",
     "isActive": false
   },
   {
@@ -416,6 +359,7 @@
     "price": 18000,
     "cost": 18000,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/6/0/600091_4_.jpeg",
+    "images": [],
     "category": "Baño",
     "categoryId": "bano",
     "description": "Ideal para optimizar el espacio en tu baño o ducha.. Fabricado en resistente aluminio, este organizador no solo es duradero, sino que también es completamente resistente al agua, lo que lo convierte en la opción perfecta para ambientes húmedos.. Medidas: 34 cm de alto - 21 cm de profundidad - 21 cm de ancho. Su instalación en pared es sencilla y práctica, permitiendo un acceso rápido a tus productos de higiene personal.",
@@ -423,8 +367,8 @@
       "Envío Gratis 🚚"
     ],
     "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
+    "createdAt": "2026-01-02T19:35:55.222+00:00",
     "isActive": false
   },
   {
@@ -434,6 +378,7 @@
     "price": 11250,
     "cost": 11250,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/6/0/600099_2_.png",
+    "images": [],
     "category": "Baño",
     "categoryId": "bano",
     "description": "Estante organizador para baño, hecho de un material resistente el cual permite soportar peso y tambien evita el oxido.. Viene con diseño de drenaje que evita que se acumule agua.. Incluye 2 tornillos y 2 ganchos adhesivos para su fácil y rápida colocación, no daña la pared.. Disponible en color negro. Medidas(cm): Largo:29cm x Ancho:22cm x Alto:5cm Aprox.",
@@ -441,8 +386,8 @@
       "Envío Gratis 🚚"
     ],
     "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
+    "createdAt": "2026-01-02T19:35:55.222+00:00",
     "isActive": false
   },
   {
@@ -452,6 +397,7 @@
     "price": 11700,
     "cost": 11700,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/6/0/600101_1_.png",
+    "images": [],
     "category": "Baño",
     "categoryId": "bano",
     "description": "Adhesivos súper fuertes: resisten un mínimo de 10kgs, es muy estable. El organizador de ducha puede almacenar artículos pesados como shampoo grandes, acondicionadores,etc.. Fácil de instalar: el organizador de ducha de baño se puede instalar sin taladrar, sin dañar la pared. Simplemente pega los adhesivos donde quieras y cuelga los organizadores de ducha.. Nota: Los adhesivos son adecuados para paredes lisas y planas como azulejos y mármol.. El estante de ducha está hecho de aluminio espacial, que es duradero, a prueba de óxido, impermeable, no se decolora, resistente a los arañazos.. Pueden drenar y secar rápidamente artículos con un diseño hueco de fondo abierto, evitando el crecimiento de incrustaciones y bacterias.",
@@ -459,8 +405,8 @@
       "Envío Gratis 🚚"
     ],
     "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
+    "createdAt": "2026-01-02T19:35:55.222+00:00",
     "isActive": false
   },
   {
@@ -470,6 +416,7 @@
     "price": 9051,
     "cost": 9051,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/7/1/71plsuo7b7l._ac_sl1500_.jpg",
+    "images": [],
     "category": "Organización",
     "categoryId": "organizacion",
     "description": "Resistente al agua y al acero inoxidable. Seguro de usar en baños húmedos, no se cae ni se oxida durante un uso prolongado.. Fácil de usar e instalación rápida, solo lleva unos segundos instalarlo, sin taladrar, tornillos, clavos ni pegamento.. Consejos: se recomienda esperar 24 horas antes de colgar cosas.. Soporta hasta 6 Kgs con tiras superadhesivas de doble cara, este gancho de pared se sostiene bien y no se cae.",
@@ -477,8 +424,8 @@
       "Envío Gratis 🚚"
     ],
     "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
+    "createdAt": "2026-01-02T19:35:55.222+00:00",
     "isActive": false
   },
   {
@@ -488,6 +435,7 @@
     "price": 7089,
     "cost": 7089,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/9/c/9cm_52_.png",
+    "images": [],
     "category": "Organización",
     "categoryId": "organizacion",
     "description": "Resistente al agua y al acero inoxidable. Seguro de usar en baños húmedos, no se cae ni se oxida durante un uso prolongado.. Fácil de usar e instalación rápida, solo lleva unos segundos instalarlo, sin taladrar, tornillos, clavos ni pegamento.. Consejos: se recomienda esperar 24 horas antes de colgar cosas.. Soporta hasta 6 Kgs con tiras superadhesivas de doble cara, este gancho de pared se sostiene bien y no se cae.",
@@ -495,8 +443,8 @@
       "Envío Gratis 🚚"
     ],
     "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
+    "createdAt": "2026-01-02T19:35:55.222+00:00",
     "isActive": false
   },
   {
@@ -506,6 +454,7 @@
     "price": 8298,
     "cost": 8298,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/6/0/600072_6_.jpg",
+    "images": [],
     "category": "Baño",
     "categoryId": "bano",
     "description": "Este perchero es ideal para mantener tu hogar organizado y con estilo. Con una profundidad de 1.5 cm, se adapta perfectamente a cualquier espacio sin ocupar mucho lugar. Su acabado en acero inoxidable le da un toque moderno y elegante que combina con cualquier decoración.. El sistema de fijación con adhesivo facilita su instalación sin necesidad de hacer agujeros en la pared. Con una altura y ancho de 4 cm, este perchero simple es perfecto para colgar abrigos, bolsos, llaves y más. Fabricado en acero resistente, el modelo HOGAR garantiza durabilidad y funcionalidad en tu día a día.. Aprovecha la versatilidad y practicidad de este perchero para mantener tus espacios ordenados y libres de desorden. Su diseño minimalista y funcional lo convierten en un accesorio imprescindible para cualquier hogar moderno.",
@@ -513,8 +462,8 @@
       "Envío Gratis 🚚"
     ],
     "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
+    "createdAt": "2026-01-02T19:35:55.222+00:00",
     "isActive": false
   },
   {
@@ -524,6 +473,7 @@
     "price": 15675,
     "cost": 15675,
     "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/s/3/s30552b71c25f456f98d6c46f72ce1483j.jpg_960x960q75.jpg__1_.jpg",
+    "images": [],
     "category": "Baño",
     "categoryId": "bano",
     "description": "Dispenser de pared para baño. Material: ABS",
@@ -531,44 +481,160 @@
       "Envío Gratis 🚚"
     ],
     "stock": 99,
-    "createdAt": "2026-01-02T19:35:55.222Z",
     "collections": [],
+    "createdAt": "2026-01-02T19:35:55.222+00:00",
     "isActive": false
   },
   {
-    "id": "R6127",
-    "name": "Maceta Simple Decorativa ",
-    "slug": "maceta-simple-decorativa-",
-    "price": 11525,
-    "cost": 11525,
-    "image": "https://droppers.com.ar/media/catalog/product/cache/4a6c60679a44375cb979bbec872434e5/r/6/r6127.png",
-    "category": "Varios",
-    "description": "Maceta deco para el hogar. Medidas:. Colores Blanco y negro.. Se envían surtidos.. 12cm Alto,10cm ancho",
+    "id": "DL2035-BL",
+    "name": "Organizador Calzado Perchero Grande BLANCO",
+    "slug": "organizador-calzado-perchero-grande-blanco",
+    "price": 26250,
+    "cost": 26250,
+    "image": "/products/46eae8f8-f6bb-448b-87dd-1fdffb9b565c-Organizador-Calzado-Perchero-Mediano-BLANCO.png",
+    "images": [],
+    "category": "Organización",
+    "categoryId": "organizacion",
+    "description": "Organizador Zapatos Perchero Metálico. 4 Estantes 7 Percheros. Medidas: Ancho 80Cm X 1,72Mt Alto X 26Cm Profundidad. Colores: Blanco",
     "features": [
       "Envío Gratis 🚚"
     ],
     "stock": 99,
-    "createdAt": "2026-01-20T02:27:46.837Z",
     "collections": [],
-    "isActive": true
+    "createdAt": "2026-01-02T19:35:55.221+00:00",
+    "isActive": false
   },
   {
-    "name": "Morral Antirrobo Oxford Negro con Bronce",
-    "slug": "morral-antirrobo-oxford-negro-con-bronce",
-    "price": 32000,
-    "image": "https://droppers.com.ar/media/catalog/product/cache/fc7aedf049e376cd3ffcfea4b9c6abee/6/0/600111.png",
+    "id": "DL2034-NE",
+    "name": "Organizador Calzado Perchero Mediano NEGRO",
+    "slug": "organizador-calzado-perchero-mediano-negro",
+    "price": 22800,
+    "cost": 22800,
+    "image": "/products/97f5821f-d737-4fa9-b7b2-27e15ac34527-Organizador-Calzado-Perchero-Grande-negro.jpg",
+    "images": [],
     "category": "Varios",
-    "description": "Tamaño del producto: 31 x 18 x 9 cm\nTirantes: ajustables\nColores Disponibles: Negro con Bronce\nBloqueo antirrobo: con función antirrobo, es práctico y conveniente. Protección de privacidad con bloqueo de contraseña, utiliza una contraseña de tres dígitos para bloquear el control deslizante y evitar que la bolsa del pecho se abra para robar artículos.\n\nÁrea de almacenamiento múltiple: las bolsas cruzadas para hombre tienen un compartimento principal para tu ropa, libros, lonchera y otras necesidades diarias. Con varios bolsillos funcionales, puedes guardar tus objetos pequeños perfectamente, como monedas, teléfono celular, llaves, bolígrafos, etc. Bolsillos laterales para un acceso rápido a tus artículos diarios.\n\nPráctica y segura: instrucciones incluidas en el paquete. Compartimento principal de la mochila antirrobo con diseño de cierre bloqueable, conveniente para bloquear tus objetos de valor. Bolsillo antirrobo oculto en la parte posterior de esta mochila de negocios, protege tus artículos de los ladrones. La superficie del paquete está impresa con diseño reflectante, y la advertencia nocturna es más segura.\n\nMaterial duradero: nuestra bolsa está hecha de tela Oxford de alta densidad resistente al agua y al desgarro. Cremalleras de metal duraderas que se cierran y abren suavemente, garantizan un uso seguro y duradero todos los días o fines de semana.\n\nDiseño de puerto de carga USB: dos sencillos pasos para cargar tus electrónicos: Primero, conecta tu propio banco de energía con el cable de extensión USB integrado dentro de la bolsa del pecho. En segundo lugar, haz que tu cable USB externo se conecte con el puerto de carga USB externo, y luego puede cargar tu teléfono celular u otros dispositivos electrónicos.(Nota: ¡el banco de energía no está incluido!)\n\nBolsa multiusos: la bolsa antirrobo se puede utilizar como una bolsa de mensajero de negocios y una bolsa de hombro diaria, también un gran compañero para actividades al aire libre, como escapadas de fin de semana, viajes, senderismo, camping, caza, ciclismo, motociclismo, etc.\n\nCambio de contraseña.\nPaso 1: La contraseña inicial es 000.\nPaso 2: Mantenga pulsado el botón de desbloqueo en el estado correcto de la contraseña.\nPaso 3: Utilice dos dedos para girar el engranaje numérico y suelte el botón de desbloqueo para generar una nueva contraseña girando al número deseado.\nPaso 4: El cambio de contraseña se ha completado, se recomienda que ambos cierres establezcan la misma contraseña para evitar olvidos, asegúrese de recordar la contraseña Oh.",
-    "features": [],
+    "categoryId": null,
+    "description": "Organizador Zapatos Perchero Metálico. 4 Estantes 7 Percheros. Medidas: Ancho 60Cm X 1,72Mt Alto X 26Cm Profundidad. Colores: Negro",
+    "features": [
+      "Envío Gratis 🚚"
+    ],
     "stock": 99,
     "collections": [],
-    "isActive": true,
-    "categoryId": "varios",
-    "images": [
-      "https://droppers.com.ar/media/catalog/product/cache/fc7aedf049e376cd3ffcfea4b9c6abee/d/_/d_nq_np_2x_743461-mla78248764689_082024-f_1.png",
-      "https://droppers.com.ar/media/catalog/product/cache/fc7aedf049e376cd3ffcfea4b9c6abee/6/0/600111_1_.jpg"
+    "createdAt": "2026-01-02T19:35:55.221+00:00",
+    "isActive": false
+  },
+  {
+    "id": "DL2035-NE",
+    "name": "Organizador Calzado Perchero Grande NEGRO",
+    "slug": "organizador-calzado-perchero-grande-negro",
+    "price": 26250,
+    "cost": 26250,
+    "image": "/products/0e1204c3-d8cb-4e51-8017-8589f64ccd87-Organizador-Calzado-Perchero-Grande-negro.jpg",
+    "images": [],
+    "category": "Organización",
+    "categoryId": "organizacion",
+    "description": "Organizador Zapatos Perchero Metálico. 4 Estantes 7 Percheros. Medidas: Ancho 80Cm X 1,72Mt Alto X 26Cm Profundidad. Colores: Negro",
+    "features": [
+      "Envío Gratis 🚚"
     ],
-    "id": "87264ee9-83e4-428f-b4af-fb7b32f9ca54",
-    "createdAt": "2026-02-04T00:31:01.825Z"
+    "stock": 99,
+    "collections": [],
+    "createdAt": "2026-01-02T19:35:55.221+00:00",
+    "isActive": false
+  },
+  {
+    "id": "DL2018",
+    "name": "Carrito Organizador con Ruedas y 4 Estantes",
+    "slug": "carrito-organizador-con-ruedas-y-4-estantes",
+    "price": 42000,
+    "cost": 42000,
+    "image": "/products/1c2b1575-d4f2-4f94-8162-1dc207707fe7-Carrito-Organizador-con-Ruedas-y-4-Estantes.png",
+    "images": [],
+    "category": "Organización",
+    "categoryId": "organizacion",
+    "description": "Estantería Carrito Con Rueda De 4 Estantes Para Organizar. Material Plástico Alto Impacto. Color Blanco.. Medidas: 95Cm X 54Cm X 12,5Cm",
+    "features": [
+      "Envío Gratis 🚚"
+    ],
+    "stock": 99,
+    "collections": [],
+    "createdAt": "2026-01-02T19:35:55.221+00:00",
+    "isActive": false
+  },
+  {
+    "id": "DL2017",
+    "name": "Carrito Organizador Con Ruedas  y 3 Estantes",
+    "slug": "carrito-organizador-con-ruedas--y-3-estantes",
+    "price": 33000,
+    "cost": 33000,
+    "image": "/products/334d3133-7b50-4dd4-8d7e-884ce8d2f793-Carrito-Organizador-con-Ruedas-y-3-Estantes.png",
+    "images": [],
+    "category": "Organización",
+    "categoryId": "organizacion",
+    "description": "Estantería Carrito Con Rueda De 3 Estantes Para Organizar. Material Plastico Alto Impacto. Color Blanco.. Medidas: 70Cm X 54Cm X 12,5Cm",
+    "features": [
+      "Envío Gratis 🚚"
+    ],
+    "stock": 99,
+    "collections": [],
+    "createdAt": "2026-01-02T19:35:55.221+00:00",
+    "isActive": false
+  },
+  {
+    "id": "DL1203-2",
+    "name": "Silla de Oficina Ergonómica",
+    "slug": "silla-de-oficina-ergonomica",
+    "price": 96525,
+    "cost": 96525,
+    "image": "/products/6d680410-a2c3-43bd-b734-63e81d43d174-Silla-de-Oficina-Ergonómica.jpg",
+    "images": [],
+    "category": "Oficina",
+    "categoryId": "oficina",
+    "description": "Silla de oficina Ergonómica. Medidas: 107 x 64 cm. Color Negro",
+    "features": [
+      "Envío Gratis 🚚"
+    ],
+    "stock": 99,
+    "collections": [],
+    "createdAt": "2026-01-02T19:35:55.221+00:00",
+    "isActive": false
+  },
+  {
+    "id": "DL1183-L",
+    "name": "Puerta Para Mascotas Calidad Superior",
+    "slug": "puerta-para-mascotas-calidad-superior",
+    "price": 51000,
+    "cost": 51000,
+    "image": "/products/67fbccb8-ed09-48c0-a12c-6eb20765b802-Puerta-Para-Mascotas-Calidad-Superior.jpg",
+    "images": [],
+    "category": "Hogar",
+    "categoryId": "hogar",
+    "description": "Puerta para mascotas calidad superior. Tamaño XL ( 25 x 23,5 x 5,3 cm ). Color: Blanco",
+    "features": [
+      "Envío Gratis 🚚"
+    ],
+    "stock": 99,
+    "collections": [],
+    "createdAt": "2026-01-02T19:35:55.221+00:00",
+    "isActive": false
+  },
+  {
+    "id": "DL1255",
+    "name": "Reflector Linterna Led",
+    "slug": "reflector-linterna-led",
+    "price": 35475,
+    "cost": 35475,
+    "image": "/products/0cfccb46-110b-4057-a6d5-d27e339b9505-Reflector-Linterna-Led.jpg",
+    "images": [],
+    "category": "Hogar",
+    "categoryId": "hogar",
+    "description": "Reflector linterna led busca huella. Modelo W5119. Alta potencia - Incluye trípode. Recargable USB. Color negro",
+    "features": [
+      "Envío Gratis 🚚"
+    ],
+    "stock": 99,
+    "collections": [],
+    "createdAt": "2026-01-02T19:35:55.221+00:00",
+    "isActive": false
   }
 ]

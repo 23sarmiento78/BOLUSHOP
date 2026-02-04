@@ -33,69 +33,80 @@ export default async function HomePage() {
 
             <main className="min-h-screen">
                 {/* Hero Section with Video/Image Background */}
-                <section className="relative h-[70vh] md:h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden">
-                    {/* Background Video with Poster to prevent CLS */}
-                    <video
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        poster="/hero-fallback.jpg"
-                        className="absolute inset-0 w-full h-full object-cover"
-                    >
-                        <source src="/videohero.mp4" type="video/mp4" />
-                    </video>
-
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80" />
-
-                    <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto pt-10">
-                        <span className="inline-block px-4 py-1.5 bg-primary/20 backdrop-blur-md border border-primary/30 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] mb-6 animate-in fade-in slide-in-from-top-4 duration-1000">
-                            Nueva Colección 2026
-                        </span>
-                        <h1 className="text-4xl md:text-7xl font-bold mb-6 tracking-tight leading-[1.1] animate-in fade-in slide-in-from-bottom-4 duration-700">
-                            Estilo Que <br />
-                            <span className="text-primary italic">Inspira</span>
-                        </h1>
-                        <p className="text-base md:text-xl mb-10 font-medium text-gray-200/90 max-w-xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150">
-                            Elevá tu hogar con piezas exclusivas elegidas para durar. Envíos flash a todo el país.
-                        </p>
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
-                            <Link
-                                href="/productos"
-                                className="w-full sm:w-auto px-10 py-4 bg-primary text-white rounded-full font-bold text-sm uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/20"
-                            >
-                                Explorar Tienda
-                            </Link>
-                            <Link
-                                href="/rastreo"
-                                className="w-full sm:w-auto px-8 py-4 bg-white/10 backdrop-blur-md text-white border border-white/20 rounded-full font-bold text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-all"
-                            >
-                                Mi Pedido 🚚
-                            </Link>
+                {/* Hero Section: Exclusive Drop */}
+                <section className="relative bg-gradient-to-r from-[#2d3436] to-[#000000] text-white overflow-hidden">
+                    <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
+                    <div className="container mx-auto px-6 py-20 md:py-32 flex flex-col-reverse md:flex-row items-center gap-12 relative z-10">
+                        <div className="w-full md:w-1/2 text-center md:text-left">
+                            <span className="inline-block px-3 py-1 bg-white/10 backdrop-blur-md rounded-lg text-[10px] font-bold uppercase tracking-widest text-[#ffe600] mb-6">
+                                Nueva Temporada 2026
+                            </span>
+                            <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-[1.1] tracking-tight">
+                                Exclusividad <br />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ffe600] to-yellow-200">
+                                    Al Alcance de Todos
+                                </span>
+                            </h1>
+                            <p className="text-gray-300 text-lg mb-8 max-w-lg mx-auto md:mx-0 font-medium">
+                                Descubrí una selección curada de productos únicos con la garantía y velocidad que merecés.
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                                <Link
+                                    href="/productos"
+                                    className="px-8 py-4 bg-[#2980b9] hover:bg-[#3498db] text-white rounded-xl font-bold text-sm transition-all shadow-lg shadow-blue-900/20"
+                                >
+                                    Ver Ofertas del Día
+                                </Link>
+                                <Link
+                                    href="/colecciones"
+                                    className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-xl font-bold text-sm transition-all backdrop-blur-sm"
+                                >
+                                    Colecciones VIP
+                                </Link>
+                            </div>
+                        </div>
+                        <div className="w-full md:w-1/2 relative">
+                            <div className="relative aspect-square md:aspect-[4/3] w-full max-w-lg mx-auto bg-white/5 rounded-3xl border border-white/10 p-6 backdrop-blur-sm -rotate-2 hover:rotate-0 transition-transform duration-700">
+                                {featuredProducts[0] && (
+                                    <div className="relative w-full h-full rounded-2xl overflow-hidden bg-white">
+                                        <Image
+                                            src={featuredProducts[0].image}
+                                            alt="Hero Product"
+                                            fill
+                                            className="object-contain p-4"
+                                            priority
+                                        />
+                                        <div className="absolute top-4 right-4 bg-[#ffe600] text-black font-black text-xs px-3 py-1 rounded shadow-sm">
+                                            DESTACADO DE HOY
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </section>
 
-                {/* Infinite Product Marquee */}
-                <section className="bg-gray-50/30 py-16 overflow-hidden border-y border-gray-100">
-                    <div className="container mx-auto px-4 mb-8 text-center">
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-primary mb-3">Nuestras Joyas</p>
-                        <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Selección <span className="italic text-primary">Premium</span></h2>
-                    </div>
+                {/* Offers of the Day Grid (MercadoLibre Style) */}
+                <section className="bg-gray-100 py-16">
+                    <div className="container mx-auto px-4">
+                        <div className="flex items-center gap-4 mb-8">
+                            <h2 className="text-2xl font-light text-gray-600">Ofertas del día</h2>
+                            <Link href="/productos" className="text-sm font-medium text-blue-600 hover:text-blue-800">Ver todas</Link>
+                        </div>
 
-                    <div className="flex animate-marquee whitespace-nowrap">
-                        {[...allProducts, ...allProducts].slice(0, 20).map((product, i) => (
-                            <div key={i} className="mx-4 flex flex-col items-center gap-4 group cursor-default">
-                                <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-2xl overflow-hidden bg-white shadow-lg border border-gray-100 group-hover:scale-105 transition-all duration-500">
-                                    <Image src={product.image} alt={product.name} fill className="object-cover" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                    <div className="absolute bottom-4 left-4 right-4 translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                                        <p className="text-white font-bold text-sm tracking-tight leading-tight whitespace-normal line-clamp-1">{product.name}</p>
-                                        <p className="text-primary font-bold mt-0.5 text-xs">${product.price.toLocaleString('es-AR')}</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                            {featuredProducts.length > 0 ? (
+                                featuredProducts.map((product) => (
+                                    <div key={product.id} className="h-full">
+                                        <ProductCard product={product} />
                                     </div>
+                                ))
+                            ) : (
+                                <div className="col-span-4 text-center py-20 text-gray-400">
+                                    <p>Cargando las mejores ofertas...</p>
                                 </div>
-                            </div>
-                        ))}
+                            )}
+                        </div>
                     </div>
                 </section>
 
@@ -136,108 +147,64 @@ export default async function HomePage() {
 
                 {/* Categories Section Removed for Boutique Layout */}
 
-                {/* Collections Section */}
-                {collections && collections.length > 0 && (
-                    <section className="bg-gray-900 py-16 overflow-hidden border-y border-white/5">
-                        <div className="container mx-auto px-4 mb-12 text-center">
-                            <span className="text-secondary font-bold uppercase tracking-widest text-[10px] mb-3 inline-block opacity-80">Selección Exclusiva</span>
-                            <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight">Nuestras <span className="italic text-secondary">Colecciones</span></h2>
-                        </div>
+                {/* Modern Featured Collection Banner */}
+                {(collections && collections.length > 0) && (() => {
+                    const featuredColl = collections.find(c => c.isFeatured) || collections[0];
+                    // Find first product image for background if collection has no custom image
+                    let bgImage = "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop";
 
-                        <div className="flex flex-wrap justify-center gap-6 px-4 max-w-7xl mx-auto">
-                            {collections.map((coll) => {
-                                // 1. Buscamos productos vinculados a esta colección
-                                const collectionProducts = allProducts.filter(p =>
-                                    p.isActive !== false &&
-                                    ((coll.productIds || []).includes(p.id) ||
-                                        p.collections?.includes(coll.id) ||
-                                        p.collections?.includes(coll.slug))
-                                );
+                    if (featuredColl.image && !featuredColl.image.includes('icon.png')) {
+                        bgImage = featuredColl.image;
+                    } else if ((allProducts || []).length > 0) {
+                        // Find products in this collection
+                        const productsInColl = allProducts.filter(p =>
+                            p.isActive !== false &&
+                            ((featuredColl.productIds || []).includes(p.id) ||
+                                (p.collections || []).includes(featuredColl.id) ||
+                                (p.collections || []).includes(featuredColl.slug))
+                        );
+                        if (productsInColl.length > 0) bgImage = productsInColl[0].image;
+                    }
 
-                                // 2. Selección de imagen inteligente
-                                let displayImage = "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?q=80&w=2070&auto=format&fit=crop"; // Placeholder premium
+                    return (
+                        <section className="container mx-auto px-4 py-8">
+                            <Link href={`/coleccion/${featuredColl.slug}`}>
+                                <div className="relative rounded-[2.5rem] overflow-hidden group h-[500px] md:h-[600px] shadow-2xl shadow-black/20">
+                                    <Image
+                                        src={bgImage}
+                                        alt={featuredColl.name}
+                                        fill
+                                        className="object-cover transition-transform duration-[2000ms] group-hover:scale-105"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
 
-                                if (coll.image && !coll.image.includes('icon.png')) {
-                                    // Imagen manual subida por el admin
-                                    displayImage = coll.image;
-                                } else if (collectionProducts.length > 0) {
-                                    // Imagen del primer producto de LA colección
-                                    displayImage = collectionProducts[0].image;
-                                }
-
-                                return (
-                                    <Link
-                                        key={coll.id}
-                                        href={`/coleccion/${coll.slug}`}
-                                        className={`group relative flex-grow min-w-[280px] h-[400px] md:h-[500px] rounded-3xl overflow-hidden transition-all duration-500 ${coll.isFeatured ? 'flex-[1.5] lg:flex-[2] ring-1 ring-secondary/30 ring-offset-4 ring-offset-gray-900' : 'flex-1 opacity-90 hover:opacity-100'}`}
-                                    >
-                                        <Image
-                                            src={displayImage}
-                                            alt={coll.name}
-                                            fill
-                                            className="object-cover transition-transform duration-[4000ms] group-hover:scale-105"
-                                        />
-                                        <div className={`absolute inset-0 bg-gradient-to-t ${coll.isFeatured ? 'from-gray-950 via-gray-950/40 to-transparent' : 'from-black/90 via-transparent to-transparent'}`} />
-
-                                        <div className="absolute inset-x-0 bottom-0 p-8 md:p-10 flex flex-col justify-end h-full text-white">
-                                            {coll.isFeatured && (
-                                                <span className="bg-secondary text-gray-900 w-fit px-3 py-1 rounded-full text-[8px] font-bold uppercase tracking-widest mb-3">
-                                                    ★ Oferta Especial
-                                                </span>
-                                            )}
-                                            <h3 className={`font-bold tracking-tight leading-tight ${coll.isFeatured ? 'text-3xl md:text-5xl' : 'text-2xl md:text-3xl'}`}>
-                                                {coll.name}
-                                            </h3>
-
-                                            {coll.discountType !== 'none' && (
-                                                <div className="mt-4 flex items-center gap-3">
-                                                    <span className="bg-emerald-500 text-white px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest">
-                                                        {coll.discountType === 'percentage' ? `${coll.discountValue}% OFF` : `$${coll.discountValue} OFF`}
-                                                    </span>
-                                                </div>
-                                            )}
-
-                                            <p className="text-gray-300 mt-4 font-medium max-w-sm line-clamp-2 text-sm">
-                                                {coll.description}
-                                            </p>
-                                            <div className="mt-6 flex items-center gap-2 text-secondary font-bold uppercase tracking-widest text-[9px] transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                                                Ver colección <span>→</span>
-                                            </div>
+                                    <div className="absolute inset-x-0 bottom-0 p-10 md:p-20 text-center md:text-left">
+                                        <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-1.5 rounded-full text-white text-xs font-bold uppercase tracking-widest mb-6">
+                                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                                            Colección Destacada
                                         </div>
-                                    </Link>
-                                );
-                            })}
-                        </div>
-                    </section>
-                )}
 
-                {/* Featured Products */}
-                <section className="bg-gray-50/50 py-16 md:py-24 rounded-3xl md:rounded-[3rem] mx-2 md:mx-4">
-                    <div className="container mx-auto px-4">
-                        <div className="flex flex-col sm:flex-row justify-between items-center mb-12 gap-6 text-center sm:text-left">
-                            <div>
-                                <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
-                                    Solo <span className="text-primary italic">Lo Mejor</span>
-                                </h2>
-                                <p className="text-gray-400 font-medium mt-2 text-sm">Productos que están marcando tendencia esta semana.</p>
-                            </div>
-                            <Link
-                                href="/productos"
-                                className="w-full sm:w-auto px-6 py-3 bg-white border border-gray-200 text-gray-900 rounded-full font-bold text-[10px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all shadow-sm"
-                            >
-                                Ver Catálogo Completo
-                            </Link>
-                        </div>
+                                        <h2 className="text-4xl md:text-7xl font-bold text-white mb-6 tracking-tighter leading-[0.9]">
+                                            {featuredColl.name}
+                                        </h2>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
-                            {featuredProducts.map((product) => (
-                                <div key={product.id} className="h-full">
-                                    <ProductCard product={product} />
+                                        <p className="text-gray-200 text-lg md:text-xl font-medium max-w-2xl mb-10 md:mb-0 line-clamp-3 md:line-clamp-none">
+                                            {featuredColl.description}
+                                        </p>
+
+                                        <div className="mt-8">
+                                            <span className="inline-block px-8 py-4 bg-white text-black rounded-full font-bold text-sm uppercase tracking-widest hover:scale-105 transition-transform cursor-pointer">
+                                                Ver Colección Completa
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
+                            </Link>
+                        </section>
+                    );
+                })()}
+
+
 
                 {/* Trust Badges */}
                 <section className="container mx-auto px-6 py-16 md:py-24">
