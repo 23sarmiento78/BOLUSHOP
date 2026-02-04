@@ -10,6 +10,7 @@ create table if not exists public.orders (
   total numeric,
   payer_name text,
   payer_email text,
+  payer_dni text,
   payer_address text,
   payer_phone text,
   items jsonb,
@@ -23,6 +24,7 @@ create table if not exists public.products (
   name text not null,
   slug text unique not null,
   price numeric not null,
+  cost numeric, -- Costo del producto para cálculo de márgenes
   image text,
   category text,
   category_id text,
@@ -48,10 +50,13 @@ create table if not exists public.settings (
   updated_at timestamptz default now(),
   profit_margin numeric,
   shipping_cost numeric, -- Base/Fallbcak
+  average_shipping_cost numeric, -- Costo promedio de envío
+  is_free_shipping_enabled boolean default true, -- Switch para envío gratis
   shipping_json jsonb, -- { "caba": 3000, "gba1": 5000, "gba2": 5500, "gba3": 8500, "rest": 9000 }
   site_name text,
   site_description text,
   whatsapp_number text,
+  min_purchase_amount numeric, -- Monto mínimo de compra
   constraint single_row check (id = 1)
 );
 
