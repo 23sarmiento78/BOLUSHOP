@@ -81,8 +81,14 @@ export default function CheckoutPage() {
     const subtotal = getCartTotal();
     const total = subtotal + shippingCost;
 
-    const handleCheckout = async (e: React.FormEvent) => {
+    const [showRedirectNotice, setShowRedirectNotice] = useState(false);
+
+    const handleCheckout = (e: React.FormEvent) => {
         e.preventDefault();
+        setShowRedirectNotice(true);
+    };
+
+    const proceedToPayment = async () => {
         setIsProcessing(true);
 
         try {
@@ -108,8 +114,8 @@ export default function CheckoutPage() {
         } catch (error: any) {
             console.error('Error al iniciar checkout:', error);
             alert(`Error: ${error.message || 'Ocurrió un error al procesar el pago. Por favor, intenta de nuevo.'}`);
-        } finally {
             setIsProcessing(false);
+            setShowRedirectNotice(false);
         }
     };
 
@@ -382,6 +388,50 @@ export default function CheckoutPage() {
                     </form>
                 </div>
             </div>
+
+            {/* Redirection Notice Modal */}
+            {showRedirectNotice && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div
+                        className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
+                        onClick={() => !isProcessing && setShowRedirectNotice(false)}
+                    ></div>
+                    <div className="relative bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl animate-in fade-in zoom-in duration-200 border border-gray-100">
+                        <div className="mb-6 flex justify-center">
+                            <div className="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center text-4xl shadow-sm">
+                                ⚠️
+                            </div>
+                        </div>
+                        <h3 className="text-xl font-black text-center text-gray-900 mb-4 uppercase tracking-wide">
+                            Antes de pagar
+                        </h3>
+                        <p className="text-gray-600 text-center font-bold leading-relaxed mb-8 text-lg">
+                            Espera la redirección a la web al finalizar el pago y por favor haz click en <span className="text-green-600 font-black underline decoration-green-300 underline-offset-4">Confirmar por WhatsApp</span>.
+                        </p>
+                        <button
+                            onClick={proceedToPayment}
+                            disabled={isProcessing}
+                            className="w-full py-4 bg-black text-white rounded-2xl font-black text-lg uppercase tracking-widest hover:bg-gray-900 transition-all flex items-center justify-center gap-3 shadow-lg shadow-black/20 hover:scale-[1.02] active:scale-[0.98]"
+                        >
+                            {isProcessing ? (
+                                <>
+                                    <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                                    Procesando...
+                                </>
+                            ) : (
+                                "Entendido, Ir a Pagar"
+                            )}
+                        </button>
+                        <button
+                            onClick={() => setShowRedirectNotice(false)}
+                            disabled={isProcessing}
+                            className="w-full mt-4 py-3 text-gray-400 font-bold text-xs uppercase tracking-widest hover:text-gray-600 transition-colors"
+                        >
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

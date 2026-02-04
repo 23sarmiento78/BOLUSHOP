@@ -20,13 +20,38 @@ export async function sendOrderConfirmationEmail(order: Order, payLink?: string)
         </div>
     `).join('');
 
+    const statusColors = {
+        pending: '#856404',
+        paid: '#155724',
+        cancelled: '#721c24'
+    };
+    const statusBg = {
+        pending: '#fff3cd',
+        paid: '#d4edda',
+        cancelled: '#f8d7da'
+    };
+    const statusText = {
+        pending: 'Pendiente de Pago',
+        paid: 'Pago Confirmado',
+        cancelled: 'Cancelado'
+    };
+
+    const currentStatus = order.status || 'pending';
+    const statusLabel = statusText[currentStatus as keyof typeof statusText] || statusText.pending;
+    const color = statusColors[currentStatus as keyof typeof statusColors] || statusColors.pending;
+    const bg = statusBg[currentStatus as keyof typeof statusBg] || statusBg.pending;
+
     const htmlContent = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-            <h1 style="color: #000; text-align: center;">¡Gracias por tu compra!</h1>
-            <p style="text-align: center; color: #666;">Tu pedido #${id.slice(0, 8)} ha sido registrado.</p>
+            <h1 style="color: #000; text-align: center;">
+                ${currentStatus === 'paid' ? '¡Pago Exitoso!' : '¡Gracias por tu compra!'}
+            </h1>
+            <p style="text-align: center; color: #666;">
+                Tu pedido #${id.slice(0, 8)} ha sido ${currentStatus === 'paid' ? 'confirmado' : 'registrado'}.
+            </p>
             <div style="text-align: center; margin-bottom: 20px;">
-                <span style="background-color: #fff3cd; color: #856404; padding: 5px 10px; border-radius: 5px; font-weight: bold; font-size: 14px;">
-                    Estado: Pendiente de Pago
+                <span style="background-color: ${bg}; color: ${color}; padding: 5px 10px; border-radius: 5px; font-weight: bold; font-size: 14px;">
+                    Estado: ${statusLabel}
                 </span>
             </div>
 
@@ -47,7 +72,7 @@ export async function sendOrderConfirmationEmail(order: Order, payLink?: string)
                 </div>
             </div>
 
-            ${payLink ? `
+            ${payLink && currentStatus === 'pending' ? `
             <div style="text-align: center; margin-top: 30px;">
                 <a href="${payLink}" style="background-color: #009ee3; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
                     Pagar con Mercado Pago
@@ -64,23 +89,30 @@ export async function sendOrderConfirmationEmail(order: Order, payLink?: string)
     try {
         // 1. Enviar al Cliente
         const senderEmail = process.env.RESEND_SENDER_EMAIL || 'onboarding@resend.dev';
+        const clientSubject = currentStatus === 'paid'
+            ? `¡Tu pedido #${id.slice(0, 8)} está confirmado! - BoluShop`
+            : `Recibimos tu pedido #${id.slice(0, 8)} - BoluShop`;
 
         await resend.emails.send({
             from: `BoluShop <${senderEmail}>`,
             to: [payer.email],
-            subject: `Recibimos tu pedido #${id.slice(0, 8)} - BoluShop`,
+            subject: clientSubject,
             html: htmlContent
         });
 
-        // 2. Enviar Copia al Admin (con todos los datos para "saber qué escribió")
+        // 2. Enviar Copia al Admin
+        const adminSubject = currentStatus === 'paid'
+            ? `[PAGO EXITOSO] Pedido #${id.slice(0, 8)} - $${total.toLocaleString('es-AR')}`
+            : `[NUEVA VENTA] Pedido #${id.slice(0, 8)} - $${total.toLocaleString('es-AR')}`;
+
         await resend.emails.send({
             from: `BoluShop <${senderEmail}>`,
-            to: ['fsarmientoisrael118@gmail.com'], // Hardcoded as per potential user identity or env
-            subject: `[NUEVA VENTA] Pedido #${id.slice(0, 8)} - $${total.toLocaleString('es-AR')}`,
+            to: ['fsarmientoisrael118@gmail.com'],
+            subject: adminSubject,
             html: `
                 <div style="background: #fff0f0; padding: 10px; border: 1px solid red; margin-bottom: 20px;">
                     <strong>👮 VISTA DE ADMINISTRADOR</strong><br>
-                    Estos son los datos crudos que el cliente ingresó en el formulario.
+                    Estado actual: <strong>${statusLabel}</strong>
                 </div>
                 ${htmlContent}
             `

@@ -55,12 +55,24 @@ export async function POST(req: NextRequest) {
             else if (['rejected', 'cancelled', 'refunded'].includes(status)) dbStatus = 'cancelled';
 
             if (orderId) {
-                const { updateOrder } = await import('@/lib/db');
+                const { updateOrder, getOrderById } = await import('@/lib/db');
+                const { sendOrderConfirmationEmail } = await import('@/lib/email');
+
                 await updateOrder(orderId, {
                     status: dbStatus as any,
                     paymentId: paymentId.toString()
                 });
                 console.log(`✨ Database updated for Order ${orderId} to ${dbStatus}`);
+
+                // Send confirmation email if paid
+                if (dbStatus === 'paid') {
+                    const updatedOrder = await getOrderById(orderId);
+                    if (updatedOrder) {
+                        // Pass undefined for payLink since it's already paid
+                        await sendOrderConfirmationEmail(updatedOrder);
+                        console.log(`📧 Payment confirmation email sent for Order ${orderId}`);
+                    }
+                }
             }
 
             return NextResponse.json({ success: true });
