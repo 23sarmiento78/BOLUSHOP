@@ -25,7 +25,7 @@ export default async function HomePage() {
     // Prioritize products that are active and have essential data
     const featuredProducts = allProducts
         .filter(p => p.isActive !== false && p.price > 0)
-        .slice(0, 8);
+        .slice(0, 4);
 
     return (
         <>
@@ -134,52 +134,7 @@ export default async function HomePage() {
                     </div>
                 </section>
 
-                <section className="container mx-auto px-4 py-8 md:py-16">
-                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-                        <div className="max-w-xl">
-                            <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
-                                Selecciones <span className="text-primary italic">Curadas</span>
-                            </h2>
-                            <p className="text-gray-500 text-base md:text-lg font-medium">
-                                Artículos diseñados para mejorar tu calidad de vida diario.
-                            </p>
-                        </div>
-                        <Link href="/productos" className="hidden md:flex items-center gap-2 font-bold uppercase tracking-widest text-[10px] text-gray-400 hover:text-primary transition-colors">
-                            Ver todo <span className="text-base">→</span>
-                        </Link>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                        {categories.map((category, index) => (
-                            <Link
-                                key={category.id}
-                                href={`/productos?categoria=${encodeURIComponent(category.name)}`}
-                                className="group relative h-[250px] md:h-[400px] overflow-hidden rounded-3xl border border-gray-100 shadow-sm transition-all duration-500"
-                            >
-                                {/* Category Image */}
-                                <div className="absolute inset-0">
-                                    <Image
-                                        src={category.image || "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=2070&auto=format&fit=crop"}
-                                        alt={category.name}
-                                        fill
-                                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                        priority={index < 3}
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity" />
-                                </div>
-                                <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-8 text-white">
-                                    <h3 className="text-2xl md:text-3xl font-bold mb-1 tracking-tight">
-                                        {category.name}
-                                    </h3>
-                                    <div className="flex items-center gap-2 text-primary font-bold uppercase tracking-widest text-[10px] opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                                        Explorar →
-                                    </div>
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
-                </section>
+                {/* Categories Section Removed for Boutique Layout */}
 
                 {/* Collections Section */}
                 {collections && collections.length > 0 && (
