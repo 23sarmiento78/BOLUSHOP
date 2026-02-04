@@ -24,6 +24,11 @@ export async function sendOrderConfirmationEmail(order: Order, payLink?: string)
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
             <h1 style="color: #000; text-align: center;">¡Gracias por tu compra!</h1>
             <p style="text-align: center; color: #666;">Tu pedido #${id.slice(0, 8)} ha sido registrado.</p>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <span style="background-color: #fff3cd; color: #856404; padding: 5px 10px; border-radius: 5px; font-weight: bold; font-size: 14px;">
+                    Estado: Pendiente de Pago
+                </span>
+            </div>
 
             <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
                 <h3 style="margin-top: 0;">📦 Datos de Envío (Ingresados en Checkout)</h3>
@@ -58,8 +63,10 @@ export async function sendOrderConfirmationEmail(order: Order, payLink?: string)
 
     try {
         // 1. Enviar al Cliente
+        const senderEmail = process.env.RESEND_SENDER_EMAIL || 'onboarding@resend.dev';
+
         await resend.emails.send({
-            from: 'BoluShop <onboarding@resend.dev>', // Cambiar a tu dominio verificado en prod
+            from: `BoluShop <${senderEmail}>`,
             to: [payer.email],
             subject: `Recibimos tu pedido #${id.slice(0, 8)} - BoluShop`,
             html: htmlContent
@@ -67,7 +74,7 @@ export async function sendOrderConfirmationEmail(order: Order, payLink?: string)
 
         // 2. Enviar Copia al Admin (con todos los datos para "saber qué escribió")
         await resend.emails.send({
-            from: 'BoluShop <onboarding@resend.dev>',
+            from: `BoluShop <${senderEmail}>`,
             to: ['fsarmientoisrael118@gmail.com'], // Hardcoded as per potential user identity or env
             subject: `[NUEVA VENTA] Pedido #${id.slice(0, 8)} - $${total.toLocaleString('es-AR')}`,
             html: `
