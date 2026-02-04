@@ -35,116 +35,108 @@ export default function CollectionDetailClient({ collection, products, totalPric
     };
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-            {/* Left: Bundle Visual */}
-            <div className="space-y-8">
-                <div className="relative aspect-square rounded-3xl overflow-hidden shadow-2xl border border-gray-100">
-                    <Image
-                        src={collection.image || (products[0]?.image) || "/icon.png"}
-                        alt={collection.name}
-                        fill
-                        className="object-cover"
-                        priority
-                    />
-                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 p-10 text-white">
-                        <span className="bg-primary text-white px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 inline-block">
-                            Pack Exclusivo
-                        </span>
-                        <h1 className="text-4xl md:text-5xl font-bold tracking-tighter">{collection.name}</h1>
-                    </div>
-                </div>
+        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
 
-                {/* Bundle Items Grid */}
-                <div className="grid grid-cols-3 gap-4">
-                    {products.slice(0, 3).map((p) => (
-                        <div key={p.id} className="relative aspect-square rounded-2xl overflow-hidden border border-gray-100 shadow-sm transition-transform hover:scale-105">
-                            <Image src={p.image} alt={p.name} fill className="object-cover" />
+            {/* LEFT COLUMN: Gallery & Visuals */}
+            <div className="flex-1 w-full lg:w-[60%]">
+                <div className="sticky top-32">
+                    <div className="relative aspect-square md:aspect-[16/10] rounded-[2.5rem] overflow-hidden shadow-2xl shadow-gray-200 border border-gray-100 mb-8 group">
+                        <Image
+                            src={collection.image || (products[0]?.image) || "/icon.png"}
+                            alt={collection.name}
+                            fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                            priority
+                        />
+                        {/* Badge Overlay */}
+                        <div className="absolute top-6 left-6">
+                            <span className="bg-white/90 backdrop-blur-md text-gray-900 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest shadow-lg">
+                                Pack Exclusivo
+                            </span>
                         </div>
-                    ))}
-                    {products.length > 3 && (
-                        <div className="aspect-square rounded-2xl bg-gray-100 flex items-center justify-center text-gray-500 font-bold">
-                            +{products.length - 3}
+                    </div>
+
+                    {/* Mini Gallery of included items */}
+                    <div className="bg-gray-50 rounded-3xl p-6 border border-gray-100">
+                        <h3 className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4 ml-1">Productos Incluidos</h3>
+                        <div className="grid grid-cols-4 gap-3">
+                            {products.map((p) => (
+                                <div key={p.id} className="relative aspect-square rounded-xl overflow-hidden bg-white border border-gray-200 shadow-sm tooltip" title={p.name}>
+                                    <Image src={p.image} alt={p.name} fill className="object-contain p-2" />
+                                </div>
+                            ))}
                         </div>
-                    )}
+                    </div>
                 </div>
             </div>
 
-            {/* Right: Bundle Info & Buy */}
-            <div className="flex flex-col">
-                <div className="mb-8">
-                    <div className="flex items-center gap-4 mb-4">
-                        <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-widest">
-                            Ahorro Garantizado
-                        </span>
-                        <span className="text-gray-400 font-bold text-sm">
-                            {products.length} productos incluidos
-                        </span>
-                    </div>
-                    <p className="text-gray-600 text-lg leading-relaxed mb-8">
-                        {collection.description}
-                    </p>
-                </div>
+            {/* RIGHT COLUMN: Info & Buy Box */}
+            <div className="w-full lg:w-[40%]">
+                <div className="flex flex-col h-full">
+                    {/* Header Info */}
+                    <div className="mb-8 border-b border-gray-100 pb-8">
+                        <div className="flex items-center gap-2 mb-4">
+                            <span className="text-emerald-500 flex text-sm">★★★★★</span>
+                            <span className="text-xs font-bold text-gray-300 uppercase tracking-wide">Colección Premium</span>
+                        </div>
 
-                {/* Pricing Card */}
-                <div className="bg-gray-50 rounded-[2.5rem] p-10 border border-gray-100 mb-10">
-                    <div className="mb-6">
-                        {totalPrice < originalPrice && (
-                            <>
-                                <p className="text-gray-400 font-bold line-through text-xl mb-1">
-                                    ${originalPrice.toLocaleString('es-AR')}
-                                </p>
-                            </>
-                        )}
-                        <div className="flex items-end gap-4">
-                            <span className="text-5xl md:text-6xl font-bold text-gray-900 tracking-tighter">
-                                ${totalPrice.toLocaleString('es-AR')}
-                            </span>
-                            {totalPrice < originalPrice && originalPrice > 0 && (
-                                <span className="bg-primary text-white px-3 py-1 rounded-lg text-sm font-bold mb-2 animate-bounce">
-                                    -{Math.round((1 - totalPrice / originalPrice) * 100)}%
-                                </span>
+                        <h1 className="text-3xl md:text-5xl font-black text-gray-900 leading-[1.1] mb-6 tracking-tight">
+                            {collection.name}
+                        </h1>
+
+                        <div className="prose prose-sm prose-gray max-w-none text-gray-500 font-medium">
+                            <p className="whitespace-pre-line">{collection.description}</p>
+                        </div>
+                    </div>
+
+                    {/* Sticky-ish Buy Box */}
+                    <div className="bg-white border border-gray-200 rounded-[2rem] p-8 shadow-xl shadow-gray-200/50">
+
+                        {/* Pricing */}
+                        <div className="mb-8">
+                            {totalPrice < originalPrice && (
+                                <div className="flex items-center gap-3 mb-2">
+                                    <span className="text-gray-400 line-through font-medium text-lg">
+                                        ${originalPrice.toLocaleString('es-AR')}
+                                    </span>
+                                    <span className="bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded text-xs font-black uppercase tracking-wider">
+                                        {Math.round((1 - totalPrice / originalPrice) * 100)}% OFF
+                                    </span>
+                                </div>
                             )}
-                        </div>
-                    </div>
 
-                    <button
-                        onClick={handleAddToCart}
-                        disabled={isAdding}
-                        className={`w-full py-6 rounded-2xl font-bold text-sm uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-4 shadow-xl ${isAdding
-                            ? 'bg-emerald-500 text-white translate-y-1'
-                            : 'bg-primary text-white hover:scale-105 active:scale-95 shadow-primary/25'
-                            }`}
-                    >
-                        {isAdding ? (
-                            <><Check size={20} /> Pack Añadido</>
-                        ) : (
-                            <><ShoppingBag size={20} /> Comprar Pack Completo</>
-                        )}
-                    </button>
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-3xl font-light text-gray-400">$</span>
+                                <span className="text-5xl font-bold text-gray-900 tracking-tighter">
+                                    {totalPrice.toLocaleString('es-AR')}
+                                </span>
+                            </div>
 
-                    <p className="text-center text-xs text-gray-400 font-bold mt-6 uppercase tracking-widest">
-                        Paga en cuotas con Mercado Pago 💳
-                    </p>
-                </div>
+                            <p className="text-emerald-600 font-bold text-xs mt-3 flex items-center gap-2">
+                                <Truck size={14} /> Envío Gratis a todo el país
+                            </p>
+                        </div>
 
-                {/* Trust Points */}
-                <div className="space-y-6">
-                    <div className="flex gap-4 p-4 rounded-2xl border border-dashed border-gray-200">
-                        <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-primary flex-shrink-0">
-                            <ShieldCheck size={24} />
-                        </div>
-                        <div>
-                            <h4 className="font-bold text-sm tracking-tight mb-1">Garantía BoluShop</h4>
-                            <p className="text-xs text-gray-500 font-medium">Todos los productos del pack cuentan con soporte 24/7.</p>
-                        </div>
-                    </div>
-                    <div className="flex gap-4 p-4 rounded-2xl border border-dashed border-gray-200">
-                        <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-primary flex-shrink-0">
-                            <Truck size={24} />
-                        </div>
-                        <div>
-                            <h4 className="font-bold text-sm tracking-tight mb-1">Envío Flash Incluido</h4>
-                            <p className="text-xs text-gray-500 font-medium">Recibí todo el pack junto en un solo envío protegido.</p>
+                        {/* Action Buttons */}
+                        <div className="space-y-4">
+                            <button
+                                onClick={handleAddToCart}
+                                disabled={isAdding}
+                                className={`w-full py-4 rounded-xl font-bold text-sm uppercase tracking-widest transition-all shadow-lg flex items-center justify-center gap-3 ${isAdding
+                                    ? 'bg-emerald-500 text-white translate-y-1'
+                                    : 'bg-primary text-white hover:bg-gray-800 hover:shadow-primary/20'
+                                    }`}
+                            >
+                                {isAdding ? (
+                                    <>¡Agregado!</>
+                                ) : (
+                                    <>Comprar Pack Ahora</>
+                                )}
+                            </button>
+
+                            <p className="text-center text-[10px] text-gray-400 font-bold mt-4 uppercase tracking-widest">
+                                Compra protegida por BoluShop
+                            </p>
                         </div>
                     </div>
                 </div>

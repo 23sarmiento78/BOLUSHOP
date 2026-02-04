@@ -53,9 +53,11 @@ export default async function CollectionPage({ params }: Props) {
     const allProducts = await getAllProducts();
     const products = allProducts.filter(p =>
         p.isActive !== false &&
-        (collection.productIds?.includes(p.id) ||
-            p.collections?.includes(collection.id) ||
-            p.collections?.includes(collection.slug))
+        (
+            (collection.productIds || []).includes(p.id) ||
+            (p.collections || []).includes(collection.id) ||
+            (p.collections || []).includes(collection.slug)
+        )
     );
 
     // Calculate Pricing
