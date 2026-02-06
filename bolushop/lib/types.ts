@@ -16,6 +16,7 @@ export interface Collection {
     discountValue?: number;
     isFeatured?: boolean;
     productIds?: string[];
+    holiday?: string; // Links to lib/holidays.ts
 }
 
 export interface Product {

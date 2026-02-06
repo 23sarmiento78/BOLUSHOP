@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { updateOrder, getAllOrders } from '@/lib/db';
-import { sendRefundRequestEmail } from '@/lib/email';
+// import { sendRefundRequestEmail } from '@/lib/email'; // DISABLED: Resend solo para email marketing
 
 export async function GET() {
     try {
@@ -26,9 +26,12 @@ export async function POST(req: NextRequest) {
 
         if (action === 'cancel') {
             await updateOrder(orderId, { status: 'cancelled' });
-            const email = order.payer?.email || 'cliente@ejemplo.com';
-            await sendRefundRequestEmail(orderId, email);
-            return NextResponse.json({ success: true, message: 'Order cancelled and email sent' });
+
+            // DISABLED: Resend solo para email marketing
+            // const email = order.payer?.email || 'cliente@ejemplo.com';
+            // await sendRefundRequestEmail(orderId, email);
+
+            return NextResponse.json({ success: true, message: 'Order cancelled' });
         }
 
         if (action === 'update_status' && status) {
