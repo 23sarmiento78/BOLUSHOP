@@ -133,12 +133,12 @@ export default async function HomePage() {
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center md:justify-items-stretch">
+                        <div className="flex flex-wrap justify-center gap-8">
                             {collections.slice(0, 3).map((coll, i) => (
                                 <Link
                                     href={`/colecciones#${coll.slug}`}
                                     key={coll.id}
-                                    className="group relative h-[450px] w-full max-w-md md:max-w-none rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
+                                    className="group relative h-[450px] w-full md:w-[calc(33.333%-2rem)] max-w-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
                                 >
                                     {/* Background Image */}
                                     <Image
@@ -161,7 +161,7 @@ export default async function HomePage() {
 
                                     {/* Content */}
                                     <div className="absolute inset-0 p-8 flex flex-col justify-end">
-                                        <div className="transform transition-transform duration-500group-hover:translate-y-0 translate-y-2">
+                                        <div className="transform transition-transform duration-500 group-hover:translate-y-0 translate-y-2">
                                             <h3 className="text-2xl md:text-3xl font-black text-white mb-2 tracking-tight">
                                                 {coll.name}
                                             </h3>
