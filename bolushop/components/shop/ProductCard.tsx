@@ -8,14 +8,17 @@ import { toggleWishlist, isInWishlist } from "@/lib/wishlist";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Heart, Truck, ShoppingCart } from "lucide-react";
+import { useHolidayTheme } from "@/lib/hooks/useHolidayTheme";
 
 interface Props {
     product: Product;
+    holidayBadge?: boolean;
 }
 
-export default function ProductCard({ product }: Props) {
+export default function ProductCard({ product, holidayBadge = false }: Props) {
     const [isAdding, setIsAdding] = useState(false);
     const [isWishlisted, setIsWishlisted] = useState(false);
+    const { holiday, primary } = useHolidayTheme();
 
     useEffect(() => {
         setIsWishlisted(isInWishlist(product.id));
@@ -46,6 +49,16 @@ export default function ProductCard({ product }: Props) {
             >
                 <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-blue-500 text-blue-500' : ''}`} />
             </button>
+
+            {/* Holiday Badge */}
+            {holidayBadge && holiday && (
+                <div
+                    className="absolute top-3 left-3 z-20 px-3 py-1 rounded-full text-xs font-bold text-white shadow-lg"
+                    style={{ backgroundColor: primary }}
+                >
+                    {holiday.icon} {holiday.label}
+                </div>
+            )}
 
             {/* Image (Squared) */}
             <div className="relative aspect-square border-b border-gray-50 overflow-hidden bg-white p-4">

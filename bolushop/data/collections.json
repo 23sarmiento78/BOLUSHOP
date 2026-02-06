@@ -9,7 +9,8 @@
     "productIds": [
       "87264ee9-83e4-428f-b4af-fb7b32f9ca54"
     ],
-    "id": "559306be-2ee9-434a-83fe-0fea93dce7fa"
+    "id": "559306be-2ee9-434a-83fe-0fea93dce7fa",
+    "holiday": "carnival"
   },
   {
     "name": "🔐🎒 Combo Seguridad + Hidratación",
@@ -22,6 +23,7 @@
       "1668ab7e-a18b-41a7-9d5a-21e50a2a2207",
       "87264ee9-83e4-428f-b4af-fb7b32f9ca54"
     ],
-    "id": "e446afdf-8af4-4eca-b0c6-1b34500af8ce"
+    "id": "e446afdf-8af4-4eca-b0c6-1b34500af8ce",
+    "holiday": "valentines"
   }
 ]

@@ -517,7 +517,8 @@ export async function getAllCollections(): Promise<Collection[]> {
                 discountType: c.discount_type,
                 discountValue: c.discount_value,
                 isFeatured: c.is_featured,
-                productIds: c.product_ids || []
+                productIds: c.product_ids || [],
+                holiday: c.holiday // New field
             }));
 
             const collectionsMap = new Map<string, Collection>();
@@ -548,11 +549,17 @@ export async function saveCollections(collections: Collection[]): Promise<{ succ
             discount_type: c.discountType || 'none',
             discount_value: c.discountValue || 0,
             is_featured: c.isFeatured || false,
-            product_ids: c.productIds || []
+            product_ids: c.productIds || [],
+            holiday: c.holiday || null // New field
         }));
 
         const { error } = await supabase.from('collections').upsert(toUpsert, { onConflict: 'id' });
         if (error) {
+            // Check if error is about missing column, if so, ignore it for now as JSON is master
+            if (error.code === '42703') { // Undefined column
+                console.warn("⚠️ Supabase 'holiday' column missing. Data saved locally only.");
+                return { success: localSuccess };
+            }
             console.error("❌ Supabase Collections Sync Error:", error);
             return {
                 success: localSuccess,
@@ -743,7 +750,11 @@ export async function addProductReview(review: Review): Promise<boolean> {
 // Newsletter API
 export async function subscribeToNewsletter(email: string): Promise<boolean> {
     const emails = readJson<Newsletter[]>(NEWSLETTER_FILE, []);
-    if (emails.find(e => e.email === email)) return true;
+
+    // Check if already subscribed
+    if (emails.find(e => e.email === email)) {
+        return false; // Email already exists
+    }
 
     const entry = { email, createdAt: new Date().toISOString() };
     emails.push(entry);
@@ -754,7 +765,14 @@ export async function subscribeToNewsletter(email: string): Promise<boolean> {
             email: entry.email,
             created_at: entry.createdAt
         }]);
-        if (error) console.error("❌ Supabase Newsletter Error:", error);
+
+        // Handle unique constraint error (duplicate email)
+        if (error) {
+            if (error.code === '23505') { // PostgreSQL unique violation
+                return false;
+            }
+            console.error("❌ Supabase Newsletter Error:", error);
+        }
     } catch (e) {
         console.error("❌ Supabase Newsletter Sync Error:", e);
     }
@@ -767,13 +785,13 @@ export async function getNewsletterSubscribers(): Promise<Newsletter[]> {
         const { data, error } = await supabase
             .from('newsletter')
             .select('*')
-            .order('createdAt', { ascending: false });
+            .order('created_at', { ascending: false }); // Fixed: was 'createdAt'
 
         if (data && data.length > 0) {
             return data.map(e => ({
                 id: e.id,
                 email: e.email,
-                createdAt: e.created_at || e.createdAt
+                createdAt: e.created_at
             }));
         }
     } catch (e) {

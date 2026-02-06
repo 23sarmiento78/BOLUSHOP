@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
 
             if (orderId) {
                 const { updateOrder, getOrderById } = await import('@/lib/db');
-                const { sendOrderConfirmationEmail } = await import('@/lib/email');
+                // const { sendOrderConfirmationEmail } = await import('@/lib/email'); // DISABLED: Resend solo para email marketing
 
                 await updateOrder(orderId, {
                     status: dbStatus as any,
@@ -64,15 +64,14 @@ export async function POST(req: NextRequest) {
                 });
                 console.log(`✨ Database updated for Order ${orderId} to ${dbStatus}`);
 
-                // Send confirmation email if paid
-                if (dbStatus === 'paid') {
-                    const updatedOrder = await getOrderById(orderId);
-                    if (updatedOrder) {
-                        // Pass undefined for payLink since it's already paid
-                        await sendOrderConfirmationEmail(updatedOrder);
-                        console.log(`📧 Payment confirmation email sent for Order ${orderId}`);
-                    }
-                }
+                // DISABLED: Email notifications (Resend solo para email marketing)
+                // if (dbStatus === 'paid') {
+                //     const updatedOrder = await getOrderById(orderId);
+                //     if (updatedOrder) {
+                //         await sendOrderConfirmationEmail(updatedOrder);
+                //         console.log(`📧 Payment confirmation email sent for Order ${orderId}`);
+                //     }
+                // }
             }
 
             return NextResponse.json({ success: true });

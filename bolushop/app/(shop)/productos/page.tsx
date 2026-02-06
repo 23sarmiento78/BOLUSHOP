@@ -3,8 +3,11 @@ import Header from "@/components/shop/Header";
 import Footer from "@/components/shop/Footer";
 import ProductCard from "@/components/shop/ProductCard";
 import ProductSorter from "@/components/shop/ProductSorter";
+import HolidayBanner from "@/components/shop/HolidayBanner";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getCurrentHoliday } from "@/lib/holidays";
+
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
     const { categoria, coleccion } = await searchParams;
@@ -34,6 +37,7 @@ interface Props {
 export default async function ProductosPage({ searchParams }: Props) {
     const allProducts = await getAllProducts();
     const activeProducts = allProducts.filter(p => p.isActive !== false);
+    const holiday = getCurrentHoliday();
 
     // Filtering
     const { categoria, coleccion, sort } = await searchParams;
@@ -89,6 +93,9 @@ export default async function ProductosPage({ searchParams }: Props) {
         <>
             <Header />
 
+            {/* Holiday Banner */}
+            <HolidayBanner />
+
             <main className="min-h-screen bg-sand-white pt-32 pb-24">
                 <div className="container mx-auto px-4">
                     {/* Page Header */}
@@ -103,7 +110,7 @@ export default async function ProductosPage({ searchParams }: Props) {
                             ) : 'Nuestra Tienda'}
                         </h1>
                         <p className="text-gray-500 text-lg md:text-xl font-medium max-w-2xl leading-relaxed">
-                            Descubrí una selección curada de productos diseñados para elevar tu estilo de vida. Calidad garantizada en cada detalle.
+                            {holiday ? `Celebrá ${holiday.label} con nuestra selección exclusiva.` : 'Descubrí una selección curada de productos diseñados para elevar tu estilo de vida. Calidad garantizada en cada detalle.'}
                         </p>
                     </div>
 
@@ -114,9 +121,16 @@ export default async function ProductosPage({ searchParams }: Props) {
                             <a
                                 href={`/productos${sort ? `?sort=${sort}` : ''}`}
                                 className={`px-8 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 ${!categoria
-                                    ? 'bg-gray-900 text-white shadow-2xl shadow-gray-900/20'
+                                    ? 'text-white shadow-2xl'
                                     : 'bg-white text-gray-500 hover:text-gray-900 border border-gray-100'
                                     }`}
+                                style={!categoria && holiday ? {
+                                    backgroundColor: holiday.colors.primary,
+                                    boxShadow: `0 20px 30px -10px ${holiday.colors.primary}40`
+                                } : !categoria ? {
+                                    backgroundColor: '#0F172A',
+                                    boxShadow: '0 20px 30px -10px rgba(15, 23, 42, 0.2)'
+                                } : {}}
                             >
                                 Todos
                             </a>
@@ -125,9 +139,16 @@ export default async function ProductosPage({ searchParams }: Props) {
                                     key={cat}
                                     href={`/productos?categoria=${encodeURIComponent(cat)}${sort ? `&sort=${sort}` : ''}`}
                                     className={`px-8 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 ${categoria === cat
-                                        ? 'bg-gray-900 text-white shadow-2xl shadow-gray-900/20'
+                                        ? 'text-white shadow-2xl'
                                         : 'bg-white text-gray-500 hover:text-gray-900 border border-gray-100'
                                         }`}
+                                    style={categoria === cat && holiday ? {
+                                        backgroundColor: holiday.colors.primary,
+                                        boxShadow: `0 20px 30px -10px ${holiday.colors.primary}40`
+                                    } : categoria === cat ? {
+                                        backgroundColor: '#0F172A',
+                                        boxShadow: '0 20px 30px -10px rgba(15, 23, 42, 0.2)'
+                                    } : {}}
                                 >
                                     {cat}
                                 </a>

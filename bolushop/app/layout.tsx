@@ -33,11 +33,11 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL(siteUrl),
     title: {
-      default: `${settings.siteName} | Tu Marketplace de Confianza en Argentina`,
-      template: `%s | ${settings.siteName}`
+      default: `${settings.siteName} | Tienda de Regalos Originales y Gadgets en Argentina`,
+      template: `%s | ${settings.siteName} Regalos`
     },
-    description: settings.siteDescription || "BoluShop es el marketplace líder en Argentina. Comprá con confianza y recibí tus productos con envío gratis a todo el país. Calidad garantizada y los mejores precios del mercado.",
-    keywords: "marketplace argentina, comprar online argentina, tienda virtual argentina, envios gratis argentina, bolushop, ofertas argentina, productos importados argentina, compras por internet argentina, mercado pago cuotas, mejores precios argentina",
+    description: settings.siteDescription || "¿Buscás el regalo perfecto? En BoluShop encontrá regalos originales, tecnología, gadgets y curiosidades. Envíos gratis a todo el país y cuotas sin interés. ¡Sorprendé hoy!",
+    keywords: "regalos originales argentina, tienda de regalos, cosas curiosas, gadgets tecnologicos, regalos para hombres, regalos para novios, comprar regalos online, bolushop, envios a todo el pais, bazar premium",
     authors: [{ name: settings.siteName }],
     creator: settings.siteName,
     publisher: settings.siteName,

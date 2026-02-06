@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Collection, Product } from "@/lib/types";
 import { createCollectionAction, deleteCollectionAction, updateCollectionAction } from "@/app/actions/admin";
 import { useRouter } from "next/navigation";
+import { HOLIDAYS } from "@/lib/holidays"; // Import new holidays config
 
 interface Props {
     initialCollections: Collection[];
@@ -20,7 +21,8 @@ export default function CollectionsClient({ initialCollections, initialProducts 
         discountType: 'none',
         discountValue: 0,
         isFeatured: false,
-        productIds: []
+        productIds: [],
+        holiday: 'none' // Init
     });
     const [isSaving, setIsSaving] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -51,7 +53,7 @@ export default function CollectionsClient({ initialCollections, initialProducts 
         setIsSaving(false);
         if (res.success) {
             setIsCreating(false);
-            setNewCollection({ name: "", description: "", slug: "", discountType: 'none', discountValue: 0, isFeatured: false, productIds: [] });
+            setNewCollection({ name: "", description: "", slug: "", discountType: 'none', discountValue: 0, isFeatured: false, productIds: [], holiday: 'none' });
             router.refresh();
         } else {
             alert(res.error);
@@ -101,39 +103,47 @@ export default function CollectionsClient({ initialCollections, initialProducts 
                         <p className="text-gray-400 font-bold uppercase tracking-widest">No hay colecciones creadas</p>
                     </div>
                 )}
-                {initialCollections.map(col => (
-                    <div key={col.id} className={`${col.isFeatured ? 'ring-4 ring-primary/20 bg-primary/5' : 'bg-white'} p-8 rounded-[2.5rem] shadow-sm border border-gray-100 group hover:shadow-xl transition-all relative overflow-hidden`}>
-                        {col.discountType !== 'none' && (
-                            <div className="absolute top-0 right-0 bg-emerald-500 text-white px-6 py-2 font-black text-[10px] uppercase tracking-widest rounded-bl-2xl">
-                                {col.discountType === 'percentage' ? `${col.discountValue}% OFF` : `$${col.discountValue} OFF`}
-                            </div>
-                        )}
-                        <div className="flex justify-between items-start mb-4">
-                            <div className={`${col.isFeatured ? 'bg-primary text-white' : 'bg-gray-50 text-gray-400'} w-16 h-16 rounded-2xl flex items-center justify-center text-3xl transition-colors`}>
-                                {col.isFeatured ? '🔥' : '🏷️'}
-                            </div>
-                            <div className="flex gap-2">
-                                <button onClick={() => setEditingCollection(col)} className="p-2 hover:bg-blue-50 text-blue-500 rounded-xl transition-colors">✏️</button>
-                                <button onClick={() => handleDelete(col.id)} className="p-2 hover:bg-red-50 text-red-500 rounded-xl transition-colors">🗑️</button>
-                            </div>
-                        </div>
-                        <h3 className="text-xl font-black text-gray-900 mb-2">{col.name}</h3>
-                        <p className="text-gray-400 text-sm font-medium line-clamp-2 mb-4">{col.description || 'Sin descripción'}</p>
-
-                        <div className="flex flex-wrap gap-2 mb-6">
-                            <span className="px-3 py-1 bg-gray-100 rounded-full text-[10px] font-black uppercase text-gray-500">
-                                {col.productIds?.length || 0} Productos
-                            </span>
-                            {col.isFeatured && (
-                                <span className="px-3 py-1 bg-primary/20 rounded-full text-[10px] font-black uppercase text-primary">
-                                    Destacado
-                                </span>
+                {initialCollections.map(col => {
+                    const holidayInfo = HOLIDAYS.find(h => h.id === col.holiday);
+                    return (
+                        <div key={col.id} className={`${col.isFeatured ? 'ring-4 ring-primary/20 bg-primary/5' : 'bg-white'} p-8 rounded-[2.5rem] shadow-sm border border-gray-100 group hover:shadow-xl transition-all relative overflow-hidden`}>
+                            {col.discountType !== 'none' && (
+                                <div className="absolute top-0 right-0 bg-emerald-500 text-white px-6 py-2 font-black text-[10px] uppercase tracking-widest rounded-bl-2xl">
+                                    {col.discountType === 'percentage' ? `${col.discountValue}% OFF` : `$${col.discountValue} OFF`}
+                                </div>
                             )}
-                        </div>
+                            {holidayInfo && (
+                                <div className="absolute top-0 left-0 bg-gradient-to-r text-white px-6 py-2 font-black text-[10px] uppercase tracking-widest rounded-br-2xl" style={{ backgroundImage: `linear-gradient(to right, ${holidayInfo.colors.primary}, ${holidayInfo.colors.secondary})` }}>
+                                    {holidayInfo.icon} {holidayInfo.label}
+                                </div>
+                            )}
+                            <div className="flex justify-between items-start mb-4 mt-8">
+                                <div className={`${col.isFeatured ? 'bg-primary text-white' : 'bg-gray-50 text-gray-400'} w-16 h-16 rounded-2xl flex items-center justify-center text-3xl transition-colors`}>
+                                    {col.isFeatured ? '🔥' : '🏷️'}
+                                </div>
+                                <div className="flex gap-2">
+                                    <button onClick={() => setEditingCollection(col)} className="p-2 hover:bg-blue-50 text-blue-500 rounded-xl transition-colors">✏️</button>
+                                    <button onClick={() => handleDelete(col.id)} className="p-2 hover:bg-red-50 text-red-500 rounded-xl transition-colors">🗑️</button>
+                                </div>
+                            </div>
+                            <h3 className="text-xl font-black text-gray-900 mb-2">{col.name}</h3>
+                            <p className="text-gray-400 text-sm font-medium line-clamp-2 mb-4">{col.description || 'Sin descripción'}</p>
 
-                        <div className="text-[10px] font-black uppercase tracking-widest text-gray-300">Slug: {col.slug}</div>
-                    </div>
-                ))}
+                            <div className="flex flex-wrap gap-2 mb-6">
+                                <span className="px-3 py-1 bg-gray-100 rounded-full text-[10px] font-black uppercase text-gray-500">
+                                    {col.productIds?.length || 0} Productos
+                                </span>
+                                {col.isFeatured && (
+                                    <span className="px-3 py-1 bg-primary/20 rounded-full text-[10px] font-black uppercase text-primary">
+                                        Destacado
+                                    </span>
+                                )}
+                            </div>
+
+                            <div className="text-[10px] font-black uppercase tracking-widest text-gray-300">Slug: {col.slug}</div>
+                        </div>
+                    );
+                })}
             </div>
 
             {/* Create & Edit Modals (Unified UI logic) */}
@@ -171,6 +181,27 @@ export default function CollectionsClient({ initialCollections, initialProducts 
 
                                 <div className="bg-gray-50 p-8 rounded-[2.5rem] space-y-4">
                                     <h3 className="text-[10px] font-black uppercase tracking-widest text-primary mb-2">Promoción y Visibilidad</h3>
+
+                                    {/* Holiday Selector */}
+                                    <div>
+                                        <label className="block text-[10px] font-black uppercase tracking-widest text-purple-600 mb-2">🎈 Asignar Festividad / Evento</label>
+                                        <select
+                                            value={isCreating ? (newCollection.holiday || 'none') : (editingCollection?.holiday || 'none')}
+                                            onChange={e => isCreating ? setNewCollection({ ...newCollection, holiday: e.target.value }) : setEditingCollection({ ...editingCollection!, holiday: e.target.value })}
+                                            className="w-full bg-purple-50 border-2 border-purple-100 rounded-2xl p-4 font-bold shadow-sm text-sm text-purple-900 focus:outline-none focus:ring-2 focus:ring-purple-200"
+                                        >
+                                            <option value="none">Ninguna (Estándar)</option>
+                                            {HOLIDAYS.map(h => (
+                                                <option key={h.id} value={h.id}>
+                                                    {h.icon} {h.label} ({h.startDay}/{h.startMonth + 1})
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <p className="text-[10px] text-gray-400 mt-2 font-medium">
+                                            Si asignás un evento, esta colección tendrá un diseño especial durante las fechas correspondientes.
+                                        </p>
+                                    </div>
+
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
                                             <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Tipo de Descuento</label>
