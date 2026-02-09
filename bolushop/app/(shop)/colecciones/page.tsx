@@ -11,6 +11,8 @@ export const metadata: Metadata = {
     description: "Explorá nuestras colecciones temáticas curadas especialmente para cada ocasión.",
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function CollectionsPage() {
     const collections = await getAllCollections();
     const allProducts = await getAllProducts();
