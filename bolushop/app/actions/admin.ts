@@ -262,6 +262,8 @@ export async function createCollectionAction(collection: Omit<Collection, 'id'>)
     const result = await saveCollections(collections);
     if (!result.success) return { success: false, error: result.error || "Error al guardar colección" };
     revalidatePath("/admin/collections");
+    revalidatePath("/colecciones");
+    revalidatePath("/");
     return { success: true, collection: newCollection };
 }
 
@@ -269,6 +271,8 @@ export async function deleteCollectionAction(id: string) {
     const success = await deleteCollection(id);
     if (!success) return { success: false, error: "Error al borrar colección" };
     revalidatePath("/admin/collections");
+    revalidatePath("/colecciones");
+    revalidatePath("/");
     return { success: true };
 }
 
@@ -281,6 +285,9 @@ export async function updateCollectionAction(updatedCollection: Collection) {
         const result = await saveCollections(collections);
         if (!result.success) return { success: false, error: result.error || "Error al actualizar colección" };
         revalidatePath("/admin/collections");
+        revalidatePath("/colecciones");
+        revalidatePath("/");
+        revalidatePath(`/coleccion/${updatedCollection.slug}`);
         return { success: true };
     }
     return { success: false, error: "Colección no encontrada" };
