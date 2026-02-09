@@ -1,4 +1,4 @@
-import { getAllProducts } from "@/lib/db";
+import { getAllProducts, getProductReviews } from "@/lib/db";
 import { getRelatedProducts } from "@/app/actions/shop";
 import { notFound } from "next/navigation";
 import ProductDetailClient from "./ProductDetailClient";
@@ -84,6 +84,7 @@ export default async function ProductPage({ params }: Props) {
     }
 
     const relatedProducts = await getRelatedProducts(product.id, product.category);
+    const reviews = await getProductReviews(product.id);
 
-    return <ProductDetailClient product={product} relatedProducts={relatedProducts} />;
+    return <ProductDetailClient product={product} relatedProducts={relatedProducts} reviews={reviews} />;
 }
