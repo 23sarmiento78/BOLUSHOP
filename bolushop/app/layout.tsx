@@ -121,6 +121,12 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://www.mercadopago.com" />
         <link rel="preconnect" href="https://www.mercadolivre.com" />
         <link rel="preconnect" href="https://www.mercadolibre.com" />
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5416044136120955"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${outfit.className} antialiased flex flex-col min-h-screen bg-sand-white`}
@@ -140,12 +146,6 @@ export default async function RootLayout({
         <WhatsAppButton />
         <Toaster position="top-center" richColors />
 
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5416044136120955"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
         <Script
           src="https://www.mercadopago.com/v2/security.js"
           strategy="lazyOnload"
