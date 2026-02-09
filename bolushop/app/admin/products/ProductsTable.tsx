@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Product, Category } from "@/lib/types";
+import { transformImageUrl } from "@/lib/images";
 import { deleteProductAction, updateProductAction, deleteAllProductsAction, deleteMultipleProductsAction, createProductAction, bulkUpdatePricesAction, bulkResetPricesAction, uploadImageAction, getCategoriesAction, bulkUpdateCategoriesAction } from "@/app/actions/admin";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -318,7 +319,7 @@ export default function ProductsTable({ initialProducts }: Props) {
                                 />
                                 <div className="w-16 h-16 rounded-xl bg-gray-50 border border-gray-100 overflow-hidden flex-shrink-0">
                                     {product.image ? (
-                                        <img src={product.image} alt="" className="w-full h-full object-cover" />
+                                        <img src={transformImageUrl(product.image)} alt="" className="w-full h-full object-cover" />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-xl opacity-30">📦</div>
                                     )}
@@ -391,7 +392,7 @@ export default function ProductsTable({ initialProducts }: Props) {
                                     <div className="flex items-center gap-3">
                                         <div className="w-10 h-10 rounded-lg bg-gray-50 border border-gray-100 overflow-hidden flex-shrink-0">
                                             {product.image ? (
-                                                <img src={product.image} alt="" className="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                                                <img src={transformImageUrl(product.image)} alt="" className="w-full h-full object-cover transition-transform group-hover:scale-105" />
                                             ) : (
                                                 <div className="w-full h-full flex items-center justify-center text-xs opacity-20">📦</div>
                                             )}
@@ -595,7 +596,7 @@ function ProductFormModal({ title, product, setProduct, onClose, onSubmit, isSav
                         <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 px-1">Imagen Principal</label>
                         <div className="w-full aspect-square bg-white rounded-2xl shadow-inner overflow-hidden border border-gray-200 mb-3 group relative">
                             {product.image ? (
-                                <img src={product.image} alt="Preview" className="w-full h-full object-contain" />
+                                <img src={transformImageUrl(product.image)} alt="Preview" className="w-full h-full object-contain" />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center text-4xl opacity-10">🖼️</div>
                             )}
@@ -638,7 +639,7 @@ function ProductFormModal({ title, product, setProduct, onClose, onSubmit, isSav
                         <div className="grid grid-cols-3 gap-2 mb-4">
                             {product.images?.map((img: string, idx: number) => (
                                 <div key={idx} className="relative aspect-square bg-white rounded-xl border border-gray-200 overflow-hidden group">
-                                    <img src={img} alt={`Gallery ${idx}`} className="w-full h-full object-cover" />
+                                    <img src={transformImageUrl(img)} alt={`Gallery ${idx}`} className="w-full h-full object-cover" />
                                     <button
                                         type="button"
                                         onClick={() => {

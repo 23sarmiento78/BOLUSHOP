@@ -5,6 +5,7 @@ import { Collection, Product } from "@/lib/types";
 import { createCollectionAction, deleteCollectionAction, updateCollectionAction } from "@/app/actions/admin";
 import { useRouter } from "next/navigation";
 import { HOLIDAYS } from "@/lib/holidays"; // Import new holidays config
+import { transformImageUrl } from "@/lib/images";
 
 interface Props {
     initialCollections: Collection[];
@@ -259,7 +260,7 @@ export default function CollectionsClient({ initialCollections, initialProducts 
                                                 onClick={() => toggleProductInCollection(product.id, !!editingCollection)}
                                                 className={`flex items-center gap-4 p-3 rounded-2xl cursor-pointer transition-all ${isSelected ? 'bg-primary text-white shadow-lg' : 'bg-white hover:bg-gray-100'}`}
                                             >
-                                                <img src={product.image} className="w-10 h-10 rounded-lg object-cover" />
+                                                <img src={transformImageUrl(product.image)} className="w-10 h-10 rounded-lg object-cover" />
                                                 <div className="flex-1 min-w-0">
                                                     <p className={`text-xs font-black truncate ${isSelected ? 'text-white' : 'text-gray-900'}`}>{product.name}</p>
                                                     <p className={`text-[10px] font-bold ${isSelected ? 'text-white/70' : 'text-gray-400'}`}>{product.category}</p>

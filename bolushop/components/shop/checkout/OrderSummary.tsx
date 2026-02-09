@@ -2,6 +2,7 @@
 
 import { CartItem } from "@/lib/cart";
 import Image from "next/image";
+import { transformImageUrl } from "@/lib/images";
 import { useHolidayTheme } from "@/lib/hooks/useHolidayTheme";
 
 interface OrderSummaryProps {
@@ -24,7 +25,7 @@ export default function OrderSummary({ items, subtotal, shippingCost, total }: O
                     <div key={item.productId} className="flex gap-4 pb-4 border-b border-gray-50">
                         <div className="relative w-16 h-16 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0">
                             <Image
-                                src={item.image}
+                                src={transformImageUrl(item.image)}
                                 alt={item.name}
                                 fill
                                 className="object-contain p-2"

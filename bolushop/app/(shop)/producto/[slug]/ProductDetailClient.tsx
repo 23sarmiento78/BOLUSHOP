@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { transformImageUrl } from "@/lib/images";
 import Header from "@/components/shop/Header";
 import Footer from "@/components/shop/Footer";
 import ProductCard from "@/components/shop/ProductCard";
@@ -125,7 +126,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
                                             onMouseEnter={() => setActiveImage(product.image)}
                                             className={`relative w-[70px] h-[70px] rounded-xl overflow-hidden border-2 transition-all ${activeImage === product.image ? 'border-primary ring-2 ring-primary/20' : 'border-transparent hover:border-gray-200'}`}
                                         >
-                                            <Image src={product.image} alt="Main" fill className="object-cover" />
+                                            <Image src={transformImageUrl(product.image)} alt="Main" fill className="object-cover" />
                                         </button>
                                         {product.images.map((img, idx) => (
                                             <button
@@ -133,7 +134,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
                                                 onMouseEnter={() => setActiveImage(img)}
                                                 className={`relative w-[70px] h-[70px] rounded-xl overflow-hidden border-2 transition-all ${activeImage === img ? 'border-primary ring-2 ring-primary/20' : 'border-transparent hover:border-gray-200'}`}
                                             >
-                                                <Image src={img} alt={`View ${idx}`} fill className="object-cover" />
+                                                <Image src={transformImageUrl(img)} alt={`View ${idx}`} fill className="object-cover" />
                                             </button>
                                         ))}
                                     </div>
@@ -143,7 +144,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
                                 <div className="flex-grow">
                                     <div className="relative aspect-square md:aspect-[4/3] rounded-[2rem] overflow-hidden bg-white hover:bg-gray-50/50 transition-colors cursor-zoom-in">
                                         <Image
-                                            src={activeImage}
+                                            src={transformImageUrl(activeImage)}
                                             alt={product.name}
                                             fill
                                             className="object-contain p-2 hover:scale-110 transition-transform duration-500"
@@ -159,7 +160,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
                                                 onClick={() => setActiveImage(product.image)}
                                                 className={`flex-shrink-0 relative w-16 h-16 rounded-xl overflow-hidden border-2 transition-all ${activeImage === product.image ? 'border-primary' : 'border-transparent bg-gray-50'}`}
                                             >
-                                                <Image src={product.image} alt="Main" fill className="object-cover" />
+                                                <Image src={transformImageUrl(product.image)} alt="Main" fill className="object-cover" />
                                             </button>
                                             {product.images.map((img, idx) => (
                                                 <button
@@ -167,7 +168,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
                                                     onClick={() => setActiveImage(img)}
                                                     className={`flex-shrink-0 relative w-16 h-16 rounded-xl overflow-hidden border-2 transition-all ${activeImage === img ? 'border-primary' : 'border-transparent bg-gray-50'}`}
                                                 >
-                                                    <Image src={img} alt={`View ${idx}`} fill className="object-cover" />
+                                                    <Image src={transformImageUrl(img)} alt={`View ${idx}`} fill className="object-cover" />
                                                 </button>
                                             ))}
                                         </div>

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/lib/types";
+import { transformImageUrl } from "@/lib/images";
 import { addToCart } from "@/lib/cart";
 import { toggleWishlist, isInWishlist } from "@/lib/wishlist";
 import { useState, useEffect } from "react";
@@ -63,7 +64,7 @@ export default function ProductCard({ product, holidayBadge = false }: Props) {
             {/* Image (Squared) */}
             <div className="relative aspect-square border-b border-gray-50 overflow-hidden bg-white p-4">
                 <Image
-                    src={product.image || "/placeholder.png"}
+                    src={transformImageUrl(product.image || "/placeholder.png")}
                     alt={product.name}
                     fill
                     className="object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
