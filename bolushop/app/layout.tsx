@@ -141,6 +141,12 @@ export default async function RootLayout({
         <Toaster position="top-center" richColors />
 
         <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5416044136120955"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+        <Script
           src="https://www.mercadopago.com/v2/security.js"
           strategy="lazyOnload"
           {...({ view: "checkout" } as any)}
