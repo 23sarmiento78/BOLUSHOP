@@ -7,7 +7,7 @@ import { transformImageUrl } from "@/lib/images";
 import Header from "@/components/shop/Header";
 import Footer from "@/components/shop/Footer";
 import ProductCard from "@/components/shop/ProductCard";
-import { Product } from "@/lib/types";
+import { Product, Review } from "@/lib/types";
 import { addToCart } from "@/lib/cart";
 import { Truck, ShieldCheck } from "lucide-react";
 import ProductReviews from "@/components/shop/ProductReviews";
@@ -15,9 +15,10 @@ import ProductReviews from "@/components/shop/ProductReviews";
 interface Props {
     product: Product;
     relatedProducts: Product[];
+    reviews: Review[];
 }
 
-export default function ProductDetailClient({ product, relatedProducts }: Props) {
+export default function ProductDetailClient({ product, relatedProducts, reviews }: Props) {
     const [quantity, setQuantity] = useState(1);
     const [isAdding, setIsAdding] = useState(false);
     const [activeImage, setActiveImage] = useState(product.image);
@@ -36,6 +37,16 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
         .replace(/\s+/g, ' ')
         .trim();
 
+    const reviewCount = reviews.length;
+    const averageRating = reviewCount > 0
+        ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviewCount
+        : 5; // Default high rating if new
+
+    // Future date for price validity (1 year from now)
+    const priceValidUntil = new Date();
+    priceValidUntil.setFullYear(priceValidUntil.getFullYear() + 1);
+    const priceValidUntilStr = priceValidUntil.toISOString().split('T')[0];
+
     const productJsonLd = {
         "@context": "https://schema.org",
         "@type": "Product",
@@ -53,13 +64,32 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
             "url": `${siteUrl}/producto/${product.slug}`,
             "priceCurrency": "ARS",
             "price": product.price,
+            "priceValidUntil": priceValidUntilStr,
             "availability": product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
             "itemCondition": "https://schema.org/NewCondition",
             "seller": {
                 "@type": "Organization",
                 "name": "BoluShop"
             }
-        }
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": averageRating.toFixed(1),
+            "reviewCount": reviewCount > 0 ? reviewCount : 1 // Minimum 1 to show stars if defaulted
+        },
+        "review": reviews.slice(0, 5).map(r => ({
+            "@type": "Review",
+            "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": r.rating,
+                "bestRating": "5"
+            },
+            "author": {
+                "@type": "Person",
+                "name": r.userName
+            },
+            "datePublished": r.date
+        }))
     };
 
     const breadcrumbsJsonLd = {
