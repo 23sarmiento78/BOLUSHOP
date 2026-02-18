@@ -14,54 +14,44 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const product = products.find(p => p.slug === slug);
 
     if (!product) {
-        return {
-            title: "Producto no encontrado | BoluShop",
-        };
+        return { title: "Producto no encontrado | BoluShop" };
     }
 
-    // Limpiar HTML de la descripción para los meta tags
-    const cleanDescription = product.description
-        .replace(/<[^>]*>?/gm, '') // Eliminar tags HTML
-        .replace(/\s+/g, ' ')      // Normalizar espacios
-        .trim();
+    // Dynamic keyword extraction from product content
+    const nameKeywords = product.name.split(' ').filter(w => w.length > 3);
+    const categoryKeyword = product.category || 'Regalos';
+    const cleanDesc = product.description.replace(/<[^>]*>?/gm, '').trim();
 
-    const seoDescription = cleanDescription.length > 160
-        ? `${cleanDescription.slice(0, 157)}...`
-        : cleanDescription;
+    // Automated keywords for national positioning
+    const dynamicKeywords = [
+        ...nameKeywords,
+        categoryKeyword,
+        `comprar ${product.name} argentina`,
+        `precio ${product.name}`,
+        'envio gratis argentina',
+        'regalos originales bolushop'
+    ].join(', ').toLowerCase();
 
+    const seoDescription = cleanDesc.slice(0, 155) + (cleanDesc.length > 155 ? '...' : '');
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
-    const productUrl = `${siteUrl}/producto/${product.slug}`;
-
-    // Extraer keywords de las características y nombre
-    const featureKeywords = product.features?.slice(0, 5).join(', ') || '';
-    const keywords = `${product.name}, ${product.category}, comprar ${product.name}, precio ${product.name}, bolushop argentina, ${featureKeywords}`.toLowerCase();
 
     return {
-        title: `${product.name} | ${product.category} | BoluShop`,
+        title: `Comprar ${product.name} | ${categoryKeyword} | BoluShop Argentina`,
         description: seoDescription,
-        keywords: keywords,
-        alternates: {
-            canonical: productUrl,
-        },
+        keywords: dynamicKeywords,
         openGraph: {
-            type: 'website',
-            url: productUrl,
-            title: `Comprar ${product.name} en BoluShop Argentina`,
+            title: `Oferta: ${product.name} - Envió Gratis en Argentina`,
             description: seoDescription,
-            images: [{
-                url: product.image,
-                width: 1200,
-                height: 630,
-                alt: product.name,
-            }],
-            siteName: 'BoluShop',
+            url: `${siteUrl}/producto/${product.slug}`,
+            images: [{ url: product.image, alt: product.name }],
+            type: 'article',
         },
         twitter: {
             card: 'summary_large_image',
             title: product.name,
             description: seoDescription,
             images: [product.image],
-        },
+        }
     };
 }
 
@@ -85,6 +75,36 @@ export default async function ProductPage({ params }: Props) {
 
     const relatedProducts = await getRelatedProducts(product.id, product.category);
     const reviews = await getProductReviews(product.id);
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
 
-    return <ProductDetailClient product={product} relatedProducts={relatedProducts} reviews={reviews} />;
+    // JSON-LD for Search Engines
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": product.name,
+        "image": product.image,
+        "description": product.description.replace(/<[^>]*>?/gm, '').slice(0, 160),
+        "brand": {
+            "@type": "Brand",
+            "name": "BoluShop"
+        },
+        "offers": {
+            "@type": "Offer",
+            "url": `${siteUrl}/producto/${product.slug}`,
+            "priceCurrency": "ARS",
+            "price": product.price,
+            "availability": product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+            "itemCondition": "https://schema.org/NewCondition"
+        }
+    };
+
+    return (
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+            <ProductDetailClient product={product} relatedProducts={relatedProducts} reviews={reviews} />
+        </>
+    );
 }

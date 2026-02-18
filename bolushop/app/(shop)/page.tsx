@@ -11,9 +11,9 @@ import { getCurrentHoliday } from "@/lib/holidays";
 import HolidayCountdown from "@/components/shop/HolidayCountdown";
 
 export const metadata: Metadata = {
-    title: "BoluShop | Tienda de Regalos, Gadgets y Cosas Originales",
-    description: "Encontrá los mejores regalos en BoluShop. Tecnología, gadgets y productos curiosos con envío gratis a todo el país y cuotas sin interés.",
-    keywords: "tienda de regalos argentina, regalos originales, gadgets tecnologicos"
+    title: "Regalos Originales Argentina | BoluShop: Tecnología y Bazar Online",
+    description: "La tienda #1 de regalos originales en Argentina. Encontrá los mejores gadgets tecnológicos, artículos de bazar premium y curiosidades con envío gratis y cuotas.",
+    keywords: "regalos originales argentina, tienda de regalos online, gadgets tecnológicos, bazar premium argentina, comprar regalos curiosos"
 };
 
 export default async function HomePage() {
@@ -75,9 +75,9 @@ export default async function HomePage() {
                                     </>
                                 ) : (
                                     <>
-                                        Exclusividad <br />
+                                        Regalos Originales <br />
                                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ffe600] to-yellow-200">
-                                            Al Alcance de Todos
+                                            & Tecnología en Argentina
                                         </span>
                                     </>
                                 )}
@@ -125,7 +125,7 @@ export default async function HomePage() {
                                 {holiday ? (
                                     <>Especial <span style={{ color: holiday.colors.primary }}>{holiday.label} {holiday.icon}</span></>
                                 ) : (
-                                    <>Colecciones <span className="italic text-primary">Curadas</span></>
+                                    <>Colecciones de <span className="italic text-primary">Regalos Originales</span></>
                                 )}
                             </h2>
                             <p className="text-gray-500 text-lg max-w-2xl mx-auto">
@@ -214,7 +214,7 @@ export default async function HomePage() {
                                         <span className="flex items-center gap-3">
                                             {holiday.icon} Picks de {holiday.label}
                                         </span>
-                                    ) : "Curaduría Semanal"}
+                                    ) : "Tendencias en Tecnología y Regalos"}
                                 </h2>
                                 <p className="text-gray-500 font-medium">Los productos más buscados de la semana.</p>
                             </div>
