@@ -19,11 +19,6 @@ export default function HolidayCountdown({ holiday }: CountdownProps) {
             // Target date is the END day of the holiday (e.g., Feb 15 for Valentine's)
             const targetDate = new Date(currentYear, holiday.endMonth, holiday.endDay, 23, 59, 59);
 
-            // If target date has passed this year, use next year
-            if (targetDate < now) {
-                targetDate.setFullYear(currentYear + 1);
-            }
-
             const difference = targetDate.getTime() - now.getTime();
 
             if (difference > 0) {
