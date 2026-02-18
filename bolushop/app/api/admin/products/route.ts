@@ -54,10 +54,17 @@ export async function POST(req: NextRequest) {
                 name: p.name || 'Sin Nombre',
                 slug: p.slug || uuidv4(),
                 price: Number(p.price) || 0,
+                cost: Number(p.cost) || 0,
                 image: p.image || '/icon.png',
                 category: p.category || 'otros',
                 description: p.description || '',
-                features: []
+                features: p.features || [],
+                isInternational: p.isInternational || false,
+                cjSku: p.cjSku || null,
+                usdPrice: p.usdPrice || 0,
+                shippingUsd: p.shippingUsd || 0,
+                isActive: p.isActive ?? true,
+                createdAt: p.createdAt || new Date().toISOString()
             }));
         }
 

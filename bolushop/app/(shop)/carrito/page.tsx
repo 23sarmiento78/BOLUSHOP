@@ -230,6 +230,18 @@ export default function CarritoPage() {
                                     </div>
                                 )}
 
+                                {cart.some(item => item.isInternational) && (
+                                    <div className="bg-blue-50 rounded-2xl p-5 mb-8 border border-blue-100/50 flex items-start gap-4">
+                                        <span className="text-2xl mt-1">🌎</span>
+                                        <div className="space-y-1">
+                                            <p className="text-xs text-blue-900 font-black uppercase tracking-widest">Aviso Importante</p>
+                                            <p className="text-[11px] text-blue-800 font-medium leading-relaxed">
+                                                Tu carrito contiene productos de <span className="font-black italic">Importación Directa</span>. Tené en cuenta que estos artículos pueden estar sujetos a normativas aduaneras y costos fronterizos adicionales al momento de ingresar al país.
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
+
                                 <Link
                                     href={subtotal < minPurchase ? "#" : "/checkout"}
                                     className={`block w-full py-4 text-white text-center rounded-2xl font-bold text-xs uppercase tracking-widest transition-all shadow-lg ${subtotal < minPurchase

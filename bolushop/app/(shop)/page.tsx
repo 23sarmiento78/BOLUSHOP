@@ -21,7 +21,8 @@ export default async function HomePage() {
     const collections = await getAllCollections();
     const holiday = getCurrentHoliday();
 
-    const featuredProducts = allProducts.filter(p => p.isActive !== false && p.price > 0).slice(0, 8);
+    const featuredProducts = allProducts.filter(p => !p.isInternational && p.isActive !== false && p.price > 0).slice(0, 8);
+    const internationalProducts = allProducts.filter(p => p.isActive !== false && p.isInternational === true).slice(0, 4);
 
     return (
         <>
@@ -238,6 +239,41 @@ export default async function HomePage() {
                         </div>
                     </div>
                 </section>
+
+                {/* INTERNATIONAL PRODUCTS PREVIEW */}
+                {internationalProducts.length > 0 && (
+                    <section className="relative z-10 py-24 bg-white overflow-hidden">
+                        <div className="container mx-auto px-6">
+                            <div className="flex flex-col md:flex-row items-center gap-16">
+                                <div className="w-full md:w-1/3">
+                                    <span className="inline-block px-4 py-2 bg-blue-100 text-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest mb-6">
+                                        🌎 Mercado Global
+                                    </span>
+                                    <h2 className="text-4xl md:text-6xl font-black text-gray-900 mb-6 leading-tight">
+                                        Compra <br />
+                                        <span className="text-blue-600 italic">Internacional</span>
+                                    </h2>
+                                    <p className="text-gray-500 text-lg mb-8 font-medium">
+                                        Importamos los productos más exclusivos de CJ Dropshipping directamente para vos. Sin trámites, sin vueltas, recibilo en tu casa.
+                                    </p>
+                                    <Link href="/internacional" className="inline-flex items-center gap-4 bg-gray-900 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-600 transition-all">
+                                        Ver Importaciones
+                                        <span>→</span>
+                                    </Link>
+                                </div>
+                                <div className="w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-6 relative">
+                                    {internationalProducts.slice(0, 2).map((product, idx) => (
+                                        <div key={product.id} className={idx === 1 ? 'md:mt-12' : ''}>
+                                            <ProductCard product={product} />
+                                        </div>
+                                    ))}
+                                    {/* Abstract decoration */}
+                                    <div className="absolute -top-12 -right-12 w-64 h-64 bg-blue-50 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-pulse"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                )}
 
                 {/* NEWSLETTER SECTION */}
                 <section className="relative z-10 container mx-auto px-4 py-16">

@@ -8,6 +8,7 @@ export interface CartItem {
     image: string;
     slug: string;
     isCollection?: boolean;
+    isInternational?: boolean;
 }
 
 const CART_KEY = 'bolushop_cart';
@@ -37,7 +38,8 @@ export function addToCart(product: Product, quantity: number = 1): void {
             price: product.price,
             quantity,
             image: product.image,
-            slug: product.slug
+            slug: product.slug,
+            isInternational: product.isInternational
         });
     }
 
