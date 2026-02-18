@@ -166,7 +166,11 @@ export async function getAllProducts(): Promise<Product[]> {
                 stock: p.stock,
                 collections: p.collections || [],
                 createdAt: p.created_at,
-                isActive: p.is_active ?? true
+                isActive: p.is_active ?? true,
+                isInternational: p.is_international ?? false,
+                cjSku: p.cj_sku,
+                usdPrice: p.usd_price,
+                shippingUsd: p.shipping_usd
             }));
 
             // Merge: Supabase takes precedence
@@ -202,7 +206,11 @@ export async function saveProducts(products: Product[]): Promise<{ success: bool
             stock: p.stock,
             collections: p.collections,
             created_at: p.createdAt,
-            is_active: p.isActive ?? true
+            is_active: p.isActive ?? true,
+            is_international: p.isInternational || false,
+            cj_sku: p.cjSku || null,
+            usd_price: p.usdPrice || 0,
+            shipping_usd: p.shippingUsd || 0
         }));
 
         const { error } = await supabase.from('products').upsert(toUpsert, { onConflict: 'id' });

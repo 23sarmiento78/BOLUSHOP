@@ -35,6 +35,10 @@ export interface Product {
     collections?: string[];
     createdAt: string;
     isActive?: boolean;
+    isInternational?: boolean; // CJ Dropshipping support
+    cjSku?: string;
+    usdPrice?: number;
+    shippingUsd?: number;
 }
 
 export interface Order {

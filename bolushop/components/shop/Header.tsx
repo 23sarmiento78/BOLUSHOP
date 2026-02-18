@@ -14,6 +14,7 @@ export default function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [holiday, setHoliday] = useState<HolidayConfig | null>(null);
+    const [hasInternational, setHasInternational] = useState(false);
 
     const router = useRouter();
     const pathname = usePathname();
@@ -22,6 +23,15 @@ export default function Header() {
     useEffect(() => {
         // Load holiday client-side to avoid hydration mismatch
         setHoliday(getCurrentHoliday());
+
+        // Check for international products
+        fetch('/api/products')
+            .then(res => res.json())
+            .then(products => {
+                const international = products.some((p: any) => p.isInternational && p.isActive !== false);
+                setHasInternational(international);
+            })
+            .catch(() => setHasInternational(false));
 
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 20);
@@ -71,14 +81,14 @@ export default function Header() {
             {/* Floating Island Header */}
             <header
                 className={`fixed left-0 right-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] flex justify-center ${isScrolled
-                        ? "top-4 px-4"
-                        : "top-12 px-6"
+                    ? "top-4 px-4"
+                    : "top-12 px-6"
                     }`}
             >
                 <div
                     className={`relative w-full max-w-7xl rounded-[2rem] transition-all duration-500 flex items-center justify-between px-6 md:px-8 ${isScrolled || !isHome
-                            ? "bg-white/80 backdrop-blur-xl shadow-2xl shadow-black/5 py-3 border border-white/40"
-                            : "bg-transparent py-4 border border-transparent"
+                        ? "bg-white/80 backdrop-blur-xl shadow-2xl shadow-black/5 py-3 border border-white/40"
+                        : "bg-transparent py-4 border border-transparent"
                         }`}
                     style={isScrolled && holiday ? { borderColor: holiday.colors.secondary, boxShadow: `0 10px 40px -10px ${holiday.colors.secondary}40` } : {}}
                 >
@@ -104,13 +114,14 @@ export default function Header() {
                             { label: 'Inicio', href: '/' },
                             { label: 'Colecciones', href: '/colecciones' },
                             { label: 'Productos', href: '/productos' },
+                            ...(hasInternational ? [{ label: 'Compra Internacional', href: '/internacional' }] : []),
                         ].map(link => (
                             <Link
                                 key={link.href}
                                 href={link.href}
                                 className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${pathname === link.href
-                                        ? 'bg-white text-black shadow-lg'
-                                        : (isScrolled || !isHome ? 'text-gray-600 hover:text-black hover:bg-white/50' : 'text-white/80 hover:text-white hover:bg-white/10')
+                                    ? 'bg-white text-black shadow-lg'
+                                    : (isScrolled || !isHome ? 'text-gray-600 hover:text-black hover:bg-white/50' : 'text-white/80 hover:text-white hover:bg-white/10')
                                     }`}
                             >
                                 {link.label}
@@ -124,8 +135,8 @@ export default function Header() {
                         <button
                             onClick={() => setIsMobileMenuOpen(true)} // Open menu to search for now, could be a modal
                             className={`p-2.5 rounded-full transition-all ${isScrolled || !isHome
-                                    ? 'bg-gray-100 hover:bg-gray-200 text-gray-800'
-                                    : 'bg-white/10 hover:bg-white/20 text-white'
+                                ? 'bg-gray-100 hover:bg-gray-200 text-gray-800'
+                                : 'bg-white/10 hover:bg-white/20 text-white'
                                 }`}
                         >
                             <Search size={18} />
@@ -134,8 +145,8 @@ export default function Header() {
                         <Link
                             href="/carrito"
                             className={`relative p-2.5 rounded-full transition-all group ${isScrolled || !isHome
-                                    ? 'bg-black text-white hover:bg-gray-800' // Always dark button for contrast
-                                    : 'bg-white text-black hover:bg-gray-100' // Always light button on dark bg
+                                ? 'bg-black text-white hover:bg-gray-800' // Always dark button for contrast
+                                : 'bg-white text-black hover:bg-gray-100' // Always light button on dark bg
                                 }`}
                             style={cartCount > 0 && holiday ? { backgroundColor: holiday.colors.primary, color: 'white' } : {}}
                         >
@@ -188,6 +199,7 @@ export default function Header() {
                                 { label: 'Inicio', href: '/', icon: '🏠' },
                                 { label: 'Colecciones VIP', href: '/colecciones', icon: themeIcon },
                                 { label: 'Todos los Productos', href: '/productos', icon: '📦' },
+                                ...(hasInternational ? [{ label: 'Compra Internacional', href: '/internacional', icon: '🌎' }] : []),
                                 { label: 'Seguir mi Pedido', href: '/rastreo', icon: '🚚' },
                             ].map((item, i) => (
                                 <Link
