@@ -1,7 +1,5 @@
 import { getAllProducts, getAllCategories, getAllCollections } from "@/lib/db";
 import Header from "@/components/shop/Header";
-
-export const dynamic = 'force-dynamic';
 import Footer from "@/components/shop/Footer";
 import ProductCard from "@/components/shop/ProductCard";
 import TrustBadge from "@/components/shop/TrustBadge";

@@ -210,26 +210,8 @@ export const HOLIDAYS: HolidayConfig[] = [
 ];
 
 export function getCurrentHoliday(): HolidayConfig | null {
-    const now = new Date();
-    // Use Argentina time (UTC-3) for consistent holiday switching
-    // This is a simple way to adjust for the user's primary market
-    const arDate = new Date(now.getTime() - (3 * 60 * 60 * 1000));
-    const month = arDate.getUTCMonth();
-    const day = arDate.getUTCDate();
-
-    return HOLIDAYS.find(h => {
-        const start = h.startMonth * 100 + h.startDay;
-        const end = h.endMonth * 100 + h.endDay;
-        const current = month * 100 + day;
-
-        if (start <= end) {
-            // Normal holiday (e.g. Feb 1 to Feb 15)
-            return current >= start && current <= end;
-        } else {
-            // Spanning holiday (e.g. Dec 26 to Jan 6)
-            return current >= start || current <= end;
-        }
-    }) || null;
+    // Holiday system disabled to keep original design
+    return null;
 }
 
 export function getHolidayById(id: string): HolidayConfig | undefined {
