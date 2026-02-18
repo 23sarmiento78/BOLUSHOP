@@ -12,7 +12,7 @@ export default function Logo({ className = "", size = 40, variant = 'full' }: Lo
         <div className={`flex items-center gap-3 ${className}`}>
             <Image
                 src="/icon.png"
-                alt="BoluShop Logo"
+                alt="BoluShop: Regalos Originales y Tecnología"
                 width={size}
                 height={size}
                 className="shadow-lg shadow-primary/20 transition-transform group-hover:rotate-6 rounded-xl"
@@ -21,10 +21,10 @@ export default function Logo({ className = "", size = 40, variant = 'full' }: Lo
             {variant === 'full' && (
                 <div className="flex flex-col -gap-1">
                     <span className="font-bold text-2xl tracking-tighter leading-none text-[#0F172A]">
-                        BoluShop
+                        Bolu
                     </span>
                     <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#0F172A]/60">
-                        Premium Store
+                        Regalería & Gadgets
                     </span>
                 </div>
             )}
