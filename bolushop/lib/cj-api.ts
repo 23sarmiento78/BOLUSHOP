@@ -1,3 +1,49 @@
+export interface CJProduct {
+    productId: string;
+    productName: string;
+    productSku: string;
+    productImage: string;
+    productPrice: string;
+    // Add other fields as needed
+}
+
+export async function fetchCJProducts(token: string) {
+    // This is a placeholder for the actual CJ API call
+    // Documentation: https://cjdropshipping.com/api-document/product-list.html
+    try {
+        const response = await fetch('https://developers.cjdropshipping.com/api2.0/product/list', {
+            method: 'GET',
+            headers: {
+                'CJ-Access-Token': token,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) return { success: false, error: 'Failed to fetch from CJ API' };
+
+        const data = await response.json();
+        return { success: true, data: data.data?.list || [] };
+    } catch (e: any) {
+        return { success: false, error: e.message };
+    }
+}
+
+export async function fetchCJProductDetail(productId: string, token: string) {
+    try {
+        const response = await fetch(`https://developers.cjdropshipping.com/api2.0/product/details?productId=${productId}`, {
+            method: 'GET',
+            headers: {
+                'CJ-Access-Token': token
+            }
+        });
+        if (!response.ok) return null;
+        const data = await response.json();
+        return data.data;
+    } catch (e) {
+        return null;
+    }
+}
+
 
 const CJ_API_BASE = "https://developers.cjdropshipping.com/api2/v1";
 

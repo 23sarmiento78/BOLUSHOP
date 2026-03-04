@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { Product, Category } from "@/lib/types";
 import { transformImageUrl } from "@/lib/images";
-import { deleteProductAction, updateProductAction, deleteAllProductsAction, deleteMultipleProductsAction, createProductAction, bulkUpdatePricesAction, bulkResetPricesAction, uploadImageAction, getCategoriesAction, bulkUpdateCategoriesAction } from "@/app/actions/admin";
+import { deleteProductAction, updateProductAction, deleteAllProductsAction, deleteMultipleProductsAction, createProductAction, bulkUpdatePricesAction, bulkResetPricesAction, uploadImageAction, getCategoriesAction, bulkUpdateCategoriesAction, syncProductWithCJAction } from "@/app/actions/admin";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -399,7 +399,19 @@ export default function ProductsTable({ initialProducts }: Props) {
                                         </div>
                                         <div>
                                             <div className="font-bold text-gray-900 text-xs mb-0.5 line-clamp-1">{product.name}</div>
-                                            <div className="text-[9px] font-medium text-gray-400 uppercase tracking-tight">{product.category}</div>
+                                            <div className="flex items-center gap-2">
+                                                <div className="text-[9px] font-medium text-gray-400 uppercase tracking-tight">{product.category}</div>
+                                                {product.cjProductId && (
+                                                    <a
+                                                        href={`https://cjdropshipping.com/product-detail/${product.cjProductId}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="text-[9px] font-bold text-orange-500 hover:underline flex items-center gap-0.5"
+                                                    >
+                                                        🔗 CJ
+                                                    </a>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 </td>
@@ -421,6 +433,22 @@ export default function ProductsTable({ initialProducts }: Props) {
                                 </td>
                                 <td className="px-6 py-3.5 text-right">
                                     <div className="flex items-center justify-end gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        {product.cjProductId && (
+                                            <button
+                                                onClick={async () => {
+                                                    const btn = event?.currentTarget as HTMLButtonElement;
+                                                    btn.disabled = true;
+                                                    const res = await syncProductWithCJAction(product.id);
+                                                    if (res.success) alert("🔄 Producto sincronizado con CJ!");
+                                                    else alert("❌ Error: " + res.error);
+                                                    btn.disabled = false;
+                                                }}
+                                                className="p-1.5 text-orange-400 hover:text-orange-600 transition-colors"
+                                                title="Sincronizar Stock/Costo con CJ"
+                                            >
+                                                🔄
+                                            </button>
+                                        )}
                                         <button onClick={() => setEditingProduct(product)} className="p-1.5 text-gray-400 hover:text-blue-600 transition-colors">✏️</button>
                                         <button onClick={() => handleDelete(product.id)} className="p-1.5 text-gray-400 hover:text-red-600 transition-colors">🗑️</button>
                                     </div>
@@ -791,6 +819,58 @@ function ProductFormModal({ title, product, setProduct, onClose, onSubmit, isSav
                                     ))}
                                 </select>
                             </div>
+                            <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 bg-orange-50/30 p-6 rounded-[2rem] border border-orange-100/50">
+                                <div className="md:col-span-2">
+                                    <h3 className="text-[10px] font-black uppercase tracking-widest text-orange-600 mb-4 flex items-center gap-2">
+                                        📦 Sincronización CJ Dropshipping
+                                        {product.cjProductId && (
+                                            <a
+                                                href={`https://cjdropshipping.com/product-detail/${product.cjProductId}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="ml-auto text-xs font-bold text-orange-600 bg-white px-3 py-1 rounded-full border border-orange-200 hover:bg-orange-50 transition-colors"
+                                            >
+                                                Ver en CJ ↗
+                                            </a>
+                                        )}
+                                    </h3>
+                                </div>
+                                <div>
+                                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 px-1">CJ Product ID / Link</label>
+                                    <div className="flex gap-2">
+                                        <input
+                                            value={product.cjProductId || ""}
+                                            onChange={(e) => {
+                                                const val = e.target.value;
+                                                const match = val.match(/product-detail\/([a-zA-Z0-9-]+)/);
+                                                const extractedId = match ? match[1] : val;
+                                                setProduct({ ...product, cjProductId: extractedId });
+                                            }}
+                                            className="flex-grow px-5 py-3 rounded-2xl bg-white border-none focus:ring-2 focus:ring-orange-500/20 font-bold text-gray-900 text-sm"
+                                            placeholder="Pegá el link o el ID"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => window.open(`https://cjdropshipping.com/search/${encodeURIComponent(product.name || '')}`, '_blank')}
+                                            className="px-4 py-3 bg-white border border-orange-100 rounded-2xl text-lg hover:bg-orange-50 transition-colors"
+                                            title="Buscar en CJ"
+                                        >
+                                            🔍
+                                        </button>
+                                    </div>
+                                    <p className="text-[9px] text-gray-400 mt-2 px-1 font-medium">💡 Pegá el link directo del producto en CJ y nosotros extraemos el ID.</p>
+                                </div>
+                                <div>
+                                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 px-1">CJ SKU (Opcional)</label>
+                                    <input
+                                        value={product.cjSku || ""}
+                                        onChange={(e) => setProduct({ ...product, cjSku: e.target.value })}
+                                        className="w-full px-5 py-3 rounded-2xl bg-white border-none focus:ring-2 focus:ring-orange-500/20 font-bold text-gray-900 text-sm"
+                                        placeholder="Ej: CJXXXXXX"
+                                    />
+                                </div>
+                            </div>
+
                             <div className="md:col-span-2 flex items-center justify-between bg-gray-50 p-6 rounded-2xl">
                                 <div>
                                     <div className="text-sm font-black text-gray-900">Producto Activo</div>

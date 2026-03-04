@@ -14,7 +14,10 @@ create table if not exists public.orders (
   payer_address text,
   payer_phone text,
   items jsonb,
-  payment_id text
+  payment_id text,
+  tracking_number text,
+  tracking_url text,
+  cj_order_id text -- ID de CJ Dropshipping para seguimiento
 );
 
 -- TABLA DE PRODUCTOS
@@ -33,7 +36,9 @@ create table if not exists public.products (
   features jsonb, -- Array de strings
   stock integer default 0,
   collections jsonb, -- Array de IDs de colecciones
-  is_active boolean default true
+  is_active boolean default true,
+  cj_sku text, -- Columna para sincronización con CJ Dropshipping
+  cj_product_id text -- ID de CJ Dropshipping para un link directo
 );
 
 -- TABLA DE CATEGORÍAS
@@ -57,7 +62,6 @@ create table if not exists public.settings (
   site_name text,
   site_description text,
   whatsapp_number text,
-  min_purchase_amount numeric, -- Monto mínimo de compra
   constraint single_row check (id = 1)
 );
 
