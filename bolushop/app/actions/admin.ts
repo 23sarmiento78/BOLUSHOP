@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { fetchCJProductDetail } from "@/lib/cj-api";
 import {
     getAllProducts,
     saveProducts,
@@ -429,9 +430,9 @@ export async function getCategoriesAction() {
 }
 
 // Orders Actions
-export async function updateOrderStatusAction(orderId: string, newStatus: string) {
+export async function updateOrderStatusAction(orderId: string, newStatus: string, extras: any = {}) {
     try {
-        await updateOrder(orderId, { status: newStatus as Order['status'] });
+        await updateOrder(orderId, { status: newStatus as Order['status'], ...extras });
         revalidatePath('/admin/orders');
         revalidatePath('/rastreo');
         return true;
@@ -510,5 +511,40 @@ export async function sendNewsletterCampaignAction(campaign: {
     } catch (e: any) {
         console.error("❌ Campaign Action Error:", e);
         return { success: false, message: e.message || "Error al procesar el envío" };
+    }
+}
+export async function syncProductWithCJAction(productId: string) {
+    try {
+        const settings = await getSettings();
+        if (!settings.cjApiToken) return { success: false, error: "Falta configurar el CJ API Token en ajustes." };
+
+        const products = await getAllProducts();
+        const p = products.find(prod => prod.id === productId);
+        if (!p || !p.cjProductId) return { success: false, error: "Producto no vinculado con un ID de CJ." };
+
+        const cjData = await fetchCJProductDetail(p.cjProductId, settings.cjApiToken);
+        if (!cjData) return { success: false, error: "No se encontró el producto en la API de CJ." };
+
+        // Update cost (if it changed) and stock
+        // Note: CJ API returns price range, we take the lead or average? 
+        // For simplicity, we take the primary price in cjData
+        const cjPrice = parseFloat(cjData.sellPrice || p.cost);
+        const cjStock = parseInt(cjData.productInventory || p.stock);
+
+        const updatedProduct: Product = {
+            ...p,
+            cost: cjPrice,
+            stock: cjStock,
+            // Automatically recalculate price if cost changed significantly
+            price: (p.cost !== cjPrice && p.price === Math.ceil((p.cost || 0) * settings.profitMargin + (settings.averageShippingCost || 0)))
+                ? Math.ceil(cjPrice * settings.profitMargin + (settings.averageShippingCost || 0))
+                : p.price
+        };
+
+        const result = await updateProductAction(updatedProduct);
+        return result;
+    } catch (e: any) {
+        console.error("❌ CJ Sync Error:", e);
+        return { success: false, error: e.message || "Error de sincronización" };
     }
 }

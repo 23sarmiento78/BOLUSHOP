@@ -37,6 +37,7 @@ export interface Product {
     isActive?: boolean;
     isInternational?: boolean; // CJ Dropshipping support
     cjSku?: string;
+    cjProductId?: string;
     usdPrice?: number;
     shippingUsd?: number;
 }
@@ -55,6 +56,9 @@ export interface Order {
         phone?: string;
     };
     paymentId?: string;
+    trackingNumber?: string;
+    trackingUrl?: string;
+    cjOrderId?: string;
 }
 
 export interface Settings {
@@ -73,6 +77,8 @@ export interface Settings {
     siteDescription: string;
     whatsappNumber: string;
     minPurchaseAmount?: number;
+    cjApiToken?: string;
+    cjApiSecret?: string;
 }
 
 export interface Review {

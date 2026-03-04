@@ -119,13 +119,16 @@ export default function Footer() {
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="border-t border-gray-100 pt-12 flex flex-col md:flex-row justify-between items-center gap-6">
-                    <p className="text-gray-400 text-xs font-bold uppercase tracking-widest">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                    <p className="text-gray-400 text-xs font-bold uppercase tracking-widest text-center md:text-left">
                         © {new Date().getFullYear()} BoluShop Argentina · Todos los derechos reservados.
                     </p>
-                    <div className="flex gap-8">
-                        <span className="text-gray-400 text-[10px] font-bold uppercase tracking-widest hover:text-gray-900 cursor-pointer">Privacidad</span>
-                        <span className="text-gray-400 text-[10px] font-bold uppercase tracking-widest hover:text-gray-900 cursor-pointer">Términos</span>
+                    <div className="flex flex-wrap justify-center gap-8">
+                        <Link href="/politica-de-privacidad" className="text-gray-400 text-[10px] font-bold uppercase tracking-widest hover:text-gray-900 transition-colors">Privacidad</Link>
+                        <Link href="/terminos-y-condiciones" className="text-gray-400 text-[10px] font-bold uppercase tracking-widest hover:text-gray-900 transition-colors">Términos</Link>
+                        <Link href="/nosotros" className="text-gray-400 text-[10px] font-bold uppercase tracking-widest hover:text-gray-900 transition-colors">Nuestra Marca</Link>
+                        <Link href="/guias" className="text-gray-400 text-[10px] font-bold uppercase tracking-widest hover:text-gray-900 transition-colors">Guías</Link>
+                        <Link href="/contacto" className="text-gray-400 text-[10px] font-bold uppercase tracking-widest hover:text-gray-900 transition-colors">Contacto</Link>
                     </div>
                 </div>
             </div>

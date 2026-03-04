@@ -96,7 +96,9 @@ export async function getSettings(): Promise<Settings> {
                 siteName: data.site_name,
                 siteDescription: data.site_description,
                 whatsappNumber: data.whatsapp_number,
-                minPurchaseAmount: data.min_purchase_amount || DEFAULT_SETTINGS.minPurchaseAmount
+                minPurchaseAmount: data.min_purchase_amount || DEFAULT_SETTINGS.minPurchaseAmount,
+                cjApiToken: data.cj_api_token,
+                cjApiSecret: data.cj_api_secret
             };
         }
     } catch (e) {
@@ -121,6 +123,8 @@ export async function saveSettings(settings: Settings): Promise<{ success: boole
                 site_description: settings.siteDescription,
                 whatsapp_number: settings.whatsappNumber,
                 min_purchase_amount: settings.minPurchaseAmount,
+                cj_api_token: (settings as any).cjApiToken,
+                cj_api_secret: (settings as any).cjApiSecret,
                 updated_at: new Date().toISOString()
             }, { onConflict: 'id' });
 
@@ -166,11 +170,7 @@ export async function getAllProducts(): Promise<Product[]> {
                 stock: p.stock,
                 collections: p.collections || [],
                 createdAt: p.created_at,
-                isActive: p.is_active ?? true,
-                isInternational: p.is_international ?? false,
-                cjSku: p.cj_sku,
-                usdPrice: p.usd_price,
-                shippingUsd: p.shipping_usd
+                isActive: p.is_active ?? true
             }));
 
             // Merge: Supabase takes precedence
@@ -206,11 +206,7 @@ export async function saveProducts(products: Product[]): Promise<{ success: bool
             stock: p.stock,
             collections: p.collections,
             created_at: p.createdAt,
-            is_active: p.isActive ?? true,
-            is_international: p.isInternational || false,
-            cj_sku: p.cjSku || null,
-            usd_price: p.usdPrice || 0,
-            shipping_usd: p.shippingUsd || 0
+            is_active: p.isActive ?? true
         }));
 
         const { error } = await supabase.from('products').upsert(toUpsert, { onConflict: 'id' });
@@ -299,7 +295,10 @@ export async function getAllOrders(): Promise<Order[]> {
                     address: o.payer_address,
                     phone: o.payer_phone
                 },
-                paymentId: o.payment_id
+                paymentId: o.payment_id,
+                trackingNumber: o.tracking_number,
+                trackingUrl: o.tracking_url,
+                cjOrderId: o.cj_order_id
             }));
         }
     } catch (e) {
@@ -337,10 +336,15 @@ export async function createOrder(order: Order) {
                 name: i.name,
                 price: i.price,
                 quantity: i.quantity,
-                image: i.image
+                image: i.image,
+                cjSku: i.cjSku,
+                cjProductId: i.cjProductId
             })), // Sanitizar items para asegurar JSON limpio
             payment_id: order.paymentId,
-            external_id: order.id
+            external_id: order.id,
+            tracking_number: order.trackingNumber,
+            tracking_url: order.trackingUrl,
+            cj_order_id: order.cjOrderId
         }]);
 
         if (error) {
@@ -438,6 +442,8 @@ export async function updateOrder(id: string, updates: Partial<Order>) {
                 status: updates.status
             };
             if (updates.paymentId) updatePayload.payment_id = updates.paymentId;
+            if (updates.trackingNumber) updatePayload.tracking_number = updates.trackingNumber;
+            if (updates.trackingUrl) updatePayload.tracking_url = updates.trackingUrl;
 
             let query = supabase.from('orders').update(updatePayload);
 
@@ -819,4 +825,50 @@ export async function deleteNewsletterSubscriber(email: string): Promise<boolean
         console.error("❌ Supabase Newsletter Delete Error:", e);
     }
     return true;
+}
+
+export async function updateProductByCJId(cjProductId: string, updates: Partial<Product>) {
+    try {
+        const { data: product, error: fetchError } = await supabase
+            .from('products')
+            .select('*')
+            .eq('cj_product_id', cjProductId)
+            .single();
+
+        if (fetchError || !product) return false;
+
+        const updated = { ...product, ...updates };
+        const { error: updateError } = await supabase
+            .from('products')
+            .update({
+                price: updates.price ?? product.price,
+                stock: updates.stock ?? product.stock,
+                cost: updates.cost ?? product.cost,
+                is_active: updates.isActive ?? product.is_active
+            })
+            .eq('cj_product_id', cjProductId);
+
+        if (updateError) return false;
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+export async function updateOrderByCJId(cjOrderId: string, updates: Partial<Order>) {
+    try {
+        const updatePayload: any = {};
+        if (updates.status) updatePayload.status = updates.status;
+        if (updates.trackingNumber) updatePayload.tracking_number = updates.trackingNumber;
+        if (updates.trackingUrl) updatePayload.tracking_url = updates.trackingUrl;
+
+        const { error } = await supabase
+            .from('orders')
+            .update(updatePayload)
+            .eq('cj_order_id', cjOrderId);
+
+        return !error;
+    } catch (e) {
+        return false;
+    }
 }
