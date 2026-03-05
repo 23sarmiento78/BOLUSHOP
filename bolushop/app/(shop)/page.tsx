@@ -1,4 +1,4 @@
-import { getAllProducts, getAllCategories, getAllCollections } from "@/lib/db";
+import { getAllProducts, getAllCategories, getAllCollections, getAllPosts } from "@/lib/db";
 import Header from "@/components/shop/Header";
 import Footer from "@/components/shop/Footer";
 import ProductCard from "@/components/shop/ProductCard";
@@ -21,8 +21,9 @@ export default async function HomePage() {
     const collections = await getAllCollections();
     const holiday = getCurrentHoliday();
 
-    const featuredProducts = allProducts.filter(p => !p.isInternational && p.isActive !== false && p.price > 0).slice(0, 8);
-    const internationalProducts = allProducts.filter(p => p.isActive !== false && p.isInternational === true).slice(0, 4);
+    const featuredProducts = allProducts.filter(p => p.isActive !== false && p.price > 0).slice(0, 8);
+    const allPosts = await getAllPosts();
+    const recentPosts = allPosts.filter(p => p.isPublished).slice(0, 3);
 
     return (
         <>
@@ -240,36 +241,54 @@ export default async function HomePage() {
                     </div>
                 </section>
 
-                {/* INTERNATIONAL PRODUCTS PREVIEW */}
-                {internationalProducts.length > 0 && (
+
+
+                {/* BLOG PREVIEW SECTION */}
+                {recentPosts.length > 0 && (
                     <section className="relative z-10 py-24 bg-white overflow-hidden">
                         <div className="container mx-auto px-6">
-                            <div className="flex flex-col md:flex-row items-center gap-16">
-                                <div className="w-full md:w-1/3">
-                                    <span className="inline-block px-4 py-2 bg-blue-100 text-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest mb-6">
-                                        🌎 Mercado Global
-                                    </span>
-                                    <h2 className="text-4xl md:text-6xl font-black text-gray-900 mb-6 leading-tight">
-                                        Compra <br />
-                                        <span className="text-blue-600 italic">Internacional</span>
+                            <div className="flex justify-between items-end mb-16">
+                                <div className="max-w-xl">
+                                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-4 block">Contenido & Insights</span>
+                                    <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tighter leading-tight">
+                                        Explora nuestro <br />
+                                        <span className="italic text-primary">Lifestyle Blog</span>
                                     </h2>
-                                    <p className="text-gray-500 text-lg mb-8 font-medium">
-                                        Importamos los productos más exclusivos de CJ Dropshipping directamente para vos. Sin trámites, sin vueltas, recibilo en tu casa.
-                                    </p>
-                                    <Link href="/internacional" className="inline-flex items-center gap-4 bg-gray-900 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-600 transition-all">
-                                        Ver Importaciones
-                                        <span>→</span>
-                                    </Link>
                                 </div>
-                                <div className="w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-6 relative">
-                                    {internationalProducts.slice(0, 2).map((product, idx) => (
-                                        <div key={product.id} className={idx === 1 ? 'md:mt-12' : ''}>
-                                            <ProductCard product={product} />
+                                <Link
+                                    href="/blog"
+                                    className="hidden md:flex items-center gap-3 px-8 py-4 rounded-2xl border-2 border-gray-100 font-black text-[10px] uppercase tracking-widest hover:border-black hover:bg-black hover:text-white transition-all"
+                                >
+                                    Ir al Blog ↗
+                                </Link>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                                {recentPosts.map((post) => (
+                                    <Link href={`/blog/${post.slug}`} key={post.id} className="group">
+                                        <div className="relative h-[400px] md:h-[450px] rounded-[2.5rem] overflow-hidden mb-8 shadow-sm border border-gray-100">
+                                            {post.image && (
+                                                <Image
+                                                    src={post.image}
+                                                    alt={post.title}
+                                                    fill
+                                                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                                />
+                                            )}
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 transition-opacity group-hover:opacity-80"></div>
+                                            <div className="absolute inset-0 p-8 flex flex-col justify-end">
+                                                <span className="text-[10px] font-black uppercase tracking-widest text-primary mb-3">{post.category}</span>
+                                                <h3 className="text-2xl font-black text-white leading-tight group-hover:translate-x-2 transition-transform duration-500">{post.title}</h3>
+                                            </div>
                                         </div>
-                                    ))}
-                                    {/* Abstract decoration */}
-                                    <div className="absolute -top-12 -right-12 w-64 h-64 bg-blue-50 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-pulse"></div>
-                                </div>
+                                    </Link>
+                                ))}
+                            </div>
+
+                            <div className="mt-12 md:hidden">
+                                <Link href="/blog" className="flex items-center justify-center p-5 bg-black text-white rounded-2xl font-black text-xs uppercase tracking-widest">
+                                    Ver todo el Blog
+                                </Link>
                             </div>
                         </div>
                     </section>

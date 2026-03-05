@@ -117,6 +117,27 @@ create table if not exists public.reviews (
 drop policy if exists "Acceso total reseñas" on public.reviews;
 create policy "Acceso total reseñas" on public.reviews for all using (true) with check (true);
 alter table public.reviews enable row level security;
+-- TABLA DE BLOG POSTS
+create table if not exists public.posts (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamptz default now(),
+  title text not null,
+  slug text unique not null,
+  content text not null,
+  excerpt text,
+  image text,
+  category text,
+  author text default 'BoluShop Team',
+  meta_title text,
+  meta_description text,
+  product_ids text[] default '{}',
+  is_published boolean default true
+);
+
+drop policy if exists "Acceso total posts" on public.posts;
+create policy "Acceso total posts" on public.posts for all using (true) with check (true);
+alter table public.posts enable row level security;
+
 -- TABLA DE NEWSLETTER
 create table if not exists public.newsletter (
   id uuid default gen_random_uuid() primary key,

@@ -179,18 +179,8 @@ export default function OrdersTable({ initialOrders }: Props) {
                                                     </div>
 
                                                     <div className="mt-8">
-                                                        <h3 className="font-black text-sm uppercase text-gray-400 mb-2">Seguimiento de Envío (CJ/Correo)</h3>
+                                                        <h3 className="font-black text-sm uppercase text-gray-400 mb-2">Seguimiento de Envío</h3>
                                                         <div className="bg-white p-6 rounded-2xl border border-orange-100 bg-orange-50/20 space-y-4">
-                                                            <div>
-                                                                <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 px-1">CJ Order Number</label>
-                                                                <input
-                                                                    type="text"
-                                                                    defaultValue={order.cjOrderId || ""}
-                                                                    placeholder="Ej: CJ12345678"
-                                                                    onBlur={(e) => handleStatusChange(order.id, order.status, { cjOrderId: e.target.value })}
-                                                                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-orange-500 outline-none font-mono text-xs"
-                                                                />
-                                                            </div>
                                                             <div>
                                                                 <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 px-1">Número de Seguimiento</label>
                                                                 <input
@@ -251,19 +241,6 @@ export default function OrdersTable({ initialOrders }: Props) {
                                                                     <p className="font-bold text-sm text-gray-900">{item.name}</p>
                                                                     <div className="flex items-center gap-3">
                                                                         <p className="text-xs text-gray-500 font-bold">Cant: {item.quantity}</p>
-                                                                        {item.cjProductId && (
-                                                                            <a
-                                                                                href={`https://cjdropshipping.com/product-detail/${item.cjProductId}`}
-                                                                                target="_blank"
-                                                                                rel="noopener noreferrer"
-                                                                                className="text-[10px] font-black uppercase text-orange-600 hover:orange-700 bg-orange-50 px-2 py-0.5 rounded-full border border-orange-100 transition-colors"
-                                                                            >
-                                                                                Comprar en CJ ↗
-                                                                            </a>
-                                                                        )}
-                                                                        {item.cjSku && !item.cjProductId && (
-                                                                            <span className="text-[10px] font-bold text-gray-400">SKU: {item.cjSku}</span>
-                                                                        )}
                                                                     </div>
                                                                 </div>
                                                             </div>

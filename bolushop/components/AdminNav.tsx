@@ -16,7 +16,7 @@ import {
     X,
     ExternalLink,
     ChevronRight,
-    Globe
+    BookOpen
 } from 'lucide-react';
 
 export default function AdminNav() {
@@ -28,7 +28,7 @@ export default function AdminNav() {
     const links = [
         { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
         { href: '/admin/products', label: 'Productos', icon: Package },
-        { href: '/admin/internacional', label: 'Compra Int.', icon: Globe },
+        { href: '/admin/blog', label: 'Blog', icon: BookOpen },
         { href: '/admin/categories', label: 'Categorías', icon: FolderTree },
         { href: '/admin/orders', label: 'Pedidos', icon: Truck },
         { href: '/admin/collections', label: 'Colecciones', icon: Tags },
