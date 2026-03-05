@@ -14,7 +14,6 @@ export default function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [holiday, setHoliday] = useState<HolidayConfig | null>(null);
-    const [hasInternational, setHasInternational] = useState(false);
 
     const router = useRouter();
     const pathname = usePathname();
@@ -23,15 +22,6 @@ export default function Header() {
     useEffect(() => {
         // Load holiday client-side to avoid hydration mismatch
         setHoliday(getCurrentHoliday());
-
-        // Check for international products
-        fetch('/api/products')
-            .then(res => res.json())
-            .then(products => {
-                const international = products.some((p: any) => p.isInternational && p.isActive !== false);
-                setHasInternational(international);
-            })
-            .catch(() => setHasInternational(false));
 
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 20);
@@ -114,7 +104,6 @@ export default function Header() {
                             { label: 'Inicio', href: '/' },
                             { label: 'Colecciones', href: '/colecciones' },
                             { label: 'Productos', href: '/productos' },
-                            ...(hasInternational ? [{ label: 'Compra Internacional', href: '/internacional' }] : []),
                         ].map(link => (
                             <Link
                                 key={link.href}
@@ -199,7 +188,6 @@ export default function Header() {
                                 { label: 'Inicio', href: '/', icon: '🏠' },
                                 { label: 'Colecciones VIP', href: '/colecciones', icon: themeIcon },
                                 { label: 'Todos los Productos', href: '/productos', icon: '📦' },
-                                ...(hasInternational ? [{ label: 'Compra Internacional', href: '/internacional', icon: '🌎' }] : []),
                                 { label: 'Seguir mi Pedido', href: '/rastreo', icon: '🚚' },
                             ].map((item, i) => (
                                 <Link

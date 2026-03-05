@@ -13,7 +13,7 @@ const CATEGORIES_FILE = path.join(DATA_DIR, 'categories.json');
 const REVIEWS_FILE = path.join(DATA_DIR, 'reviews.json');
 const NEWSLETTER_FILE = path.join(DATA_DIR, 'newsletter.json');
 
-import { Category, Collection, Product, Order, Settings, Review, Newsletter } from './types';
+import { Category, Collection, Product, Order, Settings, Review, Newsletter, BlogPost } from './types';
 
 const DEFAULT_SETTINGS: Settings = {
     profitMargin: 1.0, // Changed from 1.35 to 1.0 (no automatic increase)
@@ -96,9 +96,7 @@ export async function getSettings(): Promise<Settings> {
                 siteName: data.site_name,
                 siteDescription: data.site_description,
                 whatsappNumber: data.whatsapp_number,
-                minPurchaseAmount: data.min_purchase_amount || DEFAULT_SETTINGS.minPurchaseAmount,
-                cjApiToken: data.cj_api_token,
-                cjApiSecret: data.cj_api_secret
+                minPurchaseAmount: data.min_purchase_amount || DEFAULT_SETTINGS.minPurchaseAmount
             };
         }
     } catch (e) {
@@ -123,8 +121,6 @@ export async function saveSettings(settings: Settings): Promise<{ success: boole
                 site_description: settings.siteDescription,
                 whatsapp_number: settings.whatsappNumber,
                 min_purchase_amount: settings.minPurchaseAmount,
-                cj_api_token: (settings as any).cjApiToken,
-                cj_api_secret: (settings as any).cjApiSecret,
                 updated_at: new Date().toISOString()
             }, { onConflict: 'id' });
 
@@ -297,8 +293,7 @@ export async function getAllOrders(): Promise<Order[]> {
                 },
                 paymentId: o.payment_id,
                 trackingNumber: o.tracking_number,
-                trackingUrl: o.tracking_url,
-                cjOrderId: o.cj_order_id
+                trackingUrl: o.tracking_url
             }));
         }
     } catch (e) {
@@ -336,15 +331,12 @@ export async function createOrder(order: Order) {
                 name: i.name,
                 price: i.price,
                 quantity: i.quantity,
-                image: i.image,
-                cjSku: i.cjSku,
-                cjProductId: i.cjProductId
+                image: i.image
             })), // Sanitizar items para asegurar JSON limpio
             payment_id: order.paymentId,
             external_id: order.id,
             tracking_number: order.trackingNumber,
-            tracking_url: order.trackingUrl,
-            cj_order_id: order.cjOrderId
+            tracking_url: order.trackingUrl
         }]);
 
         if (error) {
@@ -827,48 +819,107 @@ export async function deleteNewsletterSubscriber(email: string): Promise<boolean
     return true;
 }
 
-export async function updateProductByCJId(cjProductId: string, updates: Partial<Product>) {
+// BLOG FUNCTIONS
+const POSTS_FILE = path.join(process.cwd(), 'data', 'posts.json');
+
+export async function getAllPosts(): Promise<BlogPost[]> {
+    const localPosts = readJson<BlogPost[]>(POSTS_FILE, []);
     try {
-        const { data: product, error: fetchError } = await supabase
-            .from('products')
+        const { data, error } = await supabase
+            .from('posts')
             .select('*')
-            .eq('cj_product_id', cjProductId)
+            .order('created_at', { ascending: false });
+
+        if (data && !error) {
+            return data.map(p => ({
+                id: p.id,
+                createdAt: p.created_at,
+                title: p.title,
+                slug: p.slug,
+                content: p.content,
+                excerpt: p.excerpt,
+                image: p.image,
+                category: p.category,
+                author: p.author,
+                metaTitle: p.meta_title,
+                metaDescription: p.meta_description,
+                productIds: p.product_ids || [],
+                isPublished: p.is_published
+            }));
+        }
+    } catch (e) {
+        console.warn("⚠️ Supabase Posts Fetch Error:", e);
+    }
+    return localPosts;
+}
+
+export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
+    try {
+        const { data, error } = await supabase
+            .from('posts')
+            .select('*')
+            .eq('slug', slug)
             .single();
 
-        if (fetchError || !product) return false;
-
-        const updated = { ...product, ...updates };
-        const { error: updateError } = await supabase
-            .from('products')
-            .update({
-                price: updates.price ?? product.price,
-                stock: updates.stock ?? product.stock,
-                cost: updates.cost ?? product.cost,
-                is_active: updates.isActive ?? product.is_active
-            })
-            .eq('cj_product_id', cjProductId);
-
-        if (updateError) return false;
-        return true;
+        if (data && !error) {
+            return {
+                id: data.id,
+                createdAt: data.created_at,
+                title: data.title,
+                slug: data.slug,
+                content: data.content,
+                excerpt: data.excerpt,
+                image: data.image,
+                category: data.category,
+                author: data.author,
+                metaTitle: data.meta_title,
+                metaDescription: data.meta_description,
+                productIds: data.product_ids || [],
+                isPublished: data.is_published
+            };
+        }
     } catch (e) {
+        console.error("❌ getPostBySlug Error:", e);
+    }
+    return null;
+}
+
+export async function savePost(post: Partial<BlogPost>): Promise<boolean> {
+    try {
+        const payload = {
+            title: post.title,
+            slug: post.slug,
+            content: post.content,
+            excerpt: post.excerpt,
+            image: post.image,
+            category: post.category,
+            author: post.author,
+            meta_title: post.metaTitle,
+            meta_description: post.metaDescription,
+            product_ids: post.productIds || [],
+            is_published: post.isPublished
+        };
+
+        if (post.id) {
+            const { error } = await supabase.from('posts').update(payload).eq('id', post.id);
+            return !error;
+        } else {
+            const { error } = await supabase.from('posts').insert([payload]);
+            return !error;
+        }
+    } catch (e) {
+        console.error("❌ savePost Error:", e);
         return false;
     }
 }
 
-export async function updateOrderByCJId(cjOrderId: string, updates: Partial<Order>) {
+export async function deletePost(id: string): Promise<boolean> {
     try {
-        const updatePayload: any = {};
-        if (updates.status) updatePayload.status = updates.status;
-        if (updates.trackingNumber) updatePayload.tracking_number = updates.trackingNumber;
-        if (updates.trackingUrl) updatePayload.tracking_url = updates.trackingUrl;
-
-        const { error } = await supabase
-            .from('orders')
-            .update(updatePayload)
-            .eq('cj_order_id', cjOrderId);
-
+        const { error } = await supabase.from('posts').delete().eq('id', id);
         return !error;
     } catch (e) {
+        console.error("❌ deletePost Error:", e);
         return false;
     }
 }
+

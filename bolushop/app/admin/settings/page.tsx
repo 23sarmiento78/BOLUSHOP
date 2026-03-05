@@ -17,9 +17,7 @@ export default function SettingsPage() {
         siteName: "BoluShop",
         siteDescription: "",
         whatsappNumber: "",
-        minPurchaseAmount: 35000,
-        cjApiToken: "",
-        cjApiSecret: ""
+        minPurchaseAmount: 35000
     });
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -233,44 +231,6 @@ export default function SettingsPage() {
                     </div>
                 </div>
 
-                {/* CJ Dropshipping */}
-                <div className="bg-white p-8 md:p-12 rounded-[3rem] shadow-sm border border-gray-100 ring-4 ring-orange-50/50">
-                    <h2 className="text-xl font-black text-gray-900 mb-8 flex items-center gap-3">
-                        <span className="w-10 h-10 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center">📦</span>
-                        Configuración CJ Dropshipping
-                    </h2>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div>
-                            <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3 px-1">CJ API Token</label>
-                            <input
-                                type="password"
-                                value={settings.cjApiToken || ""}
-                                onChange={(e) => setSettings({ ...settings, cjApiToken: e.target.value })}
-                                placeholder="Pega tu Access Token de CJ"
-                                className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-orange-200 font-mono text-xs"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3 px-1">CJ API Secret (Opcional)</label>
-                            <input
-                                type="password"
-                                value={settings.cjApiSecret || ""}
-                                onChange={(e) => setSettings({ ...settings, cjApiSecret: e.target.value })}
-                                className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-orange-200 font-mono text-xs"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="mt-6 p-6 bg-orange-50 rounded-2xl border border-orange-100">
-                        <p className="text-[10px] font-black text-orange-800 uppercase mb-2">💡 ¿Para qué sirve esto?</p>
-                        <p className="text-xs text-orange-700 leading-relaxed font-medium">
-                            Permite sincronizar el stock real de CJ con tu tienda y, en el futuro, automatizar el envío de órdenes.
-                            Podes conseguir tus llaves en el <a href="https://cjdropshipping.com/myCj/appManagement/apiKey" target="_blank" className="underline font-bold">Panel de CJ Dropshipping</a>.
-                        </p>
-                    </div>
-                </div>
 
                 {message.text && (
                     <div className={`p-6 rounded-2xl font-bold text-sm text-center animate-in zoom-in duration-300 ${message.type === 'success' ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'

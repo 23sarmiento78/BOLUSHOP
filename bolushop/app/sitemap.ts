@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { getAllProducts, getAllCategories, getAllCollections } from '@/lib/db';
+import { getAllProducts, getAllCategories, getAllCollections, getAllPosts } from '@/lib/db';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
@@ -51,5 +51,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.6,
     }));
 
-    return [...routes, ...productEntries, ...categoryEntries, ...collectionEntries];
+    // Blog Posts
+    const posts = await getAllPosts();
+    const postEntries = posts
+        .filter(p => p.isPublished)
+        .map((post) => ({
+            url: `${baseUrl}/blog/${post.slug}`,
+            lastModified: new Date(post.createdAt),
+            changeFrequency: 'weekly' as const,
+            priority: 0.6,
+        }));
+
+    return [...routes, ...productEntries, ...categoryEntries, ...collectionEntries, ...postEntries];
 }
