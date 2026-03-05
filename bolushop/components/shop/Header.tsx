@@ -104,6 +104,7 @@ export default function Header() {
                             { label: 'Inicio', href: '/' },
                             { label: 'Colecciones', href: '/colecciones' },
                             { label: 'Productos', href: '/productos' },
+                            { label: 'Blog', href: '/blog' },
                         ].map(link => (
                             <Link
                                 key={link.href}
@@ -188,6 +189,7 @@ export default function Header() {
                                 { label: 'Inicio', href: '/', icon: '🏠' },
                                 { label: 'Colecciones VIP', href: '/colecciones', icon: themeIcon },
                                 { label: 'Todos los Productos', href: '/productos', icon: '📦' },
+                                { label: 'Blog de Tendencias', href: '/blog', icon: '📖' },
                                 { label: 'Seguir mi Pedido', href: '/rastreo', icon: '🚚' },
                             ].map((item, i) => (
                                 <Link

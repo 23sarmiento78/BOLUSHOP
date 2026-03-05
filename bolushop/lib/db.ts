@@ -884,7 +884,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     return null;
 }
 
-export async function savePost(post: Partial<BlogPost>): Promise<boolean> {
+export async function savePost(post: Partial<BlogPost>): Promise<{ success: boolean, error?: any }> {
     try {
         const payload = {
             title: post.title,
@@ -902,14 +902,16 @@ export async function savePost(post: Partial<BlogPost>): Promise<boolean> {
 
         if (post.id) {
             const { error } = await supabase.from('posts').update(payload).eq('id', post.id);
-            return !error;
+            if (error) console.error("Supabase Error Update:", error);
+            return { success: !error, error };
         } else {
             const { error } = await supabase.from('posts').insert([payload]);
-            return !error;
+            if (error) console.error("Supabase Error Insert:", error);
+            return { success: !error, error };
         }
     } catch (e) {
         console.error("❌ savePost Error:", e);
-        return false;
+        return { success: false, error: e };
     }
 }
 

@@ -520,14 +520,15 @@ export async function getPostsAction() {
 }
 
 export async function savePostAction(post: Partial<BlogPost>) {
-    const success = await savePost(post);
+    const { success, error } = await savePost(post);
     if (success) {
         revalidatePath("/admin/blog");
         revalidatePath("/blog");
         revalidatePath("/");
         return { success: true };
     }
-    return { success: false, error: "Error al guardar el artículo" };
+    console.error("Error from savePost:", error);
+    return { success: false, error: `Error al guardar el artículo: ${error?.message || "Desconocido"}` };
 }
 
 export async function deletePostAction(id: string) {
