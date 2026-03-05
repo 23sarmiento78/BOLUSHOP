@@ -35,6 +35,7 @@ export interface Product {
     collections?: string[];
     createdAt: string;
     isActive?: boolean;
+    isInternational?: boolean;
 }
 
 export interface Order {
