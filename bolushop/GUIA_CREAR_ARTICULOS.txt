@@ -1,0 +1,59 @@
+GUÍA PARA CREAR ARTÍCULOS EN EL BLOG (BOLUSHOP)
+=================================================
+
+Para crear o editar un artículo en el panel de administración (/admin/blog), debes presionar el botón "Nuevo Artículo" o el ícono de editar en un artículo existente. Aparecerá un formulario con diferentes campos que debes completar.
+
+A continuación te explicamos qué significa cada campo y qué debes colocar en ellos:
+
+1. TÍTULO DEL ARTÍCULO
+- Qué es: El título principal de tu publicación.
+- Qué poner: Un título llamativo y relevante. Ejemplo: "5 Gadgets que necesitas en 2026".
+- Nota: Al escribir el título, el campo "Slug" se completará automáticamente.
+
+2. SLUG (URL)
+- Qué es: Es la dirección web que tendrá tu artículo.
+- Qué poner: Generalmente se autocompleta con el título (ej: "5-gadgets-que-necesitas-en-2026"). Puedes modificarlo manualmente, pero asegúrate de usar solo letras en minúscula, números y guiones medios (-), sin espacios.
+
+3. CATEGORÍA
+- Qué es: La sección o temática a la que pertenece el artículo.
+- Qué poner: Escribe una palabra o frase corta que agrupe artículos similares. Por defecto dice "General", pero puedes cambiarla a "Tecnología", "Consejos", "Novedades", etc.
+
+4. AUTOR
+- Qué es: El nombre de quien escribe el artículo.
+- Qué poner: Tu nombre o el de la tienda. Por defecto es "BoluShop Team".
+
+5. IMAGEN PRINCIPAL (URL)
+- Qué es: La foto de portada del artículo.
+- Qué poner: El enlace directo a una imagen (que empiece con https://...). Si subiste la imagen a tu propia web, también puedes colocar la ruta relativa.
+
+6. EXTRACTO (RESUMEN)
+- Qué es: Un pequeño texto introductorio que aparecerá en las tarjetas de previsualización (antes de entrar al artículo).
+- Qué poner: Una o dos oraciones que resuman de qué trata el post e inviten a hacer clic.
+
+7. METATÍTULO SEO (Opcional)
+- Qué es: El título que quieres que muestre Google en los resultados de búsqueda.
+- Qué poner: Un título optimizado de máximo 60 caracteres que incluya palabras clave. Si lo dejas vacío, se usará el Título del Artículo normal.
+
+8. METADESCRIPCIÓN SEO (Opcional)
+- Qué es: El pequeño párrafo descriptivo que aparece bajo el enlace en Google.
+- Qué poner: Un texto persuasivo de hasta 160 caracteres que explique qué encontrará el usuario si entra.
+
+9. PRODUCTOS RELACIONADOS (Vincular para vender)
+- Qué es: Una lista de productos de tu tienda que quieres promocionar dentro de este artículo.
+- Qué poner: Puedes hacer clic en los productos que aparecen en la lista (se marcarán con un ✓) para vincularlos al post. Si el artículo habla de cargadores, selecciona los cargadores que vendes.
+
+10. CONTENIDO DEL ARTÍCULO
+- Qué es: El desarrollo completo de tu publicación.
+- Qué poner: Aquí va todo el texto. Tienes una barra de herramientas arriba que te permite seleccionar texto y aplicarle formato:
+   - "B": Texto en negrita.
+   - "I": Texto en cursiva (itálica).
+   - "H2" y "H3": Para subtítulos y apartados.
+   - "UL" y "LI": Para crear listas con puntos.
+   - "P": Para separar grandes bloques en párrafos.
+(Si usas estos botones, verás que agregan etiquetas HTML como <h2> o <b>, no te preocupes, así es como el sistema las entiende para mostrarlas bonitas luego).
+
+11. PUBLICAR ARTÍCULO AHORA
+- Qué es: Una casilla de verificación (checkbox) que decide si el artículo será visible al público.
+- Qué poner: Márcala si quieres que el post esté disponible en el blog inmediatamente. Si la desmarcas, se guardará como un "Borrador" y solo podrás verlo tú desde el panel.
+
+Para terminar, solo haz clic en "Guardar Artículo".

@@ -4,6 +4,7 @@ import Footer from "@/components/shop/Footer";
 import Image from "next/image";
 import Link from "next/link";
 import { Calendar, User, ChevronRight } from "lucide-react";
+import { transformImageUrl } from "@/lib/images";
 
 export const metadata = {
     title: "Blog | BoluShop Argentina",
@@ -34,7 +35,7 @@ export default async function BlogPage() {
                             >
                                 <div className={`relative ${idx === 0 ? "md:w-1/2 h-[350px] md:h-full" : "h-[280px]"}`}>
                                     {post.image ? (
-                                        <Image src={post.image} alt={post.title} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                                        <Image src={transformImageUrl(post.image)} alt={post.title} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
                                     ) : (
                                         <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">📷</div>
                                     )}
