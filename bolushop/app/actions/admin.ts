@@ -25,6 +25,7 @@ import { Product, Collection, Category, Order, BlogPost } from "@/lib/types";
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from "@/lib/supabase";
 import { Resend } from 'resend';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export async function deleteProductAction(id: string) {
     const success = await deleteProduct(id);
@@ -540,4 +541,134 @@ export async function deletePostAction(id: string) {
         return { success: true };
     }
     return { success: false, error: "Error al eliminar el artículo" };
+}
+
+export async function generateAIArticleAction(products: Product[]) {
+    try {
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+
+        const productsInfo = products.map(p => `- Producto: ${p.name}\n  Descripción: ${p.description}\n  Características: ${p.features?.join(', ')}`).join('\n\n');
+
+        const prompt = `Actúa como un redactor experto en Blogs y SEO para una tienda de e-commerce en Argentina llamada BoluShop. 
+        
+Tu objetivo es crear un artículo de ALTO VALOR INFORMATIVO, que sea útil para el lector y cumpla con los estándares de Google AdSense (contenido original, extenso y bien estructurado).
+
+Tengo estos productos relacionados que quiero mencionar:
+${productsInfo}
+
+Instrucciones para la redacción:
+1. TEMA: No hagas solo una ficha de producto. Creá un artículo útil (ej: "Guía definitiva para...", "Cómo elegir el mejor...", "Tendencias en...", "Los secretos de...").
+2. ESTRUCTURA: 
+   - Introducción que enganche y explique el problema/necesidad.
+   - Párrafos informativos con consejos reales y útiles.
+   - Subtítulos (H2, H3) claros y descriptivos.
+   - Mención natural de los productos como soluciones o ejemplos, destacando sus beneficios.
+   - Conclusión con un consejo final.
+3. FORMATO: Usá etiquetas HTML (<h2>, <h3>, <p>, <b>, <ul>, <li>). El artículo debe tener al menos 600-800 palabras de contenido real y variado.
+4. TONO: Amigable, experto, cercano y con lenguaje argentino natural (voseo: "comprá", "tenés", "mirá").
+5. SEO: Incluye palabras clave de forma natural.
+
+El resultado debe ser un JSON plano (SIN markdown) con esta estructura:
+{
+  "title": "Un título editorial potente y optimizado para SEO",
+  "excerpt": "Un resumen persuasivo de 160 caracteres para buscadores",
+  "content": "Contenido completo en HTML (mínimo 4-5 secciones con H2/H3)",
+  "category": "Categoría relevante (ej: Guías, Tecnología, Lifestyle)",
+  "metaTitle": "Título SEO (máximo 60 caracteres)",
+  "metaDescription": "Descripción SEO (máximo 160 caracteres)"
+}
+
+IMPORTANTE: Respondé SOLO el objeto JSON limpio. No menciones precios exactos.`;
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) throw new Error("No se pudo extraer JSON");
+
+        const data = JSON.parse(jsonMatch[0]);
+        return { success: true, data };
+    } catch (e: any) {
+        console.error("❌ AI Generation Error:", e);
+        return { success: false, error: e.message || "Error al generar el artículo" };
+    }
+}
+
+export async function generateInstagramCaptionAction(post: Partial<BlogPost>) {
+    try {
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+
+        const prompt = `Actúa como un experto en Social Media para una tienda de Argentina (BoluShop).
+        
+Tengo este artículo de blog:
+- Título: ${post.title}
+- Resumen: ${post.excerpt}
+
+Generá un copy para un post de Instagram que sea súper atractivo.
+Requisitos:
+- Usá lenguaje argentino (voseo: comprá, mirá, tenés).
+- Poné emojis relevantes.
+- Usá saltos de línea para que sea fácil de leer.
+- Agregá una lista de 5-8 hashtags relevantes (incluyendo #BoluShop #Argentina #Ofertas).
+- Llamá a la acción (fomentá que vayan al link en la bio o comenten).
+
+Respondé SOLAMENTE el texto del post, listo para publicar.`;
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        return { success: true, caption: response.text() };
+    } catch (e: any) {
+        console.error("❌ IG Caption Error:", e);
+        return { success: false, error: e.message || "Error al generar copy para IG" };
+    }
+}
+
+export async function publishToInstagramAction(imageUrl: string, caption: string) {
+    try {
+        const IG_ID = process.env.INSTAGRAM_BUSINESS_ACCOUNT_ID;
+        const ACCESS_TOKEN = process.env.FACEBOOK_ACCESS_TOKEN;
+
+        if (!IG_ID || !ACCESS_TOKEN) {
+            throw new Error("Faltan credenciales de Instagram (IG_ID o TOKEN)");
+        }
+
+        // 1. Crear el contenedor del medio
+        // Usamos nuestro proxy para asegurar que Instagram pueda descargar la imagen si es de CJ u otra fuente externa
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+        const proxiedImageUrl = `${baseUrl}/api/proxy-image?url=${encodeURIComponent(imageUrl)}`;
+
+        const mediaRes = await fetch(`https://graph.facebook.com/v19.0/${IG_ID}/media`, {
+            method: 'POST',
+            body: new URLSearchParams({
+                image_url: proxiedImageUrl,
+                caption: caption,
+                access_token: ACCESS_TOKEN
+            })
+        });
+
+        const mediaData = await mediaRes.json();
+        if (mediaData.error) throw new Error(`Error reservando media: ${mediaData.error.message}`);
+
+        const creationId = mediaData.id;
+
+        // 2. Publicar el contenedor
+        const publishRes = await fetch(`https://graph.facebook.com/v19.0/${IG_ID}/media_publish`, {
+            method: 'POST',
+            body: new URLSearchParams({
+                creation_id: creationId,
+                access_token: ACCESS_TOKEN
+            })
+        });
+
+        const publishData = await publishRes.json();
+        if (publishData.error) throw new Error(`Error publicando: ${publishData.error.message}`);
+
+        return { success: true, postId: publishData.id };
+    } catch (e: any) {
+        console.error("❌ IG Publish Error:", e);
+        return { success: false, error: e.message || "Error al publicar en Instagram" };
+    }
 }
