@@ -4,7 +4,7 @@ import { useState } from "react";
 import { BlogPost, Product } from "@/lib/types";
 import { savePostAction, deletePostAction, generateAIArticleAction, generateInstagramCaptionAction, publishToInstagramAction } from "@/app/actions/admin";
 import { toast } from "sonner";
-import { ImagePlus, Trash2, Edit, Plus, Eye, Globe, Search, Package, X as CloseIcon, Bold, Italic, Heading, List, ListOrdered, Type, Sparkles, Instagram } from "lucide-react";
+import { ImagePlus, Trash2, Edit, Plus, Eye, Globe, Search, Package, X as CloseIcon, Bold, Italic, Heading, List, ListOrdered, Type, Sparkles, Instagram, Copy, Download, ExternalLink } from "lucide-react";
 import { transformImageUrl } from "@/lib/images";
 import Image from "next/image";
 
@@ -55,12 +55,34 @@ export default function BlogClient({ initialPosts, allProducts }: Props) {
                 toast.success("¡Publicado en Instagram con éxito!", { id: t });
                 setIsIGModalOpen(false);
             } else {
-                toast.error(res.error || "Error al publicar", { id: t });
+                toast.error(res.error || "Error al publicar. Probablemente falta configurar la API de Meta.", { id: t });
             }
         } catch (error) {
             toast.error("Error inesperado al publicar", { id: t });
         } finally {
             setIsPublishingToIG(false);
+        }
+    };
+
+    const handleCopyCaption = () => {
+        navigator.clipboard.writeText(igCaption);
+        toast.success("¡Copy copiado al portapapeles!");
+    };
+
+    const handleDownloadImage = async () => {
+        try {
+            const response = await fetch(transformImageUrl(igImageUrl));
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `bolushop-post-${Date.now()}.jpg`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            toast.success("Imagen lista para subir");
+        } catch (error) {
+            toast.error("No se pudo descargar la imagen automáticamente");
         }
     };
 
@@ -569,12 +591,27 @@ export default function BlogClient({ initialPosts, allProducts }: Props) {
                         </div>
 
                         <div className="p-8 space-y-6 overflow-y-auto max-h-[70vh]">
-                            <div className="relative aspect-square rounded-3xl overflow-hidden bg-gray-100 border-4 border-white shadow-lg">
+                            <div className="relative aspect-square rounded-3xl overflow-hidden bg-gray-100 border-4 border-white shadow-lg group">
                                 <Image src={transformImageUrl(igImageUrl)} alt="Preview IG" fill className="object-cover" />
+                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                    <button
+                                        onClick={handleDownloadImage}
+                                        className="bg-white text-black px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center gap-2 hover:scale-105 transition-transform"
+                                    >
+                                        <Download size={16} />
+                                        Descargar Imagen
+                                    </button>
+                                </div>
                             </div>
 
                             <div>
-                                <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 px-1">Texto del Post (Caption)</label>
+                                <div className="flex justify-between items-end mb-2 px-1">
+                                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400">Texto del Post (Caption)</label>
+                                    <button onClick={handleCopyCaption} className="text-[10px] font-black uppercase tracking-widest text-pink-600 flex items-center gap-1 hover:opacity-70">
+                                        <Copy size={12} />
+                                        Copiar Texto
+                                    </button>
+                                </div>
                                 <textarea
                                     value={igCaption}
                                     onChange={(e) => setIgCaption(e.target.value)}
@@ -585,20 +622,43 @@ export default function BlogClient({ initialPosts, allProducts }: Props) {
                             </div>
                         </div>
 
-                        <div className="p-8 bg-gray-50 border-t border-gray-100 flex gap-4">
-                            <button
-                                onClick={() => setIsIGModalOpen(false)}
-                                className="flex-1 px-8 py-4 bg-white border border-gray-200 text-gray-400 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-gray-100 transition-all"
-                            >
-                                Cancelar
-                            </button>
+                        <div className="p-8 bg-gray-50 border-t border-gray-100 flex flex-col gap-4">
+                            <div className="flex gap-4">
+                                <button
+                                    onClick={handleDownloadImage}
+                                    className="flex-1 px-8 py-4 bg-white border border-gray-200 text-gray-700 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-gray-100 transition-all flex items-center justify-center gap-2"
+                                >
+                                    <Download size={16} />
+                                    Imagen
+                                </button>
+                                <button
+                                    onClick={handleCopyCaption}
+                                    className="flex-1 px-8 py-4 bg-white border border-gray-200 text-gray-700 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-gray-100 transition-all flex items-center justify-center gap-2"
+                                >
+                                    <Copy size={16} />
+                                    Copiar
+                                </button>
+                                <a
+                                    href="https://www.instagram.com/"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="flex-1 px-8 py-4 bg-white border border-gray-200 text-gray-700 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-gray-100 transition-all flex items-center justify-center gap-2"
+                                >
+                                    <ExternalLink size={16} />
+                                    Abrir IG
+                                </a>
+                            </div>
+
                             <button
                                 onClick={handlePublishToInstagram}
                                 disabled={isPublishingToIG || !igCaption}
-                                className="flex-[2] px-8 py-4 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:opacity-90 transition-all shadow-xl shadow-pink-500/20 flex items-center justify-center gap-2 disabled:opacity-50"
+                                className="w-full px-8 py-4 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:opacity-90 transition-all shadow-xl shadow-pink-500/20 flex items-center justify-center gap-2 disabled:opacity-50"
                             >
-                                {isPublishingToIG ? "Publicando..." : "Publicar Ahora"}
+                                {isPublishingToIG ? "Publicando..." : "Publicar Directo (Requiere API)"}
                             </button>
+                            <p className="text-[10px] text-center text-gray-400 font-medium uppercase tracking-tighter">
+                                Si el botón directo falla, usá los de arriba: Descargá, Copiá y Pegá en Instagram.
+                            </p>
                         </div>
                     </div>
                 </div>
