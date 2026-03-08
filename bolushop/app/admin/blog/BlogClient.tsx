@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { BlogPost, Product } from "@/lib/types";
-import { savePostAction, deletePostAction, generateAIArticleAction, generateInstagramCaptionAction, publishToInstagramAction } from "@/app/actions/admin";
+import { savePostAction, deletePostAction, generateAIArticleAction, generateSocialContentAction, publishToInstagramAction, publishToSocialWebhookAction } from "@/app/actions/admin";
 import { toast } from "sonner";
-import { ImagePlus, Trash2, Edit, Plus, Eye, Globe, Search, Package, X as CloseIcon, Bold, Italic, Heading, List, ListOrdered, Type, Sparkles, Instagram, Copy, Download, ExternalLink } from "lucide-react";
+import { ImagePlus, Trash2, Edit, Plus, Eye, Globe, Search, Package, X as CloseIcon, Bold, Italic, Heading, List, ListOrdered, Type, Sparkles, Instagram, Copy, Download, ExternalLink, Twitter, Share2, Pin, MessageSquare } from "lucide-react";
 import { transformImageUrl } from "@/lib/images";
 import Image from "next/image";
 
@@ -23,26 +23,36 @@ export default function BlogClient({ initialPosts, allProducts }: Props) {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedProductsForAI, setSelectedProductsForAI] = useState<string[]>([]);
 
-    // Instagram States
-    const [isIGModalOpen, setIsIGModalOpen] = useState(false);
-    const [igCaption, setIgCaption] = useState("");
-    const [igImageUrl, setIgImageUrl] = useState("");
+    // Social Assistant States
+    const [isSocialModalOpen, setIsSocialModalOpen] = useState(false);
+    const [socialContent, setSocialContent] = useState({ instagram: "", twitter: "", reddit: "", pinterest: "" });
+    const [activePlatform, setActivePlatform] = useState<'instagram' | 'twitter' | 'reddit' | 'pinterest'>('instagram');
+    const [socialImageUrl, setSocialImageUrl] = useState("");
     const [isPublishingToIG, setIsPublishingToIG] = useState(false);
+    const [currentSocialPost, setCurrentSocialPost] = useState<BlogPost | null>(null);
+    const [isAutoPublishing, setIsAutoPublishing] = useState(false);
 
-    const openInstagramModal = async (post: BlogPost) => {
-        setIgImageUrl(post.image || "");
-        setIsIGModalOpen(true);
-        setIgCaption("Cargando copy mágico...");
+    const openSocialModal = async (post: BlogPost) => {
+        setCurrentSocialPost(post);
+        setSocialImageUrl(post.image || "");
+        setIsSocialModalOpen(true);
+        setActivePlatform('instagram');
 
-        try {
-            const res = await generateInstagramCaptionAction(post);
-            if (res.success && res.caption) {
-                setIgCaption(res.caption);
-            } else {
-                toast.error("No se pudo generar el copy para Instagram");
+        // Cargar todos los contenidos progresivamente
+        const platforms: ('instagram' | 'twitter' | 'reddit' | 'pinterest')[] = ['instagram', 'twitter', 'reddit', 'pinterest'];
+
+        for (const platform of platforms) {
+            setSocialContent(prev => ({ ...prev, [platform]: "Generando contenido mágico..." }));
+            try {
+                const res = await generateSocialContentAction(post, platform);
+                if (res.success && res.content) {
+                    setSocialContent(prev => ({ ...prev, [platform]: res.content }));
+                } else {
+                    setSocialContent(prev => ({ ...prev, [platform]: `Error al generar para ${platform}` }));
+                }
+            } catch (e) {
+                setSocialContent(prev => ({ ...prev, [platform]: "Error de conexión" }));
             }
-        } catch (e) {
-            toast.error("Error al conectar con la IA para Instagram");
         }
     };
 
@@ -50,10 +60,9 @@ export default function BlogClient({ initialPosts, allProducts }: Props) {
         setIsPublishingToIG(true);
         const t = toast.loading("Publicando en Instagram...");
         try {
-            const res = await publishToInstagramAction(igImageUrl, igCaption);
+            const res = await publishToInstagramAction(socialImageUrl, socialContent.instagram);
             if (res.success) {
                 toast.success("¡Publicado en Instagram con éxito!", { id: t });
-                setIsIGModalOpen(false);
             } else {
                 toast.error(res.error || "Error al publicar. Probablemente falta configurar la API de Meta.", { id: t });
             }
@@ -65,24 +74,43 @@ export default function BlogClient({ initialPosts, allProducts }: Props) {
     };
 
     const handleCopyCaption = () => {
-        navigator.clipboard.writeText(igCaption);
-        toast.success("¡Copy copiado al portapapeles!");
+        navigator.clipboard.writeText(socialContent[activePlatform]);
+        toast.success(`¡Contenido de ${activePlatform} copiado!`);
     };
 
     const handleDownloadImage = async () => {
         try {
-            const response = await fetch(transformImageUrl(igImageUrl));
+            const response = await fetch(transformImageUrl(socialImageUrl));
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `bolushop-post-${Date.now()}.jpg`;
+            a.download = `bolushop-${activePlatform}-${Date.now()}.jpg`;
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
-            toast.success("Imagen lista para subir");
+            toast.success("Imagen descargada");
         } catch (error) {
-            toast.error("No se pudo descargar la imagen automáticamente");
+            toast.error("Error al descargar");
+        }
+    };
+
+    const handleAutoPublish = async () => {
+        if (!currentSocialPost) return;
+        setIsAutoPublishing(true);
+        const t = toast.loading("Enviando a todas las redes sociales...");
+        try {
+            const res = await publishToSocialWebhookAction(currentSocialPost, socialContent);
+            if (res.success) {
+                toast.success("¡Enviado! La automatización se encargará del resto.", { id: t });
+                setIsSocialModalOpen(false);
+            } else {
+                toast.error(res.error || "Error en la automatización", { id: t });
+            }
+        } catch (e) {
+            toast.error("Error al conectar con la automatización", { id: t });
+        } finally {
+            setIsAutoPublishing(false);
         }
     };
 
@@ -265,8 +293,8 @@ export default function BlogClient({ initialPosts, allProducts }: Props) {
                                         <button onClick={() => openEditModal(post)} className="p-2 bg-gray-50 text-gray-600 rounded-xl hover:bg-black hover:text-white transition-all" title="Editar">
                                             <Edit size={16} />
                                         </button>
-                                        <button onClick={() => openInstagramModal(post)} className="p-2 bg-pink-50 text-pink-600 rounded-xl hover:bg-pink-600 hover:text-white transition-all" title="Publicar en Instagram">
-                                            <Instagram size={16} />
+                                        <button onClick={() => openSocialModal(post)} className="p-2 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-600 hover:text-white transition-all" title="Asistente de Redes Sociales">
+                                            <Share2 size={16} />
                                         </button>
                                         <button onClick={() => handleDelete(post.id)} className="p-2 bg-red-50 text-red-600 rounded-xl hover:bg-red-600 hover:text-white transition-all" title="Eliminar">
                                             <Trash2 size={16} />
@@ -573,91 +601,125 @@ export default function BlogClient({ initialPosts, allProducts }: Props) {
                 </div>
             )}
 
-            {/* Modal de Publicar en Instagram */}
-            {isIGModalOpen && (
-                <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
-                    <div className="bg-white w-full max-w-xl rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col">
-                        <div className="p-8 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-pink-50 to-purple-50">
+            {/* Modal de Asistente de Redes Sociales Multi-IA */}
+            {isSocialModalOpen && (
+                <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl animate-in fade-in duration-300">
+                    <div className="bg-white w-full max-w-2xl rounded-[3rem] shadow-2xl overflow-hidden flex flex-col border border-white/20">
+                        <div className="p-8 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50">
                             <div>
-                                <h2 className="text-2xl font-black text-pink-900 flex items-center gap-2">
-                                    <Instagram className="text-pink-600" />
-                                    Postear en Instagram
+                                <h2 className="text-2xl font-black text-indigo-900 flex items-center gap-3">
+                                    <div className="bg-indigo-600 p-2 rounded-xl">
+                                        <Sparkles className="text-white" size={20} />
+                                    </div>
+                                    Asistente Multi-IA
                                 </h2>
-                                <p className="text-pink-600/60 font-medium text-sm">Convertí tu artículo en una publicación viral.</p>
+                                <p className="text-indigo-600/60 font-medium text-sm">Cada red social tiene su propio cerebro Gemini trabajando para vos.</p>
                             </div>
-                            <button onClick={() => setIsIGModalOpen(false)} className="bg-white p-2.5 rounded-2xl hover:bg-gray-100 transition-colors">
-                                <CloseIcon size={20} className="text-gray-400" />
+                            <button onClick={() => setIsSocialModalOpen(false)} className="bg-white p-3 rounded-2xl hover:bg-red-50 hover:text-red-500 transition-all shadow-sm">
+                                <CloseIcon size={20} />
                             </button>
                         </div>
 
-                        <div className="p-8 space-y-6 overflow-y-auto max-h-[70vh]">
-                            <div className="relative aspect-square rounded-3xl overflow-hidden bg-gray-100 border-4 border-white shadow-lg group">
-                                <Image src={transformImageUrl(igImageUrl)} alt="Preview IG" fill className="object-cover" />
+                        {/* Tabs de Redes Sociales */}
+                        <div className="flex p-2 bg-gray-50/50 border-b border-gray-100 overflow-x-auto gap-2">
+                            {[
+                                { id: 'instagram', icon: Instagram, color: 'text-pink-600', bg: 'bg-pink-50', label: 'Instagram' },
+                                { id: 'twitter', icon: Twitter, color: 'text-blue-500', bg: 'bg-blue-50', label: 'Twitter (X)' },
+                                { id: 'reddit', icon: MessageSquare, color: 'text-orange-600', bg: 'bg-orange-50', label: 'Reddit' },
+                                { id: 'pinterest', icon: Pin, color: 'text-red-600', bg: 'bg-red-50', label: 'Pinterest' }
+                            ].map(tab => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActivePlatform(tab.id as any)}
+                                    className={`flex items-center gap-2 px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest transition-all ${activePlatform === tab.id ? `${tab.bg} ${tab.color} shadow-sm border border-${tab.color}/20` : 'text-gray-400 hover:bg-gray-100'}`}
+                                >
+                                    <tab.icon size={16} />
+                                    {tab.label}
+                                </button>
+                            ))}
+                        </div>
+
+                        <div className="p-8 space-y-6 overflow-y-auto max-h-[60vh]">
+                            <div className="relative aspect-video rounded-[2rem] overflow-hidden bg-gray-100 border-4 border-white shadow-xl group">
+                                <Image src={transformImageUrl(socialImageUrl)} alt="Preview Social" fill className="object-cover" />
                                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <button
-                                        onClick={handleDownloadImage}
-                                        className="bg-white text-black px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center gap-2 hover:scale-105 transition-transform"
-                                    >
-                                        <Download size={16} />
-                                        Descargar Imagen
+                                    <button onClick={handleDownloadImage} className="bg-white text-black px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center gap-3 hover:scale-105 transition-transform shadow-2xl">
+                                        <Download size={18} />
+                                        Descargar para {activePlatform}
                                     </button>
                                 </div>
                             </div>
 
-                            <div>
-                                <div className="flex justify-between items-end mb-2 px-1">
-                                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400">Texto del Post (Caption)</label>
-                                    <button onClick={handleCopyCaption} className="text-[10px] font-black uppercase tracking-widest text-pink-600 flex items-center gap-1 hover:opacity-70">
-                                        <Copy size={12} />
+                            <div className="space-y-4">
+                                <div className="flex justify-between items-end px-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Contenido Sugerido por IA</label>
+                                    <button onClick={handleCopyCaption} className="text-[10px] font-black uppercase tracking-widest text-indigo-600 flex items-center gap-2 hover:opacity-70 bg-indigo-50 px-3 py-1.5 rounded-lg transition-all">
+                                        <Copy size={14} />
                                         Copiar Texto
                                     </button>
                                 </div>
-                                <textarea
-                                    value={igCaption}
-                                    onChange={(e) => setIgCaption(e.target.value)}
-                                    rows={8}
-                                    className="w-full px-5 py-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-pink-500/20 font-medium text-gray-800 text-sm leading-relaxed"
-                                    placeholder="Escribiendo el post perfecto..."
-                                />
+                                <div className="relative">
+                                    <textarea
+                                        value={socialContent[activePlatform]}
+                                        onChange={(e) => setSocialContent({ ...socialContent, [activePlatform]: e.target.value })}
+                                        rows={8}
+                                        className="w-full px-6 py-5 rounded-[2rem] bg-gray-50 border-2 border-transparent focus:border-indigo-500/20 focus:bg-white transition-all font-medium text-gray-800 text-sm leading-relaxed shadow-inner"
+                                    />
+                                    {socialContent[activePlatform].includes("Generando") && (
+                                        <div className="absolute inset-0 flex items-center justify-center bg-gray-50/50 rounded-[2rem] backdrop-blur-[2px]">
+                                            <div className="flex flex-col items-center gap-3">
+                                                <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+                                                <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest animate-pulse">Consultando a Gemini...</span>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
 
-                        <div className="p-8 bg-gray-50 border-t border-gray-100 flex flex-col gap-4">
-                            <div className="flex gap-4">
+                        <div className="p-8 bg-gray-50 border-t border-gray-100 space-y-4">
+                            <div className="grid grid-cols-2 gap-4">
                                 <button
                                     onClick={handleDownloadImage}
-                                    className="flex-1 px-8 py-4 bg-white border border-gray-200 text-gray-700 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-gray-100 transition-all flex items-center justify-center gap-2"
+                                    className="px-8 py-5 bg-white border-2 border-gray-100 text-gray-700 rounded-2xl font-black text-xs uppercase tracking-widest hover:border-indigo-500 hover:text-indigo-600 transition-all flex items-center justify-center gap-3 shadow-sm"
                                 >
-                                    <Download size={16} />
-                                    Imagen
+                                    <Download size={18} />
+                                    Bajar Imagen
                                 </button>
-                                <button
-                                    onClick={handleCopyCaption}
-                                    className="flex-1 px-8 py-4 bg-white border border-gray-200 text-gray-700 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-gray-100 transition-all flex items-center justify-center gap-2"
-                                >
-                                    <Copy size={16} />
-                                    Copiar
-                                </button>
-                                <a
-                                    href="https://www.instagram.com/"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="flex-1 px-8 py-4 bg-white border border-gray-200 text-gray-700 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-gray-100 transition-all flex items-center justify-center gap-2"
-                                >
-                                    <ExternalLink size={16} />
-                                    Abrir IG
-                                </a>
+
+                                {activePlatform === 'instagram' ? (
+                                    <button
+                                        onClick={handlePublishToInstagram}
+                                        disabled={isPublishingToIG || socialContent.instagram.includes("Generando")}
+                                        className="px-8 py-5 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:opacity-90 transition-all shadow-xl shadow-pink-500/30 flex items-center justify-center gap-3 disabled:opacity-50"
+                                    >
+                                        <Instagram size={18} />
+                                        {isPublishingToIG ? "Publicando..." : "Postear Ahora"}
+                                    </button>
+                                ) : (
+                                    <a
+                                        href={activePlatform === 'twitter' ? "https://twitter.com/intent/tweet" : activePlatform === 'reddit' ? "https://www.reddit.com/submit" : "https://www.pinterest.com/"}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        onClick={handleCopyCaption}
+                                        className="px-8 py-5 bg-indigo-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-600/30 flex items-center justify-center gap-3"
+                                    >
+                                        <ExternalLink size={18} />
+                                        Abrir {activePlatform}
+                                    </a>
+                                )}
                             </div>
 
                             <button
-                                onClick={handlePublishToInstagram}
-                                disabled={isPublishingToIG || !igCaption}
-                                className="w-full px-8 py-4 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:opacity-90 transition-all shadow-xl shadow-pink-500/20 flex items-center justify-center gap-2 disabled:opacity-50"
+                                onClick={handleAutoPublish}
+                                disabled={isAutoPublishing || Object.values(socialContent).some(c => c.includes("Generando"))}
+                                className="w-full px-8 py-6 bg-black text-white rounded-[2rem] font-black text-sm uppercase tracking-[0.2em] hover:bg-gray-800 transition-all shadow-2xl flex items-center justify-center gap-3 disabled:opacity-50"
                             >
-                                {isPublishingToIG ? "Publicando..." : "Publicar Directo (Requiere API)"}
+                                <Globe size={20} className="text-indigo-400" />
+                                {isAutoPublishing ? "Automatizando..." : "Auto-Publicar en todas las redes"}
                             </button>
-                            <p className="text-[10px] text-center text-gray-400 font-medium uppercase tracking-tighter">
-                                Si el botón directo falla, usá los de arriba: Descargá, Copiá y Pegá en Instagram.
+                            <p className="text-[10px] text-center text-gray-400 font-bold uppercase tracking-widest">
+                                Envíalo a un Webhook (Make.com) para publicación 100% automática.
                             </p>
                         </div>
                     </div>

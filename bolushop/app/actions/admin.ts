@@ -26,6 +26,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { supabase } from "@/lib/supabase";
 import { Resend } from 'resend';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { transformImageUrl } from "@/lib/images";
 
 export async function deleteProductAction(id: string) {
     const success = await deleteProduct(id);
@@ -596,34 +597,67 @@ IMPORTANTE: Respondé SOLO el objeto JSON limpio. No menciones precios exactos.`
     }
 }
 
-export async function generateInstagramCaptionAction(post: Partial<BlogPost>) {
+export async function generateSocialContentAction(post: Partial<BlogPost>, platform: 'instagram' | 'twitter' | 'reddit' | 'pinterest') {
     try {
-        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+        let apiKey = process.env.GEMINI_API_KEY;
+        let prompt = "";
+
+        switch (platform) {
+            case 'instagram':
+                apiKey = process.env.GEMINI_API_KEY_INSTAGRAM || apiKey;
+                prompt = `Actúa como un experto en Social Media para una tienda de Argentina (BoluShop). Generá un copy para Instagram sobre el artículo "${post.title}". Usá voseo, muchos emojis, saltos de línea y hashtags relevantes. IMPORTANTE: Respondé SOLO con el texto del post, sin explicaciones ni markdown (sin negritas con asteriscos).`;
+                break;
+            case 'twitter':
+                apiKey = process.env.GEMINI_API_KEY_TWITTER || apiKey;
+                prompt = `Actúa como un influencer de tecnología/tendencias en Argentina. Generá un HILO de Twitter (máximo 3 tweets) sobre "${post.title}". El primero debe ser un gancho (hook) potente, el segundo con valor y el tercero invitando a leer más en BoluShop. Usá voseo y hashtags como #BoluShop #Argentina. IMPORTANTE: Respondé SOLO el texto de los tweets separados por "---". Sin markdown (sin negritas).`;
+                break;
+            case 'reddit':
+                apiKey = process.env.GEMINI_API_KEY_REDDIT || apiKey;
+                prompt = `Actúa como un experto en comunidades de Reddit Argentina. No hagas spam. Redactá un post que aporte VALOR o genere DEBATE basado en "${post.title}". El tono debe ser sarcástico o muy informativo pero "de usuario a usuario". Usá lenguaje argentino de Reddit. IMPORTANTE: Respondé SOLO el texto del post. Sin markdown de negritas.`;
+                break;
+            case 'pinterest':
+                apiKey = process.env.GEMINI_API_KEY_PINTEREST || apiKey;
+                prompt = `Actúa como un curador de contenido visual. Generá un título y una descripción optimizada para Pinterest sobre "${post.title}". Enfocante en palabras clave de búsqueda y beneficios estéticos o prácticos. Usá voseo. IMPORTANTE: Respondé SOLO el título y la descripción separados por un salto de línea. Sin markdown.`;
+                break;
+        }
+
+        const genAI = new GoogleGenerativeAI(apiKey || '');
         const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
-
-        const prompt = `Actúa como un experto en Social Media para una tienda de Argentina (BoluShop).
-        
-Tengo este artículo de blog:
-- Título: ${post.title}
-- Resumen: ${post.excerpt}
-
-Generá un copy para un post de Instagram que sea súper atractivo.
-Requisitos:
-- Usá lenguaje argentino (voseo: comprá, mirá, tenés).
-- Poné emojis relevantes.
-- Usá saltos de línea para que sea fácil de leer.
-- Agregá una lista de 5-8 hashtags relevantes (incluyendo #BoluShop #Argentina #Ofertas).
-- Llamá a la acción (fomentá que vayan al link en la bio o comenten).
-
-Respondé SOLAMENTE el texto del post, listo para publicar.`;
 
         const result = await model.generateContent(prompt);
         const response = await result.response;
-        return { success: true, caption: response.text() };
+        return { success: true, content: response.text() };
     } catch (e: any) {
-        console.error("❌ IG Caption Error:", e);
-        return { success: false, error: e.message || "Error al generar copy para IG" };
+        console.error(`❌ ${platform} Content Error:`, e);
+        return { success: false, error: `Error al generar para ${platform}` };
     }
+}
+
+/**
+ * Convierte cualquier URL de imagen en una URL pública accesible por Meta/Instagram.
+ * Usa el proxy propio de la app (sin almacenar nada en DB).
+ * - Si ya es de Supabase u otra URL pública confiable → la devuelve tal cual.
+ * - Si es de Dropers u otro origen bloqueado → la envuelve en nuestro proxy.
+ */
+function ensurePublicImageUrl(rawUrl: string): string {
+    if (!rawUrl) return rawUrl;
+
+    // URLs de Supabase o placeholders → directo, sin proxy
+    if (rawUrl.includes('supabase') || rawUrl.startsWith('/placeholder')) return rawUrl;
+
+    // Si es relativa, la convertimos a absoluta simple
+    if (!rawUrl.startsWith('http')) {
+        const base = (process.env.NEXT_PUBLIC_BASE_URL || '').replace(/\/$/, '');
+        return `${base}${rawUrl.startsWith('/') ? '' : '/'}${rawUrl}`;
+    }
+
+    // URLs externas (Dropers, etc.) → las servimos a través de nuestro proxy
+    // Esto genera: https://bolushop.com/api/proxy-image?url=URL_DROPERS
+    // Instagram puede descargar desde esa URL sin problemas
+    const base = (process.env.NEXT_PUBLIC_BASE_URL || '').replace(/\/$/, '');
+    const proxyUrl = `${base}/api/proxy-image?url=${encodeURIComponent(rawUrl)}`;
+    console.log('🔀 Proxy URL generada para Instagram/Make:', proxyUrl);
+    return proxyUrl;
 }
 
 export async function publishToInstagramAction(imageUrl: string, caption: string) {
@@ -635,24 +669,33 @@ export async function publishToInstagramAction(imageUrl: string, caption: string
             throw new Error("Faltan credenciales de Instagram (IG_ID o TOKEN)");
         }
 
-        // 1. Crear el contenedor del medio
-        // Usamos nuestro proxy para asegurar que Instagram pueda descargar la imagen si es de CJ u otra fuente externa
-        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-        const proxiedImageUrl = `${baseUrl}/api/proxy-image?url=${encodeURIComponent(imageUrl)}`;
+        // Truncar caption para cumplir con el límite de Instagram (2200 chars)
+        const finalCaption = caption.length > 2100 ? caption.substring(0, 2100) + "..." : caption;
 
+        // Convertir URL de Dropers al proxy público de BoluShop para que Meta pueda accederla
+        const finalImageUrl = ensurePublicImageUrl(imageUrl);
+        console.log("🚀 Publicando en IG con URL (proxy):", finalImageUrl);
+
+        // 1. Crear el contenedor del medio
         const mediaRes = await fetch(`https://graph.facebook.com/v19.0/${IG_ID}/media`, {
             method: 'POST',
             body: new URLSearchParams({
-                image_url: proxiedImageUrl,
-                caption: caption,
+                image_url: finalImageUrl,
+                caption: finalCaption,
                 access_token: ACCESS_TOKEN
             })
         });
 
         const mediaData = await mediaRes.json();
-        if (mediaData.error) throw new Error(`Error reservando media: ${mediaData.error.message}`);
+        if (mediaData.error) {
+            console.error("❌ Error Meta API (Media):", mediaData.error);
+            throw new Error(`Error reservando media: ${mediaData.error.message} (código ${mediaData.error.code})`);
+        }
 
         const creationId = mediaData.id;
+
+        // 10 segundos de espera para que Facebook procese la imagen (opcional pero recomendado para URLs lentas)
+        // await new Promise(resolve => setTimeout(resolve, 3000));
 
         // 2. Publicar el contenedor
         const publishRes = await fetch(`https://graph.facebook.com/v19.0/${IG_ID}/media_publish`, {
@@ -664,11 +707,59 @@ export async function publishToInstagramAction(imageUrl: string, caption: string
         });
 
         const publishData = await publishRes.json();
-        if (publishData.error) throw new Error(`Error publicando: ${publishData.error.message}`);
+        if (publishData.error) {
+            console.error("❌ Error Meta API (Publish):", publishData.error);
+            throw new Error(`Error publicando: ${publishData.error.message}`);
+        }
 
         return { success: true, postId: publishData.id };
     } catch (e: any) {
         console.error("❌ IG Publish Error:", e);
         return { success: false, error: e.message || "Error al publicar en Instagram" };
+    }
+}
+
+export async function publishToSocialWebhookAction(post: Partial<BlogPost>, socialContent: any) {
+    try {
+        const webhookUrl = process.env.SOCIAL_WEBHOOK_URL;
+        if (!webhookUrl) {
+            return { success: false, error: "No configuraste la URL del Webhook en .env.local" };
+        }
+
+        // Convertir la URL de la imagen a una URL proxy pública de BoluShop.
+        // Make.com recibe: https://bolushop.com/api/proxy-image?url=URL_DROPERS
+        // Instagram descarga desde esa URL. Sin almacenamiento, solo proxy.
+        const rawImageUrl = transformImageUrl(post.image || '');
+        const absoluteImageUrl = ensurePublicImageUrl(rawImageUrl);
+
+        console.log("📡 Webhook → imagen proxy:", absoluteImageUrl);
+
+        const payload = {
+            title: post.title || "Sin título",
+            post_link: `${process.env.NEXT_PUBLIC_BASE_URL}/blog/${post.slug || ""}`,
+            image_url: absoluteImageUrl,
+            content_instagram: socialContent.instagram || "",
+            content_twitter: socialContent.twitter || "",
+            content_reddit: socialContent.reddit || "",
+            content_pinterest: socialContent.pinterest || "",
+            published_at: new Date().toISOString(),
+            platform_target: "all"
+        };
+
+        const res = await fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+            return { success: true, imageUrl: absoluteImageUrl };
+        } else {
+            console.error("❌ Webhook Response Error:", res.status, await res.text());
+            return { success: false, error: `El servidor de automatización respondió con error (${res.status}).` };
+        }
+    } catch (e: any) {
+        console.error("❌ Webhook Error:", e);
+        return { success: false, error: e.message || "Error al conectar con el servidor de automatización." };
     }
 }
