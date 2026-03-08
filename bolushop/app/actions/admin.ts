@@ -547,7 +547,7 @@ export async function deletePostAction(id: string) {
 export async function generateAIArticleAction(products: Product[]) {
     try {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
         const productsInfo = products.map(p => `- Producto: ${p.name}\n  Descripción: ${p.description}\n  Características: ${p.features?.join(', ')}`).join('\n\n');
 
@@ -622,14 +622,14 @@ export async function generateSocialContentAction(post: Partial<BlogPost>, platf
         }
 
         const genAI = new GoogleGenerativeAI(apiKey || '');
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
-
+        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
         const result = await model.generateContent(prompt);
+
         const response = await result.response;
         return { success: true, content: response.text() };
     } catch (e: any) {
         console.error(`❌ ${platform} Content Error:`, e);
-        return { success: false, error: `Error al generar para ${platform}` };
+        return { success: false, error: `Error al generar para ${platform}: ${e.message || 'Error desconocido'}` };
     }
 }
 
@@ -638,65 +638,23 @@ export async function generateSocialContentAction(post: Partial<BlogPost>, platf
  * Retorna la URL pública de Supabase para que Instagram/Make.com pueda accederla.
  * Si la descarga o el upload falla, retorna la URL original sin modificar.
  */
-async function ensurePublicImageUrl(rawUrl: string): Promise<string> {
+/**
+ * Convierte una URL de imagen en una URL pública accesible por Meta/Instagram/Make.
+ * Usa el proxy propio de la app para evitar bloqueos de Dropers (sin almacenar nada).
+ */
+function ensurePublicImageUrl(rawUrl: string): string {
     if (!rawUrl) return rawUrl;
+    if (rawUrl.includes('supabase') || rawUrl.startsWith('data:')) return rawUrl;
 
-    // Ya está en Supabase → perfecto
-    if (rawUrl.includes('supabase')) return rawUrl;
+    const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || 'https://bolushop.com').replace(/\/$/, '');
 
-    // URL relativa → construir absoluta usando la URL de Supabase como host confiable
-    // (evitamos depender de NEXT_PUBLIC_BASE_URL que puede tener comentarios o estar vacía)
-    if (!rawUrl.startsWith('http')) {
-        // Imagen local → devolvemos tal cual (bolushop.com la servirá)
+    // Si ya es absoluta y no es Dropers, la dejamos
+    if (rawUrl.startsWith('http') && !rawUrl.includes('droppers.com.ar')) {
         return rawUrl;
     }
 
-    // URL externa (Dropers, etc.) → descargar y re-hospedar en Supabase
-    try {
-        console.log('📥 Descargando imagen de Dropers para re-hospedar:', rawUrl);
-        const response = await fetch(rawUrl, {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36',
-                'Accept': 'image/*,*/*;q=0.8',
-                'Referer': 'https://bolushop.com/'
-            },
-            // Timeout implícito por Vercel (10s en free tier)
-        });
-
-        if (!response.ok) {
-            console.warn(`⚠️ HTTP ${response.status} al descargar imagen — usando URL original`);
-            return rawUrl;
-        }
-
-        const contentType = response.headers.get('content-type') || 'image/jpeg';
-        if (!contentType.startsWith('image/')) {
-            console.warn('⚠️ Respuesta no es imagen:', contentType, '— usando URL original');
-            return rawUrl;
-        }
-
-        const buffer = await response.arrayBuffer();
-        const ext = contentType.includes('png') ? 'png' : contentType.includes('webp') ? 'webp' : 'jpg';
-        const date = new Date().toISOString().substring(0, 10); // YYYY-MM-DD
-        const hash = Buffer.from(rawUrl).toString('base64').replace(/[^a-zA-Z0-9]/g, '').substring(0, 20);
-        const filePath = `social/temp/${date}_${hash}.${ext}`;
-
-        const { error: uploadError } = await supabase.storage
-            .from('products')
-            .upload(filePath, buffer, { contentType, upsert: true });
-
-        if (uploadError) {
-            console.error('❌ Upload a Supabase falló:', uploadError.message);
-            return rawUrl; // Fallback: URL original de Dropers
-        }
-
-        const { data: { publicUrl } } = supabase.storage.from('products').getPublicUrl(filePath);
-        console.log('✅ Imagen subida a Supabase (temp):', publicUrl);
-        return publicUrl;
-
-    } catch (e: any) {
-        console.error('❌ Error en ensurePublicImageUrl:', e.message);
-        return rawUrl; // Fallback: URL original sin romper nada
-    }
+    // Proxy para todo lo demás (especialmente Dropers)
+    return `${baseUrl}/api/proxy-image?url=${encodeURIComponent(rawUrl)}`;
 }
 
 
@@ -713,9 +671,9 @@ export async function publishToInstagramAction(imageUrl: string, caption: string
         // Truncar caption para cumplir con el límite de Instagram (2200 chars)
         const finalCaption = caption.length > 2100 ? caption.substring(0, 2100) + "..." : caption;
 
-        // Descargar imagen de Dropers y re-hospedar en Supabase temp para que Meta pueda accederla
-        const finalImageUrl = await ensurePublicImageUrl(imageUrl);
-        console.log("🚀 Publicando en IG con URL:", finalImageUrl);
+        // Proxy URL para que Meta pueda accederla sin bloqueo de Dropers
+        const finalImageUrl = ensurePublicImageUrl(imageUrl);
+        console.log("🚀 Publicando en IG con URL proxy:", finalImageUrl);
 
         // 1. Crear el contenedor del medio
         const mediaRes = await fetch(`https://graph.facebook.com/v19.0/${IG_ID}/media`, {
@@ -767,11 +725,11 @@ export async function publishToSocialWebhookAction(post: Partial<BlogPost>, soci
             return { success: false, error: "No configuraste la URL del Webhook en .env.local" };
         }
 
-        // Descargar imagen de Dropers y re-hospedar en Supabase temp para que Make/Instagram pueda accederla
+        // Proxy URL para evitar bloqueo de Dropers en Make/Instagram
         const rawImageUrl = transformImageUrl(post.image || '');
-        const absoluteImageUrl = await ensurePublicImageUrl(rawImageUrl);
+        const absoluteImageUrl = ensurePublicImageUrl(rawImageUrl);
 
-        console.log("📡 Webhook → imagen final:", absoluteImageUrl);
+        console.log("📡 Webhook → imagen proxy:", absoluteImageUrl);
 
         const payload = {
             title: post.title || "Sin título",
