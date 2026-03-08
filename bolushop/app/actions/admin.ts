@@ -547,7 +547,7 @@ export async function deletePostAction(id: string) {
 export async function generateAIArticleAction(products: Product[]) {
     try {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
         const productsInfo = products.map(p => `- Producto: ${p.name}\n  Descripción: ${p.description}\n  Características: ${p.features?.join(', ')}`).join('\n\n');
 
@@ -622,7 +622,7 @@ export async function generateSocialContentAction(post: Partial<BlogPost>, platf
         }
 
         const genAI = new GoogleGenerativeAI(apiKey || '');
-        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
         const result = await model.generateContent(prompt);
 
         const response = await result.response;
