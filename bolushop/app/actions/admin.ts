@@ -634,70 +634,71 @@ export async function generateSocialContentAction(post: Partial<BlogPost>, platf
 }
 
 /**
- * Asegura que la imagen está en una URL que Instagram puede descargar.
- * Estrategia:
- *   1. Si ya está en Supabase → OK, se usa directo.
- *   2. Si es externa (Dropers) → se descarga y sube a Supabase en social/temp/
- *      Las imágenes temporales se guardan con prefijo de fecha (YYYY-MM-DD_hash)
- *      y pueden limpiarse desde Supabase Storage > products > social/temp/ cuando quieras.
- *   3. Si la descarga falla → fallback al proxy (mejor que nada).
+ * Descarga la imagen de Dropers y la sube a Supabase Storage (carpeta social/temp/).
+ * Retorna la URL pública de Supabase para que Instagram/Make.com pueda accederla.
+ * Si la descarga o el upload falla, retorna la URL original sin modificar.
  */
 async function ensurePublicImageUrl(rawUrl: string): Promise<string> {
     if (!rawUrl) return rawUrl;
 
-    // Ya está en Supabase → perfecto, Instagram puede accederla
+    // Ya está en Supabase → perfecto
     if (rawUrl.includes('supabase')) return rawUrl;
 
-    // URL relativa → convertir a absoluta con proxy como fallback
+    // URL relativa → construir absoluta usando la URL de Supabase como host confiable
+    // (evitamos depender de NEXT_PUBLIC_BASE_URL que puede tener comentarios o estar vacía)
     if (!rawUrl.startsWith('http')) {
-        const base = (process.env.NEXT_PUBLIC_BASE_URL || '').replace(/\/$/, '');
-        return `${base}${rawUrl.startsWith('/') ? '' : '/'}${rawUrl}`;
+        // Imagen local → devolvemos tal cual (bolushop.com la servirá)
+        return rawUrl;
     }
 
-    // Intentar descargar y subir a Supabase (desde el servidor Next.js)
+    // URL externa (Dropers, etc.) → descargar y re-hospedar en Supabase
     try {
-        console.log('📥 Descargando imagen para Instagram:', rawUrl);
+        console.log('📥 Descargando imagen de Dropers para re-hospedar:', rawUrl);
         const response = await fetch(rawUrl, {
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36',
                 'Accept': 'image/*,*/*;q=0.8',
                 'Referer': 'https://bolushop.com/'
-            }
+            },
+            // Timeout implícito por Vercel (10s en free tier)
         });
 
-        if (response.ok) {
-            const contentType = response.headers.get('content-type') || 'image/jpeg';
-            if (contentType.startsWith('image/')) {
-                const buffer = await response.arrayBuffer();
-                const ext = contentType.includes('png') ? 'png' : contentType.includes('webp') ? 'webp' : 'jpg';
-                const date = new Date().toISOString().substring(0, 10); // YYYY-MM-DD
-                const hash = Buffer.from(rawUrl).toString('base64').replace(/[^a-zA-Z0-9]/g, '').substring(0, 20);
-                const filePath = `social/temp/${date}_${hash}.${ext}`;
-
-                const { error: uploadError } = await supabase.storage
-                    .from('products')
-                    .upload(filePath, buffer, { contentType, upsert: true });
-
-                if (!uploadError) {
-                    const { data: { publicUrl } } = supabase.storage.from('products').getPublicUrl(filePath);
-                    console.log('✅ Imagen subida a Supabase (temp):', publicUrl);
-                    return publicUrl;
-                }
-                console.warn('⚠️ Upload a Supabase falló, usando proxy:', uploadError.message);
-            }
-        } else {
-            console.warn(`⚠️ No se pudo descargar imagen: HTTP ${response.status}`);
+        if (!response.ok) {
+            console.warn(`⚠️ HTTP ${response.status} al descargar imagen — usando URL original`);
+            return rawUrl;
         }
-    } catch (e: any) {
-        console.warn('⚠️ Error descargando imagen:', e.message);
-    }
 
-    // Fallback: proxy (puede no funcionar si Dropers bloquea Vercel IPs)
-    const base = (process.env.NEXT_PUBLIC_BASE_URL || '').replace(/\/$/, '');
-    const proxyUrl = `${base}/api/proxy-image?url=${encodeURIComponent(rawUrl)}`;
-    console.log('🔀 Fallback al proxy:', proxyUrl);
-    return proxyUrl;
+        const contentType = response.headers.get('content-type') || 'image/jpeg';
+        if (!contentType.startsWith('image/')) {
+            console.warn('⚠️ Respuesta no es imagen:', contentType, '— usando URL original');
+            return rawUrl;
+        }
+
+        const buffer = await response.arrayBuffer();
+        const ext = contentType.includes('png') ? 'png' : contentType.includes('webp') ? 'webp' : 'jpg';
+        const date = new Date().toISOString().substring(0, 10); // YYYY-MM-DD
+        const hash = Buffer.from(rawUrl).toString('base64').replace(/[^a-zA-Z0-9]/g, '').substring(0, 20);
+        const filePath = `social/temp/${date}_${hash}.${ext}`;
+
+        const { error: uploadError } = await supabase.storage
+            .from('products')
+            .upload(filePath, buffer, { contentType, upsert: true });
+
+        if (uploadError) {
+            console.error('❌ Upload a Supabase falló:', uploadError.message);
+            return rawUrl; // Fallback: URL original de Dropers
+        }
+
+        const { data: { publicUrl } } = supabase.storage.from('products').getPublicUrl(filePath);
+        console.log('✅ Imagen subida a Supabase (temp):', publicUrl);
+        return publicUrl;
+
+    } catch (e: any) {
+        console.error('❌ Error en ensurePublicImageUrl:', e.message);
+        return rawUrl; // Fallback: URL original sin romper nada
+    }
 }
+
 
 
 export async function publishToInstagramAction(imageUrl: string, caption: string) {
