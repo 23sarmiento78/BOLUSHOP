@@ -623,40 +623,81 @@ export async function generateSocialContentAction(post: Partial<BlogPost>, platf
 
         const genAI = new GoogleGenerativeAI(apiKey || '');
         const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
-        const result = await model.generateContent(prompt);
 
+        const result = await model.generateContent(prompt);
         const response = await result.response;
         return { success: true, content: response.text() };
     } catch (e: any) {
         console.error(`❌ ${platform} Content Error:`, e);
-        return { success: false, error: `Error al generar para ${platform}: ${e.message || 'Error desconocido'}` };
+        return { success: false, error: `Error al generar para ${platform}` };
     }
 }
 
 /**
- * Descarga la imagen de Dropers y la sube a Supabase Storage (carpeta social/temp/).
- * Retorna la URL pública de Supabase para que Instagram/Make.com pueda accederla.
- * Si la descarga o el upload falla, retorna la URL original sin modificar.
+ * Asegura que la imagen está en una URL que Instagram puede descargar.
+ * Estrategia:
+ *   1. Si ya está en Supabase → OK, se usa directo.
+ *   2. Si es externa (Dropers) → se descarga y sube a Supabase en social/temp/
+ *      Las imágenes temporales se guardan con prefijo de fecha (YYYY-MM-DD_hash)
+ *      y pueden limpiarse desde Supabase Storage > products > social/temp/ cuando quieras.
+ *   3. Si la descarga falla → fallback al proxy (mejor que nada).
  */
-/**
- * Convierte una URL de imagen en una URL pública accesible por Meta/Instagram/Make.
- * Usa el proxy propio de la app para evitar bloqueos de Dropers (sin almacenar nada).
- */
-function ensurePublicImageUrl(rawUrl: string): string {
+async function ensurePublicImageUrl(rawUrl: string): Promise<string> {
     if (!rawUrl) return rawUrl;
-    if (rawUrl.includes('supabase') || rawUrl.startsWith('data:')) return rawUrl;
 
-    const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || 'https://bolushop.com').replace(/\/$/, '');
+    // Ya está en Supabase → perfecto, Instagram puede accederla
+    if (rawUrl.includes('supabase')) return rawUrl;
 
-    // Si ya es absoluta y no es Dropers, la dejamos
-    if (rawUrl.startsWith('http') && !rawUrl.includes('droppers.com.ar')) {
-        return rawUrl;
+    // URL relativa → convertir a absoluta con proxy como fallback
+    if (!rawUrl.startsWith('http')) {
+        const base = (process.env.NEXT_PUBLIC_BASE_URL || '').replace(/\/$/, '');
+        return `${base}${rawUrl.startsWith('/') ? '' : '/'}${rawUrl}`;
     }
 
-    // Proxy para todo lo demás (especialmente Dropers)
-    return `${baseUrl}/api/proxy-image?url=${encodeURIComponent(rawUrl)}`;
-}
+    // Intentar descargar y subir a Supabase (desde el servidor Next.js)
+    try {
+        console.log('📥 Descargando imagen para Instagram:', rawUrl);
+        const response = await fetch(rawUrl, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36',
+                'Accept': 'image/*,*/*;q=0.8',
+                'Referer': 'https://bolushop.com/'
+            }
+        });
 
+        if (response.ok) {
+            const contentType = response.headers.get('content-type') || 'image/jpeg';
+            if (contentType.startsWith('image/')) {
+                const buffer = await response.arrayBuffer();
+                const ext = contentType.includes('png') ? 'png' : contentType.includes('webp') ? 'webp' : 'jpg';
+                const date = new Date().toISOString().substring(0, 10); // YYYY-MM-DD
+                const hash = Buffer.from(rawUrl).toString('base64').replace(/[^a-zA-Z0-9]/g, '').substring(0, 20);
+                const filePath = `social/temp/${date}_${hash}.${ext}`;
+
+                const { error: uploadError } = await supabase.storage
+                    .from('products')
+                    .upload(filePath, buffer, { contentType, upsert: true });
+
+                if (!uploadError) {
+                    const { data: { publicUrl } } = supabase.storage.from('products').getPublicUrl(filePath);
+                    console.log('✅ Imagen subida a Supabase (temp):', publicUrl);
+                    return publicUrl;
+                }
+                console.warn('⚠️ Upload a Supabase falló, usando proxy:', uploadError.message);
+            }
+        } else {
+            console.warn(`⚠️ No se pudo descargar imagen: HTTP ${response.status}`);
+        }
+    } catch (e: any) {
+        console.warn('⚠️ Error descargando imagen:', e.message);
+    }
+
+    // Fallback: proxy (puede no funcionar si Dropers bloquea Vercel IPs)
+    const base = (process.env.NEXT_PUBLIC_BASE_URL || '').replace(/\/$/, '');
+    const proxyUrl = `${base}/api/proxy-image?url=${encodeURIComponent(rawUrl)}`;
+    console.log('🔀 Fallback al proxy:', proxyUrl);
+    return proxyUrl;
+}
 
 
 export async function publishToInstagramAction(imageUrl: string, caption: string) {
@@ -671,9 +712,9 @@ export async function publishToInstagramAction(imageUrl: string, caption: string
         // Truncar caption para cumplir con el límite de Instagram (2200 chars)
         const finalCaption = caption.length > 2100 ? caption.substring(0, 2100) + "..." : caption;
 
-        // Proxy URL para que Meta pueda accederla sin bloqueo de Dropers
-        const finalImageUrl = ensurePublicImageUrl(imageUrl);
-        console.log("🚀 Publicando en IG con URL proxy:", finalImageUrl);
+        // Descargar imagen de Dropers y re-hospedar en Supabase temp para que Meta pueda accederla
+        const finalImageUrl = await ensurePublicImageUrl(imageUrl);
+        console.log("🚀 Publicando en IG con URL:", finalImageUrl);
 
         // 1. Crear el contenedor del medio
         const mediaRes = await fetch(`https://graph.facebook.com/v19.0/${IG_ID}/media`, {
@@ -725,11 +766,11 @@ export async function publishToSocialWebhookAction(post: Partial<BlogPost>, soci
             return { success: false, error: "No configuraste la URL del Webhook en .env.local" };
         }
 
-        // Proxy URL para evitar bloqueo de Dropers en Make/Instagram
+        // Descargar imagen de Dropers y re-hospedar en Supabase temp para que Make/Instagram pueda accederla
         const rawImageUrl = transformImageUrl(post.image || '');
-        const absoluteImageUrl = ensurePublicImageUrl(rawImageUrl);
+        const absoluteImageUrl = await ensurePublicImageUrl(rawImageUrl);
 
-        console.log("📡 Webhook → imagen proxy:", absoluteImageUrl);
+        console.log("📡 Webhook → imagen final:", absoluteImageUrl);
 
         const payload = {
             title: post.title || "Sin título",
