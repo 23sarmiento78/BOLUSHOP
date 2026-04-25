@@ -102,17 +102,31 @@ export default function ProductCard({ product, holidayBadge = false }: Props) {
                     </div>
 
                     {/* Hidden Add to Cart - Only visible on hover/mobile if needed, but keeping it clean for now */}
-                    <div className="pt-3 opacity-0 group-hover:opacity-100 transition-opacity bg-white">
-                        <button
-                            onClick={(e) => {
-                                e.preventDefault();
-                                handleAddToCart();
-                            }}
-                            disabled={product.stock === 0 || isAdding}
-                            className="w-full py-2 bg-blue-50 text-blue-600 font-bold text-xs rounded-lg hover:bg-blue-100 transition-colors"
-                        >
-                            {isAdding ? '¡Agregado!' : 'Agregar al carrito'}
-                        </button>
+                    <div className="pt-3 opacity-0 group-hover:opacity-100 transition-opacity bg-white relative z-30">
+                        {product.isMlReferral ? (
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    window.open(product.mlAffiliateUrl, '_blank');
+                                }}
+                                className="w-full py-2.5 bg-[#FFE600] text-[#2D3277] font-bold text-xs rounded-lg hover:bg-yellow-400 transition-colors flex items-center justify-center gap-1 shadow-sm"
+                            >
+                                <ShoppingCart size={14} /> Comprar en ML
+                            </button>
+                        ) : (
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    handleAddToCart();
+                                }}
+                                disabled={product.stock === 0 || isAdding}
+                                className="w-full py-2.5 bg-blue-50 text-blue-600 font-bold text-xs rounded-lg hover:bg-blue-100 transition-colors"
+                            >
+                                {isAdding ? '¡Agregado!' : 'Agregar al carrito'}
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>

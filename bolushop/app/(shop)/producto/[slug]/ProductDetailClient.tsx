@@ -314,22 +314,35 @@ export default function ProductDetailClient({ product, relatedProducts, reviews 
                                             </p>
                                         )}
 
-                                        <button
-                                            onClick={handleAddToCart}
-                                            disabled={isAdding}
-                                            className={`w-full py-4 rounded-xl font-bold text-sm transition-all duration-300 ${isAdding
-                                                ? 'bg-green-500 text-white'
-                                                : 'bg-primary text-white hover:bg-blue-600 shadow-lg shadow-blue-500/20'}`}
-                                        >
-                                            {isAdding ? '¡Agregado!' : 'Comprar ahora'}
-                                        </button>
+                                        {product.isMlReferral ? (
+                                            <button
+                                                onClick={() => window.open(product.mlAffiliateUrl, '_blank')}
+                                                className="w-full py-5 rounded-2xl font-black text-lg bg-[#FFE600] text-[#2D3277] hover:bg-yellow-400 transition-all flex items-center justify-center gap-3 shadow-xl shadow-yellow-500/20 active:scale-[0.98]"
+                                            >
+                                                {/* <ShieldCheck size={24} /> */}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path><path d="m9 12 2 2 4-4"></path></svg>
+                                                Comprar Seguro en Mercado Libre
+                                            </button>
+                                        ) : (
+                                            <>
+                                                <button
+                                                    onClick={handleAddToCart}
+                                                    disabled={isAdding}
+                                                    className={`w-full py-4 rounded-xl font-bold text-sm transition-all duration-300 ${isAdding
+                                                        ? 'bg-green-500 text-white'
+                                                        : 'bg-primary text-white hover:bg-blue-600 shadow-lg shadow-blue-500/20'}`}
+                                                >
+                                                    {isAdding ? '¡Agregado!' : 'Comprar ahora'}
+                                                </button>
 
-                                        <button
-                                            onClick={handleAddToCart}
-                                            className="w-full py-4 rounded-xl font-bold text-sm text-primary bg-blue-50 hover:bg-blue-100 transition-colors"
-                                        >
-                                            Agregar al carrito
-                                        </button>
+                                                <button
+                                                    onClick={handleAddToCart}
+                                                    className="w-full py-4 rounded-xl font-bold text-sm text-primary bg-blue-50 hover:bg-blue-100 transition-colors"
+                                                >
+                                                    Agregar al carrito
+                                                </button>
+                                            </>
+                                        )}
 
                                         <div className="pt-6 space-y-3">
                                             <div className="flex gap-3 text-xs text-gray-500">

@@ -3,42 +3,42 @@
     "id": "hogar",
     "name": "Hogar",
     "slug": "hogar",
-    "description": "Transformá cada rincón de tu casa con elegancia.",
-    "image": "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=2000&auto=format&fit=crop"
+    "description": "Transformá cada rincón de tu casa con elegancia."
   },
   {
     "id": "organizacion",
     "name": "Organización",
     "slug": "organizacion",
-    "description": "El orden es la base de un hogar armonioso.",
-    "image": "https://images.unsplash.com/photo-1540518614846-7eded433c457?q=80&w=2000&auto=format&fit=crop"
+    "description": "El orden es la base de un hogar armonioso."
   },
   {
     "id": "oficina",
     "name": "Oficina",
     "slug": "oficina",
-    "description": "Productividad y confort en tu espacio de trabajo.",
-    "image": "https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=2000&auto=format&fit=crop"
+    "description": "Productividad y confort en tu espacio de trabajo."
   },
   {
     "id": "bano",
     "name": "Baño",
     "slug": "bano",
-    "description": "Detalles que convierten tu baño en un spa.",
-    "image": "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?q=80&w=2000&auto=format&fit=crop"
+    "description": "Detalles que convierten tu baño en un spa."
   },
   {
     "id": "limpieza",
     "name": "Limpieza",
     "slug": "limpieza",
-    "description": "Soluciones eficientes para un hogar impecable.",
-    "image": "https://images.unsplash.com/photo-1516062423079-7ca13cdc7f5a?q=80&w=2000&auto=format&fit=crop"
+    "description": "Soluciones eficientes para un hogar impecable."
   },
   {
     "id": "varios",
     "name": "Varios",
     "slug": "varios",
-    "description": "Descubrí tesoros únicos para tu día a día.",
-    "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=2000&auto=format&fit=crop"
+    "description": "Descubrí tesoros únicos para tu día a día."
+  },
+  {
+    "name": "telefonos",
+    "description": "\n",
+    "slug": "telefonos",
+    "id": "6436c782-00ff-4eb6-8b04-b9bb2616ceb2"
   }
 ]
