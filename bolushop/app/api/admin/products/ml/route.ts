@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { getAllProducts, saveProducts } from '@/lib/db';
 import { Product } from '@/lib/types';
 
+import { revalidatePath } from 'next/cache';
+
 export async function POST(request: Request) {
     try {
         const data = await request.json();
@@ -23,7 +25,7 @@ export async function POST(request: Request) {
             slug,
             price: data.price,
             cost: data.price, // Same cost as ML
-            image: data.pictures[0],
+            image: data.pictures[0] || '',
             images: data.pictures.slice(0, 5), // Max 5 images
             category: 'Referidos ML',
             categoryId: 'ml-referrals',
@@ -39,17 +41,30 @@ export async function POST(request: Request) {
             isActive: true,
             isMlReferral: true,
             mlItemId: data.id,
-            mlAffiliateUrl: data.originalUrl
+            mlAffiliateUrl: data.permalink || data.originalUrl
         };
 
-        const result = await saveProducts([...products, newProduct]);
-        if (!result.success) {
-            return NextResponse.json({ error: 'Error guardando en Supabase' }, { status: 500 });
+        // Si ya existe un producto referenciado con ese mismo ID de ML, lo actualizamos en la misma posición
+        // para que la base de datos no reciba un array con 2 elementos de igual ID (lo que causa error en Supabase)
+        const updatedProducts = [...products];
+        const existingIndex = updatedProducts.findIndex(p => p.id === newProduct.id);
+        if (existingIndex !== -1) {
+            updatedProducts[existingIndex] = newProduct;
+        } else {
+            updatedProducts.push(newProduct);
         }
+
+        const result = await saveProducts(updatedProducts);
+        if (!result.success) {
+            return NextResponse.json({ error: `Error guardando en Supabase: ${result.error || 'Desconocido'}` }, { status: 500 });
+        }
+
+        // ¡SÚPER IMPORTANTE! Forzar a Next.js a limpiar su caché interna en todas las páginas
+        revalidatePath('/', 'layout');
 
         return NextResponse.json({ success: true, product: newProduct });
     } catch (e: any) {
         console.error('Save ML product error:', e);
-        return NextResponse.json({ error: e.message || 'Server error' }, { status: 500 });
+        return NextResponse.json({ error: e.message || 'Error interno del servidor.' }, { status: 500 });
     }
 }
