@@ -144,7 +144,18 @@ export default function MercadoLibreAdmin() {
                                 <div className="flex text-[#3483FA] text-sm">★★★★★</div>
                                 <span className="text-xs text-gray-400 font-medium tracking-wide">COMPRA PROTEGIDA</span>
                             </div>
-                            <span className="text-4xl font-light text-gray-900 mb-8">$ {previewData.price.toLocaleString('es-AR')}</span>
+                            <div className="mb-8">
+                                <label className="text-xs font-bold text-[#3483FA] uppercase tracking-widest mb-2 block flex items-center gap-1">💰 Precio detectado (Puedes editarlo manual)</label>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-4xl font-light text-gray-900">$</span>
+                                    <input
+                                        type="number"
+                                        value={previewData.price || 0}
+                                        onChange={(e) => setPreviewData({ ...previewData, price: Number(e.target.value) })}
+                                        className="text-4xl font-black text-gray-900 bg-gray-50 border border-gray-200 rounded-xl hover:border-gray-300 focus:border-[#3483FA] w-48 outline-none focus:ring-2 focus:ring-[#3483FA]/20 px-3 py-1 transition-all"
+                                    />
+                                </div>
+                            </div>
 
                             <div className="mt-auto flex flex-col gap-3 pt-6 border-t border-gray-100">
                                 {success ? (

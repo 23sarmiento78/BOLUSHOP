@@ -12,62 +12,108 @@ export async function POST(request: Request) {
         let finalUrl = url;
         let htmlText = '';
 
-        // ML bloquea bots básicos, necesitamos enviar un User-Agent
-        const headers = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' };
+        // Emulate a standard mobile browser so ML sends us the standard HTML quickly without blocking
+        const headers = {
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
+            'Accept-Language': 'es-AR,es;q=0.9',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8'
+        };
 
-        // Si es un link acortado como meli.la, sigamos la redirección o descarguemos su HTML
+        // Si es un link acortado como meli.la, sigamos la redirección
         if (url.includes('meli.la')) {
             try {
                 const expandRes = await fetch(url, { headers, redirect: 'follow' });
                 finalUrl = expandRes.url;
                 htmlText = await expandRes.text();
             } catch (e) {
-                console.warn("Fallo al intentar expandir el link corto de ML:", e);
+                console.warn("Fallo al expandir link corto");
             }
         }
 
-        // Buscar el ID primero en la URL
+        // Buscar el ID en la URL
         let match = finalUrl.match(/MLA-?\d+/i);
-
-        // Si no está en la URL pero tenemos el HTML de la redirección, buscar ahí
         if (!match && htmlText) {
             match = htmlText.match(/MLA-?\d+/i);
         }
 
         if (!match) {
-            return NextResponse.json({ error: 'No se pudo detectar un ID válido de Mercado Libre en el link. Si usaste un link corto, asegúrate de que esté activo.' }, { status: 400 });
+            return NextResponse.json({ error: 'No se pudo detectar un ID válido de ML en el link. Intenta usar el link largo de computadora.' }, { status: 400 });
         }
 
-        // Format code correctly for the ML API (without dash)
         const itemId = match[0].replace('-', '').toUpperCase();
 
-        // Fetch from Mercado Libre PUBLIC API
-        const mlResponse = await fetch(`https://api.mercadolibre.com/items/${itemId}`);
-        if (!mlResponse.ok) {
-            return NextResponse.json({ error: 'No se pudo obtener información del producto desde Mercado Libre. Verifica que el link sea correcto y el producto esté activo.' }, { status: 400 });
+        // SCRAPER MODE: Intentamos descargar la página pública y leer las etiquetas META (Evita Bloqueos 403)
+        let title = '';
+        let image = '';
+        let price = 0;
+        let isNew = 'new';
+
+        try {
+            // Si no descargamos HTML en el paso del acortador, descarguemos ahora
+            if (!htmlText) {
+                const pageRes = await fetch(finalUrl, { headers });
+                htmlText = await pageRes.text();
+            }
+
+            // Extraer metadata con regex genérico para que no falle si ML cambia clases
+            // Título
+            const titleMatch = htmlText.match(/<meta\s+property="og:title"\s+content="([^"]+)"/i);
+            if (titleMatch) title = titleMatch[1].replace(/ - Envío gratis|\$ [\d.]+/gi, '').split('|')[0].trim();
+            // Imagen principal (en alta calidad usualmente)
+            const imgMatch = htmlText.match(/<meta\s+property="og:image"\s+content="([^"]+)"/i) || htmlText.match(/<meta\s+name="twitter:image"\s+content="([^"]+)"/i);
+            if (imgMatch) image = imgMatch[1];
+            // Precio
+            const priceMeta = htmlText.match(/<meta\s+itemprop="price"\s+content="([\d.]+)"/i);
+            if (priceMeta) {
+                price = parseFloat(priceMeta[1]);
+            } else {
+                // Fallback: buscar la clase andes-money-amount__fraction
+                const fractionMatch = htmlText.match(/andes-money-amount__fraction">([^<]+)<\/span>/i);
+                if (fractionMatch) {
+                    price = parseFloat(fractionMatch[1].replace(/\./g, '').replace(/,/g, '.'));
+                }
+            }
+
+            // Condición (Nuevo o Usado) - buscar texto "Usado"
+            if (htmlText.includes('item-condition="used"') || htmlText.includes('>Usado<')) {
+                isNew = 'used';
+            }
+
+        } catch (e) {
+            console.error("Error scrapeando HTML de ML:", e);
         }
 
-        const mlData = await mlResponse.json();
-
-        if (!mlData || !mlData.title) {
-            return NextResponse.json({ error: 'Datos incompletos.' }, { status: 400 });
+        // Si falló el Scraper o no sacó el título, hagamos fallback a la API (aunque podría dar 403)
+        if (!title || !image) {
+            try {
+                const mlResponse = await fetch(`https://api.mercadolibre.com/items/${itemId}`);
+                if (mlResponse.ok) {
+                    const mlData = await mlResponse.json();
+                    title = mlData.title;
+                    image = mlData.pictures[0]?.secure_url || mlData.pictures[0]?.url;
+                    price = mlData.price;
+                    isNew = mlData.condition;
+                }
+            } catch (e) { }
         }
 
-        // Extract key info
+        if (!title) {
+            return NextResponse.json({ error: 'Las capas de seguridad de Mercado Libre impidieron leer el producto. Intenta abrir el link, copiarlo tal cual de tu navegador y pegarlo nuevamente.' }, { status: 400 });
+        }
+
         const result = {
-            id: mlData.id,
-            title: mlData.title,
-            price: mlData.price,
-            currency: mlData.currency_id,
-            condition: mlData.condition,
-            pictures: mlData.pictures.map((p: any) => p.secure_url || p.url), // Returns array of max-res URLs
-            permalink: mlData.permalink, // Original link (just for reference)
-            domainId: mlData.domain_id,
+            id: itemId,
+            title: title || 'Producto Importado',
+            price: price || 10000,
+            currency: 'ARS',
+            condition: isNew,
+            pictures: [image], // Lo empaquetamos en un array para compatibilidad
+            permalink: finalUrl
         };
 
         return NextResponse.json({ success: true, data: result });
     } catch (e: any) {
         console.error('Error fetching ML data:', e);
-        return NextResponse.json({ error: 'Error interno del servidor intentando conectar con ML' }, { status: 500 });
+        return NextResponse.json({ error: 'Error interno conectando con ML' }, { status: 500 });
     }
 }
