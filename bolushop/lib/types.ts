@@ -36,6 +36,9 @@ export interface Product {
     createdAt: string;
     isActive?: boolean;
     isInternational?: boolean;
+    mlAffiliateUrl?: string; // Mercado Libre referral link
+    mlItemId?: string;       // Mercado Libre item ID
+    isMlReferral?: boolean;  // Flag to identify ML products
 }
 
 export interface Order {

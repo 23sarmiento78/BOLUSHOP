@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { BlogPost, Product } from "@/lib/types";
-import { savePostAction, deletePostAction, generateAIArticleAction, generateSocialContentAction, publishToInstagramAction, publishToSocialWebhookAction } from "@/app/actions/admin";
+import { savePostAction, deletePostAction, generateAIArticleAction, generateSocialContentAction, publishToSocialAction } from "@/app/actions/admin";
 import { toast } from "sonner";
 import { ImagePlus, Trash2, Edit, Plus, Eye, Globe, Search, Package, X as CloseIcon, Bold, Italic, Heading, List, ListOrdered, Type, Sparkles, Instagram, Copy, Download, ExternalLink, Twitter, Share2, Pin, MessageSquare } from "lucide-react";
 import { transformImageUrl } from "@/lib/images";
@@ -28,7 +28,6 @@ export default function BlogClient({ initialPosts, allProducts }: Props) {
     const [socialContent, setSocialContent] = useState({ instagram: "", twitter: "", reddit: "", pinterest: "" });
     const [activePlatform, setActivePlatform] = useState<'instagram' | 'twitter' | 'reddit' | 'pinterest'>('instagram');
     const [socialImageUrl, setSocialImageUrl] = useState("");
-    const [isPublishingToIG, setIsPublishingToIG] = useState(false);
     const [currentSocialPost, setCurrentSocialPost] = useState<BlogPost | null>(null);
     const [isAutoPublishing, setIsAutoPublishing] = useState(false);
 
@@ -56,25 +55,8 @@ export default function BlogClient({ initialPosts, allProducts }: Props) {
         }
     };
 
-    const handlePublishToInstagram = async () => {
-        setIsPublishingToIG(true);
-        const t = toast.loading("Publicando en Instagram...");
-        try {
-            const res = await publishToInstagramAction(socialImageUrl, socialContent.instagram);
-            if (res.success) {
-                toast.success("¡Publicado en Instagram con éxito!", { id: t });
-            } else {
-                toast.error(res.error || "Error al publicar. Probablemente falta configurar la API de Meta.", { id: t });
-            }
-        } catch (error) {
-            toast.error("Error inesperado al publicar", { id: t });
-        } finally {
-            setIsPublishingToIG(false);
-        }
-    };
-
     const handleCopyCaption = () => {
-        navigator.clipboard.writeText(socialContent[activePlatform]);
+        navigator.clipboard.writeText(socialContent[activePlatform as keyof typeof socialContent] || "");
         toast.success(`¡Contenido de ${activePlatform} copiado!`);
     };
 
@@ -98,17 +80,17 @@ export default function BlogClient({ initialPosts, allProducts }: Props) {
     const handleAutoPublish = async () => {
         if (!currentSocialPost) return;
         setIsAutoPublishing(true);
-        const t = toast.loading("Enviando a todas las redes sociales...");
+        const t = toast.loading("Enviando a Make/Automatización...");
         try {
-            const res = await publishToSocialWebhookAction(currentSocialPost, socialContent);
+            const res = await publishToSocialAction(currentSocialPost, socialContent);
             if (res.success) {
-                toast.success("¡Enviado! La automatización se encargará del resto.", { id: t });
+                toast.success("¡Enviado con éxito!", { id: t });
                 setIsSocialModalOpen(false);
             } else {
-                toast.error(res.error || "Error en la automatización", { id: t });
+                toast.error(res.error || "Error al enviar", { id: t });
             }
         } catch (e) {
-            toast.error("Error al conectar con la automatización", { id: t });
+            toast.error("Error de conexión", { id: t });
         } finally {
             setIsAutoPublishing(false);
         }
@@ -687,27 +669,16 @@ export default function BlogClient({ initialPosts, allProducts }: Props) {
                                     Bajar Imagen
                                 </button>
 
-                                {activePlatform === 'instagram' ? (
-                                    <button
-                                        onClick={handlePublishToInstagram}
-                                        disabled={isPublishingToIG || socialContent.instagram.includes("Generando")}
-                                        className="px-8 py-5 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:opacity-90 transition-all shadow-xl shadow-pink-500/30 flex items-center justify-center gap-3 disabled:opacity-50"
-                                    >
-                                        <Instagram size={18} />
-                                        {isPublishingToIG ? "Publicando..." : "Postear Ahora"}
-                                    </button>
-                                ) : (
-                                    <a
-                                        href={activePlatform === 'twitter' ? "https://twitter.com/intent/tweet" : activePlatform === 'reddit' ? "https://www.reddit.com/submit" : "https://www.pinterest.com/"}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        onClick={handleCopyCaption}
-                                        className="px-8 py-5 bg-indigo-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-600/30 flex items-center justify-center gap-3"
-                                    >
-                                        <ExternalLink size={18} />
-                                        Abrir {activePlatform}
-                                    </a>
-                                )}
+                                <a
+                                    href={activePlatform === 'twitter' ? "https://twitter.com/intent/tweet" : activePlatform === 'reddit' ? "https://www.reddit.com/submit" : "https://www.pinterest.com/"}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    onClick={handleCopyCaption}
+                                    className="px-8 py-5 bg-white border-2 border-gray-100 text-gray-700 rounded-2xl font-black text-xs uppercase tracking-widest hover:border-gray-300 transition-all flex items-center justify-center gap-3"
+                                >
+                                    <ExternalLink size={18} />
+                                    Manual en {activePlatform}
+                                </a>
                             </div>
 
                             <button

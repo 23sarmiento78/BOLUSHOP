@@ -27,6 +27,8 @@ import { supabase } from "@/lib/supabase";
 import { Resend } from 'resend';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { transformImageUrl } from "@/lib/images";
+import OAuth from 'oauth-1.0a';
+import CryptoJS from 'crypto-js';
 
 export async function deleteProductAction(id: string) {
     const success = await deleteProduct(id);
@@ -547,7 +549,7 @@ export async function deletePostAction(id: string) {
 export async function generateAIArticleAction(products: Product[]) {
     try {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+        const model = genAI.getGenerativeModel({ model: 'models/gemini-2.5-flash' });
 
         const productsInfo = products.map(p => `- Producto: ${p.name}\n  Descripción: ${p.description}\n  Características: ${p.features?.join(', ')}`).join('\n\n');
 
@@ -599,37 +601,72 @@ IMPORTANTE: Respondé SOLO el objeto JSON limpio. No menciones precios exactos.`
 
 export async function generateSocialContentAction(post: Partial<BlogPost>, platform: 'instagram' | 'twitter' | 'reddit' | 'pinterest') {
     try {
-        let apiKey = process.env.GEMINI_API_KEY;
+        const mainApiKey = process.env.GEMINI_API_KEY;
+        let specificApiKey = "";
         let prompt = "";
 
+        // Seleccionar la llave específica según la plataforma
         switch (platform) {
             case 'instagram':
-                apiKey = process.env.GEMINI_API_KEY_INSTAGRAM || apiKey;
+                specificApiKey = process.env.GEMINI_API_KEY_INSTAGRAM || "";
                 prompt = `Actúa como un experto en Social Media para una tienda de Argentina (BoluShop). Generá un copy para Instagram sobre el artículo "${post.title}". Usá voseo, muchos emojis, saltos de línea y hashtags relevantes. IMPORTANTE: Respondé SOLO con el texto del post, sin explicaciones ni markdown (sin negritas con asteriscos).`;
                 break;
             case 'twitter':
-                apiKey = process.env.GEMINI_API_KEY_TWITTER || apiKey;
+                specificApiKey = process.env.GEMINI_API_KEY_TWITTER || "";
                 prompt = `Actúa como un influencer de tecnología/tendencias en Argentina. Generá un HILO de Twitter (máximo 3 tweets) sobre "${post.title}". El primero debe ser un gancho (hook) potente, el segundo con valor y el tercero invitando a leer más en BoluShop. Usá voseo y hashtags como #BoluShop #Argentina. IMPORTANTE: Respondé SOLO el texto de los tweets separados por "---". Sin markdown (sin negritas).`;
                 break;
             case 'reddit':
-                apiKey = process.env.GEMINI_API_KEY_REDDIT || apiKey;
+                specificApiKey = process.env.GEMINI_API_KEY_REDDIT || "";
                 prompt = `Actúa como un experto en comunidades de Reddit Argentina. No hagas spam. Redactá un post que aporte VALOR o genere DEBATE basado en "${post.title}". El tono debe ser sarcástico o muy informativo pero "de usuario a usuario". Usá lenguaje argentino de Reddit. IMPORTANTE: Respondé SOLO el texto del post. Sin markdown de negritas.`;
                 break;
             case 'pinterest':
-                apiKey = process.env.GEMINI_API_KEY_PINTEREST || apiKey;
+                specificApiKey = process.env.GEMINI_API_KEY_PINTEREST || "";
                 prompt = `Actúa como un curador de contenido visual. Generá un título y una descripción optimizada para Pinterest sobre "${post.title}". Enfocante en palabras clave de búsqueda y beneficios estéticos o prácticos. Usá voseo. IMPORTANTE: Respondé SOLO el título y la descripción separados por un salto de línea. Sin markdown.`;
                 break;
         }
 
-        const genAI = new GoogleGenerativeAI(apiKey || '');
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+        // Determinar qué llave usar
+        let activeApiKey = specificApiKey || mainApiKey;
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        return { success: true, content: response.text() };
+        if (!activeApiKey) {
+            throw new Error("No hay API Key configurada para Gemini");
+        }
+
+        async function tryGenerate(key: string) {
+            const genAI = new GoogleGenerativeAI(key);
+            const model = genAI.getGenerativeModel({ model: 'models/gemini-2.5-flash' });
+            const result = await model.generateContent(prompt);
+            const response = await result.response;
+            return response.text();
+        }
+
+        let text = "";
+        try {
+            text = await tryGenerate(activeApiKey);
+        } catch (initialError: any) {
+            // Si falló con la llave específica, intentamos una vez más con la principal (si es distinta)
+            if (specificApiKey && mainApiKey && specificApiKey !== mainApiKey) {
+                console.warn(`⚠️ Falló llave específica de ${platform}, reintentando con principal...`);
+                try {
+                    text = await tryGenerate(mainApiKey);
+                } catch (retryError: any) {
+                    throw new Error(`Error incluso con llave principal: ${retryError.message}`);
+                }
+            } else {
+                throw initialError;
+            }
+        }
+
+        if (!text) throw new Error("La IA devolvió una respuesta vacía");
+
+        return { success: true, content: text };
     } catch (e: any) {
         console.error(`❌ ${platform} Content Error:`, e);
-        return { success: false, error: `Error al generar para ${platform}` };
+        // Devolvemos un mensaje más descriptivo para ayudar a identificar si es un tema de cuota o de la llave
+        return {
+            success: false,
+            error: `Error en ${platform}: ${e.message || "Error desconocido"}`
+        };
     }
 }
 
@@ -700,104 +737,64 @@ async function ensurePublicImageUrl(rawUrl: string): Promise<string> {
 }
 
 
-export async function publishToInstagramAction(imageUrl: string, caption: string) {
-    try {
-        const IG_ID = process.env.INSTAGRAM_BUSINESS_ACCOUNT_ID;
-        const ACCESS_TOKEN = process.env.FACEBOOK_ACCESS_TOKEN;
-
-        if (!IG_ID || !ACCESS_TOKEN) {
-            throw new Error("Faltan credenciales de Instagram (IG_ID o TOKEN)");
-        }
-
-        // Truncar caption para cumplir con el límite de Instagram (2200 chars)
-        const finalCaption = caption.length > 2100 ? caption.substring(0, 2100) + "..." : caption;
-
-        // Descargar imagen de Dropers y re-hospedar en Supabase temp para que Meta pueda accederla
-        const finalImageUrl = await ensurePublicImageUrl(imageUrl);
-        console.log("🚀 Publicando en IG con URL:", finalImageUrl);
-
-        // 1. Crear el contenedor del medio
-        const mediaRes = await fetch(`https://graph.facebook.com/v19.0/${IG_ID}/media`, {
-            method: 'POST',
-            body: new URLSearchParams({
-                image_url: finalImageUrl,
-                caption: finalCaption,
-                access_token: ACCESS_TOKEN
-            })
-        });
-
-        const mediaData = await mediaRes.json();
-        if (mediaData.error) {
-            console.error("❌ Error Meta API (Media):", mediaData.error);
-            throw new Error(`Error reservando media: ${mediaData.error.message} (código ${mediaData.error.code})`);
-        }
-
-        const creationId = mediaData.id;
-
-        // 10 segundos de espera para que Facebook procese la imagen (opcional pero recomendado para URLs lentas)
-        // await new Promise(resolve => setTimeout(resolve, 3000));
-
-        // 2. Publicar el contenedor
-        const publishRes = await fetch(`https://graph.facebook.com/v19.0/${IG_ID}/media_publish`, {
-            method: 'POST',
-            body: new URLSearchParams({
-                creation_id: creationId,
-                access_token: ACCESS_TOKEN
-            })
-        });
-
-        const publishData = await publishRes.json();
-        if (publishData.error) {
-            console.error("❌ Error Meta API (Publish):", publishData.error);
-            throw new Error(`Error publicando: ${publishData.error.message}`);
-        }
-
-        return { success: true, postId: publishData.id };
-    } catch (e: any) {
-        console.error("❌ IG Publish Error:", e);
-        return { success: false, error: e.message || "Error al publicar en Instagram" };
-    }
-}
-
-export async function publishToSocialWebhookAction(post: Partial<BlogPost>, socialContent: any) {
+/**
+ * PUBLICA EN TODAS LAS REDES VÍA WEBHOOK (MAKE/ZAPIER)
+ * Esta es la forma más estable. Nosotros generamos el contenido,
+ * hosteamos la imagen en Supabase y Make se encarga del resto.
+ */
+export async function publishToSocialAction(post: Partial<BlogPost>, socialContent: any) {
     try {
         const webhookUrl = process.env.SOCIAL_WEBHOOK_URL;
         if (!webhookUrl) {
-            return { success: false, error: "No configuraste la URL del Webhook en .env.local" };
+            throw new Error("No configuraste SOCIAL_WEBHOOK_URL en .env.local");
         }
 
-        // Descargar imagen de Dropers y re-hospedar en Supabase temp para que Make/Instagram pueda accederla
+        // 1. Asegurar imagen pública (en Supabase) para que las redes puedan verla
         const rawImageUrl = transformImageUrl(post.image || '');
         const absoluteImageUrl = await ensurePublicImageUrl(rawImageUrl);
 
-        console.log("📡 Webhook → imagen final:", absoluteImageUrl);
+        console.log("📡 Enviando a Make → Imagen:", absoluteImageUrl);
 
+        // 2. Preparar el paquete completo
         const payload = {
-            title: post.title || "Sin título",
-            post_link: `${process.env.NEXT_PUBLIC_BASE_URL}/blog/${post.slug || ""}`,
-            image_url: absoluteImageUrl,
-            content_instagram: socialContent.instagram || "",
-            content_twitter: socialContent.twitter || "",
-            content_reddit: socialContent.reddit || "",
-            content_pinterest: socialContent.pinterest || "",
+            id: post.id,
+            title: post.title,
+            slug: post.slug,
+            link: `${process.env.NEXT_PUBLIC_BASE_URL}/blog/${post.slug}`,
+            image: absoluteImageUrl,
             published_at: new Date().toISOString(),
-            platform_target: "all"
+            // Contenidos generados por Gemini
+            content: {
+                instagram: socialContent.instagram || "",
+                twitter: socialContent.twitter || "",
+                reddit: socialContent.reddit || "",
+                pinterest: socialContent.pinterest || "",
+            },
+            // Metadata útil para filtros en Make
+            category: post.category || "General",
+            author: post.author || "BoluShop AI"
         };
 
+        // 3. Envío único a Make
         const res = await fetch(webhookUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
 
-        if (res.ok) {
-            return { success: true, imageUrl: absoluteImageUrl };
-        } else {
-            console.error("❌ Webhook Response Error:", res.status, await res.text());
-            return { success: false, error: `El servidor de automatización respondió con error (${res.status}).` };
+        if (!res.ok) {
+            const errorText = await res.text();
+            throw new Error(`Make respondió con error: ${res.status} - ${errorText}`);
         }
+
+        return {
+            success: true,
+            imageUrl: absoluteImageUrl,
+            message: "Enviado a Make correctamente. Revisa tus escenarios."
+        };
+
     } catch (e: any) {
-        console.error("❌ Webhook Error:", e);
-        return { success: false, error: e.message || "Error al conectar con el servidor de automatización." };
+        console.error("❌ Social Publish Error:", e);
+        return { success: false, error: e.message || "Error al conectar con la automatización." };
     }
 }

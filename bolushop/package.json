@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
@@ -15,10 +15,12 @@
     "@tailwindcss/typography": "^0.5.19",
     "@types/papaparse": "^5.5.2",
     "@types/uuid": "^10.0.0",
+    "crypto-js": "^4.2.0",
     "lucide-react": "^0.562.0",
     "mercadopago": "^2.11.0",
     "next": "16.1.1",
     "nextjs-toploader": "^3.9.17",
+    "oauth-1.0a": "^2.2.6",
     "papaparse": "^5.5.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
@@ -29,6 +31,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/crypto-js": "^4.2.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
