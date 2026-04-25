@@ -16,7 +16,8 @@ import {
     X,
     ExternalLink,
     ChevronRight,
-    BookOpen
+    BookOpen,
+    ShoppingBag
 } from 'lucide-react';
 
 export default function AdminNav() {
@@ -32,6 +33,7 @@ export default function AdminNav() {
         { href: '/admin/categories', label: 'Categorías', icon: FolderTree },
         { href: '/admin/orders', label: 'Pedidos', icon: Truck },
         { href: '/admin/collections', label: 'Colecciones', icon: Tags },
+        { href: '/admin/mercado-libre', label: 'Referidos ML', icon: ShoppingBag },
         { href: '/admin/settings', label: 'Ajustes', icon: Settings },
         { href: '/admin/newsletter', label: 'Marketing', icon: Mail },
         { href: '/admin/upload', label: 'Importar CSV', icon: FileUp },
