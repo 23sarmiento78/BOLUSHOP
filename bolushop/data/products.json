@@ -1,31 +1,5 @@
 [
   {
-    "id": "ML-MLA105957145304",
-    "name": "Teléfono Celular Samsung Galaxy A16 128 Gb 4 Gb De Ram Nfc Verde Claro",
-    "slug": "tel-fono-celular-samsung-galaxy-a16-128-gb-4-gb-de-ram-nfc-verde-claro",
-    "price": 222711,
-    "cost": 222711,
-    "image": "https://http2.mlstatic.com/D_NQ_NP_708740-MLA80779729796_112024-O.webp",
-    "images": [
-      "https://http2.mlstatic.com/D_NQ_NP_708740-MLA80779729796_112024-O.webp"
-    ],
-    "category": "Referidos ML",
-    "categoryId": "ml-referrals",
-    "description": "**Compra Segura**\nEste producto ha sido seleccionado especialmente por BoluShop y la transacción se procesa de forma 100% segura usando infraestructura y envíos exprés de Mercado Libre.\n\nAl hacer clic en Comprar, serás dirigido para aprovechar la red de envíos más rápida del país.",
-    "features": [
-      "Garantía: Compra Protegida de Mercado Libre",
-      "Beneficio Extra: Sumás Mercado Puntos",
-      "Condición Original: Nuevo"
-    ],
-    "stock": 999,
-    "collections": [],
-    "createdAt": "2026-04-25T19:58:42.798+00:00",
-    "isActive": true,
-    "mlAffiliateUrl": "https://meli.la/17dsxLz",
-    "mlItemId": "MLA105957145304",
-    "isMlReferral": true
-  },
-  {
     "id": "ee29c816-0473-48f7-b488-29d3d8267657",
     "name": "Metegol de madera y metal",
     "slug": "metegol-de-madera-y-metal",
@@ -934,31 +908,5 @@
     "mlAffiliateUrl": null,
     "mlItemId": null,
     "isMlReferral": null
-  },
-  {
-    "id": "ML-MLA105957145304",
-    "name": "Celular Motorola G15 128gb 8gb Ram Dual Sim Potente Gris",
-    "slug": "celular-motorola-g15-128gb-8gb-ram-dual-sim-potente-gris",
-    "price": 269362,
-    "cost": 269362,
-    "image": "https://http2.mlstatic.com/D_NQ_NP_879184-MLA90557082581_082025-O.webp",
-    "images": [
-      "https://http2.mlstatic.com/D_NQ_NP_879184-MLA90557082581_082025-O.webp"
-    ],
-    "category": "Referidos ML",
-    "categoryId": "ml-referrals",
-    "description": "**Compra Segura**\nEste producto ha sido seleccionado especialmente por BoluShop y la transacción se procesa de forma 100% segura usando infraestructura y envíos exprés de Mercado Libre.\n\nAl hacer clic en Comprar, serás dirigido para aprovechar la red de envíos más rápida del país.",
-    "features": [
-      "Garantía: Compra Protegida de Mercado Libre",
-      "Beneficio Extra: Sumás Mercado Puntos",
-      "Condición Original: Nuevo"
-    ],
-    "stock": 999,
-    "collections": [],
-    "createdAt": "2026-04-25T20:08:17.043Z",
-    "isActive": true,
-    "isMlReferral": true,
-    "mlItemId": "MLA105957145304",
-    "mlAffiliateUrl": "https://meli.la/2GohBK6"
   }
 ]
