@@ -50,10 +50,20 @@ export default function MercadoLibreAdmin() {
         setError('');
 
         try {
+            // Reordenar fotos si se eligió una distinta como principal
+            const finalPictures = [...(previewData.pictures || [])];
+            if (previewData.mainImageIndex && previewData.mainImageIndex > 0) {
+                const selected = finalPictures.splice(previewData.mainImageIndex, 1)[0];
+                finalPictures.unshift(selected);
+            }
+
             const res = await fetch('/api/admin/products/ml', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(previewData)
+                body: JSON.stringify({
+                    ...previewData,
+                    pictures: finalPictures
+                })
             });
             const data = await res.json();
 
@@ -129,16 +139,39 @@ export default function MercadoLibreAdmin() {
 
                     <div className="p-8 flex flex-col lg:flex-row gap-10">
                         {/* Imagestage Layout - ML Style */}
-                        <div className="w-full lg:w-1/3 aspect-square relative rounded-2xl overflow-hidden bg-white border border-gray-100 flex-shrink-0 cursor-zoom-in">
-                            {previewData.pictures && previewData.pictures[0] ? (
-                                <Image src={previewData.pictures[0]} alt="Preview" fill className="object-contain p-4 hover:scale-110 transition-transform duration-500" />
-                            ) : (
-                                <div className="absolute inset-0 flex items-center justify-center text-gray-400">Sin foto principal</div>
+                        <div className="w-full lg:w-1/3 flex flex-col gap-4">
+                            <div className="relative aspect-square rounded-2xl overflow-hidden bg-white border border-gray-100 flex-shrink-0 cursor-zoom-in">
+                                {previewData.pictures && previewData.pictures[previewData.mainImageIndex || 0] ? (
+                                    <Image
+                                        src={previewData.pictures[previewData.mainImageIndex || 0]}
+                                        alt="Preview"
+                                        fill
+                                        className="object-contain p-4 hover:scale-110 transition-transform duration-500"
+                                    />
+                                ) : (
+                                    <div className="absolute inset-0 flex items-center justify-center text-gray-400">Sin foto principal</div>
+                                )}
+                            </div>
+
+                            {/* MINI GALLERY */}
+                            {previewData.pictures && previewData.pictures.length > 1 && (
+                                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                                    {previewData.pictures.map((pic: string, idx: number) => (
+                                        <button
+                                            key={idx}
+                                            onClick={() => setPreviewData({ ...previewData, mainImageIndex: idx })}
+                                            className={`relative w-16 h-16 rounded-lg overflow-hidden border-2 flex-shrink-0 transition-all ${(previewData.mainImageIndex || 0) === idx ? 'border-[#3483FA]' : 'border-transparent bg-gray-50'}`}
+                                        >
+                                            <Image src={pic} alt={`Thumb ${idx}`} fill className="object-cover" />
+                                        </button>
+                                    ))}
+                                </div>
                             )}
                         </div>
 
                         <div className="flex-1 flex flex-col justify-start text-left">
                             <span className="text-xs font-medium text-gray-400 mb-2">Condición: {previewData.condition === 'new' ? 'Nuevo' : 'Usado'}</span>
+
                             <h2 className="text-3xl font-bold text-gray-900 mb-4 leading-tight">{previewData.title}</h2>
                             <div className="flex items-center gap-2 mb-6">
                                 <div className="flex text-[#3483FA] text-sm">★★★★★</div>

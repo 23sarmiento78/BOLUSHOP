@@ -26,7 +26,7 @@ export async function POST(request: Request) {
             price: data.price,
             cost: data.price, // Same cost as ML
             image: data.pictures[0] || '',
-            images: data.pictures.slice(0, 5), // Max 5 images
+            images: data.pictures.slice(0, 10), // Max 10 imágenes para mejor galería
             category: 'Referidos ML',
             categoryId: 'ml-referrals',
             description: `**Compra Segura**\nEste producto ha sido seleccionado especialmente por BoluShop y la transacción se procesa de forma 100% segura usando infraestructura y envíos exprés de Mercado Libre.\n\nAl hacer clic en Comprar, serás dirigido para aprovechar la red de envíos más rápida del país.`,

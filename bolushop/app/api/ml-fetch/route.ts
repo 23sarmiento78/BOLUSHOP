@@ -30,10 +30,20 @@ export async function POST(request: Request) {
             }
         }
 
-        // Buscar el ID en la URL
+        // Buscar el ID primero en la URL
         let match = finalUrl.match(/MLA-?\d+/i);
+
+        // Si no está en la URL (pasa con algunos shortlinks), buscar en la etiqueta oficial og:url
         if (!match && htmlText) {
-            match = htmlText.match(/MLA-?\d+/i);
+            const ogUrl = htmlText.match(/<meta\s+property="og:url"\s+content="([^"]+)"/i);
+            if (ogUrl) {
+                match = ogUrl[1].match(/MLA-?\d+/i);
+            }
+            // Si seguimos sin suerte, usamos el site_name que a veces lleva el ID
+            if (!match) {
+                const altMatch = htmlText.match(/"product_id":"(MLA\d+)"/i) || htmlText.match(/MLA-?\d+/i);
+                match = altMatch;
+            }
         }
 
         if (!match) {
@@ -45,6 +55,7 @@ export async function POST(request: Request) {
         // SCRAPER MODE: Intentamos descargar la página pública y leer las etiquetas META (Evita Bloqueos 403)
         let title = '';
         let image = '';
+        let pictures: string[] = [];
         let price = 0;
         let isNew = 'new';
 
@@ -55,26 +66,56 @@ export async function POST(request: Request) {
                 htmlText = await pageRes.text();
             }
 
-            // Extraer metadata con regex genérico para que no falle si ML cambia clases
-            // Título
+            // 1. Extraer Título (OpenGraph es lo más confiable)
             const titleMatch = htmlText.match(/<meta\s+property="og:title"\s+content="([^"]+)"/i);
             if (titleMatch) title = titleMatch[1].replace(/ - Envío gratis|\$ [\d.]+/gi, '').split('|')[0].trim();
-            // Imagen principal (en alta calidad usualmente)
-            const imgMatch = htmlText.match(/<meta\s+property="og:image"\s+content="([^"]+)"/i) || htmlText.match(/<meta\s+name="twitter:image"\s+content="([^"]+)"/i);
-            if (imgMatch) image = imgMatch[1];
-            // Precio
-            const priceMeta = htmlText.match(/<meta\s+itemprop="price"\s+content="([\d.]+)"/i);
-            if (priceMeta) {
-                price = parseFloat(priceMeta[1]);
+
+            // 2. Extraer Imágenes (Buscamos todas las imágenes de alta calidad del CDN de ML)
+            // Los patrones suelen ser D_NQ_NP_...-O.webp o -F.webp
+            const imgRegex = /https:\/\/http2\.mlstatic\.com\/D_NQ_NP_[0-9A-Z_-]+-(?:O|F)\.webp/gi;
+            const foundImgs = Array.from(new Set(htmlText.match(imgRegex) || []));
+
+            if (foundImgs.length > 0) {
+                pictures = foundImgs.slice(0, 10); // Límite de 10 imágenes
+                image = pictures[0];
             } else {
-                // Fallback: buscar la clase andes-money-amount__fraction
+                // Fallback a OpenGraph si el regex de galería falla
+                const ogImg = htmlText.match(/<meta\s+property="og:image"\s+content="([^"]+)"/i);
+                if (ogImg) {
+                    image = ogImg[1];
+                    pictures = [image];
+                }
+            }
+
+            // 3. Extraer Precio (Probamos varios métodos por orden de confiabilidad)
+            // Método A: JSON-LD (Schema.org)
+            const jsonLdMatch = htmlText.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/i);
+            if (jsonLdMatch) {
+                try {
+                    const json = JSON.parse(jsonLdMatch[1]);
+                    // Puede venir como un objeto directo o un array con el producto
+                    const productObj = Array.isArray(json) ? json.find(i => i['@type'] === 'Product') : (json['@type'] === 'Product' ? json : null);
+                    if (productObj?.offers?.price) {
+                        price = parseFloat(productObj.offers.price);
+                    }
+                } catch (e) { }
+            }
+
+            // Método B: Meta itemprop (Muy común)
+            if (price === 0) {
+                const priceMeta = htmlText.match(/<meta\s+itemprop="price"\s+content="([\d.]+)"/i);
+                if (priceMeta) price = parseFloat(priceMeta[1]);
+            }
+
+            // Método C: Scraper de Clases CSS (Fallback final)
+            if (price === 0) {
                 const fractionMatch = htmlText.match(/andes-money-amount__fraction">([^<]+)<\/span>/i);
                 if (fractionMatch) {
                     price = parseFloat(fractionMatch[1].replace(/\./g, '').replace(/,/g, '.'));
                 }
             }
 
-            // Condición (Nuevo o Usado) - buscar texto "Usado"
+            // 4. Condición (Nuevo o Usado)
             if (htmlText.includes('item-condition="used"') || htmlText.includes('>Usado<')) {
                 isNew = 'used';
             }
@@ -91,6 +132,7 @@ export async function POST(request: Request) {
                     const mlData = await mlResponse.json();
                     title = mlData.title;
                     image = mlData.pictures[0]?.secure_url || mlData.pictures[0]?.url;
+                    pictures = mlData.pictures.map((p: any) => p.secure_url || p.url);
                     price = mlData.price;
                     isNew = mlData.condition;
                 }
@@ -104,10 +146,10 @@ export async function POST(request: Request) {
         const result = {
             id: itemId,
             title: title || 'Producto Importado',
-            price: price || 10000,
+            price: price || 0,
             currency: 'ARS',
             condition: isNew,
-            pictures: [image], // Lo empaquetamos en un array para compatibilidad
+            pictures: pictures.length > 0 ? pictures : [image],
             permalink: finalUrl
         };
 
