@@ -1,129 +1,83 @@
+import { Suspense } from "react";
 import { getCollectionBySlug, getAllProducts } from "@/lib/db";
-import { notFound } from "next/navigation";
+import ProductCard from "@/components/shop/ProductCard";
 import Header from "@/components/shop/Header";
 import Footer from "@/components/shop/Footer";
-import CollectionDetailClient from "./CollectionDetailClient";
-import ProductCard from "@/components/shop/ProductCard";
-import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import Image from "next/image";
 
 interface Props {
-    params: Promise<{
-        slug: string;
-    }>;
+    params: { slug: string };
 }
 
-export const dynamic = 'force-dynamic';
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const { slug } = await params;
-    const collection = await getCollectionBySlug(slug);
-
-    if (!collection) {
-        return {
-            title: "Colección no encontrada | BoluShop",
-        };
-    }
-
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
-    const collectionUrl = `${siteUrl}/coleccion/${collection.slug}`;
+export async function generateMetadata({ params }: Props) {
+    const collection = await getCollectionBySlug(params.slug);
+    if (!collection) return { title: 'Colección no encontrada' };
 
     return {
-        title: `${collection.name} | Oferta Exclusiva Pack | BoluShop`,
-        description: collection.description || `Ahorrá con el pack ${collection.name}. Productos seleccionados con envío gratis a todo Argentina en BoluShop.`,
-        keywords: `${collection.name}, pack de productos, oferta argentina, bolushop colecciones, combo ahorro argentina`,
-        alternates: {
-            canonical: collectionUrl,
-        },
-        openGraph: {
-            title: `Pack Oferta: ${collection.name} en BoluShop`,
-            description: collection.description,
-            type: 'website',
-            url: collectionUrl,
-            images: collection.image ? [{ url: collection.image }] : [],
-        }
+        title: `${collection.name} | BoluShop`,
+        description: collection.description || `Explora nuestra colección de ${collection.name} con excelentes ofertas.`
     };
 }
 
 export default async function CollectionPage({ params }: Props) {
-    const { slug } = await params;
-    const collection = await getCollectionBySlug(slug);
+    const collection = await getCollectionBySlug(params.slug);
 
     if (!collection) {
         notFound();
     }
 
-    const allProducts = await getAllProducts();
-    const products = allProducts.filter(p =>
-        p.isActive !== false &&
-        (
-            (collection.productIds || []).includes(p.id) ||
-            (p.collections || []).includes(collection.id) ||
-            (p.collections || []).includes(collection.slug)
-        )
+    const products = await getAllProducts();
+
+    // Filter products manually if the collection has custom productIds or use category logic depending on implementation.
+    // Assuming simple mapping where product maps to collection id or products includes collection.id
+    const collectionProducts = products.filter(product =>
+        (product.collections && product.collections.includes(collection.id)) ||
+        (collection.productIds && collection.productIds.includes(product.id))
     );
-
-    // Calculate Pricing
-    const originalPrice = products.reduce((acc, p) => acc + p.price, 0);
-    let totalPrice = originalPrice;
-
-    if (collection.discountType === 'percentage' && collection.discountValue) {
-        totalPrice = originalPrice * (1 - collection.discountValue / 100);
-    } else if (collection.discountType === 'fixed' && collection.discountValue) {
-        // En este sistema, el valor 'fijo' se toma como el precio TOTAL del pack
-        totalPrice = collection.discountValue;
-    }
 
     return (
         <>
             <Header />
-            <main className="min-h-screen bg-white pt-32 pb-24">
-                <div className="container mx-auto px-4">
-                    {/* Breadcrumbs */}
-                    <div className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest mb-12">
-                        <a href="/" className="hover:text-primary transition-colors">Inicio</a>
-                        <span>/</span>
-                        <a href="/productos" className="hover:text-primary transition-colors">Colecciones</a>
-                        <span>/</span>
-                        <span className="text-gray-900">{collection.name}</span>
+            <main className="min-h-screen pt-32 pb-24 bg-gray-50/30">
+                <div className="container mx-auto px-6">
+                    <div className="mb-12">
+                        {collection.image && (
+                            <div className="w-full h-64 md:h-80 relative rounded-3xl overflow-hidden mb-8 shadow-xl">
+                                <Image
+                                    src={collection.image}
+                                    alt={collection.name}
+                                    fill
+                                    className="object-cover object-center"
+                                />
+                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                    <h1 className="text-4xl md:text-6xl font-black text-white text-center tracking-tighter drop-shadow-md">
+                                        {collection.name}
+                                    </h1>
+                                </div>
+                            </div>
+                        )}
+                        {!collection.image && (
+                            <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tighter mb-4">
+                                {collection.name}
+                            </h1>
+                        )}
+                        <p className="text-gray-500 text-lg md:text-xl font-medium max-w-3xl">
+                            {collection.description}
+                        </p>
                     </div>
 
-                    <CollectionDetailClient
-                        collection={collection}
-                        products={products}
-                        totalPrice={totalPrice}
-                        originalPrice={originalPrice}
-                    />
-
-                    {/* What's Inside Section */}
-                    <section className="mt-32">
-                        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-                            <div>
-                                <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-4">
-                                    ¿Qué incluye este <span className="text-primary italic">Pack</span>?
-                                </h2>
-                                <p className="text-gray-500 font-medium max-w-xl">
-                                    Obtené todos estos productos seleccionados con un descuento exclusivo por tiempo limitado.
-                                </p>
-                            </div>
-                            <div className="bg-gray-50 px-8 py-4 rounded-2xl border border-gray-100 flex items-center gap-4">
-                                <div className="text-right">
-                                    <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest">Total de artículos</p>
-                                    <p className="text-2xl font-black text-gray-900">{products.length}</p>
-                                </div>
-                                <div className="h-10 w-px bg-gray-200" />
-                                <div className="text-right">
-                                    <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest">Estado</p>
-                                    <p className="text-2xl font-black text-emerald-500">Disponible</p>
-                                </div>
-                            </div>
+                    {collectionProducts.length === 0 ? (
+                        <div className="text-center py-20 bg-white rounded-3xl border border-gray-100">
+                            <p className="text-gray-500 text-xl font-medium">No hay productos en esta colección por el momento.</p>
                         </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                            {products.map((product) => (
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                            {collectionProducts.map(product => (
                                 <ProductCard key={product.id} product={product} />
                             ))}
                         </div>
-                    </section>
+                    )}
                 </div>
             </main>
             <Footer />
