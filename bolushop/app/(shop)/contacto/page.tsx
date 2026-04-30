@@ -22,7 +22,7 @@ export default function ContactoPage() {
                                         </div>
                                         <div>
                                             <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Email</p>
-                                            <p className="text-xl font-bold text-gray-900">hola@bolushop.com</p>
+                                            <p className="text-xl font-bold text-gray-900">sarmientoisrael118@gmail.com</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-6 group">
@@ -31,16 +31,16 @@ export default function ContactoPage() {
                                         </div>
                                         <div>
                                             <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">WhatsApp</p>
-                                            <p className="text-xl font-bold text-gray-900">+54 11 1234-5678</p>
+                                            <p className="text-xl font-bold text-gray-900">+54 3541237972</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-6 group">
-                                        <div className="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center text-purple-500 group-hover:scale-110 transition-transform">
-                                            <Instagram size={24} />
+                                        <div className="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform">
+                                            <MapPin size={24} />
                                         </div>
                                         <div>
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Instagram</p>
-                                            <p className="text-xl font-bold text-gray-900">@bolushop.ar</p>
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Ubicación</p>
+                                            <p className="text-xl font-bold text-gray-900">Villa Carlos Paz, Córdoba</p>
                                         </div>
                                     </div>
                                 </div>

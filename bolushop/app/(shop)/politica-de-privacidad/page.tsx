@@ -13,7 +13,12 @@ export default function PrivacidadPage() {
 
                         <div className="prose prose-gray max-w-none space-y-10 text-gray-600">
                             <section>
-                                <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Introducción</h2>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Responsable del Tratamiento</h2>
+                                <p>El sitio web <b>BoluShop</b> es propiedad y está operado por <b>Israel Enrique Sarmiento Escuela</b>, con domicilio en Villa Carlos Paz, Córdoba, Argentina. Puedes contactarnos por correo electrónico en <b>sarmientoisrael118@gmail.com</b>.</p>
+                            </section>
+
+                            <section>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Introducción</h2>
                                 <p>En BoluShop, valoramos tu privacidad y nos comprometemos a proteger tus datos personales. Esta Política de Privacidad describe cómo recopilamos, usamos y compartimos tu información cuando visitas o realizas una compra en nuestro sitio.</p>
                             </section>
 

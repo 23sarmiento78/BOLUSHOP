@@ -20,10 +20,10 @@ export default function Logo({ className = "", size = 40, variant = 'full' }: Lo
 
             {variant === 'full' && (
                 <div className="flex flex-col -gap-1">
-                    <span className="font-bold text-2xl tracking-tighter leading-none text-[#0F172A]">
+                    <span className={`font-bold text-2xl tracking-tighter leading-none ${className.includes('text-white') ? 'text-white' : 'text-[#0F172A]'}`}>
                         Bolu
                     </span>
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#0F172A]/60">
+                    <span className={`text-[10px] font-semibold uppercase tracking-[0.2em] ${className.includes('text-white') ? 'text-white/60' : 'text-[#0F172A]/60'}`}>
                         Regalería & Gadgets
                     </span>
                 </div>
