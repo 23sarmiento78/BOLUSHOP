@@ -170,38 +170,53 @@ export default function MercadoLibreAdmin() {
                         </div>
 
                         <div className="flex-1 flex flex-col justify-start text-left">
-                            <span className="text-xs font-medium text-gray-400 mb-2">Condición: {previewData.condition === 'new' ? 'Nuevo' : 'Usado'}</span>
+                            <div className="flex items-center gap-3 mb-2">
+                                <span className="px-2 py-0.5 bg-gray-100 text-gray-500 rounded text-[10px] font-bold uppercase tracking-wider">ID: {previewData.id}</span>
+                                <span className="text-xs font-semibold text-[#3483FA] uppercase tracking-wide">
+                                    {previewData.condition === 'new' ? '✨ Nuevo' : '📦 Usado'}
+                                </span>
+                            </div>
 
                             <h2 className="text-3xl font-bold text-gray-900 mb-4 leading-tight">{previewData.title}</h2>
+
                             <div className="flex items-center gap-2 mb-6">
-                                <div className="flex text-[#3483FA] text-sm">★★★★★</div>
-                                <span className="text-xs text-gray-400 font-medium tracking-wide">COMPRA PROTEGIDA</span>
+                                <div className="flex text-[#FFD700] text-sm group-hover:animate-pulse">★★★★★</div>
+                                <span className="text-[10px] text-gray-400 font-bold tracking-[0.2em] uppercase">Mercado Lider Platinum</span>
                             </div>
-                            <div className="mb-8">
-                                <label className="text-xs font-bold text-[#3483FA] uppercase tracking-widest mb-2 block flex items-center gap-1">💰 Precio detectado (Puedes editarlo manual)</label>
+
+                            <div className="mb-8 p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                                <label className="text-[10px] font-black text-[#3483FA] uppercase tracking-[0.2em] mb-4 block">💰 Precio Final de Venta</label>
                                 <div className="flex items-center gap-2">
-                                    <span className="text-4xl font-light text-gray-900">$</span>
+                                    <span className="text-4xl font-bold text-gray-400">$</span>
                                     <input
                                         type="number"
                                         value={previewData.price || 0}
                                         onChange={(e) => setPreviewData({ ...previewData, price: Number(e.target.value) })}
-                                        className="text-4xl font-black text-gray-900 bg-gray-50 border border-gray-200 rounded-xl hover:border-gray-300 focus:border-[#3483FA] w-48 outline-none focus:ring-2 focus:ring-[#3483FA]/20 px-3 py-1 transition-all"
+                                        className="text-4xl font-black text-gray-900 bg-transparent border-none w-full outline-none focus:ring-0 p-0 transition-all"
                                     />
                                 </div>
+                                <p className="text-[10px] text-gray-400 mt-2 italic font-medium">Nota: Este es el precio que verá el cliente en BoluShop.</p>
                             </div>
 
-                            <div className="mt-auto flex flex-col gap-3 pt-6 border-t border-gray-100">
+                            <div className="mt-auto flex flex-col gap-3 pt-6">
                                 {success ? (
-                                    <div className="bg-[#00A650]/10 text-[#00A650] py-4 rounded-2xl text-center font-bold flex items-center justify-center gap-2 shadow-sm">
+                                    <div className="bg-[#00A650] text-white py-4 rounded-2xl text-center font-bold flex items-center justify-center gap-2 shadow-lg shadow-green-500/20 animate-bounce">
                                         <CheckCircle2 /> {success}
                                     </div>
                                 ) : (
                                     <button
                                         onClick={handleSave}
                                         disabled={saving}
-                                        className="bg-[#3483FA] text-white w-full py-5 rounded-2xl font-bold text-lg hover:bg-blue-600 transition-colors flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 active:scale-[0.98]"
+                                        className="bg-[#3483FA] text-white w-full py-5 rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-blue-600 transition-all flex items-center justify-center gap-3 shadow-lg shadow-blue-500/20 active:scale-[0.98] border-b-4 border-blue-800"
                                     >
-                                        {saving ? 'Guardando producto...' : <><Plus size={24} /> Publicar este producto en mi tienda</>}
+                                        {saving ? (
+                                            <span className="flex items-center gap-2">
+                                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                                Sincronizando...
+                                            </span>
+                                        ) : (
+                                            <><Plus size={20} /> Publicar Producto Referido</>
+                                        )}
                                     </button>
                                 )}
                             </div>

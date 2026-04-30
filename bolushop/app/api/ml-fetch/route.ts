@@ -41,7 +41,11 @@ export async function POST(request: Request) {
             }
             // Si seguimos sin suerte, usamos el site_name que a veces lleva el ID
             if (!match) {
-                const altMatch = htmlText.match(/"product_id":"(MLA\d+)"/i) || htmlText.match(/MLA-?\d+/i);
+                // Caso catálogo o producto_id en el script o ID en metadatos de landing
+                const altMatch =
+                    htmlText.match(/"product_id":"(MLA\d+)"/i) ||
+                    htmlText.match(/"id":"(MLA\d+)"/i) ||
+                    htmlText.match(/MLA-?\d+/i);
                 match = altMatch;
             }
         }
@@ -71,15 +75,16 @@ export async function POST(request: Request) {
             if (titleMatch) title = titleMatch[1].replace(/ - Envío gratis|\$ [\d.]+/gi, '').split('|')[0].trim();
 
             // 2. Extraer Imágenes (Buscamos todas las imágenes de alta calidad del CDN de ML)
-            // Los patrones suelen ser D_NQ_NP_...-O.webp o -F.webp
-            const imgRegex = /https:\/\/http2\.mlstatic\.com\/D_NQ_NP_[0-9A-Z_-]+-(?:O|F)\.webp/gi;
+            // Patrones: D_NQ_NP_...-O.webp, -O.jpg, -F.webp, -F.jpg
+            const imgRegex = /https:\/\/http2\.mlstatic\.com\/D_NQ_NP_[0-9A-Z_-]+-(?:O|F)\.(?:webp|jpg)/gi;
             const foundImgs = Array.from(new Set(htmlText.match(imgRegex) || []));
 
             if (foundImgs.length > 0) {
-                pictures = foundImgs.slice(0, 10); // Límite de 10 imágenes
+                // Priorizar las mejores calidades y limpiar URLs duplicadas
+                pictures = foundImgs.slice(0, 10);
                 image = pictures[0];
             } else {
-                // Fallback a OpenGraph si el regex de galería falla
+                // Fallback a OpenGraph
                 const ogImg = htmlText.match(/<meta\s+property="og:image"\s+content="([^"]+)"/i);
                 if (ogImg) {
                     image = ogImg[1];
@@ -87,13 +92,13 @@ export async function POST(request: Request) {
                 }
             }
 
-            // 3. Extraer Precio (Probamos varios métodos por orden de confiabilidad)
-            // Método A: JSON-LD (Schema.org)
+            // 3. Extraer Precio (Lógica de prioridad: JSON-LD > Meta Itemprop > CSS Class)
+
+            // Método A: JSON-LD (Schema.org) - Es lo que usa Google para ver precios de oferta
             const jsonLdMatch = htmlText.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/i);
             if (jsonLdMatch) {
                 try {
                     const json = JSON.parse(jsonLdMatch[1]);
-                    // Puede venir como un objeto directo o un array con el producto
                     const productObj = Array.isArray(json) ? json.find(i => i['@type'] === 'Product') : (json['@type'] === 'Product' ? json : null);
                     if (productObj?.offers?.price) {
                         price = parseFloat(productObj.offers.price);
@@ -101,21 +106,34 @@ export async function POST(request: Request) {
                 } catch (e) { }
             }
 
-            // Método B: Meta itemprop (Muy común)
+            // Método B: Meta itemprop (Muy común en ML)
             if (price === 0) {
                 const priceMeta = htmlText.match(/<meta\s+itemprop="price"\s+content="([\d.]+)"/i);
                 if (priceMeta) price = parseFloat(priceMeta[1]);
             }
 
-            // Método C: Scraper de Clases CSS (Fallback final)
+            // Método C: Scraper de Clases CSS (Fallback final para ofertas dinámicas)
             if (price === 0) {
-                const fractionMatch = htmlText.match(/andes-money-amount__fraction">([^<]+)<\/span>/i);
-                if (fractionMatch) {
-                    price = parseFloat(fractionMatch[1].replace(/\./g, '').replace(/,/g, '.'));
+                // Buscamos la clase fraction que contiene el número grande
+                const fractionMatches = htmlText.match(/andes-money-amount__fraction">([^<]+)<\/span>/gi);
+                if (fractionMatches && fractionMatches.length > 0) {
+                    // Tomamos el primero que suele ser el precio actual (el más grande arriba)
+                    const firstPrice = fractionMatches[0].match(/>([^<]+)</);
+                    if (firstPrice) {
+                        price = parseFloat(firstPrice[1].replace(/\./g, '').replace(/,/g, '.'));
+                    }
                 }
             }
 
-            // 4. Condición (Nuevo o Usado)
+            // Método D: Búsqueda en JSON de Landing Pages de Afiliados (Caso meli.la)
+            if (price === 0) {
+                const landingPriceMatch = htmlText.match(/\"current_price\":\{\"value\":(\d+)/i);
+                if (landingPriceMatch) {
+                    price = parseFloat(landingPriceMatch[1]);
+                }
+            }
+
+            // 4. Condición
             if (htmlText.includes('item-condition="used"') || htmlText.includes('>Usado<')) {
                 isNew = 'used';
             }
@@ -124,23 +142,23 @@ export async function POST(request: Request) {
             console.error("Error scrapeando HTML de ML:", e);
         }
 
-        // Si falló el Scraper o no sacó el título, hagamos fallback a la API (aunque podría dar 403)
-        if (!title || !image) {
+        // Si falló el Scraper o no sacó el título, hagamos fallback a la API pública
+        if (!title || !image || price === 0) {
             try {
                 const mlResponse = await fetch(`https://api.mercadolibre.com/items/${itemId}`);
                 if (mlResponse.ok) {
                     const mlData = await mlResponse.json();
-                    title = mlData.title;
-                    image = mlData.pictures[0]?.secure_url || mlData.pictures[0]?.url;
-                    pictures = mlData.pictures.map((p: any) => p.secure_url || p.url);
-                    price = mlData.price;
+                    if (!title) title = mlData.title;
+                    if (!image) image = mlData.pictures[0]?.secure_url || mlData.pictures[0]?.url;
+                    if (pictures.length === 0) pictures = mlData.pictures.map((p: any) => p.secure_url || p.url);
+                    if (price === 0) price = mlData.price;
                     isNew = mlData.condition;
                 }
             } catch (e) { }
         }
 
         if (!title) {
-            return NextResponse.json({ error: 'Las capas de seguridad de Mercado Libre impidieron leer el producto. Intenta abrir el link, copiarlo tal cual de tu navegador y pegarlo nuevamente.' }, { status: 400 });
+            return NextResponse.json({ error: 'Las capas de seguridad de Mercado Libre impidieron leer el producto. Intenta con el link largo de computadora.' }, { status: 400 });
         }
 
         const result = {
