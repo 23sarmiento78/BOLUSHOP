@@ -30,6 +30,7 @@ interface Props {
     searchParams: Promise<{
         categoria?: string;
         coleccion?: string;
+        seccion?: string;
         sort?: string;
     }>;
 }
@@ -40,8 +41,17 @@ export default async function ProductosPage({ searchParams }: Props) {
     const holiday = getCurrentHoliday();
 
     // Filtering
-    const { categoria, coleccion, sort } = await searchParams;
+    const { categoria, coleccion, seccion, sort } = await searchParams;
+
+    // Logic: ML products ONLY appear if specific section is active
+    // Normal products appear otherwise
     let filteredProducts = activeProducts;
+
+    if (seccion === 'mercado-libre') {
+        filteredProducts = filteredProducts.filter(p => p.isMlReferral);
+    } else {
+        filteredProducts = filteredProducts.filter(p => !p.isMlReferral);
+    }
 
     let activeCollectionName = "";
 
@@ -87,7 +97,16 @@ export default async function ProductosPage({ searchParams }: Props) {
         );
     }
 
-    const categories = Array.from(new Set(activeProducts.map(p => p.category)));
+    const currentSubset = seccion === 'mercado-libre' ? activeProducts.filter(p => p.isMlReferral) : activeProducts.filter(p => !p.isMlReferral);
+    const categories = Array.from(new Set(currentSubset.map(p => p.category)));
+
+    const displayTitle = seccion === 'mercado-libre'
+        ? 'Imperdibles Mercado Libre'
+        : (activeCollectionName ? `Colección ${activeCollectionName}` : 'Nuestra Tienda');
+
+    const displaySubtitle = seccion === 'mercado-libre'
+        ? 'Seleccionamos lo mejor de ML para que compres con la confianza de BoluShop.'
+        : (holiday ? `Celebrá ${holiday.label} con nuestra selección exclusiva.` : 'Descubrí una selección curada de productos únicos.');
 
     return (
         <>
@@ -102,15 +121,15 @@ export default async function ProductosPage({ searchParams }: Props) {
                     <div className="max-w-4xl mb-16">
                         <div className="flex items-center gap-3 mb-6">
                             <div className="h-px w-12 bg-primary"></div>
-                            <span className="text-xs font-black uppercase tracking-[0.3em] text-primary">Catálogo Exclusivo</span>
+                            <span className="text-xs font-black uppercase tracking-[0.3em] text-primary">
+                                {seccion === 'mercado-libre' ? 'Selección Especial' : 'Catálogo Exclusivo'}
+                            </span>
                         </div>
                         <h1 className="text-6xl md:text-7xl font-black mb-8 tracking-tighter text-gray-900">
-                            {activeCollectionName ? (
-                                <>Colección <span className="text-primary italic">{activeCollectionName}</span></>
-                            ) : 'Nuestra Tienda'}
+                            {displayTitle}
                         </h1>
                         <p className="text-gray-500 text-lg md:text-xl font-medium max-w-2xl leading-relaxed">
-                            {holiday ? `Celebrá ${holiday.label} con nuestra selección exclusiva.` : 'Descubrí una selección curada de productos diseñados para elevar tu estilo de vida. Calidad garantizada en cada detalle.'}
+                            {displaySubtitle}
                         </p>
                     </div>
 
@@ -118,26 +137,45 @@ export default async function ProductosPage({ searchParams }: Props) {
                     <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8 mb-12 pb-12 border-b border-gray-100">
                         {/* Filters */}
                         <div className="flex flex-wrap gap-2">
+                            {/* Standard Catalog Tab */}
                             <a
                                 href={`/productos${sort ? `?sort=${sort}` : ''}`}
-                                className={`px-8 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 ${!categoria
+                                className={`px-8 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 ${!seccion && !categoria
                                     ? 'text-white shadow-2xl'
                                     : 'bg-white text-gray-500 hover:text-gray-900 border border-gray-100'
                                     }`}
-                                style={!categoria && holiday ? {
+                                style={!seccion && !categoria && holiday ? {
                                     backgroundColor: holiday.colors.primary,
                                     boxShadow: `0 20px 30px -10px ${holiday.colors.primary}40`
-                                } : !categoria ? {
+                                } : !seccion && !categoria ? {
                                     backgroundColor: '#0F172A',
                                     boxShadow: '0 20px 30px -10px rgba(15, 23, 42, 0.2)'
                                 } : {}}
                             >
-                                Todos
+                                Tienda Local
                             </a>
+
+                            {/* ML Catalog Tab */}
+                            <a
+                                href={`/productos?seccion=mercado-libre${sort ? `&sort=${sort}` : ''}`}
+                                className={`px-8 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 ${seccion === 'mercado-libre' && !categoria
+                                    ? 'text-white shadow-2xl'
+                                    : 'bg-white text-gray-500 hover:text-gray-900 border border-gray-100'
+                                    }`}
+                                style={seccion === 'mercado-libre' && !categoria ? {
+                                    backgroundColor: '#3483FA', // ML Blue
+                                    boxShadow: '0 20px 30px -10px rgba(52, 131, 250, 0.3)'
+                                } : {}}
+                            >
+                                Imperdibles ML 🚀
+                            </a>
+
+                            <div className="w-px h-10 bg-gray-100 mx-2 hidden md:block" />
+
                             {categories.map((cat) => (
                                 <a
                                     key={cat}
-                                    href={`/productos?categoria=${encodeURIComponent(cat)}${sort ? `&sort=${sort}` : ''}`}
+                                    href={`/productos?categoria=${encodeURIComponent(cat)}${seccion ? `&seccion=${seccion}` : ''}${sort ? `&sort=${sort}` : ''}`}
                                     className={`px-8 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 ${categoria === cat
                                         ? 'text-white shadow-2xl'
                                         : 'bg-white text-gray-500 hover:text-gray-900 border border-gray-100'
