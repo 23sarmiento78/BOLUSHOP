@@ -18,10 +18,14 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
     const allProducts = await getAllProducts();
+    const activeProducts = allProducts.filter(p => p.isActive !== false && p.price > 0);
     const collections = await getAllCollections();
     const holiday = getCurrentHoliday();
 
-    const featuredProducts = allProducts.filter(p => p.isActive !== false && p.price > 0).slice(0, 8);
+    // Segregate products as per user request: ML only in specific sections
+    const featuredProducts = activeProducts.filter(p => !p.isMlReferral).slice(0, 8);
+    const mlProducts = activeProducts.filter(p => p.isMlReferral).slice(0, 4);
+
     const allPosts = await getAllPosts();
     const recentPosts = allPosts.filter(p => p.isPublished).slice(0, 3);
 
@@ -241,7 +245,48 @@ export default async function HomePage() {
                     </div>
                 </section>
 
+                {/* MERCADO LIBRE SPECIAL SECTION */}
+                {mlProducts.length > 0 && (
+                    <section className="relative z-10 py-16 md:py-24 bg-white">
+                        <div className="container mx-auto px-4">
+                            <div className="bg-[#FFE600] rounded-[3rem] p-8 md:p-16 shadow-2xl shadow-yellow-500/10 border border-yellow-200 overflow-hidden relative">
+                                {/* Decorative elements */}
+                                <div className="absolute top-0 right-0 w-64 h-64 bg-white/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl opacity-50" />
+                                <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl opacity-50" />
 
+                                <div className="relative z-10">
+                                    <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-12">
+                                        <div className="max-w-xl text-center md:text-left">
+                                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest mb-4">
+                                                <span>🚀 Envío Directo</span>
+                                                <span className="opacity-50">|</span>
+                                                <span>Compra Protegida</span>
+                                            </div>
+                                            <h2 className="text-4xl md:text-5xl font-black text-[#2D3277] mb-4 tracking-tight leading-tight">
+                                                Imperdibles de <br />
+                                                <span className="text-blue-600">Mercado Libre</span>
+                                            </h2>
+                                            <p className="text-[#2D3277]/70 font-medium text-lg">
+                                                Seleccionados por BoluShop. Compra en ML con nuestra recomendación y recibí en tiempo récord.
+                                            </p>
+                                        </div>
+                                        <Link href="/productos?seccion=mercado-libre" className="px-10 py-4 bg-[#2D3277] text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-900 transition-all shadow-xl shadow-blue-900/20 active:scale-95">
+                                            Ver Todo Recomendados
+                                        </Link>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                                        {mlProducts.map((product) => (
+                                            <div key={product.id} className="h-full transform hover:-translate-y-2 transition-all duration-300">
+                                                <ProductCard product={product} />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                )}
 
                 {/* BLOG PREVIEW SECTION */}
                 {recentPosts.length > 0 && (

@@ -70,21 +70,51 @@ export async function POST(request: Request) {
                 htmlText = await pageRes.text();
             }
 
+            // --- Extracciones Base (Regex) ---
+            const jsonLdMatch = htmlText.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/i);
+
             // 1. Extraer Título (OpenGraph es lo más confiable)
             const titleMatch = htmlText.match(/<meta\s+property="og:title"\s+content="([^"]+)"/i);
             if (titleMatch) title = titleMatch[1].replace(/ - Envío gratis|\$ [\d.]+/gi, '').split('|')[0].trim();
 
             // 2. Extraer Imágenes (Buscamos todas las imágenes de alta calidad del CDN de ML)
-            // Patrones: D_NQ_NP_...-O.webp, -O.jpg, -F.webp, -F.jpg
-            const imgRegex = /https:\/\/http2\.mlstatic\.com\/D_NQ_NP_[0-9A-Z_-]+-(?:O|F)\.(?:webp|jpg)/gi;
-            const foundImgs = Array.from(new Set(htmlText.match(imgRegex) || []));
 
-            if (foundImgs.length > 0) {
-                // Priorizar las mejores calidades y limpiar URLs duplicadas
-                pictures = foundImgs.slice(0, 10);
+            // Intentamos extraer la lista de imágenes desde el JSON-LD (Schema.org) primero, que es lo más preciso
+            if (jsonLdMatch) {
+                try {
+                    const json = JSON.parse(jsonLdMatch[1]);
+                    const productObj = Array.isArray(json) ? json.find(i => i['@type'] === 'Product') : (json['@type'] === 'Product' ? json : null);
+                    if (productObj?.image) {
+                        const ldImages = Array.isArray(productObj.image) ? productObj.image : [productObj.image];
+                        pictures = ldImages.map((img: string) => img.replace("-V.jpg", "-O.webp").replace("-V.webp", "-O.webp"));
+                    }
+                } catch (e) { }
+            }
+
+            // Si no obtuvimos imágenes precisas del JSON-LD, buscamos en el contenedor de la galería del HTML
+            if (pictures.length === 0) {
+                // Buscamos el bloque de la galería para evitar fotos de "productos relacionados"
+                const galleryMatch =
+                    htmlText.match(/<div[^>]*class="[^"]*ui-pdp-gallery[^"]*"[^>]*>([\s\S]*?)<\/div>\s*<div[^>]*class="[^"]*ui-pdp-description/i) ||
+                    htmlText.match(/<div[^>]*class="[^"]*ui-pdp-gallery[^"]*"[^>]*>([\s\S]*?)<\/div>\s*<div[^>]*class="[^"]*ui-pdp-container__row/i) ||
+                    htmlText.match(/<div[^>]*class="[^"]*ui-pdp-gallery[^"]*"[^>]*>([\s\S]*?)<\/div>/i);
+
+                const galleryHtml = galleryMatch ? galleryMatch[1] : htmlText; // Fallback al texto completo si no aislamos la galería
+
+                // Patrones: D_NQ_NP_...-O.webp, -O.jpg, -F.webp, -F.jpg
+                const imgRegex = /https:\/\/[a-z0-9-]+\.mlstatic\.com\/D_NQ_NP_[0-9A-Z_-]+-(?:O|F|V)\.(?:webp|jpg)/gi;
+                let foundImgs = Array.from(new Set(galleryHtml.match(imgRegex) || []));
+
+                // Limpieza y priorización de calidad (O = Original, F = Full, V = Vertical/Thumbnail)
+                // Convertimos todo a calidad -O (Original/HD) si es posible
+                pictures = foundImgs.map(img => img.replace(/-(?:V|F)\.(?:webp|jpg)$/i, "-O.webp")).slice(0, 10);
+                pictures = Array.from(new Set(pictures));
+            }
+
+            if (pictures.length > 0) {
                 image = pictures[0];
             } else {
-                // Fallback a OpenGraph
+                // Fallback final a OpenGraph (Solo una imagen)
                 const ogImg = htmlText.match(/<meta\s+property="og:image"\s+content="([^"]+)"/i);
                 if (ogImg) {
                     image = ogImg[1];
@@ -95,7 +125,6 @@ export async function POST(request: Request) {
             // 3. Extraer Precio (Lógica de prioridad: JSON-LD > Meta Itemprop > CSS Class)
 
             // Método A: JSON-LD (Schema.org) - Es lo que usa Google para ver precios de oferta
-            const jsonLdMatch = htmlText.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/i);
             if (jsonLdMatch) {
                 try {
                     const json = JSON.parse(jsonLdMatch[1]);

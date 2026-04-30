@@ -102,8 +102,9 @@ export default function Header() {
                     <nav className="hidden lg:flex items-center gap-1 bg-black/5 backdrop-blur-sm p-1.5 rounded-full border border-white/10 mx-auto absolute left-1/2 -translate-x-1/2">
                         {[
                             { label: 'Inicio', href: '/' },
-                            { label: 'Colecciones', href: '/colecciones' },
                             { label: 'Productos', href: '/productos' },
+                            { label: 'Imperdibles ML', href: '/productos?seccion=mercado-libre' },
+                            { label: 'Colecciones', href: '/colecciones' },
                             { label: 'Blog', href: '/blog' },
                         ].map(link => (
                             <Link
@@ -187,8 +188,9 @@ export default function Header() {
                         <div className="space-y-2">
                             {[
                                 { label: 'Inicio', href: '/', icon: '🏠' },
+                                { label: 'Productos', href: '/productos', icon: '📦' },
+                                { label: 'Imperdibles ML', href: '/productos?seccion=mercado-libre', icon: '🚀' },
                                 { label: 'Colecciones VIP', href: '/colecciones', icon: themeIcon },
-                                { label: 'Todos los Productos', href: '/productos', icon: '📦' },
                                 { label: 'Blog de Tendencias', href: '/blog', icon: '📖' },
                                 { label: 'Seguir mi Pedido', href: '/rastreo', icon: '🚚' },
                             ].map((item, i) => (

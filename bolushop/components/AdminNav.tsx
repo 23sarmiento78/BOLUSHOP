@@ -1,140 +1,116 @@
 "use client";
-import Link from 'next/link';
-import Image from 'next/image';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
     LayoutDashboard,
-    Package,
-    FolderTree,
-    Truck,
-    Tags,
+    ShoppingBag,
+    Tag,
     Settings,
-    Mail,
-    FileUp,
+    Users,
+    BarChart3,
+    MessageSquare,
+    LogOut,
     Menu,
     X,
-    ExternalLink,
-    ChevronRight,
-    BookOpen,
-    ShoppingBag
-} from 'lucide-react';
+    Package,
+    Store
+} from "lucide-react";
+import { useState } from "react";
+import Logo from "./shop/Logo";
+
+const navItems = [
+    { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+    { name: "Productos", href: "/admin/products", icon: ShoppingBag },
+    { name: "Mercado Libre", href: "/admin/mercado-libre", icon: Package },
+    { name: "Pedidos", href: "/admin/pedidos", icon: Tag },
+    { name: "Usuarios", href: "/admin/usuarios", icon: Users },
+    { name: "Reseñas", href: "/admin/resenas", icon: MessageSquare },
+    { name: "Estadísticas", href: "/admin/stats", icon: BarChart3 },
+    { name: "Configuración", href: "/admin/settings", icon: Settings },
+];
 
 export default function AdminNav() {
     const pathname = usePathname();
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-    if (pathname === '/admin/login') return null;
-
-    const links = [
-        { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-        { href: '/admin/products', label: 'Productos', icon: Package },
-        { href: '/admin/blog', label: 'Blog', icon: BookOpen },
-        { href: '/admin/categories', label: 'Categorías', icon: FolderTree },
-        { href: '/admin/orders', label: 'Pedidos', icon: Truck },
-        { href: '/admin/collections', label: 'Colecciones', icon: Tags },
-        { href: '/admin/mercado-libre', label: 'Referidos ML', icon: ShoppingBag },
-        { href: '/admin/settings', label: 'Ajustes', icon: Settings },
-        { href: '/admin/newsletter', label: 'Marketing', icon: Mail },
-        { href: '/admin/upload', label: 'Importar CSV', icon: FileUp },
-    ];
+    const [isOpen, setIsOpen] = useState(false);
 
     return (
         <>
-            {/* Mobile Header */}
-            <div className="lg:hidden bg-white/80 backdrop-blur-xl border-b border-gray-100 p-4 flex justify-between items-center sticky top-0 z-[60]">
-                <Link href="/" className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-black text-xs">
-                        B
-                    </div>
-                    <div className="font-black text-lg tracking-tighter text-gray-900">
-                        Admin<span className="text-primary italic">Panel</span>
-                    </div>
-                </Link>
+            {/* Mobile Menu Button */}
+            <div className="lg:hidden fixed top-4 left-4 z-50">
                 <button
-                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                    className="p-2.5 bg-gray-50 text-gray-900 rounded-xl active:scale-95 transition-all"
+                    onClick={() => setIsOpen(!isOpen)}
+                    className="p-3 bg-white rounded-2xl shadow-xl border border-gray-100 text-gray-900"
                 >
-                    {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+                    {isOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
             </div>
 
-            {/* Sidebar Navigation */}
-            <nav className={`
-                fixed inset-y-0 left-0 z-50 lg:relative lg:translate-x-0 transition-all duration-300 ease-in-out
-                w-72 bg-white border-r border-gray-100 flex flex-col h-screen
-                ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
-            `}>
-                {/* Logo Section */}
-                <div className="p-8">
-                    <Link href="/" target="_blank" className="group block">
-                        <div className="flex items-center gap-3 mb-2">
-                            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary/10 transition-transform duration-300">
-                                B
-                            </div>
-                            <div className="flex flex-col">
-                                <h1 className="font-bold text-xl tracking-tight leading-none text-gray-900">
-                                    Bolu<span className="text-primary">Shop</span>
-                                </h1>
-                                <span className="text-[9px] font-semibold uppercase tracking-widest text-gray-400">Admin</span>
-                            </div>
-                        </div>
-                    </Link>
-                </div>
-
-                {/* Navigation Links */}
-                <div className="flex-grow px-4 space-y-1 overflow-y-auto custom-scrollbar">
-                    <p className="px-3 text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-3 opacity-70">Menú Administrador</p>
-                    {links.map(link => {
-                        const isActive = pathname === link.href;
-                        const Icon = link.icon;
-                        return (
-                            <Link
-                                key={link.href}
-                                href={link.href}
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                className={`
-                                    flex items-center justify-between group px-3 py-2.5 rounded-xl text-sm transition-all duration-200
-                                    ${isActive
-                                        ? 'bg-primary text-white shadow-lg shadow-primary/15'
-                                        : 'text-gray-600 hover:text-primary hover:bg-gray-50'}
-                                `}
-                            >
-                                <div className="flex items-center gap-3">
-                                    <div className={`p-1.5 rounded-lg transition-colors ${isActive ? 'bg-white/15 text-white' : 'bg-gray-100 text-gray-400 group-hover:bg-primary/10 group-hover:text-primary'}`}>
-                                        <Icon size={16} strokeWidth={isActive ? 2 : 1.5} />
-                                    </div>
-                                    <span className={isActive ? 'font-semibold' : 'font-medium'}>{link.label}</span>
-                                </div>
-                                {isActive && <ChevronRight size={14} className="opacity-70" />}
-                            </Link>
-                        )
-                    })}
-                </div>
-
-                {/* Footer Section */}
-                <div className="p-6 mt-auto">
-                    <div className="bg-gradient-to-br from-gray-900 to-primary rounded-2xl p-4 text-white relative overflow-hidden group">
-                        <div className="relative z-10">
-                            <h4 className="font-semibold text-xs mb-3">BoluShop v2.6</h4>
-                            <Link
-                                href="/"
-                                className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-widest bg-white/10 py-2 rounded-lg hover:bg-white/20 transition-all text-center justify-center"
-                            >
-                                Ver Tienda <ExternalLink size={10} />
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-
-            {/* Mobile Overlay */}
-            {isMobileMenuOpen && (
+            {/* Backdrop */}
+            {isOpen && (
                 <div
-                    className="fixed inset-0 bg-gray-900/40 backdrop-blur-md z-40 lg:hidden animate-in fade-in duration-500"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden"
+                    onClick={() => setIsOpen(false)}
                 />
             )}
+
+            {/* Sidebar */}
+            <aside className={`
+                fixed lg:relative inset-y-0 left-0 z-50
+                w-72 bg-white border-r border-gray-100 flex flex-col
+                transition-transform duration-500 ease-out
+                ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+            `}>
+                <div className="p-8 pb-12">
+                    <Logo variant="full" />
+                    <div className="mt-2 px-1">
+                        <span className="px-2 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest rounded-lg">Admin Panel</span>
+                    </div>
+                </div>
+
+                <nav className="flex-1 px-6 space-y-2 overflow-y-auto">
+                    <div className="mb-6 px-2">
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4">Módulos de Gestión</p>
+                    </div>
+                    {navItems.map((item) => {
+                        const Icon = item.icon;
+                        const isActive = pathname === item.href;
+                        return (
+                            <Link
+                                key={item.name}
+                                href={item.href}
+                                onClick={() => setIsOpen(false)}
+                                className={`
+                                    flex items-center gap-4 px-4 py-4 rounded-2xl font-bold transition-all
+                                    ${isActive
+                                        ? 'bg-gray-900 text-white shadow-xl shadow-gray-200'
+                                        : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}
+                                `}
+                            >
+                                <Icon size={20} className={isActive ? 'text-primary' : ''} />
+                                <span className="text-sm">{item.name}</span>
+                                {item.name === "Mercado Libre" && !isActive && (
+                                    <span className="ml-auto w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
+                                )}
+                            </Link>
+                        );
+                    })}
+                </nav>
+
+                <div className="p-6 mt-auto border-t border-gray-50">
+                    <Link
+                        href="/"
+                        className="flex items-center gap-4 px-4 py-4 text-gray-500 font-bold hover:text-gray-900 transition-colors"
+                    >
+                        <Store size={20} />
+                        <span className="text-sm">Ver Tienda</span>
+                    </Link>
+                    <button className="flex items-center gap-4 px-4 py-4 w-full text-red-500 font-bold hover:bg-red-50 rounded-2xl transition-all">
+                        <LogOut size={20} />
+                        <span className="text-sm">Cerrar Sesión</span>
+                    </button>
+                </div>
+            </aside>
         </>
     );
 }
