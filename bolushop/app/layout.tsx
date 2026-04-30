@@ -82,6 +82,8 @@ export async function generateMetadata(): Promise<Metadata> {
       shortcut: '/favicon.ico',
       apple: '/icon.png',
     },
+    manifest: '/manifest.json',
+    themeColor: '#0F172A',
   };
 }
 
