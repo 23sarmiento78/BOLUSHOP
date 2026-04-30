@@ -5,6 +5,7 @@ import Script from "next/script";
 import NextTopLoader from 'nextjs-toploader';
 import { getSettings } from "@/lib/db";
 import WhatsAppButton from "@/components/shop/WhatsAppButton";
+import CookieConsent from "@/components/shop/CookieConsent";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -150,6 +151,7 @@ export default async function RootLayout({
           {children}
         </main>
         <WhatsAppButton />
+        <CookieConsent />
         <Toaster position="top-center" richColors />
 
         <Script
