@@ -13,8 +13,8 @@ export default function TerminosPage() {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                             <div className="md:col-span-2 space-y-12 text-gray-600 leading-relaxed">
                                 <section>
-                                    <h2 className="text-xl font-black text-gray-900 uppercase tracking-widest mb-4">1. Aceptación de Términos</h2>
-                                    <p>Al acceder y utilizar BoluShop, aceptas cumplir con estos términos y condiciones. Si no estás de acuerdo con alguna parte, por favor no utilices nuestro sitio.</p>
+                                    <h2 className="text-xl font-black text-gray-900 uppercase tracking-widest mb-4">1. Identidad</h2>
+                                    <p>BoluShop es una plataforma comercial operada por <b>Israel Enrique Sarmiento Escuela</b>, con base de operaciones en Villa Carlos Paz, Córdoba, Argentina. Al acceder y utilizar este sitio, aceptas cumplir con estos términos y condiciones.</p>
                                 </section>
 
                                 <section>

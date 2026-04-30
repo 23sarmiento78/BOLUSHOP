@@ -193,6 +193,8 @@ export default function Header() {
                                 { label: 'Colecciones VIP', href: '/colecciones', icon: themeIcon },
                                 { label: 'Blog de Tendencias', href: '/blog', icon: '📖' },
                                 { label: 'Seguir mi Pedido', href: '/rastreo', icon: '🚚' },
+                                { label: 'Sobre Nosotros', href: '/nosotros', icon: '🤝' },
+                                { label: 'Contacto', href: '/contacto', icon: '✉️' },
                             ].map((item, i) => (
                                 <Link
                                     key={item.href}

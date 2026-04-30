@@ -29,7 +29,7 @@ export default function NosotrosPage() {
 
                         <div className="prose prose-xl prose-gray max-w-none space-y-8 text-gray-600 font-medium leading-relaxed">
                             <p>
-                                <b>BoluShop</b> nació en el año 2026 con una misión clara: transformar la forma en que los argentinos descubrimos y compramos productos que salen de lo común. En un mundo lleno de lo mismo, nosotros buscamos lo diferente.
+                                <b>BoluShop</b> nació en el año 2026 con una misión clara: transformar la forma en que los argentinos descubrimos y compramos productos que salen de lo común. Bajo la dirección de <b>Israel Enrique Sarmiento Escuela</b>, nuestro proyecto busca la excelencia en cada detalle desde nuestra base en Villa Carlos Paz, Córdoba.
                             </p>
                             <p>
                                 Lo que comenzó como una pequeña curaduría de gadgets tecnológicos en Google Drive, hoy se ha convertido en la tienda de referencia para quienes buscan ese regalo perfecto, esa herramienta curiosa o ese detalle que hace la vida más inteligente.

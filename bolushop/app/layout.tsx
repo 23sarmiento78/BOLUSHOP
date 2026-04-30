@@ -141,12 +141,6 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5416044136120955"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
         <main className="flex-grow">
           {children}
         </main>
