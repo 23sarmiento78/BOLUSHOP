@@ -3,7 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import Script from "next/script";
 import NextTopLoader from 'nextjs-toploader';
+import { headers } from 'next/headers';
 import { getSettings } from "@/lib/db";
+import { supabase } from "@/lib/supabase"; // Usaremos el cliente existente
 import WhatsAppButton from "@/components/shop/WhatsAppButton";
 import CookieConsent from "@/components/shop/CookieConsent";
 import "./globals.css";
@@ -31,7 +33,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
 
-  return {
+  // Lógica de restricción para la PWA: Solo para el administrador logueado
+  const headerList = await headers();
+  const cookies = headerList.get('cookie') || '';
+  const isAllowed = cookies.includes('admin_authenticated=true');
+
+  const metadata: Metadata = {
     metadataBase: new URL(siteUrl),
     title: {
       default: `${settings.siteName} | Tienda de Regalos Originales y Gadgets en Argentina`,
@@ -82,9 +89,15 @@ export async function generateMetadata(): Promise<Metadata> {
       shortcut: '/favicon.ico',
       apple: '/icon.png',
     },
-    manifest: '/manifest.json',
-    themeColor: '#0F172A',
   };
+
+  // Solo añadir manifiesto e instalar si la IP es la correcta
+  if (isAllowed) {
+    metadata.manifest = '/manifest.json';
+    (metadata as any).themeColor = '#0F172A';
+  }
+
+  return metadata;
 }
 
 export default async function RootLayout({
@@ -124,12 +137,7 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://www.mercadopago.com" />
         <link rel="preconnect" href="https://www.mercadolivre.com" />
         <link rel="preconnect" href="https://www.mercadolibre.com" />
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5416044136120955"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5416044136120955" crossOrigin="anonymous"></script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${outfit.className} antialiased flex flex-col min-h-screen bg-sand-white`}
