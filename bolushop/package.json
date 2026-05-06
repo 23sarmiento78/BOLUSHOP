@@ -2,13 +2,20 @@
   "name": "bolushop",
   "version": "0.1.0",
   "private": true,
+  "description": "Panel de Administración Profesional para BoluShop",
+  "author": "Israel Sarmiento",
   "scripts": {
     "dev": "next dev --webpack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "desktop:dev": "electron .",
+    "desktop:build": "electron-builder"
   },
   "dependencies": {
+    "@capacitor/android": "^8.3.1",
+    "@capacitor/cli": "^8.3.1",
+    "@capacitor/core": "^8.3.1",
     "@google/generative-ai": "^0.24.1",
     "@mercadopago/sdk-react": "^1.0.7",
     "@supabase/supabase-js": "^2.89.0",
@@ -35,9 +42,28 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3",
     "eslint": "^9",
     "eslint-config-next": "16.1.1",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "main": "desktop-wrapper.js",
+  "build": {
+    "appId": "com.bolushop.admin",
+    "productName": "BoluShop Admin",
+    "icon": "public/icon.png",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "desktop-wrapper.js",
+      "package.json",
+      "public/icon.png"
+    ],
+    "win": {
+      "target": "portable"
+    }
   }
 }

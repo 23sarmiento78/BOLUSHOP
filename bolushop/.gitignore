@@ -36,6 +36,11 @@ yarn-error.log*
 # vercel
 .vercel
 
+# apps
+/dist-electron
+/android
+/public/apps/*.exe
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

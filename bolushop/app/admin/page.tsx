@@ -16,7 +16,10 @@ import {
     Settings,
     Mail,
     Tags,
-    Truck
+    Truck,
+    Smartphone,
+    Monitor,
+    Download
 } from 'lucide-react';
 
 export default async function AdminDashboard() {
@@ -169,6 +172,53 @@ export default async function AdminDashboard() {
                                 <p className="text-xs font-black uppercase tracking-[0.2em]">Todo excelente</p>
                             </div>
                         )}
+                    </div>
+                </div>
+            </div>
+
+            {/* Native Apps Section */}
+            <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm mt-12">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+                    <div>
+                        <h2 className="text-3xl font-black text-gray-900 tracking-tighter mb-2">
+                            Aplicaciones <span className="text-primary">Nativas</span>
+                        </h2>
+                        <p className="text-gray-400 font-bold uppercase text-[10px] tracking-[0.2em]">
+                            Descarga el Panel Admin en todos tus dispositivos
+                        </p>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <a
+                            href="/apps/bolushop-admin.exe"
+                            download
+                            className="flex items-center gap-4 bg-gray-50 hover:bg-gray-900 hover:text-white p-5 rounded-2xl transition-all group border border-transparent hover:border-gray-800 shadow-sm"
+                        >
+                            <div className="bg-white group-hover:bg-gray-800 p-3 rounded-xl shadow-inner transition-colors">
+                                <Monitor size={24} />
+                            </div>
+                            <div>
+                                <p className="font-bold text-sm">Windows App</p>
+                                <p className="text-[10px] opacity-50 font-bold uppercase tracking-widest flex items-center gap-1">
+                                    Descargar .exe <Download size={10} />
+                                </p>
+                            </div>
+                        </a>
+
+                        <a
+                            href="/apps/bolushop-admin.apk"
+                            download
+                            className="flex items-center gap-4 bg-gray-50 hover:bg-primary/90 hover:text-white p-5 rounded-2xl transition-all group border border-transparent hover:border-primary shadow-sm"
+                        >
+                            <div className="bg-white group-hover:bg-primary p-3 rounded-xl shadow-inner transition-colors">
+                                <Smartphone size={24} />
+                            </div>
+                            <div>
+                                <p className="font-bold text-sm">Android App</p>
+                                <p className="text-[10px] opacity-70 font-bold uppercase tracking-widest flex items-center gap-1">
+                                    Descargar .apk <Download size={10} />
+                                </p>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
