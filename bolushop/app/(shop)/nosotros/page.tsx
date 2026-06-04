@@ -1,65 +1,99 @@
 import Header from "@/components/shop/Header";
 import Footer from "@/components/shop/Footer";
-import Image from "next/image";
+import Link from "next/link";
+import { ChevronRight, Heart, Zap, Users } from "lucide-react";
 
 export default function NosotrosPage() {
     return (
         <>
             <Header />
-            <main className="min-h-screen bg-white pt-32 pb-24">
-                <div className="container mx-auto px-6">
-                    <div className="max-w-4xl mx-auto">
-                        <span className="text-xs font-black uppercase tracking-[0.3em] text-primary mb-6 block text-center">Nuestra Historia</span>
-                        <h1 className="text-5xl md:text-7xl font-black mb-12 tracking-tighter text-gray-900 text-center">
-                            Pasión por lo <span className="text-primary italic">Original</span>
-                        </h1>
+            <main className="min-h-screen bg-white">
+                <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-8 md:py-12 px-4 md:px-6">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="flex items-center gap-2 mb-4 text-xs text-gray-300">
+                            <Link href="/" className="hover:text-white">Inicio</Link>
+                            <ChevronRight size={14} />
+                            <span>Nosotros</span>
+                        </div>
+                        <h1 className="text-3xl md:text-4xl font-bold mb-2">Sobre BoluShop</h1>
+                        <p className="text-sm md:text-base text-gray-300 max-w-2xl">
+                            Conocé nuestro origen, nuestra misión y la forma en que trabajamos cada día.
+                        </p>
+                    </div>
+                </section>
 
-                        <div className="relative aspect-video rounded-[3rem] overflow-hidden mb-16 shadow-2xl">
-                            <Image
-                                src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071"
-                                alt="Equipo BoluShop"
-                                fill
-                                className="object-cover"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                            <div className="absolute bottom-8 left-8 right-8 text-white">
-                                <p className="text-xl font-bold italic">"No vendemos productos, vendemos momentos de alegría y originalidad."</p>
+                <section className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16 space-y-16">
+                    <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr] items-center">
+                        <div className="space-y-6">
+                            <span className="inline-flex items-center rounded-full bg-[#f8fafb] px-4 py-2 text-[11px] font-black uppercase tracking-[0.35em] text-[#0f2044]">Nuestra Historia</span>
+                            <h2 className="text-3xl md:text-4xl font-black text-[#0f2044]">Una tienda pensada para quienes buscan lo distinto.</h2>
+                            <p className="text-[#64748b] leading-relaxed text-base md:text-lg">
+                                BoluShop nació en 2026 con la misión de traer al mercado argentino productos únicos, funcionales y con estilo. Desde Villa Carlos Paz, seleccionamos cada artículo con cuidado.
+                            </p>
+                            <p className="text-[#64748b] leading-relaxed text-base md:text-lg">
+                                Lo que comenzó como una pequeña curaduría de gadgets hoy es un espacio dedicado a experiencias de compra distintas: regalos con personalidad, herramientas prácticas y detalles que sorprenden.
+                            </p>
+                        </div>
+                        <div className="rounded-[2.5rem] bg-[#f8f9fb] border border-[#e2e8f0] p-10 shadow-card">
+                            <h3 className="text-2xl font-black text-[#0f2044] mb-5">Nuestra Promesa</h3>
+                            <p className="text-[#64748b] leading-relaxed mb-6">
+                                Si no lo usaríamos nosotros, no lo recomendamos. Cada producto recibe el respaldo de nuestro servicio y atención personalizada.
+                            </p>
+                            <div className="grid gap-4">
+                                <div className="rounded-3xl bg-white border border-[#e2e8f0] p-5">
+                                    <p className="text-xs uppercase tracking-[0.35em] text-[#64748b] mb-2 font-black">Confianza</p>
+                                    <p className="text-sm text-[#0f2044] font-bold">Compra segura con soporte real.</p>
+                                </div>
+                                <div className="rounded-3xl bg-white border border-[#e2e8f0] p-5">
+                                    <p className="text-xs uppercase tracking-[0.35em] text-[#64748b] mb-2 font-black">Calidad</p>
+                                    <p className="text-sm text-[#0f2044] font-bold">Selección de productos verificados y confiables.</p>
+                                </div>
+                                <div className="rounded-3xl bg-white border border-[#e2e8f0] p-5">
+                                    <p className="text-xs uppercase tracking-[0.35em] text-[#64748b] mb-2 font-black">Entrega</p>
+                                    <p className="text-sm text-[#0f2044] font-bold">Envíos rápidos y atención local.</p>
+                                </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div className="prose prose-xl prose-gray max-w-none space-y-8 text-gray-600 font-medium leading-relaxed">
-                            <p>
-                                <b>BoluShop</b> nació en el año 2026 con una misión clara: transformar la forma en que los argentinos descubrimos y compramos productos que salen de lo común. Bajo la dirección de <b>Israel Enrique Sarmiento Escuela</b>, nuestro proyecto busca la excelencia en cada detalle desde nuestra base en Villa Carlos Paz, Córdoba.
-                            </p>
-                            <p>
-                                Lo que comenzó como una pequeña curaduría de gadgets tecnológicos en Google Drive, hoy se ha convertido en la tienda de referencia para quienes buscan ese regalo perfecto, esa herramienta curiosa o ese detalle que hace la vida más inteligente.
-                            </p>
-
-                            <h2 className="text-3xl font-black text-gray-900 mt-12 mb-6">Valores que nos definen</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 not-prose">
-                                <div className="p-8 bg-gray-50 rounded-3xl border border-gray-100">
-                                    <div className="text-3xl mb-4">💎</div>
-                                    <h3 className="text-xl font-bold text-gray-900 mb-2">Curaduría de Calidad</h3>
-                                    <p className="text-sm text-gray-500">Cada producto en nuestro catálogo pasa por un proceso de selección estricto. Si no lo usaríamos nosotros, no te lo vendemos.</p>
-                                </div>
-                                <div className="p-8 bg-gray-50 rounded-3xl border border-gray-100">
-                                    <div className="text-3xl mb-4">⚡</div>
-                                    <h3 className="text-xl font-bold text-gray-900 mb-2">Envío Veloz</h3>
-                                    <p className="text-sm text-gray-500">Sabemos que cuando encontrás algo genial, lo querés ya. Por eso optimizamos nuestra logística para llegar a cada rincón de Argentina en tiempo récord.</p>
-                                </div>
+                    <div className="grid gap-6 md:grid-cols-3">
+                        <div className="card p-8">
+                            <div className="w-12 h-12 rounded-3xl bg-[#fef2f2] flex items-center justify-center mb-5">
+                                <Heart size={24} className="text-red-500" />
                             </div>
-
-                            <p>
-                                Además, hemos integrado una sección especial de <b>Imperdibles Mercado Libre</b>, donde seleccionamos los mejores "tesoros" del marketplace más grande del país, asegurándote una experiencia de compra protegida con el respaldo de BoluShop.
+                            <h3 className="text-xl font-bold text-[#0f2044] mb-3">Curaduría de Calidad</h3>
+                            <p className="text-[#64748b] leading-relaxed text-sm">
+                                Seleccionamos solo productos que realmente valen la pena.
                             </p>
-
-                            <p className="text-center text-2xl font-black text-gray-900 py-12">
-                                Gracias por ser parte de nuestra comunidad. <br />
-                                <span className="text-primary italic">Atentamente, el equipo de BoluShop.</span>
+                        </div>
+                        <div className="card p-8">
+                            <div className="w-12 h-12 rounded-3xl bg-[#f0fdf4] flex items-center justify-center mb-5">
+                                <Zap size={24} className="text-[#10b981]" />
+                            </div>
+                            <h3 className="text-xl font-bold text-[#0f2044] mb-3">Envío Veloz</h3>
+                            <p className="text-[#64748b] leading-relaxed text-sm">
+                                Enviamos tus compras con agilidad y seguimiento constante.
+                            </p>
+                        </div>
+                        <div className="card p-8">
+                            <div className="w-12 h-12 rounded-3xl bg-[#f0f9ff] flex items-center justify-center mb-5">
+                                <Users size={24} className="text-[#185fa5]" />
+                            </div>
+                            <h3 className="text-xl font-bold text-[#0f2044] mb-3">Comunidad</h3>
+                            <p className="text-[#64748b] leading-relaxed text-sm">
+                                Tu feedback es clave para mejorar cada día.
                             </p>
                         </div>
                     </div>
-                </div>
+
+                    <div className="rounded-[2.5rem] bg-[#f8fafc] border border-[#e2e8f0] p-10 text-center">
+                        <p className="text-sm uppercase tracking-[0.35em] text-[#64748b] font-bold mb-4">Nuestra visión</p>
+                        <h2 className="text-3xl font-black text-[#0f2044] mb-4">Ser la tienda online donde comprar algo especial sea fácil, rápido y seguro.</h2>
+                        <p className="text-[#64748b] leading-relaxed text-base md:text-lg">
+                            No vendemos productos: ofrecemos experiencias seleccionadas con entusiasmo y responsabilidad.
+                        </p>
+                    </div>
+                </section>
             </main>
             <Footer />
         </>

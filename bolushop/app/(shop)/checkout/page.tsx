@@ -1,19 +1,20 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { getCart, getCartTotal, clearCart, CartItem } from "@/lib/cart";
+import { getCart, getCartTotal, CartItem } from "@/lib/cart";
 import { getShippingRate } from "@/app/actions/shop";
 import { LOCATION_DATA } from "@/lib/locations";
 import { initMercadoPago } from '@mercadopago/sdk-react';
+import Header from "@/components/shop/Header";
+import Footer from "@/components/shop/Footer";
 
 export default function CheckoutPage() {
     const router = useRouter();
     const [cart, setCart] = useState<CartItem[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
     const [shippingCost, setShippingCost] = useState(0);
     const [isProcessing, setIsProcessing] = useState(false);
-    const [isFreeShipping, setIsFreeShipping] = useState(true); // Default to true as per new strategy
+    const [isFreeShipping, setIsFreeShipping] = useState(true);
 
     const [formData, setFormData] = useState({
         name: "",
@@ -29,12 +30,10 @@ export default function CheckoutPage() {
     });
 
     useEffect(() => {
-        // Inicializar con la nueva Public Key de Pro
         initMercadoPago(process.env.NEXT_PUBLIC_MP_PRO_PUBLIC_KEY || '', {
             locale: 'es-AR'
         });
 
-        // Fetch settings to check free shipping status and min purchase
         fetch('/api/admin/settings')
             .then(res => res.json())
             .then(data => {
@@ -46,7 +45,7 @@ export default function CheckoutPage() {
                     }
                 }
             });
-    }, []);
+    }, [router]);
 
     const availableCities = useMemo(() => {
         const provinceData = LOCATION_DATA.find(p => p.province === formData.province);
@@ -69,7 +68,7 @@ export default function CheckoutPage() {
         }
     }, [formData.province, formData.city]);
 
-    const handleProvinceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleProvinceChange = (e: ChangeEvent<HTMLSelectElement>) => {
         const newProvince = e.target.value;
         setFormData(prev => ({
             ...prev,
@@ -80,10 +79,9 @@ export default function CheckoutPage() {
 
     const subtotal = getCartTotal();
     const total = subtotal + shippingCost;
-
     const [showRedirectNotice, setShowRedirectNotice] = useState(false);
 
-    const handleCheckout = (e: React.FormEvent) => {
+    const handleCheckout = (e: FormEvent) => {
         e.preventDefault();
         setShowRedirectNotice(true);
     };
@@ -95,18 +93,12 @@ export default function CheckoutPage() {
             const response = await fetch('/api/create-preference', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    cart,
-                    shippingCost,
-                    formData
-                }),
+                body: JSON.stringify({ cart, shippingCost, formData }),
             });
 
             const data = await response.json();
 
             if (data.init_point) {
-                // Redirigir al Checkout Pro de Mercado Pago
-                console.log("Redirigiendo a Mercado Pago...");
                 window.location.href = data.init_point;
             } else {
                 throw new Error(data.error || 'No se pudo generar el punto de inicio del pago');
@@ -124,315 +116,239 @@ export default function CheckoutPage() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col lg:flex-row bg-white">
-            {/* Left Side - Video (Fixed on Desktop) */}
-            <div className="lg:w-1/2 relative lg:fixed lg:inset-y-0 lg:left-0 h-[30vh] lg:h-full overflow-hidden bg-black">
-                <div className="absolute inset-0 bg-black/40 z-10" />
-                <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-full h-full object-cover opacity-80"
-                >
-                    <source src="/videohero.mp4" type="video/mp4" />
-                </video>
-                <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-white p-12 text-center">
-                    <h1 className="text-5xl lg:text-7xl font-black mb-6 tracking-tighter">
-                        BOLU<span className="text-primary">SHOP</span>
-                    </h1>
-                    <p className="text-lg lg:text-2xl font-medium max-w-md leading-relaxed opacity-90">
-                        Estás a un paso de tener lo mejor. Completá tus datos y recibilo en casa.
-                    </p>
-                </div>
-            </div>
-
-            {/* Right Side - Scrollable Form */}
-            <div className="lg:w-1/2 lg:ml-[50%] min-h-screen bg-white">
-                <div className="p-6 lg:p-12 xl:p-20 max-w-3xl mx-auto">
-                    <div className="flex items-center gap-4 mb-12 opacity-50 hover:opacity-100 transition-opacity cursor-default">
-                        <span className="text-2xl">🔒</span>
-                        <span className="text-xs font-bold uppercase tracking-widest text-gray-500">Checkout Seguro · Mercado Pago Pro</span>
+        <>
+            <Header />
+            <main className="bg-[#f8f9fb]">
+                <section className="bg-gradient-to-r from-[#0f2044] via-[#1e3a6b] to-[#0f2044] py-16">
+                    <div className="max-w-7xl mx-auto px-4">
+                        <div className="rounded-[3rem] bg-white/10 border border-white/20 p-10 md:p-14 text-white shadow-xl shadow-[#0f2044]/10 backdrop-blur-sm">
+                            <span className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 text-[11px] uppercase tracking-[0.35em] font-black text-white/90">Checkout Seguro</span>
+                            <h1 className="mt-6 text-4xl md:text-5xl font-black tracking-tight max-w-3xl">Finalizá tu compra con Mercado Pago y envío rápido.</h1>
+                            <p className="mt-4 max-w-2xl text-sm md:text-base text-white/75 leading-relaxed">Completá tus datos a continuación. Pagá con total seguridad y recibí tu pedido en el menor tiempo posible.</p>
+                        </div>
                     </div>
+                </section>
 
-                    <h2 className="text-3xl font-black mb-8 text-gray-900">Datos de Envío</h2>
-
-                    <form onSubmit={handleCheckout} className="space-y-8">
-                        <div className="bg-gray-50 rounded-2xl p-6 lg:p-8 mb-8 border border-gray-100">
-                            <h3 className="text-sm font-bold uppercase tracking-widest text-gray-500 mb-4">Resumen de tu pedido</h3>
-                            <div className="flex justify-between items-end mb-2">
-                                <span className="text-3xl font-black text-gray-900">${total.toLocaleString('es-AR')}</span>
-                                <span className="text-sm font-medium text-gray-500">{cart.length} productos</span>
-                            </div>
-                            {isFreeShipping ? (
-                                <p className="text-xs text-emerald-600 font-black mt-2 flex items-center gap-1">
-                                    <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                                    ¡Tenés ENVÍO GRATIS asegurado!
-                                </p>
-                            ) : (
-                                shippingCost === 0 && (
-                                    <p className="text-xs text-orange-500 font-bold mt-2">Calculando envío según tu dirección...</p>
-                                )
-                            )}
-                            <div className="mt-4 flex -space-x-2 overflow-hidden">
-                                {cart.slice(0, 5).map((item, i) => (
-                                    <img key={i} className="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover" src={item.image || "/placeholder.png"} alt={item.name} />
-                                ))}
-                                {cart.length > 5 && (
-                                    <div className="flex items-center justify-center h-8 w-8 rounded-full ring-2 ring-white bg-gray-200 text-xs font-bold text-gray-600">
-                                        +{cart.length - 5}
+                <section className="max-w-7xl mx-auto px-4 py-16">
+                    <div className="grid grid-cols-1 lg:grid-cols-[1.7fr_0.95fr] gap-10">
+                        <div>
+                            <div className="rounded-[2rem] bg-white border border-[#e2e8f0] p-8 shadow-card">
+                                <div className="flex items-center justify-between mb-8 gap-4">
+                                    <div>
+                                        <p className="text-sm uppercase tracking-[0.35em] text-[#64748b] font-black">Tus datos</p>
+                                        <h2 className="text-3xl font-black text-[#0f2044]">Información de envío</h2>
                                     </div>
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="space-y-6">
-                            <div>
-                                <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
-                                    Nombre Completo
-                                </label>
-                                <input
-                                    type="text"
-                                    required
-                                    value={formData.name}
-                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    className="w-full px-4 py-4 rounded-xl bg-white border-2 border-gray-100 focus:border-black focus:ring-0 transition-all outline-none font-medium text-lg placeholder-gray-300"
-                                    placeholder="Como figura en tu DNI"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
-                                    DNI / CUIL
-                                </label>
-                                <input
-                                    type="text"
-                                    required
-                                    value={formData.dni}
-                                    onChange={(e) => setFormData({ ...formData, dni: e.target.value })}
-                                    className="w-full px-4 py-4 rounded-xl bg-white border-2 border-gray-100 focus:border-black focus:ring-0 transition-all outline-none font-medium text-lg placeholder-gray-300"
-                                    placeholder="Número sin puntos ni guiones"
-                                />
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
-                                        Email
-                                    </label>
-                                    <input
-                                        type="email"
-                                        required
-                                        value={formData.email}
-                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                        className="w-full px-4 py-4 rounded-xl bg-white border-2 border-gray-100 focus:border-black focus:ring-0 transition-all outline-none font-medium text-lg placeholder-gray-300"
-                                        placeholder="tu@email.com"
-                                    />
+                                    <span className="inline-flex rounded-full bg-[#f8fafb] px-4 py-2 text-sm text-[#0f2044] font-bold border border-[#e2e8f0]">{cart.length} artículos</span>
                                 </div>
 
-                                <div>
-                                    <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
-                                        Teléfono
-                                    </label>
-                                    <input
-                                        type="tel"
-                                        required
-                                        value={formData.phone}
-                                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                        className="w-full px-4 py-4 rounded-xl bg-white border-2 border-gray-100 focus:border-black focus:ring-0 transition-all outline-none font-medium text-lg placeholder-gray-300"
-                                        placeholder="Cod. Área + Número"
-                                    />
-                                </div>
-                            </div>
+                                <form onSubmit={handleCheckout} className="space-y-6">
+                                    <div className="grid gap-6 md:grid-cols-2">
+                                        <label className="space-y-3">
+                                            <span className="text-xs uppercase tracking-[0.35em] text-[#64748b] font-bold">Nombre completo</span>
+                                            <input
+                                                type="text"
+                                                required
+                                                value={formData.name}
+                                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                                className="w-full rounded-3xl border border-[#e2e8f0] bg-[#f8f9fb] px-4 py-4 text-base outline-none transition focus:border-[#0f2044]"
+                                                placeholder="Como figura en tu DNI"
+                                            />
+                                        </label>
+                                        <label className="space-y-3">
+                                            <span className="text-xs uppercase tracking-[0.35em] text-[#64748b] font-bold">DNI / CUIL</span>
+                                            <input
+                                                type="text"
+                                                required
+                                                value={formData.dni}
+                                                onChange={(e) => setFormData({ ...formData, dni: e.target.value })}
+                                                className="w-full rounded-3xl border border-[#e2e8f0] bg-[#f8f9fb] px-4 py-4 text-base outline-none transition focus:border-[#0f2044]"
+                                                placeholder="Número sin puntos ni guiones"
+                                            />
+                                        </label>
+                                    </div>
 
-                            <div>
-                                <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
-                                    Calle
-                                </label>
-                                <input
-                                    type="text"
-                                    required
-                                    value={formData.street}
-                                    onChange={(e) => setFormData({ ...formData, street: e.target.value })}
-                                    className="w-full px-4 py-4 rounded-xl bg-white border-2 border-gray-100 focus:border-black focus:ring-0 transition-all outline-none font-medium text-lg placeholder-gray-300"
-                                    placeholder="Nombre de la calle"
-                                />
-                            </div>
+                                    <div className="grid gap-6 md:grid-cols-2">
+                                        <label className="space-y-3">
+                                            <span className="text-xs uppercase tracking-[0.35em] text-[#64748b] font-bold">Email</span>
+                                            <input
+                                                type="email"
+                                                required
+                                                value={formData.email}
+                                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                                className="w-full rounded-3xl border border-[#e2e8f0] bg-[#f8f9fb] px-4 py-4 text-base outline-none transition focus:border-[#0f2044]"
+                                                placeholder="tu@email.com"
+                                            />
+                                        </label>
+                                        <label className="space-y-3">
+                                            <span className="text-xs uppercase tracking-[0.35em] text-[#64748b] font-bold">Teléfono</span>
+                                            <input
+                                                type="tel"
+                                                required
+                                                value={formData.phone}
+                                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                                className="w-full rounded-3xl border border-[#e2e8f0] bg-[#f8f9fb] px-4 py-4 text-base outline-none transition focus:border-[#0f2044]"
+                                                placeholder="Cod. área + número"
+                                            />
+                                        </label>
+                                    </div>
 
-                            <div className="grid grid-cols-2 gap-6">
-                                <div>
-                                    <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
-                                        Número
-                                    </label>
-                                    <input
-                                        type="text"
-                                        required
-                                        value={formData.streetNumber}
-                                        onChange={(e) => setFormData({ ...formData, streetNumber: e.target.value })}
-                                        className="w-full px-4 py-4 rounded-xl bg-white border-2 border-gray-100 focus:border-black focus:ring-0 transition-all outline-none font-medium text-lg placeholder-gray-300"
-                                        placeholder="Altura"
-                                    />
-                                </div>
+                                    <div className="grid gap-6 md:grid-cols-3">
+                                        <label className="space-y-3">
+                                            <span className="text-xs uppercase tracking-[0.35em] text-[#64748b] font-bold">Provincia</span>
+                                            <select
+                                                required
+                                                value={formData.province}
+                                                onChange={handleProvinceChange}
+                                                className="w-full rounded-3xl border border-[#e2e8f0] bg-[#f8f9fb] px-4 py-4 text-base outline-none transition focus:border-[#0f2044]"
+                                            >
+                                                <option value="">Seleccioná tu provincia</option>
+                                                {LOCATION_DATA.map((location) => (
+                                                    <option key={location.province} value={location.province}>{location.province}</option>
+                                                ))}
+                                            </select>
+                                        </label>
+                                        <label className="space-y-3">
+                                            <span className="text-xs uppercase tracking-[0.35em] text-[#64748b] font-bold">Ciudad</span>
+                                            <select
+                                                required
+                                                value={formData.city}
+                                                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                                                className="w-full rounded-3xl border border-[#e2e8f0] bg-[#f8f9fb] px-4 py-4 text-base outline-none transition focus:border-[#0f2044]"
+                                            >
+                                                <option value="">Seleccioná tu ciudad</option>
+                                                {availableCities.map((city) => (
+                                                    <option key={city.name} value={city.name}>{city.name}</option>
+                                                ))}
+                                            </select>
+                                        </label>
+                                        <label className="space-y-3">
+                                            <span className="text-xs uppercase tracking-[0.35em] text-[#64748b] font-bold">Código Postal</span>
+                                            <input
+                                                type="text"
+                                                required
+                                                value={formData.zipCode}
+                                                onChange={(e) => setFormData({ ...formData, zipCode: e.target.value })}
+                                                className="w-full rounded-3xl border border-[#e2e8f0] bg-[#f8f9fb] px-4 py-4 text-base outline-none transition focus:border-[#0f2044]"
+                                                placeholder="Ej. 5000"
+                                            />
+                                        </label>
+                                    </div>
 
-                                <div>
-                                    <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
-                                        Piso / Depto / Casa
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={formData.apartment}
-                                        onChange={(e) => setFormData({ ...formData, apartment: e.target.value })}
-                                        className="w-full px-4 py-4 rounded-xl bg-white border-2 border-gray-100 focus:border-black focus:ring-0 transition-all outline-none font-medium text-lg placeholder-gray-300"
-                                        placeholder="Piso, torre o casa"
-                                    />
-                                </div>
-                            </div>
+                                    <div className="grid gap-6 md:grid-cols-2">
+                                        <label className="space-y-3">
+                                            <span className="text-xs uppercase tracking-[0.35em] text-[#64748b] font-bold">Calle</span>
+                                            <input
+                                                type="text"
+                                                required
+                                                value={formData.street}
+                                                onChange={(e) => setFormData({ ...formData, street: e.target.value })}
+                                                className="w-full rounded-3xl border border-[#e2e8f0] bg-[#f8f9fb] px-4 py-4 text-base outline-none transition focus:border-[#0f2044]"
+                                                placeholder="Nombre de la calle"
+                                            />
+                                        </label>
+                                        <label className="space-y-3">
+                                            <span className="text-xs uppercase tracking-[0.35em] text-[#64748b] font-bold">Número</span>
+                                            <input
+                                                type="text"
+                                                required
+                                                value={formData.streetNumber}
+                                                onChange={(e) => setFormData({ ...formData, streetNumber: e.target.value })}
+                                                className="w-full rounded-3xl border border-[#e2e8f0] bg-[#f8f9fb] px-4 py-4 text-base outline-none transition focus:border-[#0f2044]"
+                                                placeholder="Número"
+                                            />
+                                        </label>
+                                    </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
-                                        Provincia
+                                    <label className="space-y-3">
+                                        <span className="text-xs uppercase tracking-[0.35em] text-[#64748b] font-bold">Departamento / Piso</span>
+                                        <input
+                                            type="text"
+                                            value={formData.apartment}
+                                            onChange={(e) => setFormData({ ...formData, apartment: e.target.value })}
+                                            className="w-full rounded-3xl border border-[#e2e8f0] bg-[#f8f9fb] px-4 py-4 text-base outline-none transition focus:border-[#0f2044]"
+                                            placeholder="Opcional"
+                                        />
                                     </label>
-                                    <div className="relative">
-                                        <select
-                                            required
-                                            value={formData.province}
-                                            onChange={handleProvinceChange}
-                                            className="w-full px-4 py-4 rounded-xl bg-white border-2 border-gray-100 focus:border-black focus:ring-0 transition-all outline-none font-medium text-lg appearance-none cursor-pointer"
+
+                                    <div className="grid gap-4 lg:grid-cols-[1.4fr_0.6fr]">
+                                        <div className="rounded-[2rem] border border-[#e2e8f0] bg-white p-6">
+                                            <p className="text-xs uppercase tracking-[0.35em] text-[#64748b] font-black mb-4">Resumen del pago</p>
+                                            <div className="space-y-3 text-sm text-[#64748b]">
+                                                <div className="flex justify-between">
+                                                    <span>Subtotal</span>
+                                                    <span>$ {subtotal.toLocaleString('es-AR')}</span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span>Envío</span>
+                                                    <span>$ {shippingCost.toLocaleString('es-AR')}</span>
+                                                </div>
+                                                <div className="border-t border-[#e2e8f0] pt-4 flex justify-between font-black text-[#0f2044]">
+                                                    <span>Total</span>
+                                                    <span>$ {total.toLocaleString('es-AR')}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="rounded-[2rem] border border-[#e2e8f0] bg-[#f8f9fb] p-6 flex flex-col justify-between gap-4">
+                                            <div>
+                                                <p className="text-xs uppercase tracking-[0.35em] text-[#64748b] font-black mb-3">Pago seguro</p>
+                                                <p className="text-sm text-[#0f2044] font-semibold">Mercado Pago Pro</p>
+                                                <p className="text-sm text-[#64748b] leading-relaxed mt-3">Tu pago se procesa en un entorno seguro y protegido.</p>
+                                            </div>
+                                            <p className="text-xs uppercase tracking-[0.35em] text-[#10b981] font-black">Envío rápido sujeto a dirección ingresada</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-4 pt-2">
+                                        <button
+                                            type="submit"
+                                            className="w-full rounded-3xl bg-[#e8630a] text-white py-4 text-lg font-black transition hover:bg-[#d55708]"
                                         >
-                                            <option value="">Seleccionar</option>
-                                            {LOCATION_DATA.map((loc) => (
-                                                <option key={loc.province} value={loc.province}>
-                                                    {loc.province}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">▼</div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
-                                        Localidad
-                                    </label>
-                                    <div className="relative">
-                                        <select
-                                            required
-                                            value={formData.city}
-                                            onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                                            disabled={!formData.province}
-                                            className="w-full px-4 py-4 rounded-xl bg-white border-2 border-gray-100 focus:border-black focus:ring-0 transition-all outline-none font-medium text-lg appearance-none cursor-pointer disabled:bg-gray-50"
+                                            Confirmar datos
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={proceedToPayment}
+                                            disabled={isProcessing}
+                                            className="w-full rounded-3xl border border-[#e2e8f0] bg-white py-4 text-lg font-black text-[#0f2044] transition hover:bg-[#f8f9fb]"
                                         >
-                                            <option value="">{formData.province ? 'Seleccionar Localidad' : '...'}</option>
-                                            {availableCities.map((city) => (
-                                                <option key={city.name} value={city.name}>
-                                                    {city.name}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">▼</div>
+                                            {isProcessing ? 'Procesando pago...' : 'Ir a Mercado Pago'}
+                                        </button>
+                                        {showRedirectNotice && (
+                                            <p className="text-sm text-[#64748b]">Serás redirigido a Mercado Pago en breve. Si no sucede, revisá tu bloqueador de ventanas emergentes.</p>
+                                        )}
                                     </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <aside className="lg:sticky lg:top-24">
+                            <div className="rounded-[2rem] bg-white border border-[#e2e8f0] p-8 shadow-card">
+                                <h3 className="text-xl font-black text-[#0f2044] mb-4">Detalles del pedido</h3>
+                                <div className="space-y-4">
+                                    {cart.map((item, index) => (
+                                        <div key={item.slug || item.name || index} className="flex items-center justify-between gap-3">
+                                            <div className="min-w-0">
+                                                <p className="font-bold text-[#0f2044] truncate">{item.name}</p>
+                                                <p className="text-xs text-[#64748b]">Cant. {item.quantity}</p>
+                                            </div>
+                                            <p className="font-black text-[#0f2044]">$ {(item.price * item.quantity).toLocaleString('es-AR')}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="mt-6 rounded-3xl bg-[#f8fafb] p-5 border border-[#e2e8f0]">
+                                    <p className="text-sm font-black uppercase tracking-[0.35em] text-[#64748b] mb-3">Beneficios</p>
+                                    <ul className="mt-4 space-y-3 text-sm text-[#64748b]">
+                                        <li>• Envío más rápido con la dirección correcta</li>
+                                        <li>• Pago 100% seguro con Mercado Pago</li>
+                                        <li>• Atención al cliente hasta la entrega</li>
+                                    </ul>
                                 </div>
                             </div>
-
-                            <div>
-                                <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
-                                    Código Postal
-                                </label>
-                                <input
-                                    type="text"
-                                    value={formData.zipCode}
-                                    onChange={(e) => setFormData({ ...formData, zipCode: e.target.value })}
-                                    className="w-full px-4 py-4 rounded-xl bg-white border-2 border-gray-100 focus:border-black focus:ring-0 transition-all outline-none font-medium text-lg placeholder-gray-300"
-                                    placeholder="CPA o Numérico"
-                                />
-                            </div>
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled={isProcessing || !formData.province || !formData.city || !formData.name || !formData.dni || !formData.email || !formData.street || !formData.streetNumber || !formData.phone}
-                            className="w-full mt-8 py-5 bg-black text-white rounded-xl font-black text-lg uppercase tracking-widest hover:bg-gray-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed transform hover:translate-y-px flex items-center justify-center gap-3 shadow-2xl shadow-black/10"
-                        >
-                            {isProcessing ? (
-                                <>
-                                    <span className="w-5 h-5 border-4 border-white border-t-transparent rounded-full animate-spin"></span>
-                                    Procesando...
-                                </>
-                            ) : (
-                                "Pagar con Mercado Pago"
-                            )}
-                        </button>
-
-                        {/* Improved Checkout Notice */}
-                        <div className="mt-8 relative group">
-                            <div className="absolute -inset-1 bg-gradient-to-r from-amber-500 to-amber-200 rounded-2xl blur opacity-10 group-hover:opacity-20 transition duration-1000 group-hover:duration-200"></div>
-                            <div className="relative flex gap-5 p-6 bg-white rounded-2xl border border-amber-100 shadow-sm transition-all duration-300 group-hover:border-amber-200">
-                                <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-2xl shrink-0 group-hover:rotate-12 transition-transform shadow-inner">
-                                    🚀
-                                </div>
-                                <div className="space-y-2">
-                                    <p className="text-xs font-black uppercase tracking-[0.15em] text-amber-800 flex items-center gap-2">
-                                        Pasos a seguir después del pago
-                                    </p>
-                                    <p className="text-sm font-bold text-gray-600 leading-relaxed italic">
-                                        "Al completar el pago, mantené la ventana abierta. La web te redirigirá automáticamente a la confirmación de WhatsApp, necesaria para procesar tu envío."
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="pt-8 mt-8 border-t border-gray-100 text-center">
-                            <a href="/" className="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-black transition-colors">Volver a la tienda</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            {/* Redirection Notice Modal */}
-            {showRedirectNotice && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    <div
-                        className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
-                        onClick={() => !isProcessing && setShowRedirectNotice(false)}
-                    ></div>
-                    <div className="relative bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl animate-in fade-in zoom-in duration-200 border border-gray-100">
-                        <div className="mb-6 flex justify-center">
-                            <div className="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center text-4xl shadow-sm">
-                                ⚠️
-                            </div>
-                        </div>
-                        <h3 className="text-xl font-black text-center text-gray-900 mb-4 uppercase tracking-wide">
-                            Antes de pagar
-                        </h3>
-                        <p className="text-gray-600 text-center font-bold leading-relaxed mb-8 text-lg">
-                            Espera la redirección a la web al finalizar el pago y por favor haz click en <span className="text-green-600 font-black underline decoration-green-300 underline-offset-4">Confirmar por WhatsApp</span>.
-                        </p>
-                        <button
-                            onClick={proceedToPayment}
-                            disabled={isProcessing}
-                            className="w-full py-4 bg-black text-white rounded-2xl font-black text-lg uppercase tracking-widest hover:bg-gray-900 transition-all flex items-center justify-center gap-3 shadow-lg shadow-black/20 hover:scale-[1.02] active:scale-[0.98]"
-                        >
-                            {isProcessing ? (
-                                <>
-                                    <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-                                    Procesando...
-                                </>
-                            ) : (
-                                "Entendido, Ir a Pagar"
-                            )}
-                        </button>
-                        <button
-                            onClick={() => setShowRedirectNotice(false)}
-                            disabled={isProcessing}
-                            className="w-full mt-4 py-3 text-gray-400 font-bold text-xs uppercase tracking-widest hover:text-gray-600 transition-colors"
-                        >
-                            Cancelar
-                        </button>
+                        </aside>
                     </div>
-                </div>
-            )}
-        </div>
+                </section>
+            </main>
+            <Footer />
+        </>
     );
 }
-

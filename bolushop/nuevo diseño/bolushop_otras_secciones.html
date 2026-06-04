@@ -1,0 +1,571 @@
+
+<h2 class="sr-only">Mockup de BoluShop — páginas de Productos, Colecciones, Blog, Carrito y Sobre Nosotros con el sistema de diseño oficial del sitio.</h2>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.wrap{display:flex;flex-direction:column;gap:2rem;padding:1rem 0}
+
+.site{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.bar{background:#1a1a2e;padding:6px 16px;display:flex;align-items:center;gap:6px}
+.bar-dot{width:10px;height:10px;border-radius:50%}
+.bar-url{flex:1;background:rgba(255,255,255,0.08);border-radius:4px;padding:3px 10px;font-size:11px;color:rgba(255,255,255,0.5);margin:0 8px;font-family:var(--font-mono)}
+.section-label{font-size:11px;color:var(--color-text-secondary);margin-bottom:6px;display:flex;align-items:center;gap:5px}
+
+.topbar{background:#0f2044;padding:7px 20px;display:flex;justify-content:space-between;align-items:center}
+.topbar-msg{font-size:10px;color:rgba(255,255,255,0.7);display:flex;gap:16px}
+.topbar-msg span{display:flex;align-items:center;gap:4px}
+.nav{background:#fff;border-bottom:0.5px solid var(--color-border-tertiary);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:52px}
+.nav-logo{display:flex;align-items:center;gap:8px}
+.nav-logo-icon{width:28px;height:28px;background:#0f2044;border-radius:6px;display:flex;align-items:center;justify-content:center}
+.nav-logo-icon span{color:#fff;font-size:13px;font-weight:500}
+.nav-brand{font-size:15px;font-weight:500;color:var(--color-text-primary)}
+.nav-brand sub{font-size:9px;color:#e8630a;font-weight:400;display:block;line-height:1}
+.nav-links{display:flex;gap:20px}
+.nav-link{font-size:12px;color:var(--color-text-secondary);cursor:pointer}
+.nav-link.active{color:#0f2044;font-weight:500}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-search{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--color-text-secondary);display:flex;align-items:center;gap:6px;min-width:140px}
+.cart-btn{background:#0f2044;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px}
+
+.btn-primary{background:#e8630a;color:#fff;border:none;border-radius:6px;padding:8px 16px;font-size:12px;cursor:pointer;font-weight:500}
+.btn-outline{background:transparent;color:#0f2044;border:0.5px solid #0f2044;border-radius:6px;padding:6px 12px;font-size:11px;cursor:pointer}
+
+.prod{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.prod-img{height:90px;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;position:relative}
+.prod-img i{font-size:28px;color:var(--color-text-secondary)}
+.prod-badge{position:absolute;top:6px;left:6px;background:#e8630a;color:#fff;font-size:9px;padding:2px 6px;border-radius:3px}
+.prod-badge.ml{background:#fff9e6;color:#c47a00;border:0.5px solid #f0c040;position:static;display:inline-block;margin-bottom:6px}
+.prod-body{padding:8px 10px}
+.prod-cat{font-size:9px;color:var(--color-text-secondary);margin-bottom:2px}
+.prod-name{font-size:11px;font-weight:500;color:var(--color-text-primary);line-height:1.3;margin-bottom:4px}
+.prod-stars{color:#f0a500;font-size:9px;margin-bottom:4px}
+.prod-price{font-size:13px;font-weight:500;color:#0f2044}
+.prod-cuotas{font-size:9px;color:var(--color-text-secondary)}
+.prod-add{width:100%;background:#0f2044;color:#fff;border:none;border-radius:4px;padding:5px;font-size:10px;cursor:pointer;margin-top:6px}
+
+.page-header{background:linear-gradient(135deg,#0f2044,#1a3a6b);padding:20px 24px}
+.page-header h1{font-size:18px;font-weight:500;color:#fff;margin-bottom:4px}
+.page-header p{font-size:11px;color:rgba(255,255,255,0.6)}
+.breadcrumb{font-size:10px;color:rgba(255,255,255,0.45);margin-bottom:8px;display:flex;gap:4px;align-items:center}
+
+.sidebar{width:160px;flex-shrink:0}
+.filter-box{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:12px;margin-bottom:8px}
+.filter-title{font-size:11px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px}
+.filter-opt{font-size:10px;color:var(--color-text-secondary);margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.filter-opt input{accent-color:#0f2044}
+.filter-chip{display:inline-flex;align-items:center;gap:3px;background:#eef3fb;border:0.5px solid #b5d4f4;border-radius:3px;padding:2px 7px;font-size:9px;color:#185fa5;margin-right:4px;margin-bottom:4px}
+
+.tag{display:inline-flex;align-items:center;background:#eef3fb;border:0.5px solid #b5d4f4;border-radius:20px;padding:4px 10px;font-size:10px;color:#185fa5;margin-right:6px;margin-bottom:6px;cursor:pointer}
+.tag.active{background:#0f2044;color:#fff;border-color:#0f2044}
+
+.blog-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;display:flex;gap:0}
+.blog-card-img{width:90px;min-height:90px;background:#eef3fb;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.blog-card-img i{font-size:24px;color:#185fa5}
+.blog-card-body{padding:10px 12px;flex:1}
+.blog-tag{font-size:9px;color:#185fa5;background:#e6f1fb;padding:1px 6px;border-radius:3px;display:inline-block;margin-bottom:4px}
+.blog-title{font-size:11px;font-weight:500;color:var(--color-text-primary);line-height:1.4;margin-bottom:4px}
+.blog-meta{font-size:9px;color:var(--color-text-secondary);display:flex;gap:8px;margin-bottom:6px}
+.blog-excerpt{font-size:10px;color:var(--color-text-secondary);line-height:1.5}
+
+.col-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;cursor:pointer}
+.col-card-header{padding:20px 16px;display:flex;flex-direction:column;justify-content:flex-end;min-height:100px;position:relative}
+.col-card-badge{font-size:9px;font-weight:500;padding:2px 8px;border-radius:3px;display:inline-block;margin-bottom:8px;width:fit-content}
+.col-card-title{font-size:14px;font-weight:500;color:#fff;margin-bottom:2px}
+.col-card-desc{font-size:10px;color:rgba(255,255,255,0.7)}
+.col-card-footer{padding:10px 16px;display:flex;justify-content:space-between;align-items:center;background:var(--color-background-secondary);border-top:0.5px solid var(--color-border-tertiary)}
+.col-card-count{font-size:10px;color:var(--color-text-secondary)}
+
+.cart-item{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:12px;display:flex;gap:10px;align-items:flex-start;margin-bottom:8px}
+.cart-item-img{width:56px;height:56px;background:var(--color-background-secondary);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cart-item-img i{font-size:20px;color:var(--color-text-secondary)}
+.cart-item-info{flex:1}
+.cart-item-name{font-size:11px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.cart-item-sub{font-size:10px;color:var(--color-text-secondary);margin-bottom:6px}
+.qty-ctrl{display:flex;align-items:center;gap:6px}
+.qty-btn{width:22px;height:22px;border:0.5px solid var(--color-border-tertiary);border-radius:4px;background:var(--color-background-secondary);font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--color-text-secondary)}
+.qty-val{font-size:11px;font-weight:500;color:var(--color-text-primary);width:20px;text-align:center}
+.cart-price{font-size:13px;font-weight:500;color:#0f2044;text-align:right}
+
+.summary-box{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:16px}
+.summary-row{display:flex;justify-content:space-between;font-size:11px;color:var(--color-text-secondary);margin-bottom:7px}
+.summary-row.total{font-size:14px;font-weight:500;color:var(--color-text-primary);border-top:0.5px solid var(--color-border-tertiary);padding-top:10px;margin-top:10px}
+.coupon-field{display:flex;gap:6px;margin-top:10px}
+.coupon-field input{flex:1;border:0.5px solid var(--color-border-tertiary);border-radius:5px;padding:5px 10px;font-size:11px;background:var(--color-background-primary);color:var(--color-text-primary)}
+.coupon-field button{background:#0f2044;color:#fff;border:none;border-radius:5px;padding:5px 10px;font-size:10px;cursor:pointer}
+
+.trust-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--color-text-secondary)}
+.trust-item i{font-size:14px;color:#0f2044}
+
+.nosotros-section{padding:20px 24px}
+.nosotros-hero{background:linear-gradient(135deg,#0f2044,#1a3a6b);border-radius:var(--border-radius-lg);padding:24px;margin-bottom:16px;display:flex;gap:20px}
+.stat-card{background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.12);border-radius:var(--border-radius-md);padding:12px 16px;text-align:center;flex:1}
+.stat-card strong{display:block;font-size:18px;font-weight:500;color:#fff;margin-bottom:2px}
+.stat-card span{font-size:9px;color:rgba(255,255,255,0.55)}
+.value-card{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:12px;display:flex;gap:10px;align-items:flex-start}
+.value-card i{font-size:18px;color:#0f2044;flex-shrink:0;margin-top:1px}
+.value-card-title{font-size:11px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.value-card-desc{font-size:10px;color:var(--color-text-secondary);line-height:1.5}
+.timeline-item{display:flex;gap:12px;margin-bottom:12px;align-items:flex-start}
+.timeline-dot{width:28px;height:28px;background:#0f2044;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.timeline-dot span{font-size:9px;color:#fff;font-weight:500}
+.timeline-text strong{display:block;font-size:11px;font-weight:500;color:var(--color-text-primary)}
+.timeline-text span{font-size:10px;color:var(--color-text-secondary);line-height:1.5}
+
+.footer{background:#0f2044;padding:20px 24px}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:20px;margin-bottom:16px}
+.footer-brand-name{font-size:14px;font-weight:500;color:#fff;margin-bottom:4px}
+.footer-brand-desc{font-size:10px;color:rgba(255,255,255,0.5);line-height:1.5;margin-bottom:10px}
+.footer-social{display:flex;gap:8px}
+.footer-social-btn{width:28px;height:28px;background:rgba(255,255,255,0.08);border-radius:5px;display:flex;align-items:center;justify-content:center}
+.footer-social-btn i{font-size:14px;color:rgba(255,255,255,0.6)}
+.footer-col-title{font-size:11px;font-weight:500;color:rgba(255,255,255,0.8);margin-bottom:8px}
+.footer-link{font-size:10px;color:rgba(255,255,255,0.45);display:block;margin-bottom:4px}
+.footer-divider{border-top:0.5px solid rgba(255,255,255,0.1);padding-top:12px;display:flex;justify-content:space-between;align-items:center}
+.footer-legal{font-size:9px;color:rgba(255,255,255,0.35)}
+.footer-affiliate{font-size:9px;color:rgba(255,255,255,0.4);max-width:320px;line-height:1.5;font-style:italic}
+</style>
+
+<div class="wrap">
+
+<!-- NAV reutilizable interno -->
+<template id="nav-tpl">
+<div class="topbar"><div class="topbar-msg"><span><i class="ti ti-truck" aria-hidden="true"></i>Envíos a todo el país</span><span><i class="ti ti-credit-card" aria-hidden="true"></i>Cuotas sin interés</span><span><i class="ti ti-star" aria-hidden="true"></i>Nueva Colección 2026</span></div></div>
+<div class="nav">
+  <div class="nav-logo"><div class="nav-logo-icon"><span>B</span></div><div class="nav-brand">BoluShop<sub>Regalería &amp; Gadgets</sub></div></div>
+  <div class="nav-links">
+    <span class="nav-link">Inicio</span>
+    <span class="nav-link" id="nav-prod">Productos</span>
+    <span class="nav-link" id="nav-ml">Imperdibles ML</span>
+    <span class="nav-link" id="nav-col">Colecciones</span>
+    <span class="nav-link" id="nav-blog">Blog</span>
+  </div>
+  <div class="nav-right">
+    <div class="nav-search"><i class="ti ti-search" style="font-size:12px" aria-hidden="true"></i> Buscar...</div>
+    <button class="cart-btn"><i class="ti ti-shopping-cart" style="font-size:12px" aria-hidden="true"></i> Carrito (2)</button>
+  </div>
+</div>
+</template>
+
+<!-- ═══════════════════════════════════════
+     1. PÁGINA DE PRODUCTOS (listado)
+═══════════════════════════════════════ -->
+<div>
+<div class="section-label"><i class="ti ti-layout-grid" aria-hidden="true"></i> Página de Productos — /productos</div>
+<div class="site">
+  <div class="bar"><div class="bar-dot" style="background:#ff5f57"></div><div class="bar-dot" style="background:#febc2e"></div><div class="bar-dot" style="background:#28c840"></div><div class="bar-url">bolushop.com/productos</div></div>
+  <div class="topbar"><div class="topbar-msg"><span><i class="ti ti-truck" aria-hidden="true"></i>Envíos gratis</span><span><i class="ti ti-credit-card" aria-hidden="true"></i>Cuotas sin interés</span></div></div>
+  <div class="nav">
+    <div class="nav-logo"><div class="nav-logo-icon"><span>B</span></div><div class="nav-brand">BoluShop<sub>Regalería &amp; Gadgets</sub></div></div>
+    <div class="nav-links"><span class="nav-link">Inicio</span><span class="nav-link active">Productos</span><span class="nav-link">Imperdibles ML</span><span class="nav-link">Colecciones</span><span class="nav-link">Blog</span></div>
+    <div class="nav-right"><div class="nav-search"><i class="ti ti-search" style="font-size:12px" aria-hidden="true"></i> Buscar...</div><button class="cart-btn"><i class="ti ti-shopping-cart" style="font-size:12px" aria-hidden="true"></i> (2)</button></div>
+  </div>
+
+  <div class="page-header">
+    <div class="breadcrumb"><span>Inicio</span><i class="ti ti-chevron-right" style="font-size:10px" aria-hidden="true"></i><span>Productos</span></div>
+    <h1>Todos los productos</h1>
+    <p>Regalos originales, gadgets y accesorios con envío gratis a toda Argentina</p>
+  </div>
+
+  <div style="padding:14px 20px;background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+    <span class="tag active">Todos</span>
+    <span class="tag">Carteras</span>
+    <span class="tag">Accesorios</span>
+    <span class="tag">Hogar</span>
+    <span class="tag">Tecnología</span>
+    <span class="tag">Regalos</span>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
+      <span style="font-size:10px;color:var(--color-text-secondary)">Ordenar:</span>
+      <select style="font-size:10px;border:0.5px solid var(--color-border-tertiary);border-radius:5px;padding:3px 6px;background:var(--color-background-primary);color:var(--color-text-primary)"><option>Más relevantes</option><option>Menor precio</option><option>Mayor precio</option><option>Más vendidos</option></select>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:0">
+    <div class="sidebar" style="padding:14px 12px;border-right:0.5px solid var(--color-border-tertiary)">
+      <div class="filter-box">
+        <div class="filter-title">Precio</div>
+        <div class="filter-opt"><input type="checkbox" checked> Hasta $50.000</div>
+        <div class="filter-opt"><input type="checkbox"> $50k – $100k</div>
+        <div class="filter-opt"><input type="checkbox"> Más de $100k</div>
+      </div>
+      <div class="filter-box">
+        <div class="filter-title">Categoría</div>
+        <div class="filter-opt"><input type="checkbox" checked> Carteras</div>
+        <div class="filter-opt"><input type="checkbox"> Accesorios</div>
+        <div class="filter-opt"><input type="checkbox"> Hogar</div>
+        <div class="filter-opt"><input type="checkbox"> Tecnología</div>
+      </div>
+      <div class="filter-box">
+        <div class="filter-title">Envío</div>
+        <div class="filter-opt"><input type="checkbox" checked> Gratis</div>
+        <div class="filter-opt"><input type="checkbox"> Mismo día</div>
+      </div>
+    </div>
+
+    <div style="flex:1;padding:14px 16px">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+        <span class="filter-chip">Carteras <i class="ti ti-x" style="font-size:9px" aria-hidden="true"></i></span>
+        <span class="filter-chip">Hasta $50k <i class="ti ti-x" style="font-size:9px" aria-hidden="true"></i></span>
+        <span style="font-size:10px;color:#e8630a;cursor:pointer">Limpiar filtros</span>
+      </div>
+      <div style="font-size:10px;color:var(--color-text-secondary);margin-bottom:10px">Mostrando 1–12 de 48 productos</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+        <div class="prod"><div class="prod-img"><i class="ti ti-briefcase" aria-hidden="true"></i><span class="prod-badge">Oferta</span></div><div class="prod-body"><div class="prod-cat">Carteras</div><div class="prod-name">Cartera mujer PVC negro transparente</div><div class="prod-stars">★★★★★ <span style="color:var(--color-text-secondary)">(4.9)</span></div><div class="prod-price">$48.000</div><div class="prod-cuotas">3x $16.000 sin interés</div><button class="prod-add">Agregar al carrito</button></div></div>
+        <div class="prod"><div class="prod-img"><i class="ti ti-bag" aria-hidden="true"></i></div><div class="prod-body"><div class="prod-cat">Carteras</div><div class="prod-name">Bolso de cuero sintético marrón</div><div class="prod-stars">★★★★☆ <span style="color:var(--color-text-secondary)">(4.6)</span></div><div class="prod-price">$62.500</div><div class="prod-cuotas">6x $10.416 sin interés</div><button class="prod-add">Agregar al carrito</button></div></div>
+        <div class="prod"><div class="prod-img"><i class="ti ti-backpack" aria-hidden="true"></i><span class="prod-badge">Nuevo</span></div><div class="prod-body"><div class="prod-cat">Accesorios</div><div class="prod-name">Mochila antirrobo porta notebook 15"</div><div class="prod-stars">★★★★★ <span style="color:var(--color-text-secondary)">(5.0)</span></div><div class="prod-price">$74.900</div><div class="prod-cuotas">3x $24.966 sin interés</div><button class="prod-add">Agregar al carrito</button></div></div>
+        <div class="prod"><div class="prod-img"><i class="ti ti-diamond" aria-hidden="true"></i></div><div class="prod-body"><div class="prod-cat">Accesorios</div><div class="prod-name">Organizador joyero portátil cremallera</div><div class="prod-stars">★★★★☆ <span style="color:var(--color-text-secondary)">(4.5)</span></div><div class="prod-price">$12.000</div><div class="prod-cuotas">Pago único</div><button class="prod-add">Agregar al carrito</button></div></div>
+        <div class="prod"><div class="prod-img"><i class="ti ti-armchair" aria-hidden="true"></i><span class="prod-badge">Oferta</span></div><div class="prod-body"><div class="prod-cat">Hogar</div><div class="prod-name">Silla ergonómica lumbar regulable</div><div class="prod-stars">★★★★☆ <span style="color:var(--color-text-secondary)">(4.7)</span></div><div class="prod-price">$85.175</div><div class="prod-cuotas">6x $14.195 sin interés</div><button class="prod-add">Agregar al carrito</button></div></div>
+        <div class="prod"><div class="prod-img"><i class="ti ti-device-watch" aria-hidden="true"></i></div><div class="prod-body"><div class="prod-cat">Tecnología</div><div class="prod-name">Smartwatch deportivo GPS resistente agua</div><div class="prod-stars">★★★★★ <span style="color:var(--color-text-secondary)">(4.8)</span></div><div class="prod-price">$95.000</div><div class="prod-cuotas">3x $31.666 sin interés</div><button class="prod-add">Agregar al carrito</button></div></div>
+      </div>
+      <div style="display:flex;justify-content:center;gap:4px;margin-top:14px">
+        <button style="width:26px;height:26px;border:0.5px solid var(--color-border-tertiary);border-radius:4px;background:#0f2044;color:#fff;font-size:11px;cursor:pointer">1</button>
+        <button style="width:26px;height:26px;border:0.5px solid var(--color-border-tertiary);border-radius:4px;background:var(--color-background-primary);color:var(--color-text-secondary);font-size:11px;cursor:pointer">2</button>
+        <button style="width:26px;height:26px;border:0.5px solid var(--color-border-tertiary);border-radius:4px;background:var(--color-background-primary);color:var(--color-text-secondary);font-size:11px;cursor:pointer">3</button>
+        <button style="width:26px;height:26px;border:0.5px solid var(--color-border-tertiary);border-radius:4px;background:var(--color-background-primary);color:var(--color-text-secondary);font-size:11px;cursor:pointer">→</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer" style="margin-top:0">
+    <div class="footer-divider" style="border:none;padding:0"><div class="footer-legal">© 2026 BoluShop — Villa Carlos Paz, Córdoba</div></div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     2. COLECCIONES
+═══════════════════════════════════════ -->
+<div>
+<div class="section-label"><i class="ti ti-stack-2" aria-hidden="true"></i> Página de Colecciones — /colecciones</div>
+<div class="site">
+  <div class="bar"><div class="bar-dot" style="background:#ff5f57"></div><div class="bar-dot" style="background:#febc2e"></div><div class="bar-dot" style="background:#28c840"></div><div class="bar-url">bolushop.com/colecciones</div></div>
+  <div class="topbar"><div class="topbar-msg"><span><i class="ti ti-truck" aria-hidden="true"></i>Envíos gratis</span><span><i class="ti ti-credit-card" aria-hidden="true"></i>Cuotas sin interés</span></div></div>
+  <div class="nav">
+    <div class="nav-logo"><div class="nav-logo-icon"><span>B</span></div><div class="nav-brand">BoluShop<sub>Regalería &amp; Gadgets</sub></div></div>
+    <div class="nav-links"><span class="nav-link">Inicio</span><span class="nav-link">Productos</span><span class="nav-link">Imperdibles ML</span><span class="nav-link active">Colecciones</span><span class="nav-link">Blog</span></div>
+    <div class="nav-right"><div class="nav-search"><i class="ti ti-search" style="font-size:12px" aria-hidden="true"></i> Buscar...</div><button class="cart-btn"><i class="ti ti-shopping-cart" style="font-size:12px" aria-hidden="true"></i> (2)</button></div>
+  </div>
+
+  <div class="page-header">
+    <div class="breadcrumb"><span>Inicio</span><i class="ti ti-chevron-right" style="font-size:10px" aria-hidden="true"></i><span>Colecciones</span></div>
+    <h1>Nuestras colecciones</h1>
+    <p>Selecciones curadas para cada estilo y ocasión</p>
+  </div>
+
+  <div style="padding:20px 20px">
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px">
+
+      <div class="col-card">
+        <div class="col-card-header" style="background:linear-gradient(135deg,#0f2044,#185fa5)">
+          <span class="col-card-badge" style="background:rgba(232,99,10,0.85);color:#fff">✦ Destacada</span>
+          <div class="col-card-title">Regalos Originales 2026</div>
+          <div class="col-card-desc">Para sorprender en cualquier ocasión</div>
+        </div>
+        <div class="col-card-footer">
+          <span class="col-card-count"><i class="ti ti-package" style="font-size:12px" aria-hidden="true"></i> 24 productos</span>
+          <span style="font-size:10px;color:#e8630a;cursor:pointer">Ver colección →</span>
+        </div>
+      </div>
+
+      <div class="col-card">
+        <div class="col-card-header" style="background:linear-gradient(135deg,#4a1b0c,#993c1d)">
+          <span class="col-card-badge" style="background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.9)">Mujer</span>
+          <div class="col-card-title">Carteras &amp; Accesorios</div>
+          <div class="col-card-desc">Estilo y funcionalidad en cada detalle</div>
+        </div>
+        <div class="col-card-footer">
+          <span class="col-card-count"><i class="ti ti-package" style="font-size:12px" aria-hidden="true"></i> 18 productos</span>
+          <span style="font-size:10px;color:#e8630a;cursor:pointer">Ver colección →</span>
+        </div>
+      </div>
+
+      <div class="col-card">
+        <div class="col-card-header" style="background:linear-gradient(135deg,#173404,#3b6d11)">
+          <span class="col-card-badge" style="background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.9)">Hogar</span>
+          <div class="col-card-title">Organización del hogar</div>
+          <div class="col-card-desc">Tu espacio, ordenado y con estilo</div>
+        </div>
+        <div class="col-card-footer">
+          <span class="col-card-count"><i class="ti ti-package" style="font-size:12px" aria-hidden="true"></i> 15 productos</span>
+          <span style="font-size:10px;color:#e8630a;cursor:pointer">Ver colección →</span>
+        </div>
+      </div>
+
+      <div class="col-card">
+        <div class="col-card-header" style="background:linear-gradient(135deg,#26215c,#534ab7)">
+          <span class="col-card-badge" style="background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.9)">Tech</span>
+          <div class="col-card-title">Gadgets &amp; Tecnología</div>
+          <div class="col-card-desc">Los mejores gadgets del momento</div>
+        </div>
+        <div class="col-card-footer">
+          <span class="col-card-count"><i class="ti ti-package" style="font-size:12px" aria-hidden="true"></i> 12 productos</span>
+          <span style="font-size:10px;color:#e8630a;cursor:pointer">Ver colección →</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#fff9e6;border:0.5px solid #f0c040;border-radius:var(--border-radius-lg);padding:14px 16px;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="background:#f0c040;color:#7a4f00;font-size:10px;font-weight:500;padding:2px 8px;border-radius:3px">Mercado Libre</span><span style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Imperdibles seleccionados</span></div>
+        <div style="font-size:10px;color:var(--color-text-secondary)">Los mejores productos de ML con nuestro criterio de selección · Links de afiliado</div>
+      </div>
+      <button class="btn-primary" style="white-space:nowrap">Ver selección →</button>
+    </div>
+  </div>
+
+  <div class="footer"><div class="footer-divider" style="border:none;padding:0"><div class="footer-legal">© 2026 BoluShop — Villa Carlos Paz, Córdoba</div></div></div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     3. BLOG
+═══════════════════════════════════════ -->
+<div>
+<div class="section-label"><i class="ti ti-pencil" aria-hidden="true"></i> Blog — /blog</div>
+<div class="site">
+  <div class="bar"><div class="bar-dot" style="background:#ff5f57"></div><div class="bar-dot" style="background:#febc2e"></div><div class="bar-dot" style="background:#28c840"></div><div class="bar-url">bolushop.com/blog</div></div>
+  <div class="topbar"><div class="topbar-msg"><span><i class="ti ti-truck" aria-hidden="true"></i>Envíos gratis</span><span><i class="ti ti-credit-card" aria-hidden="true"></i>Cuotas sin interés</span></div></div>
+  <div class="nav">
+    <div class="nav-logo"><div class="nav-logo-icon"><span>B</span></div><div class="nav-brand">BoluShop<sub>Regalería &amp; Gadgets</sub></div></div>
+    <div class="nav-links"><span class="nav-link">Inicio</span><span class="nav-link">Productos</span><span class="nav-link">Imperdibles ML</span><span class="nav-link">Colecciones</span><span class="nav-link active">Blog</span></div>
+    <div class="nav-right"><div class="nav-search"><i class="ti ti-search" style="font-size:12px" aria-hidden="true"></i> Buscar...</div><button class="cart-btn"><i class="ti ti-shopping-cart" style="font-size:12px" aria-hidden="true"></i> (2)</button></div>
+  </div>
+
+  <div class="page-header">
+    <div class="breadcrumb"><span>Inicio</span><i class="ti ti-chevron-right" style="font-size:10px" aria-hidden="true"></i><span>Blog</span></div>
+    <h1>Guías y recomendaciones</h1>
+    <p>Consejos de compra, reviews y listas de regalos para cada ocasión</p>
+  </div>
+
+  <div style="padding:14px 20px;background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary);display:flex;gap:8px;flex-wrap:wrap">
+    <span class="tag active">Todos</span>
+    <span class="tag">Regalos</span>
+    <span class="tag">Hogar</span>
+    <span class="tag">Review</span>
+    <span class="tag">Guías</span>
+    <span class="tag">Tecnología</span>
+  </div>
+
+  <div style="padding:16px 20px;display:grid;gap:10px">
+
+    <div class="blog-card" style="border:2px solid #b5d4f4">
+      <div class="blog-card-img" style="background:#0f2044;width:110px"><i class="ti ti-star" style="color:rgba(255,255,255,0.7)" aria-hidden="true"></i></div>
+      <div class="blog-card-body">
+        <span style="font-size:9px;background:#eef3fb;color:#185fa5;border:0.5px solid #b5d4f4;padding:1px 6px;border-radius:3px;margin-right:5px">Destacado</span>
+        <span class="blog-tag">Regalos</span>
+        <div class="blog-title">10 regalos originales para el Día de la Madre bajo $50.000 — Guía 2026</div>
+        <div class="blog-meta"><span><i class="ti ti-user" style="font-size:10px" aria-hidden="true"></i> Israel S.</span><span><i class="ti ti-calendar" style="font-size:10px" aria-hidden="true"></i> Mayo 2026</span><span><i class="ti ti-clock" style="font-size:10px" aria-hidden="true"></i> 5 min de lectura</span></div>
+        <div class="blog-excerpt">Seleccionamos los mejores regalos para sorprender sin vaciar el bolsillo. Carteras, organizadores y gadgets con envío gratis...</div>
+      </div>
+    </div>
+
+    <div class="blog-card">
+      <div class="blog-card-img"><i class="ti ti-home" aria-hidden="true"></i></div>
+      <div class="blog-card-body">
+        <span class="blog-tag">Hogar</span>
+        <div class="blog-title">Cómo organizar tu escritorio en 5 pasos sin gastar de más</div>
+        <div class="blog-meta"><span><i class="ti ti-user" style="font-size:10px" aria-hidden="true"></i> Israel S.</span><span><i class="ti ti-calendar" style="font-size:10px" aria-hidden="true"></i> Mayo 2026</span><span><i class="ti ti-clock" style="font-size:10px" aria-hidden="true"></i> 4 min</span></div>
+        <div class="blog-excerpt">Pequeños cambios que transforman tu espacio de trabajo. Accesorios prácticos y económicos que recomendamos...</div>
+      </div>
+    </div>
+
+    <div class="blog-card">
+      <div class="blog-card-img"><i class="ti ti-backpack" aria-hidden="true"></i></div>
+      <div class="blog-card-body">
+        <span class="blog-tag">Review</span>
+        <div class="blog-title">Mochila antirrobo 2026 — ¿vale la pena comprarla?</div>
+        <div class="blog-meta"><span><i class="ti ti-user" style="font-size:10px" aria-hidden="true"></i> Israel S.</span><span><i class="ti ti-calendar" style="font-size:10px" aria-hidden="true"></i> Junio 2026</span><span><i class="ti ti-clock" style="font-size:10px" aria-hidden="true"></i> 6 min</span></div>
+        <div class="blog-excerpt">Analizamos la mochila antirrobo más vendida del sitio: materiales, compartimentos, y por qué la recomendamos para viajeros...</div>
+      </div>
+    </div>
+
+    <div class="blog-card">
+      <div class="blog-card-img" style="background:#fff9e6"><i class="ti ti-device-mobile" style="color:#c47a00" aria-hidden="true"></i></div>
+      <div class="blog-card-body">
+        <span class="blog-tag" style="background:#fff9e6;color:#c47a00;border:0.5px solid #f0c040">Guía ML</span>
+        <div class="blog-title">Los 5 gadgets más vendidos de Mercado Libre este mes</div>
+        <div class="blog-meta"><span><i class="ti ti-user" style="font-size:10px" aria-hidden="true"></i> Israel S.</span><span><i class="ti ti-calendar" style="font-size:10px" aria-hidden="true"></i> Junio 2026</span><span><i class="ti ti-clock" style="font-size:10px" aria-hidden="true"></i> 3 min</span></div>
+        <div class="blog-excerpt">Desde auriculares hasta smartwatches: los gadgets con mejor relación precio-calidad que podés encontrar hoy en ML...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="background:var(--color-background-secondary);border-top:0.5px solid var(--color-border-tertiary);padding:16px 20px;display:flex;justify-content:space-between;align-items:center">
+    <span style="font-size:10px;color:var(--color-text-secondary)">Mostrando 4 de 12 artículos</span>
+    <button class="btn-outline">Cargar más artículos</button>
+  </div>
+
+  <div class="footer"><div class="footer-divider" style="border:none;padding:0"><div class="footer-legal">© 2026 BoluShop — Villa Carlos Paz, Córdoba</div></div></div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     4. CARRITO
+═══════════════════════════════════════ -->
+<div>
+<div class="section-label"><i class="ti ti-shopping-cart" aria-hidden="true"></i> Carrito — /carrito</div>
+<div class="site">
+  <div class="bar"><div class="bar-dot" style="background:#ff5f57"></div><div class="bar-dot" style="background:#febc2e"></div><div class="bar-dot" style="background:#28c840"></div><div class="bar-url">bolushop.com/carrito</div></div>
+  <div class="topbar"><div class="topbar-msg"><span><i class="ti ti-truck" aria-hidden="true"></i>Envíos gratis</span><span><i class="ti ti-lock" aria-hidden="true"></i>Compra protegida</span></div></div>
+  <div class="nav">
+    <div class="nav-logo"><div class="nav-logo-icon"><span>B</span></div><div class="nav-brand">BoluShop<sub>Regalería &amp; Gadgets</sub></div></div>
+    <div class="nav-links"><span class="nav-link">Inicio</span><span class="nav-link">Productos</span><span class="nav-link">Colecciones</span><span class="nav-link">Blog</span></div>
+    <div class="nav-right"><button class="cart-btn" style="background:#e8630a"><i class="ti ti-shopping-cart" style="font-size:12px" aria-hidden="true"></i> Carrito (2)</button></div>
+  </div>
+
+  <div class="page-header" style="padding:16px 24px">
+    <h1 style="font-size:16px">Tu carrito</h1>
+    <p>2 productos · Envío gratis a todo el país</p>
+  </div>
+
+  <div style="display:flex;gap:0">
+    <div style="flex:1;padding:16px 16px;border-right:0.5px solid var(--color-border-tertiary)">
+
+      <div class="cart-item">
+        <div class="cart-item-img"><i class="ti ti-briefcase" aria-hidden="true"></i></div>
+        <div class="cart-item-info">
+          <div class="cart-item-name">Cartera mujer PVC negro transparente</div>
+          <div class="cart-item-sub">Color: Negro · Talle: Único</div>
+          <div class="qty-ctrl">
+            <div class="qty-btn">−</div>
+            <div class="qty-val">1</div>
+            <div class="qty-btn">+</div>
+            <span style="font-size:10px;color:#e8630a;margin-left:8px;cursor:pointer">Eliminar</span>
+          </div>
+        </div>
+        <div class="cart-price">$48.000</div>
+      </div>
+
+      <div class="cart-item">
+        <div class="cart-item-img"><i class="ti ti-diamond" aria-hidden="true"></i></div>
+        <div class="cart-item-info">
+          <div class="cart-item-name">Organizador joyero portátil cremallera</div>
+          <div class="cart-item-sub">Color: Gris</div>
+          <div class="qty-ctrl">
+            <div class="qty-btn">−</div>
+            <div class="qty-val">1</div>
+            <div class="qty-btn">+</div>
+            <span style="font-size:10px;color:#e8630a;margin-left:8px;cursor:pointer">Eliminar</span>
+          </div>
+        </div>
+        <div class="cart-price">$12.000</div>
+      </div>
+
+      <div style="background:#eef3fb;border:0.5px solid #b5d4f4;border-radius:var(--border-radius-md);padding:10px 12px;display:flex;align-items:center;gap:8px;margin-top:4px">
+        <i class="ti ti-truck" style="font-size:16px;color:#185fa5" aria-hidden="true"></i>
+        <span style="font-size:10px;color:#185fa5">¡Envío gratis a todo el país! Llega entre el <strong>4 y 7 de junio</strong>.</span>
+      </div>
+
+      <div style="margin-top:14px">
+        <div style="font-size:11px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px">También te puede interesar</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+          <div class="prod"><div class="prod-img" style="height:60px"><i class="ti ti-backpack" style="font-size:20px" aria-hidden="true"></i></div><div class="prod-body"><div class="prod-name" style="font-size:10px">Mochila antirrobo 15"</div><div class="prod-price" style="font-size:11px">$74.900</div><button class="prod-add" style="font-size:9px">+ Agregar</button></div></div>
+          <div class="prod"><div class="prod-img" style="height:60px"><i class="ti ti-device-watch" style="font-size:20px" aria-hidden="true"></i></div><div class="prod-body"><div class="prod-name" style="font-size:10px">Smartwatch deportivo</div><div class="prod-price" style="font-size:11px">$95.000</div><button class="prod-add" style="font-size:9px">+ Agregar</button></div></div>
+          <div class="prod"><div class="prod-img" style="height:60px"><i class="ti ti-bag" style="font-size:20px" aria-hidden="true"></i></div><div class="prod-body"><div class="prod-name" style="font-size:10px">Bolso cuero sintético</div><div class="prod-price" style="font-size:11px">$62.500</div><button class="prod-add" style="font-size:9px">+ Agregar</button></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="width:200px;padding:16px 14px;flex-shrink:0">
+      <div class="summary-box">
+        <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:10px">Resumen del pedido</div>
+        <div class="summary-row"><span>Subtotal</span><span>$60.000</span></div>
+        <div class="summary-row"><span>Envío</span><span style="color:#3b6d11">Gratis</span></div>
+        <div class="summary-row"><span>Descuento</span><span style="color:#e8630a">– $0</span></div>
+        <div class="summary-row total"><span>Total</span><span>$60.000</span></div>
+        <div style="font-size:9px;color:var(--color-text-secondary);margin-top:4px;margin-bottom:10px">3x $20.000 sin interés</div>
+        <button class="btn-primary" style="width:100%;padding:9px;font-size:12px">Finalizar compra</button>
+        <div class="coupon-field">
+          <input placeholder="Código de descuento">
+          <button>OK</button>
+        </div>
+      </div>
+      <div style="margin-top:12px;display:flex;flex-direction:column;gap:7px">
+        <div class="trust-item"><i class="ti ti-shield-check" aria-hidden="true"></i> Compra protegida</div>
+        <div class="trust-item"><i class="ti ti-lock" aria-hidden="true"></i> Pago 100% seguro</div>
+        <div class="trust-item"><i class="ti ti-refresh" aria-hidden="true"></i> Cambios y devoluciones</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer"><div class="footer-divider" style="border:none;padding:0"><div class="footer-legal">© 2026 BoluShop — Villa Carlos Paz, Córdoba</div></div></div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     5. SOBRE NOSOTROS
+═══════════════════════════════════════ -->
+<div>
+<div class="section-label"><i class="ti ti-users" aria-hidden="true"></i> Sobre nosotros — /nosotros</div>
+<div class="site">
+  <div class="bar"><div class="bar-dot" style="background:#ff5f57"></div><div class="bar-dot" style="background:#febc2e"></div><div class="bar-dot" style="background:#28c840"></div><div class="bar-url">bolushop.com/nosotros</div></div>
+  <div class="topbar"><div class="topbar-msg"><span><i class="ti ti-truck" aria-hidden="true"></i>Envíos gratis</span><span><i class="ti ti-heart" aria-hidden="true"></i>Hecho con amor en Córdoba</span></div></div>
+  <div class="nav">
+    <div class="nav-logo"><div class="nav-logo-icon"><span>B</span></div><div class="nav-brand">BoluShop<sub>Regalería &amp; Gadgets</sub></div></div>
+    <div class="nav-links"><span class="nav-link">Inicio</span><span class="nav-link">Productos</span><span class="nav-link">Colecciones</span><span class="nav-link">Blog</span></div>
+    <div class="nav-right"><div class="nav-search"><i class="ti ti-search" style="font-size:12px" aria-hidden="true"></i> Buscar...</div><button class="cart-btn"><i class="ti ti-shopping-cart" style="font-size:12px" aria-hidden="true"></i> (2)</button></div>
+  </div>
+
+  <div class="nosotros-section">
+    <div class="nosotros-hero">
+      <div style="flex:1">
+        <div style="font-size:9px;color:#f09f5a;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">Nuestra historia</div>
+        <div style="font-size:17px;font-weight:500;color:#fff;line-height:1.4;margin-bottom:8px">Nacimos para hacer<br>los regalos más fáciles</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.6);line-height:1.6">BoluShop nació en Villa Carlos Paz, Córdoba, con una misión simple: ayudarte a encontrar el regalo perfecto sin perder tiempo ni plata. Seleccionamos cada producto con criterio y lo respaldamos con envío gratis y atención real.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;width:120px;flex-shrink:0">
+        <div class="stat-card"><strong>+100</strong><span>Productos vendidos</span></div>
+        <div class="stat-card"><strong>4.9★</strong><span>Calificación promedio</span></div>
+        <div class="stat-card"><strong>2024</strong><span>Año de fundación</span></div>
+      </div>
+    </div>
+
+    <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:10px">Nuestros valores</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px">
+      <div class="value-card"><i class="ti ti-shield-check" aria-hidden="true"></i><div><div class="value-card-title">Compra protegida</div><div class="value-card-desc">Si el producto no es lo que esperabas, te devolvemos el dinero. Sin preguntas.</div></div></div>
+      <div class="value-card"><i class="ti ti-truck" aria-hidden="true"></i><div><div class="value-card-title">Envío gratis siempre</div><div class="value-card-desc">A todo el país, sin monto mínimo. Coordinamos con OCA y Andreani.</div></div></div>
+      <div class="value-card"><i class="ti ti-star" aria-hidden="true"></i><div><div class="value-card-title">Curaduría de calidad</div><div class="value-card-desc">Cada producto fue elegido por nosotros. No vendemos cualquier cosa.</div></div></div>
+      <div class="value-card"><i class="ti ti-message-circle" aria-hidden="true"></i><div><div class="value-card-title">Atención por WhatsApp</div><div class="value-card-desc">Respondemos rápido. Estamos disponibles para resolver cualquier duda.</div></div></div>
+    </div>
+
+    <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:10px">Cómo llegamos hasta acá</div>
+    <div style="background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 16px;margin-bottom:16px">
+      <div class="timeline-item">
+        <div class="timeline-dot"><span>2024</span></div>
+        <div class="timeline-text"><strong>Fundación de BoluShop</strong><span>Israel Sarmiento crea la tienda con foco en regalos originales y envíos a todo el país.</span></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"><span>2025</span></div>
+        <div class="timeline-text"><strong>Primeros 50 productos y afiliados ML</strong><span>Se incorpora la sección de Mercado Libre con links de afiliado seleccionados a mano.</span></div>
+      </div>
+      <div class="timeline-item" style="margin-bottom:0">
+        <div class="timeline-dot" style="background:#e8630a"><span>2026</span></div>
+        <div class="timeline-text"><strong>Nueva colección y rediseño</strong><span>Lanzamiento de colecciones temáticas, blog editorial y experiencia de compra mejorada.</span></div>
+      </div>
+    </div>
+
+    <div style="background:#0f2044;border-radius:var(--border-radius-lg);padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:3px">¿Tenés alguna pregunta?</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.55)">Escribinos y te respondemos en menos de 24 horas</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button style="background:rgba(255,255,255,0.1);border:0.5px solid rgba(255,255,255,0.2);border-radius:6px;padding:7px 12px;font-size:10px;color:#fff;cursor:pointer;display:flex;align-items:center;gap:4px"><i class="ti ti-brand-whatsapp" style="font-size:13px" aria-hidden="true"></i> WhatsApp</button>
+        <button style="background:#e8630a;border:none;border-radius:6px;padding:7px 12px;font-size:10px;color:#fff;cursor:pointer;display:flex;align-items:center;gap:4px"><i class="ti ti-mail" style="font-size:13px" aria-hidden="true"></i> Email</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-grid">
+      <div><div class="footer-brand-name">BoluShop</div><div class="footer-brand-desc">Curamos los mejores regalos originales y accesorios para el hogar de Argentina.</div><div style="font-size:10px;color:#f09f5a;display:flex;align-items:center;gap:4px;margin-bottom:8px"><i class="ti ti-mail" style="font-size:12px" aria-hidden="true"></i> contacto@bolushop.com</div><div class="footer-social"><div class="footer-social-btn"><i class="ti ti-brand-instagram" aria-hidden="true"></i></div><div class="footer-social-btn"><i class="ti ti-brand-whatsapp" aria-hidden="true"></i></div></div></div>
+      <div><div class="footer-col-title">Tienda</div><span class="footer-link">Todos los productos</span><span class="footer-link">Colecciones</span><span class="footer-link">Imperdibles ML</span><span class="footer-link">Blog y guías</span></div>
+      <div><div class="footer-col-title">Ayuda</div><span class="footer-link">Garantías y cambios</span><span class="footer-link">Preguntas frecuentes</span><span class="footer-link">Política de privacidad</span><span class="footer-link">Contacto</span></div>
+    </div>
+    <div class="footer-divider"><div class="footer-legal">© 2026 BoluShop — Villa Carlos Paz, Córdoba</div><div class="footer-affiliate">* Sitio con links de afiliados. Podemos recibir comisión sin costo adicional para vos.</div></div>
+  </div>
+</div>
+</div>
+
+</div>

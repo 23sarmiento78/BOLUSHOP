@@ -114,8 +114,7 @@ export async function POST(req: NextRequest) {
                 email: formData.email,
                 address: `${formData.street} ${formData.streetNumber}${formData.apartment ? ', ' + formData.apartment : ''}, ${formData.city}, ${formData.province}`,
                 phone: formData.phone
-            },
-            paymentId: response.id
+            }
         };
 
         try {

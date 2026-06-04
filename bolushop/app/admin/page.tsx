@@ -30,15 +30,29 @@ export default async function AdminDashboard() {
     try {
         const categoriesPath = path.join(process.cwd(), 'data', 'categories.json');
         if (fs.existsSync(categoriesPath)) {
-            const localCategories = JSON.parse(fs.readFileSync(categoriesPath, 'utf-8'));
-            await saveCategories(localCategories);
+            const rawCategories = fs.readFileSync(categoriesPath, 'utf-8').trim();
+            if (rawCategories) {
+                const localCategories = JSON.parse(rawCategories);
+                await saveCategories(localCategories);
+            }
         }
     } catch (e) {
         console.error("Error syncing categories:", e);
     }
 
     const lowStockProducts = products.filter((p) => p.stock < 5);
-    const totalRevenue = orders.reduce((acc, o) => acc + o.total, 0);
+
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const nextMonthStart = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+
+    const totalRevenue = orders
+        .filter((o) => ['paid', 'shipped', 'delivered'].includes(o.status))
+        .filter((o) => {
+            const orderDate = new Date(o.date);
+            return orderDate >= monthStart && orderDate < nextMonthStart;
+        })
+        .reduce((acc, o) => acc + o.total, 0);
 
     return (
         <div className="max-w-7xl mx-auto space-y-12">
@@ -95,11 +109,11 @@ export default async function AdminDashboard() {
                     <div className="absolute top-0 right-0 p-4 opacity-10">
                         <TrendingUp size={80} className="text-primary" />
                     </div>
-                    <p className="text-primary font-bold uppercase text-[10px] tracking-widest mb-4">Ventas Brutas</p>
+                    <p className="text-primary font-bold uppercase text-[10px] tracking-widest mb-4">Ventas Brutas (mes actual)</p>
                     <p className="text-3xl font-bold text-white">
                         ${totalRevenue.toLocaleString('es-AR')}
                     </p>
-                    <p className="text-[10px] font-bold text-gray-400 mt-2 uppercase">Pesos Argentinos</p>
+                    <p className="text-[10px] font-bold text-gray-400 mt-2 uppercase">Pesos Argentinos · Incluye solo pedidos pagados</p>
                 </div>
             </div>
 
