@@ -1,6 +1,5 @@
 import { getAllCollections, getAllProducts } from "@/lib/db";
 import Link from "next/link";
-import Image from "next/image";
 import Header from "@/components/shop/Header";
 import Footer from "@/components/shop/Footer";
 import { Metadata } from "next";
@@ -12,6 +11,13 @@ export const metadata: Metadata = {
 };
 
 export const dynamic = 'force-dynamic';
+
+const gradients = [
+    'from-[#0f2044] to-[#1a3a6b]',
+    'from-[#4a1b0c] to-[#993c1d]',
+    'from-[#173404] to-[#3b6d11]',
+    'from-[#26215c] to-[#534ab7]',
+];
 
 export default async function CollectionsPage() {
     const collections = await getAllCollections();
@@ -30,74 +36,77 @@ export default async function CollectionsPage() {
         <>
             <Header />
 
-            <main className="min-h-screen bg-white">
-                {/* Page Header */}
-                <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-8 md:py-12 px-4 md:px-6">
+            <main className="min-h-screen bg-[#f7f7f7]">
+                <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-10 md:py-14 px-4 md:px-6">
                     <div className="max-w-7xl mx-auto">
-                        <div className="flex items-center gap-2 mb-4 text-xs text-gray-300">
+                        <div className="flex items-center gap-2 mb-4 text-xs text-white/70">
                             <Link href="/" className="hover:text-white">Inicio</Link>
                             <ChevronRight size={14} />
                             <span>Colecciones</span>
                         </div>
-                        <h1 className="text-3xl md:text-4xl font-bold mb-2">Colecciones Temáticas</h1>
-                        <p className="text-sm md:text-base text-gray-300">
-                            Selecciones curadas especialmente para cada ocasión
+                        <h1 className="text-3xl md:text-5xl font-black mb-3">Nuestras colecciones</h1>
+                        <p className="max-w-3xl text-sm md:text-base text-white/80">
+                            Selecciones curadas para cada estilo y ocasión, con un look moderno y una experiencia de compra clara.
                         </p>
                     </div>
                 </section>
 
-                {/* Collections Grid */}
                 <section className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16">
-                    {collections.length === 0 ? (
-                        <div className="text-center py-16">
-                            <p className="text-[#64748b] text-sm">Aún no hay colecciones disponibles</p>
-                        </div>
-                    ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                            {collections.map(coll => (
-                                <Link
-                                    key={coll.id}
-                                    href={`/coleccion/${coll.slug}`}
-                                    className="group"
-                                >
-                                    <div className="card overflow-hidden h-full flex flex-col hover:shadow-lg">
-                                        {/* Image */}
-                                        <div className="relative bg-[#f8f9fb] overflow-hidden h-40 md:h-48">
-                                            <Image
-                                                src={getCollectionImage(coll)}
-                                                alt={coll.name}
-                                                fill
-                                                className="object-cover group-hover:scale-105 transition-transform"
-                                            />
-                                            {coll.discountValue && coll.discountValue > 0 && (
-                                                <div className="absolute top-3 right-3 bg-[#e8630a] text-white text-xs font-bold px-3 py-1 rounded-md">
-                                                    {coll.discountType === 'percentage' ? `-${coll.discountValue}%` : `$${coll.discountValue}`}
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        {/* Content */}
-                                        <div className="p-4 flex-1 flex flex-col">
-                                            <h3 className="text-sm md:text-base font-bold text-[#0f2044] mb-2 line-clamp-2 group-hover:text-[#e8630a] transition-colors">
-                                                {coll.name}
-                                            </h3>
-                                            <p className="text-xs text-[#64748b] line-clamp-2 flex-1 mb-3">
-                                                {coll.description || "Selección exclusiva"}
-                                            </p>
-                                            <div className="flex items-center justify-between pt-3 border-t border-[#e2e8f0]">
-                                                <span className="text-xs text-[#64748b]">
-                                                    {(coll.productIds || []).length} productos
-                                                </span>
-                                                <span className="text-xs font-bold text-[#0f2044] group-hover:text-[#e8630a] transition-colors">
-                                                    Ver →
-                                                </span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                        {collections.map((coll, index) => (
+                            <Link
+                                key={coll.id}
+                                href={`/coleccion/${coll.slug}`}
+                                className="group"
+                            >
+                                <article className="h-full rounded-[1.75rem] overflow-hidden border border-[#e2e8f0] bg-white shadow-sm transition hover:shadow-lg">
+                                    <div className="flex h-full flex-col">
+                                        <div className={`min-h-[220px] p-8 flex flex-col justify-end gap-4 bg-gradient-to-br ${gradients[index % gradients.length]}`}>
+                                            <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-[10px] uppercase tracking-[0.35em] text-white font-semibold">
+                                                {coll.discountValue && coll.discountValue > 0 ? 'Destacada' : 'Colección'}
+                                            </span>
+                                            <div>
+                                                <h2 className="text-2xl md:text-3xl font-black text-white leading-tight mb-2">{coll.name}</h2>
+                                                <p
+                                                    className="text-sm text-white/80 leading-relaxed max-w-full overflow-hidden"
+                                                    style={{
+                                                        display: '-webkit-box',
+                                                        WebkitLineClamp: 3,
+                                                        WebkitBoxOrient: 'vertical',
+                                                    }}
+                                                >
+                                                    {coll.description || 'Selección exclusiva para cada ocasión.'}
+                                                </p>
                                             </div>
                                         </div>
+
+                                        <div className="bg-white px-6 py-5 border-t border-[#eef2f7] flex items-center justify-between gap-4">
+                                            <span className="text-xs text-[#64748b] flex items-center gap-2">
+                                                <span className="inline-flex h-2 w-2 rounded-full bg-[#0f2044]" />
+                                                {(coll.productIds || []).length} productos
+                                            </span>
+                                            <span className="text-xs font-bold text-[#e8630a]">Ver colección →</span>
+                                        </div>
                                     </div>
-                                </Link>
-                            ))}
+                                </article>
+                            </Link>
+                        ))}
+                    </div>
+
+                    <div className="mt-10 rounded-[1.5rem] bg-[#fff9e6] border border-[#f0c040] p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div>
+                            <span className="inline-flex items-center rounded-full bg-[#f0c040] px-3 py-1 text-[11px] font-semibold text-[#7a4f00] uppercase tracking-[0.35em] mb-2">
+                                Mercado Libre
+                            </span>
+                            <h2 className="text-xl md:text-2xl font-black text-[#0f2044]">Imperdibles seleccionados</h2>
+                            <p className="text-sm text-[#64748b] mt-2 max-w-2xl">
+                                Los mejores productos de ML con nuestro criterio de selección. Enlaces de afiliado con recomendaciones confiables.
+                            </p>
                         </div>
-                    )}
+                        <Link href="/productos?seccion=mercado-libre" className="btn btn-primary whitespace-nowrap">
+                            Ver selección →
+                        </Link>
+                    </div>
                 </section>
             </main>
 

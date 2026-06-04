@@ -49,19 +49,19 @@ export default function Header() {
     return (
         <>
             {/* Topbar con beneficios */}
-            <div className="sticky top-0 z-40 bg-[#0f2044] text-white py-2 px-4 md:px-6">
-                <div className="max-w-7xl mx-auto flex justify-between items-center text-[10px] md:text-xs gap-4 md:gap-8 flex-wrap">
-                    <div className="flex items-center gap-1 md:gap-2">
-                        <Truck size={14} />
-                        <span>Envío gratis desde $75.000</span>
+            <div className="sticky top-0 z-40 bg-[#0f2044] text-white py-3 px-4 md:px-6">
+                <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center text-sm md:text-base gap-4 md:gap-8">
+                    <div className="flex items-center gap-2 md:gap-3">
+                        <Truck size={16} />
+                        <span className="font-medium">Envío gratis en todos los productos</span>
                     </div>
-                    <div className="hidden sm:flex items-center gap-1 md:gap-2">
-                        <CreditCard size={14} />
-                        <span>Cuotas sin interés</span>
+                    <div className="hidden sm:flex items-center gap-2 md:gap-3">
+                        <CreditCard size={16} />
+                        <span className="font-medium">Cuotas sin interés</span>
                     </div>
-                    <div className="hidden md:flex items-center gap-1 md:gap-2 ml-auto">
-                        <Shield size={14} />
-                        <span>Compra 100% protegida</span>
+                    <div className="hidden md:flex items-center gap-2 md:gap-3 ml-auto">
+                        <Shield size={16} />
+                        <span className="font-medium">Compra 100% protegida</span>
                     </div>
                 </div>
             </div>
@@ -76,20 +76,20 @@ export default function Header() {
                                 <span className="text-white font-bold text-sm">B</span>
                             </div>
                             <div className="hidden sm:block">
-                                <div className="text-sm font-bold text-[#0f2044]">BoluShop</div>
-                                <div className="text-[10px] text-[#e8630a]">Regalos & Hogar</div>
+                                <div className="text-lg font-bold text-[#0f2044]">BoluShop</div>
+                                <div className="text-sm text-[#e8630a]">Regalos & Hogar</div>
                             </div>
                         </Link>
 
                         {/* Desktop Navigation */}
-                        <nav className="hidden lg:flex items-center gap-6 mx-auto">
+                        <nav className="hidden lg:flex items-center gap-8 mx-auto">
                             {navLinks.map(link => (
                                 <Link
                                     key={link.href}
                                     href={link.href}
-                                    className={`text-xs font-medium transition-colors ${
+                                    className={`text-sm font-semibold transition-colors ${
                                         pathname === link.href
-                                            ? 'text-[#0f2044] font-bold'
+                                            ? 'text-[#0f2044]'
                                             : 'text-[#64748b] hover:text-[#0f2044]'
                                     }`}
                                 >
@@ -99,17 +99,17 @@ export default function Header() {
                         </nav>
 
                         {/* Search Bar (Desktop) */}
-                        <div className="hidden md:flex items-center flex-1 max-w-xs mx-4">
+                        <div className="hidden md:flex items-center flex-1 max-w-md mx-4">
                             <form onSubmit={handleSearch} className="w-full relative">
                                 <input
                                     type="text"
                                     placeholder="Buscar productos..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full bg-[#f8f9fb] border border-[#e2e8f0] rounded-full py-2 pl-4 pr-10 text-xs outline-none focus:border-[#0f2044] transition-colors"
+                                    className="w-full bg-[#f8f9fb] border border-[#e2e8f0] rounded-full py-3 pl-4 pr-12 text-sm outline-none focus:border-[#0f2044] transition-colors"
                                 />
                                 <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748b]">
-                                    <Search size={16} />
+                                    <Search size={18} />
                                 </button>
                             </form>
                         </div>
@@ -137,17 +137,17 @@ export default function Header() {
                     </div>
 
                     {/* Mobile Search */}
-                    <div className="md:hidden mt-3">
+                    <div className="md:hidden mt-4">
                         <form onSubmit={handleSearch} className="relative">
                             <input
                                 type="text"
                                 placeholder="Buscar..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full bg-[#f8f9fb] border border-[#e2e8f0] rounded-full py-2 pl-4 pr-10 text-xs outline-none focus:border-[#0f2044] transition-colors"
+                                className="w-full bg-[#f8f9fb] border border-[#e2e8f0] rounded-full py-3 pl-4 pr-12 text-sm outline-none focus:border-[#0f2044] transition-colors"
                             />
                             <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748b]">
-                                <Search size={16} />
+                                <Search size={18} />
                             </button>
                         </form>
                     </div>
@@ -163,7 +163,7 @@ export default function Header() {
                                 key={link.href}
                                 href={link.href}
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className={`block px-4 py-3 rounded-md text-sm font-medium transition-colors ${
+                                className={`block px-4 py-3 rounded-md text-base font-semibold transition-colors ${
                                     pathname === link.href
                                         ? 'bg-[#f8f9fb] text-[#0f2044] font-bold'
                                         : 'text-[#64748b] hover:bg-[#f8f9fb]'

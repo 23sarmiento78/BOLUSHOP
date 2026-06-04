@@ -123,8 +123,8 @@ export default function CheckoutPage() {
                     <div className="max-w-7xl mx-auto px-4">
                         <div className="rounded-[3rem] bg-white/10 border border-white/20 p-10 md:p-14 text-white shadow-xl shadow-[#0f2044]/10 backdrop-blur-sm">
                             <span className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 text-[11px] uppercase tracking-[0.35em] font-black text-white/90">Checkout Seguro</span>
-                            <h1 className="mt-6 text-4xl md:text-5xl font-black tracking-tight max-w-3xl">Finalizá tu compra con Mercado Pago y envío rápido.</h1>
-                            <p className="mt-4 max-w-2xl text-sm md:text-base text-white/75 leading-relaxed">Completá tus datos a continuación. Pagá con total seguridad y recibí tu pedido en el menor tiempo posible.</p>
+                            <h1 className="mt-6 text-4xl md:text-5xl font-black tracking-tight max-w-3xl">Finalizá tu compra con Mercado Pago y envío calculado según tu ubicación.</h1>
+                            <p className="mt-4 max-w-2xl text-sm md:text-base text-white/75 leading-relaxed">Completá tus datos a continuación. Pagá con total seguridad y el costo de envío se calcula según tu provincia y ciudad.</p>
                         </div>
                     </div>
                 </section>
@@ -294,7 +294,7 @@ export default function CheckoutPage() {
                                                 <p className="text-sm text-[#0f2044] font-semibold">Mercado Pago Pro</p>
                                                 <p className="text-sm text-[#64748b] leading-relaxed mt-3">Tu pago se procesa en un entorno seguro y protegido.</p>
                                             </div>
-                                            <p className="text-xs uppercase tracking-[0.35em] text-[#10b981] font-black">Envío rápido sujeto a dirección ingresada</p>
+                                            <p className="text-xs uppercase tracking-[0.35em] text-[#10b981] font-black">Costo de envío calculado según la dirección ingresada</p>
                                         </div>
                                     </div>
 
@@ -338,7 +338,7 @@ export default function CheckoutPage() {
                                 <div className="mt-6 rounded-3xl bg-[#f8fafb] p-5 border border-[#e2e8f0]">
                                     <p className="text-sm font-black uppercase tracking-[0.35em] text-[#64748b] mb-3">Beneficios</p>
                                     <ul className="mt-4 space-y-3 text-sm text-[#64748b]">
-                                        <li>• Envío más rápido con la dirección correcta</li>
+                                        <li>• Costo de envío calculado según tu dirección</li>
                                         <li>• Pago 100% seguro con Mercado Pago</li>
                                         <li>• Atención al cliente hasta la entrega</li>
                                     </ul>
