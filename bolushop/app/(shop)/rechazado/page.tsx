@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/shop/Header";
 import Footer from "@/components/shop/Footer";
+import { AlertCircle } from "lucide-react";
 
 function RechazadoContent() {
     const searchParams = useSearchParams();
@@ -26,95 +27,66 @@ function RechazadoContent() {
     }
 
     return (
-        <>
-            <Header />
-
-            <main className="min-h-screen bg-gradient-to-b from-red-50 to-white flex items-center justify-center px-4 pt-28 pb-12">
-                <div className="max-w-2xl w-full text-center">
-                    <div className="bg-white rounded-[3rem] p-12 shadow-2xl">
-                        {/* Error Icon */}
-                        <div className="w-24 h-24 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-8 animate-pulse">
-                            <span className="text-5xl text-white">✕</span>
-                        </div>
-
-                        <h1 className="text-5xl font-black text-gray-900 mb-4">
-                            Pago <span className="text-red-500 italic">No Procesado</span>
-                        </h1>
-
-                        <p className="text-xl text-gray-600 mb-4 font-bold">
-                            {mensajeError}
-                        </p>
-
-                        <p className="text-lg text-gray-500 mb-8">
-                            {sugerencia}
-                        </p>
-
-                        {orderId && (
-                            <div className="bg-gray-50 rounded-2xl p-4 mb-8 border border-gray-100">
-                                <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">
-                                    Referencia de Intento
-                                </p>
-                                <p className="text-sm font-bold text-gray-600 font-mono">
-                                    {orderId}
-                                </p>
-                            </div>
-                        )}
-
-                        <div className="space-y-4">
-                            <Link
-                                href="/checkout"
-                                className="block w-full py-5 bg-gray-900 text-white rounded-2xl font-black text-lg uppercase tracking-widest hover:scale-105 transition-transform shadow-xl shadow-gray-900/30"
-                            >
-                                🔄 Intentar de nuevo
-                            </Link>
-
-                            <Link
-                                href="/productos"
-                                className="block w-full py-4 bg-gray-100 text-gray-700 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-gray-200 transition-colors"
-                            >
-                                Volver a la Tienda
-                            </Link>
-                        </div>
-
-                        <div className="mt-12 pt-8 border-t border-gray-200">
-                            <h3 className="font-black text-lg mb-4 text-gray-400">¿Necesitas ayuda?</h3>
-                            <p className="text-sm text-gray-500 mb-4">
-                                Si crees que esto es un error, contactanos para asistirte.
-                            </p>
-                            <a
-                                href={`https://wa.me/3541237972?text=${encodeURIComponent(`Hola, tuve un problema con mi pago. Mi referencia es: ${orderId}`)}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 px-6 py-3 bg-green-500 text-white rounded-xl font-black text-sm uppercase tracking-widest hover:bg-green-600 transition-colors"
-                            >
-                                📱 Soporte por WhatsApp
-                            </a>
-                        </div>
-                    </div>
+        <div className="max-w-2xl w-full text-center px-4 py-8 md:py-12">
+            <div className="rounded-[2rem] bg-white border border-[#e2e8f0] p-8 shadow-card">
+                <div className="w-24 h-24 bg-[#fef2f2] text-red-500 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-lg">
+                    <AlertCircle size={48} />
                 </div>
-            </main>
-
-            <Footer />
-        </>
+                <h1 className="text-3xl md:text-4xl font-black text-[#0f2044] tracking-tight mb-4">Pago No Procesado</h1>
+                <p className="text-lg text-[#1e293b] mb-4 font-bold">{mensajeError}</p>
+                <p className="text-base text-[#64748b] mb-8">{sugerencia}</p>
+                {orderId && (
+                    <div className="bg-[#f8f9fb] rounded-3xl p-4 mb-8 border border-[#e2e8f0]">
+                        <p className="text-xs font-bold uppercase tracking-widest text-[#64748b] mb-1">Referencia de Intento</p>
+                        <p className="text-sm font-bold text-[#0f2044] font-mono">{orderId}</p>
+                    </div>
+                )}
+                <div className="space-y-3 mb-8">
+                    <Link href="/checkout" className="inline-flex w-full justify-center rounded-3xl bg-[#0f2044] px-6 py-4 text-sm font-black text-white hover:bg-[#0b1938] transition">🔄 Intentar de Nuevo</Link>
+                    <Link href="/productos" className="inline-flex w-full justify-center rounded-3xl border border-[#e2e8f0] bg-white px-6 py-4 text-sm font-black text-[#0f2044] hover:bg-[#f8fafb] transition">Volver a la Tienda</Link>
+                </div>
+                <div className="pt-6 border-t border-[#e2e8f0]">
+                    <h3 className="font-bold text-base mb-3 text-[#64748b]">¿Necesitas Ayuda?</h3>
+                    <p className="text-sm text-[#64748b] mb-4">Si crees que esto es un error, contáctanos para asistirte.</p>
+                    <a
+                        href={`https://wa.me/3541237972?text=${encodeURIComponent(`Hola, tuve un problema con mi pago. Mi referencia es: ${orderId}`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block px-6 py-3 bg-[#25D366] text-white rounded-3xl font-bold text-sm uppercase tracking-widest hover:shadow-lg transition-shadow"
+                    >
+                        📱 Soporte por WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
     );
 }
 
 export default function RechazadoPage() {
     return (
-        <Suspense fallback={
-            <>
-                <Header />
-                <div className="min-h-screen flex items-center justify-center">
-                    <div className="text-center">
-                        <div className="text-6xl mb-4 animate-pulse">⏳</div>
-                        <p className="text-gray-500 font-bold">Cargando...</p>
+        <>
+            <Header />
+            <main className="min-h-screen bg-white">
+                <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-10 md:py-16 px-4 md:px-6 text-center">
+                    <div className="max-w-3xl mx-auto">
+                        <h1 className="text-3xl md:text-5xl font-black mb-4">Pago Rechazado</h1>
+                        <p className="text-sm md:text-base text-white/80">No se pudo completar tu compra. Revisá los detalles y volvé a intentarlo.</p>
                     </div>
-                </div>
-                <Footer />
-            </>
-        }>
-            <RechazadoContent />
-        </Suspense>
+                </section>
+                <section className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16 flex items-center justify-center">
+                    <Suspense fallback={
+                        <div className="min-h-[40vh] flex items-center justify-center text-center">
+                            <div>
+                                <div className="w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                                <p className="text-xs font-bold uppercase tracking-widest text-[#64748b]">Cargando...</p>
+                            </div>
+                        </div>
+                    }>
+                        <RechazadoContent />
+                    </Suspense>
+                </section>
+            </main>
+            <Footer />
+        </>
     );
 }
-

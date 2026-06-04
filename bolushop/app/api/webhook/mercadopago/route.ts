@@ -1,8 +1,42 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createHmac, timingSafeEqual } from 'crypto';
+
+function verifyMercadoPagoSignature(rawBody: string, signature: string | null, secret: string) {
+    if (!signature || !secret) return false;
+
+    const normalizedSignature = signature.startsWith('sha256=') ? signature.slice(7) : signature;
+    const expectedSignature = createHmac('sha256', secret).update(rawBody).digest('hex');
+    const signatureBuffer = Buffer.from(normalizedSignature, 'utf8');
+    const expectedBuffer = Buffer.from(expectedSignature, 'utf8');
+
+    if (signatureBuffer.length !== expectedBuffer.length) {
+        return false;
+    }
+
+    try {
+        return timingSafeEqual(signatureBuffer, expectedBuffer);
+    } catch {
+        return false;
+    }
+}
 
 export async function POST(req: NextRequest) {
     try {
-        const body = await req.json();
+        const rawBody = await req.text();
+        const signature = req.headers.get('x-hub-signature') || req.headers.get('X-Hub-Signature');
+        const webhookSecret = process.env.MP_WEBHOOK_SECRET || '';
+
+        if (!webhookSecret) {
+            console.error('❌ MP_WEBHOOK_SECRET not configured');
+            return NextResponse.json({ error: 'Webhook secret not configured' }, { status: 500 });
+        }
+
+        if (!verifyMercadoPagoSignature(rawBody, signature, webhookSecret)) {
+            console.error('❌ Invalid Mercado Pago webhook signature');
+            return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
+        }
+
+        const body = JSON.parse(rawBody);
 
         console.log('Mercado Pago Webhook:', body);
 

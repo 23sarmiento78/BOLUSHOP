@@ -5,6 +5,8 @@ import Header from "@/components/shop/Header";
 import Footer from "@/components/shop/Footer";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 
 interface Props {
     params: { slug: string };
@@ -29,8 +31,6 @@ export default async function CollectionPage({ params }: Props) {
 
     const products = await getAllProducts();
 
-    // Filter products manually if the collection has custom productIds or use category logic depending on implementation.
-    // Assuming simple mapping where product maps to collection id or products includes collection.id
     const collectionProducts = products.filter(product =>
         (product.collections && product.collections.includes(collection.id)) ||
         (collection.productIds && collection.productIds.includes(product.id))
@@ -39,46 +39,38 @@ export default async function CollectionPage({ params }: Props) {
     return (
         <>
             <Header />
-            <main className="min-h-screen pt-32 pb-24 bg-gray-50/30">
-                <div className="container mx-auto px-6">
-                    <div className="mb-12">
-                        {collection.image && (
-                            <div className="w-full h-64 md:h-80 relative rounded-3xl overflow-hidden mb-8 shadow-xl">
-                                <Image
-                                    src={collection.image}
-                                    alt={collection.name}
-                                    fill
-                                    className="object-cover object-center"
-                                />
-                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                                    <h1 className="text-4xl md:text-6xl font-black text-white text-center tracking-tighter drop-shadow-md">
-                                        {collection.name}
-                                    </h1>
-                                </div>
-                            </div>
-                        )}
-                        {!collection.image && (
-                            <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tighter mb-4">
-                                {collection.name}
-                            </h1>
-                        )}
-                        <p className="text-gray-500 text-lg md:text-xl font-medium max-w-3xl">
+            <main className="min-h-screen bg-white">
+                {/* Page Header */}
+                <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-8 md:py-12 px-4 md:px-6">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="flex items-center gap-2 mb-4 text-xs text-gray-300">
+                            <Link href="/" className="hover:text-white">Inicio</Link>
+                            <ChevronRight size={14} />
+                            <Link href="/colecciones" className="hover:text-white">Colecciones</Link>
+                            <ChevronRight size={14} />
+                            <span>{collection.name}</span>
+                        </div>
+                        <h1 className="text-3xl md:text-4xl font-bold mb-2">{collection.name}</h1>
+                        <p className="text-sm md:text-base text-gray-300">
                             {collection.description}
                         </p>
                     </div>
+                </section>
 
+                {/* Collection Content */}
+                <section className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16">
                     {collectionProducts.length === 0 ? (
-                        <div className="text-center py-20 bg-white rounded-3xl border border-gray-100">
-                            <p className="text-gray-500 text-xl font-medium">No hay productos en esta colección por el momento.</p>
+                        <div className="text-center py-16 card">
+                            <p className="text-[#64748b] text-sm md:text-base font-medium">No hay productos en esta colección por el momento.</p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
                             {collectionProducts.map(product => (
                                 <ProductCard key={product.id} product={product} />
                             ))}
                         </div>
                     )}
-                </div>
+                </section>
             </main>
             <Footer />
         </>

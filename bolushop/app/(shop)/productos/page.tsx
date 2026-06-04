@@ -1,13 +1,21 @@
 import { getAllProducts } from "@/lib/db";
+import { getCurrentHoliday } from "@/lib/holidays";
 import Header from "@/components/shop/Header";
 import Footer from "@/components/shop/Footer";
 import ProductCard from "@/components/shop/ProductCard";
-import ProductSorter from "@/components/shop/ProductSorter";
 import HolidayBanner from "@/components/shop/HolidayBanner";
+import ProductSorter from "@/components/shop/ProductSorter";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getCurrentHoliday } from "@/lib/holidays";
 
+interface Props {
+    searchParams: Promise<{
+        categoria?: string;
+        coleccion?: string;
+        seccion?: string;
+        sort?: string;
+    }>;
+}
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
     const { categoria, coleccion } = await searchParams;
@@ -26,57 +34,41 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     };
 }
 
-interface Props {
-    searchParams: Promise<{
-        categoria?: string;
-        coleccion?: string;
-        seccion?: string;
-        sort?: string;
-    }>;
-}
-
 export default async function ProductosPage({ searchParams }: Props) {
     const allProducts = await getAllProducts();
-    const activeProducts = allProducts.filter(p => p.isActive !== false);
     const holiday = getCurrentHoliday();
-
-    // Filtering
     const { categoria, coleccion, seccion, sort } = await searchParams;
 
-    // Logic: ML products ONLY appear if specific section is active
-    // Normal products appear otherwise
-    let filteredProducts = activeProducts;
+    const activeProducts = allProducts.filter(product => product.isActive !== false);
+    let filteredProducts = [...activeProducts];
 
     if (seccion === 'mercado-libre') {
-        filteredProducts = filteredProducts.filter(p => p.isMlReferral);
+        filteredProducts = filteredProducts.filter(product => product.isMlReferral);
     } else {
-        filteredProducts = filteredProducts.filter(p => !p.isMlReferral);
+        filteredProducts = filteredProducts.filter(product => !product.isMlReferral);
     }
 
     let activeCollectionName = "";
 
     if (categoria) {
-        filteredProducts = filteredProducts.filter(p => p.category.toLowerCase() === categoria.toLowerCase());
+        filteredProducts = filteredProducts.filter(product => product.category.toLowerCase() === categoria.toLowerCase());
         activeCollectionName = categoria;
     } else if (coleccion) {
-        // Mejoramos el filtrado por colección: Buscamos la colección para obtener sus productos vinculados
         const collections = await (await import("@/lib/db")).getAllCollections();
-        const foundColl = collections.find(c => c.id === coleccion || c.slug === coleccion);
+        const foundCollection = collections.find(collection => collection.id === coleccion || collection.slug === coleccion);
 
-        if (foundColl) {
-            activeCollectionName = foundColl.name;
-            const collProductIds = foundColl.productIds || [];
-            filteredProducts = filteredProducts.filter(p =>
-                collProductIds.includes(p.id) ||
-                (p.collections && (p.collections.includes(foundColl.id) || p.collections.includes(foundColl.slug)))
+        if (foundCollection) {
+            activeCollectionName = foundCollection.name;
+            const collectionIds = foundCollection.productIds || [];
+            filteredProducts = filteredProducts.filter(product =>
+                collectionIds.includes(product.id) ||
+                (product.collections && (product.collections.includes(foundCollection.id) || product.collections.includes(foundCollection.slug)))
             );
         } else {
-            // Fallback si no se encuentra la colección
-            filteredProducts = filteredProducts.filter(p => p.collections && p.collections.includes(coleccion));
+            filteredProducts = filteredProducts.filter(product => product.collections?.includes(coleccion || ""));
         }
     }
 
-    // Sorting
     if (sort) {
         filteredProducts = [...filteredProducts].sort((a, b) => {
             switch (sort) {
@@ -91,14 +83,14 @@ export default async function ProductosPage({ searchParams }: Props) {
             }
         });
     } else {
-        // Default sort: newest
-        filteredProducts = [...filteredProducts].sort((a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
+        filteredProducts = [...filteredProducts].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     }
 
-    const currentSubset = seccion === 'mercado-libre' ? activeProducts.filter(p => p.isMlReferral) : activeProducts.filter(p => !p.isMlReferral);
-    const categories = Array.from(new Set(currentSubset.map(p => p.category)));
+    const visibleProducts = seccion === 'mercado-libre'
+        ? activeProducts.filter(product => product.isMlReferral)
+        : activeProducts.filter(product => !product.isMlReferral);
+
+    const categories = Array.from(new Set(visibleProducts.map(product => product.category))).sort();
 
     const displayTitle = seccion === 'mercado-libre'
         ? 'Imperdibles Mercado Libre'
@@ -111,124 +103,87 @@ export default async function ProductosPage({ searchParams }: Props) {
     return (
         <>
             <Header />
-
-            {/* Holiday Banner */}
             <HolidayBanner />
-
-            <main className="min-h-screen bg-sand-white pt-32 pb-24">
-                <div className="container mx-auto px-4">
-                    {/* Page Header */}
-                    <div className="max-w-4xl mb-16">
-                        <div className="flex items-center gap-3 mb-6">
-                            <div className="h-px w-12 bg-primary"></div>
-                            <span className="text-xs font-black uppercase tracking-[0.3em] text-primary">
+            <main className="min-h-screen bg-[#f7f7f7]">
+                <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white pt-20 pb-20">
+                    <div className="max-w-7xl mx-auto px-4 md:px-6">
+                        <div className="max-w-4xl">
+                            <span className="inline-flex items-center rounded-full bg-white/10 px-4 py-2 text-[10px] uppercase tracking-[0.35em] text-white font-black mb-6">
                                 {seccion === 'mercado-libre' ? 'Selección Especial' : 'Catálogo Exclusivo'}
                             </span>
+                            <h1 className="text-5xl md:text-6xl font-black leading-tight mb-6">{displayTitle}</h1>
+                            <p className="max-w-3xl text-base md:text-lg text-white/80 leading-relaxed">{displaySubtitle}</p>
                         </div>
-                        <h1 className="text-6xl md:text-7xl font-black mb-8 tracking-tighter text-gray-900">
-                            {displayTitle}
-                        </h1>
-                        <p className="text-gray-500 text-lg md:text-xl font-medium max-w-2xl leading-relaxed">
-                            {displaySubtitle}
-                        </p>
                     </div>
+                </section>
 
-                    {/* Toolbar */}
-                    <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8 mb-12 pb-12 border-b border-gray-100">
-                        {/* Filters */}
-                        <div className="flex flex-wrap gap-2">
-                            {/* Standard Catalog Tab */}
-                            <a
+                <section className="max-w-7xl mx-auto px-4 md:px-6 py-10 md:py-14">
+                    <div className="flex flex-col lg:flex-row gap-6 lg:items-center justify-between mb-10">
+                        <div className="flex flex-wrap gap-3">
+                            <Link
                                 href={`/productos${sort ? `?sort=${sort}` : ''}`}
-                                className={`px-8 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 ${!seccion && !categoria
-                                    ? 'text-white shadow-2xl'
-                                    : 'bg-white text-gray-500 hover:text-gray-900 border border-gray-100'
-                                    }`}
-                                style={!seccion && !categoria && holiday ? {
-                                    backgroundColor: holiday.colors.primary,
-                                    boxShadow: `0 20px 30px -10px ${holiday.colors.primary}40`
-                                } : !seccion && !categoria ? {
-                                    backgroundColor: '#0F172A',
-                                    boxShadow: '0 20px 30px -10px rgba(15, 23, 42, 0.2)'
-                                } : {}}
+                                className={`rounded-full px-5 py-3 text-xs font-black uppercase tracking-[0.35em] transition ${!seccion && !categoria ? 'bg-white text-[#0f2044]' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
                             >
                                 Tienda Local
-                            </a>
-
-                            {/* ML Catalog Tab */}
-                            <a
+                            </Link>
+                            <Link
                                 href={`/productos?seccion=mercado-libre${sort ? `&sort=${sort}` : ''}`}
-                                className={`px-8 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 ${seccion === 'mercado-libre' && !categoria
-                                    ? 'text-white shadow-2xl'
-                                    : 'bg-white text-gray-500 hover:text-gray-900 border border-gray-100'
-                                    }`}
-                                style={seccion === 'mercado-libre' && !categoria ? {
-                                    backgroundColor: '#3483FA', // ML Blue
-                                    boxShadow: '0 20px 30px -10px rgba(52, 131, 250, 0.3)'
-                                } : {}}
+                                className={`rounded-full px-5 py-3 text-xs font-black uppercase tracking-[0.35em] transition ${seccion === 'mercado-libre' ? 'bg-[#3483FA] text-white' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
                             >
-                                Imperdibles ML 🚀
-                            </a>
-
-                            <div className="w-px h-10 bg-gray-100 mx-2 hidden md:block" />
-
-                            {categories.map((cat) => (
-                                <a
-                                    key={cat}
-                                    href={`/productos?categoria=${encodeURIComponent(cat)}${seccion ? `&seccion=${seccion}` : ''}${sort ? `&sort=${sort}` : ''}`}
-                                    className={`px-8 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 ${categoria === cat
-                                        ? 'text-white shadow-2xl'
-                                        : 'bg-white text-gray-500 hover:text-gray-900 border border-gray-100'
-                                        }`}
-                                    style={categoria === cat && holiday ? {
-                                        backgroundColor: holiday.colors.primary,
-                                        boxShadow: `0 20px 30px -10px ${holiday.colors.primary}40`
-                                    } : categoria === cat ? {
-                                        backgroundColor: '#0F172A',
-                                        boxShadow: '0 20px 30px -10px rgba(15, 23, 42, 0.2)'
-                                    } : {}}
-                                >
-                                    {cat}
-                                </a>
-                            ))}
+                                Imperdibles ML
+                            </Link>
                         </div>
-
-                        {/* Stats & Sort */}
-                        <div className="flex items-center gap-8 w-full lg:w-auto justify-between lg:justify-end border-t lg:border-t-0 pt-6 lg:pt-0">
-                            <div className="text-xs font-black uppercase tracking-widest text-gray-400">
-                                {filteredProducts.length} <span className="ml-1">Resultados</span>
-                            </div>
+                        <div className="flex items-center gap-4">
+                            <div className="text-xs font-black uppercase tracking-[0.35em] text-[#64748b]">Ordenar por</div>
                             <ProductSorter />
                         </div>
                     </div>
 
-                    {/* Products Grid */}
-                    {filteredProducts.length > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {filteredProducts.map((product) => (
-                                <ProductCard key={product.id} product={product} />
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="text-center py-32 rounded-[3rem] border-2 border-dashed border-gray-100">
-                            <div className="text-6xl mb-6">🔍</div>
-                            <h2 className="text-2xl font-black text-gray-900 mb-4">
-                                No encontramos lo que buscás
-                            </h2>
-                            <p className="text-gray-500 font-medium mb-10 max-w-sm mx-auto">
-                                Intentá con otra categoría o restablecé los filtros para ver todos nuestros productos.
-                            </p>
-                            <Link
-                                href="/productos"
-                                className="inline-block px-10 py-4 bg-primary text-white rounded-full font-black text-xs uppercase tracking-widest hover:scale-105 transition-transform"
-                            >
-                                Ver Todo el Catálogo
-                            </Link>
-                        </div>
-                    )}
-                </div>
-            </main>
+                    <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-8">
+                        <aside className="space-y-4">
+                            <div className="rounded-[2rem] bg-white border border-[#e2e8f0] p-6 shadow-sm">
+                                <h2 className="text-sm font-black uppercase tracking-[0.35em] text-[#0f2044] mb-4">Categorías</h2>
+                                <div className="space-y-2">
+                                    <Link
+                                        href="/productos"
+                                        className={`block rounded-full px-4 py-3 text-xs font-bold transition ${!categoria ? 'bg-[#0f2044] text-white' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
+                                    >
+                                        Todos
+                                    </Link>
+                                    {categories.map(category => (
+                                        <Link
+                                            key={category}
+                                            href={`/productos?categoria=${encodeURIComponent(category)}${seccion ? `&seccion=${seccion}` : ''}${sort ? `&sort=${sort}` : ''}`}
+                                            className={`block rounded-full px-4 py-3 text-xs font-bold transition ${categoria === category ? 'bg-[#0f2044] text-white' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
+                                        >
+                                            {category}
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        </aside>
 
+                        <div>
+                            {filteredProducts.length > 0 ? (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {filteredProducts.map(product => (
+                                        <ProductCard key={product.id} product={product} />
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="rounded-[2.5rem] border border-dashed border-[#e2e8f0] bg-white p-12 text-center">
+                                    <div className="text-6xl mb-6">🔍</div>
+                                    <h2 className="text-3xl font-black text-[#0f2044] mb-4">No encontramos productos</h2>
+                                    <p className="text-[#64748b] mb-8">Intentá con otra categoría o restablecé los filtros para ver nuestra selección completa.</p>
+                                    <Link href="/productos" className="inline-flex items-center justify-center rounded-3xl bg-[#0f2044] px-8 py-4 text-white text-sm font-black uppercase tracking-[0.35em] hover:bg-[#0b1938]">
+                                        Ver todo el catálogo
+                                    </Link>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </section>
+            </main>
             <Footer />
         </>
     );

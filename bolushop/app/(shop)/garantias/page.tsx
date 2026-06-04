@@ -1,7 +1,7 @@
 import Header from "@/components/shop/Header";
 import Footer from "@/components/shop/Footer";
 import Link from "next/link";
-import { ShieldCheck, ArrowRight, Package, Truck, AlertCircle } from "lucide-react";
+import { ChevronRight, Package, Truck, Shield, AlertCircle } from "lucide-react";
 
 export const metadata = {
     title: "Garantías y Devoluciones | BoluShop",
@@ -12,95 +12,90 @@ export default function GarantiasPage() {
     return (
         <>
             <Header />
-            <main className="min-h-screen pt-32 pb-24 bg-gray-50/30">
-                <div className="container mx-auto px-6 max-w-4xl">
-                    <div className="text-center mb-16 animate-in slide-in-from-bottom-8 duration-700">
-                        <div className="w-20 h-20 bg-blue-100 text-blue-600 rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-xl shadow-blue-500/10">
-                            <ShieldCheck size={40} />
+            <main className="min-h-screen bg-white">
+                <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-8 md:py-12 px-4 md:px-6">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="flex items-center gap-2 mb-4 text-xs text-gray-300">
+                            <Link href="/" className="hover:text-white">Inicio</Link>
+                            <ChevronRight size={14} />
+                            <span>Garantías</span>
                         </div>
-                        <h1 className="text-5xl md:text-6xl font-black text-gray-900 tracking-tighter mb-4">
-                            Garantías y <span className="italic text-primary">Devoluciones</span>
-                        </h1>
-                        <p className="text-gray-500 text-xl font-medium max-w-2xl mx-auto">
-                            Comprá con total confianza. Conoce nuestras políticas de cambio, devolución y las garantías de nuestros productos.
+                        <h1 className="text-3xl md:text-4xl font-bold mb-2">Garantías y Devoluciones</h1>
+                        <p className="text-sm md:text-base text-gray-300 max-w-2xl">
+                            Compra con total confianza. Conocé nuestras políticas de cambio y garantía.
                         </p>
                     </div>
+                </section>
 
-                    <div className="space-y-12 animate-in fade-in duration-1000 delay-150">
-                        <section className="bg-white rounded-[3rem] p-10 md:p-14 shadow-xl shadow-gray-200/50 border border-gray-100">
-                            <div className="flex items-start gap-6">
-                                <div className="mt-1 bg-green-50 text-green-600 p-3 rounded-2xl">
-                                    <Package size={24} />
-                                </div>
-                                <div>
-                                    <h2 className="text-2xl font-black text-gray-900 mb-4 tracking-tight">Cambios y Devoluciones</h2>
-                                    <p className="text-gray-600 leading-relaxed font-medium mb-4">
-                                        Si no estás conforme con nuestro producto, puedes realizar un cambio o devolución del mismo de la siguiente forma:
-                                    </p>
-                                    <ul className="space-y-3 mb-6">
-                                        <li className="flex items-center gap-3 text-gray-600">
-                                            <div className="w-2 h-2 rounded-full bg-primary/50" />
-                                            <span>En cualquiera de nuestras tiendas presentando el ticket de compra y el producto en su empaque original.</span>
-                                        </li>
-                                        <li className="flex items-center gap-3 text-gray-600">
-                                            <div className="w-2 h-2 rounded-full bg-primary/50" />
-                                            <span>Desde tu domicilio: Envíanos un correo a hola@bolushop.com indicando tu número de orden y motivo.</span>
-                                        </li>
-                                    </ul>
-                                    <p className="text-sm font-bold text-gray-500 uppercase tracking-widest">
-                                        * Las devoluciones sólo pueden ser realizadas durante los 10 días corridos siguientes a la compra para evitar que te cobremos el costo de envío.
-                                    </p>
-                                </div>
+                <section className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16 space-y-10">
+                    <div className="grid gap-6 lg:grid-cols-3">
+                        <div className="rounded-[2rem] border border-[#e2e8f0] bg-[#f8fafb] p-8 shadow-card">
+                            <div className="inline-flex items-center justify-center w-14 h-14 rounded-3xl bg-[#fef2f2] mb-6">
+                                <Package size={24} className="text-[#e8630a]" />
                             </div>
-                        </section>
-
-                        <section className="bg-white rounded-[3rem] p-10 md:p-14 shadow-xl shadow-gray-200/50 border border-gray-100">
-                            <div className="flex items-start gap-6">
-                                <div className="mt-1 bg-purple-50 text-purple-600 p-3 rounded-2xl">
-                                    <ShieldCheck size={24} />
-                                </div>
-                                <div>
-                                    <h2 className="text-2xl font-black text-gray-900 mb-4 tracking-tight">Cobertura de la Garantía</h2>
-                                    <p className="text-gray-600 leading-relaxed font-medium mb-4">
-                                        Todos nuestros productos cuentan con garantía de sus respectivos fabricantes o importadores, la misma está vigente desde la fecha de facturación.
-                                    </p>
-                                    <p className="text-gray-600 leading-relaxed font-medium mb-4">
-                                        La garantía cubre defectos de fabricación. No cubre daños por mal uso, golpes, humedad o desgaste natural por el uso continuo.
-                                    </p>
-                                </div>
+                            <h2 className="text-xl font-black text-[#0f2044] mb-3">Cambios rápidos</h2>
+                            <p className="text-[#64748b] leading-relaxed text-sm">
+                                Tenés 10 días para cambiar productos defectuosos o que no cumplan tus expectativas, siempre que estén en condiciones originales.
+                            </p>
+                        </div>
+                        <div className="rounded-[2rem] border border-[#e2e8f0] bg-[#f8fafb] p-8 shadow-card">
+                            <div className="inline-flex items-center justify-center w-14 h-14 rounded-3xl bg-[#ecfdf5] mb-6">
+                                <Truck size={24} className="text-[#10b981]" />
                             </div>
-                        </section>
-
-                        <section className="bg-white rounded-[3rem] p-10 md:p-14 shadow-xl shadow-gray-200/50 border border-gray-100">
-                            <div className="flex items-start gap-6">
-                                <div className="mt-1 bg-yellow-50 text-yellow-600 p-3 rounded-2xl">
-                                    <Truck size={24} />
-                                </div>
-                                <div>
-                                    <h2 className="text-2xl font-black text-gray-900 mb-4 tracking-tight">Costos de Envío en Cambios</h2>
-                                    <p className="text-gray-600 leading-relaxed font-medium mb-6">
-                                        Si el cambio es por defecto de fábrica en los primeros 10 días, el envío corre por nuestra cuenta. Pasado ese tiempo, el comprador deberá hacerse cargo de los gastos de transporte del mismo hacia nuestro depósito.
-                                    </p>
-                                    <div className="bg-blue-50/50 p-6 rounded-2xl border border-blue-100/50 flex items-start gap-4">
-                                        <AlertCircle className="text-blue-500 mt-1" size={24} />
-                                        <p className="text-sm text-blue-900 font-semibold leading-relaxed">
-                                            Recomendamos revisar todos los productos ni bien sean recibidos y conservar todo el embalaje original durante el período de prueba.
-                                        </p>
-                                    </div>
-                                </div>
+                            <h2 className="text-xl font-black text-[#0f2044] mb-3">Envío garantizado</h2>
+                            <p className="text-[#64748b] leading-relaxed text-sm">
+                                Si tu producto se demora o se pierde, trabajamos para rastrearlo, reemplazarlo o reembolsarte sin complicaciones.
+                            </p>
+                        </div>
+                        <div className="rounded-[2rem] border border-[#e2e8f0] bg-[#f8fafb] p-8 shadow-card">
+                            <div className="inline-flex items-center justify-center w-14 h-14 rounded-3xl bg-[#eff6ff] mb-6">
+                                <Shield size={24} className="text-[#185fa5]" />
                             </div>
-                        </section>
+                            <h2 className="text-xl font-black text-[#0f2044] mb-3">Calidad respaldada</h2>
+                            <p className="text-[#64748b] leading-relaxed text-sm">
+                                Todos nuestros productos están cubiertos por garantía de calidad del fabricante o importador.
+                            </p>
+                        </div>
                     </div>
 
-                    <div className="mt-16 text-center">
-                        <Link
-                            href="/contacto"
-                            className="inline-flex items-center gap-3 bg-gray-900 text-white px-8 py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] hover:bg-black hover:gap-6 transition-all shadow-xl shadow-gray-900/10"
-                        >
-                            Contactar a Soporte <ArrowRight size={18} />
+                    <div className="rounded-[2rem] border border-[#e2e8f0] bg-white p-8 shadow-card">
+                        <h2 className="text-2xl font-black text-[#0f2044] mb-6">Cómo iniciar un cambio o devolución</h2>
+                        <div className="grid gap-6 md:grid-cols-3">
+                            <div className="rounded-3xl bg-[#f8fafb] p-6">
+                                <p className="text-xs uppercase tracking-[0.35em] text-[#64748b] font-black mb-3">Paso 1</p>
+                                <p className="text-sm text-[#64748b] leading-relaxed">Contactanos por email o WhatsApp con tu número de pedido.</p>
+                            </div>
+                            <div className="rounded-3xl bg-[#f8fafb] p-6">
+                                <p className="text-xs uppercase tracking-[0.35em] text-[#64748b] font-black mb-3">Paso 2</p>
+                                <p className="text-sm text-[#64748b] leading-relaxed">Enviá el producto en su embalaje original y con todos los accesorios.</p>
+                            </div>
+                            <div className="rounded-3xl bg-[#f8fafb] p-6">
+                                <p className="text-xs uppercase tracking-[0.35em] text-[#64748b] font-black mb-3">Paso 3</p>
+                                <p className="text-sm text-[#64748b] leading-relaxed">Recibí el cambio, reparación o reembolso según corresponda.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="rounded-[2rem] border border-[#e2e8f0] bg-[#f8fafb] p-8 shadow-card">
+                        <div className="flex items-start gap-4">
+                            <div className="rounded-3xl bg-blue-50 p-4 text-blue-600">
+                                <AlertCircle size={24} />
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-black text-[#0f2044] mb-3">Pregunta frecuente</h3>
+                                <p className="text-[#64748b] leading-relaxed text-sm">
+                                    Sí, las devoluciones son gratis durante los primeros 10 días cuando el producto tiene un defecto de fábrica y se conserva en su embalaje original.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="text-center">
+                        <Link href="/contacto" className="inline-flex items-center justify-center rounded-3xl bg-[#0f2044] px-8 py-4 text-sm font-black text-white transition hover:bg-[#0b1938]">
+                            Consultar soporte de garantía
                         </Link>
                     </div>
-                </div>
+                </section>
             </main>
             <Footer />
         </>

@@ -323,7 +323,7 @@ export async function createOrder(order: Order) {
 
     // 1. Sync to Supabase - PRIORIDAD 1
     try {
-        const { error } = await supabase.from('orders').insert([{
+        const payload: any = {
             created_at: order.date,
             status: order.status,
             total: order.total,
@@ -339,11 +339,16 @@ export async function createOrder(order: Order) {
                 quantity: i.quantity,
                 image: i.image
             })), // Sanitizar items para asegurar JSON limpio
-            payment_id: order.paymentId,
             external_id: order.id,
             tracking_number: order.trackingNumber,
             tracking_url: order.trackingUrl
-        }]);
+        };
+
+        if (order.paymentId) {
+            payload.payment_id = order.paymentId;
+        }
+
+        const { error } = await supabase.from('orders').upsert([payload], { onConflict: 'external_id' });
 
         if (error) {
             console.error("❌ Supabase Insertion Error Detail:", JSON.stringify(error, null, 2));
@@ -381,23 +386,24 @@ export async function createOrder(order: Order) {
 }
 
 export async function getOrderById(id: string): Promise<Order | undefined> {
+    const cleanId = id.trim();
+
     try {
-        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id.trim());
+        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(cleanId);
 
         let query = supabase.from('orders').select('*');
 
         if (isUUID) {
-            query = query.eq('external_id', id.trim());
+            query = query.eq('external_id', cleanId);
         } else {
-            // If it looks like a number, try id eq
-            if (/^\d+$/.test(id)) {
-                query = query.eq('id', parseInt(id));
+            if (/^\d+$/.test(cleanId)) {
+                query = query.eq('id', parseInt(cleanId));
             } else {
-                query = query.eq('external_id', id);
+                query = query.eq('external_id', cleanId);
             }
         }
 
-        const { data, error } = await query.single();
+        const { data } = await query.single();
 
         if (data) {
             return {
@@ -420,8 +426,36 @@ export async function getOrderById(id: string): Promise<Order | undefined> {
         console.warn("⚠️ Supabase Fetch ID Error:", e);
     }
 
+    try {
+        const { data: paymentData } = await supabase
+            .from('orders')
+            .select('*')
+            .eq('payment_id', cleanId)
+            .single();
+
+        if (paymentData) {
+            return {
+                id: paymentData.external_id || paymentData.id,
+                date: paymentData.created_at,
+                status: paymentData.status,
+                items: paymentData.items,
+                total: paymentData.total,
+                payer: {
+                    name: paymentData.payer_name,
+                    email: paymentData.payer_email,
+                    dni: paymentData.payer_dni,
+                    address: paymentData.payer_address,
+                    phone: paymentData.payer_phone
+                },
+                paymentId: paymentData.payment_id
+            };
+        }
+    } catch (e) {
+        console.warn("⚠️ Supabase Fetch payment_id Error:", e);
+    }
+
     const orders = await getAllOrders();
-    return orders.find(o => o.id === id);
+    return orders.find(o => o.id === cleanId || o.paymentId === cleanId);
 }
 
 export async function updateOrder(id: string, updates: Partial<Order>) {

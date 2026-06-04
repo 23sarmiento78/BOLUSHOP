@@ -6,6 +6,7 @@ import Link from "next/link";
 import Header from "@/components/shop/Header";
 import Footer from "@/components/shop/Footer";
 import { getCart, updateQuantity, removeFromCart, getCartTotal, CartItem } from "@/lib/cart";
+import { ChevronRight } from "lucide-react";
 
 export default function CarritoPage() {
     const [cart, setCart] = useState<CartItem[]>([]);
@@ -16,7 +17,6 @@ export default function CarritoPage() {
     useEffect(() => {
         setCart(getCart());
 
-        // Fetch settings to check free shipping
         fetch('/api/admin/settings')
             .then(res => res.json())
             .then(data => {
@@ -55,7 +55,7 @@ export default function CarritoPage() {
                 <div className="min-h-screen flex items-center justify-center">
                     <div className="text-center">
                         <div className="text-6xl mb-4">🛒</div>
-                        <p className="text-gray-500 font-bold">Cargando carrito...</p>
+                        <p className="text-[#64748b] font-bold">Cargando carrito...</p>
                     </div>
                 </div>
                 <Footer />
@@ -67,22 +67,23 @@ export default function CarritoPage() {
         return (
             <>
                 <Header />
-                <main className="min-h-screen bg-gray-50 flex items-center justify-center pt-20">
-                    <div className="text-center px-4">
-                        <div className="text-9xl mb-6 opacity-20">🛒</div>
-                        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                            Tu carrito está vacío
-                        </h1>
-                        <p className="text-gray-600 mb-8 text-lg">
-                            ¡Descubrí nuestros productos y empezá a comprar!
-                        </p>
+                <main className="min-h-screen bg-white">
+                    <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-12 md:py-16 px-4 md:px-6 flex items-center justify-center min-h-[40vh]">
+                        <div className="max-w-7xl mx-auto text-center">
+                            <h1 className="text-3xl md:text-4xl font-bold mb-2">Tu Carrito está Vacío</h1>
+                            <p className="text-sm md:text-base text-gray-300">
+                                ¡Descubre nuestros productos y comienza a comprar!
+                            </p>
+                        </div>
+                    </section>
+                    <section className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16 text-center">
                         <Link
                             href="/productos"
-                            className="inline-block px-8 py-4 bg-primary text-white rounded-full font-bold text-sm uppercase tracking-widest hover:scale-105 transition-transform shadow-xl shadow-primary/30"
+                            className="btn btn-primary"
                         >
                             Ver Productos
                         </Link>
-                    </div>
+                    </section>
                 </main>
                 <Footer />
             </>
@@ -93,88 +94,98 @@ export default function CarritoPage() {
         <>
             <Header />
 
-            <main className="min-h-screen bg-gray-50 pt-28 pb-12">
-                <div className="container mx-auto px-4">
-                    <h1 className="text-3xl md:text-5xl font-bold mb-10 tracking-tight">
-                        Tu <span className="text-primary italic">Carrito</span>
-                    </h1>
+            <main className="min-h-screen bg-white">
+                {/* Page Header */}
+                <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-8 md:py-12 px-4 md:px-6">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="flex items-center gap-2 mb-4 text-xs text-gray-300">
+                            <Link href="/" className="hover:text-white">Inicio</Link>
+                            <ChevronRight size={14} />
+                            <span>Carrito</span>
+                        </div>
+                        <h1 className="text-3xl md:text-4xl font-bold mb-2">Tu Carrito de Compras</h1>
+                        <p className="text-sm md:text-base text-gray-300">
+                            {cart.length} producto{cart.length !== 1 ? 's' : ''} en tu carrito
+                        </p>
+                    </div>
+                </section>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Cart Content */}
+                <section className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
                         {/* Cart Items */}
                         <div className="lg:col-span-2 space-y-4">
                             {cart.map((item) => (
                                 <div
                                     key={item.productId}
-                                    className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100/50 hover:shadow-md transition-shadow"
+                                    className="card p-4 md:p-6 flex gap-4 md:gap-6"
                                 >
-                                    <div className="flex gap-6">
-                                        {/* Image */}
-                                        <Link
-                                            href={item.isCollection ? `/coleccion/${item.slug}` : `/producto/${item.slug}`}
-                                            className="relative w-24 h-24 rounded-2xl overflow-hidden bg-gray-50 flex-shrink-0"
-                                        >
-                                            <Image
-                                                src={item.image || "/placeholder.png"}
-                                                alt={item.name}
-                                                fill
-                                                className="object-cover"
-                                                sizes="96px"
-                                            />
+                                    {/* Image */}
+                                    <Link
+                                        href={item.isCollection ? `/coleccion/${item.slug}` : `/producto/${item.slug}`}
+                                        className="relative w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden bg-[#f8f9fb] flex-shrink-0"
+                                    >
+                                        <Image
+                                            src={item.image || "/placeholder.png"}
+                                            alt={item.name}
+                                            fill
+                                            className="object-cover"
+                                            sizes="96px"
+                                        />
+                                    </Link>
+
+                                    {/* Info */}
+                                    <div className="flex-grow">
+                                        <Link href={item.isCollection ? `/coleccion/${item.slug}` : `/producto/${item.slug}`}>
+                                            <h3 className="font-bold text-sm md:text-base text-[#0f2044] hover:text-[#e8630a] transition-colors mb-1">
+                                                {item.name}
+                                            </h3>
                                         </Link>
+                                        {item.isCollection && (
+                                            <span className="badge-ml text-[10px] mb-3 inline-block">
+                                                Pack Ahorro
+                                            </span>
+                                        )}
+                                        <p className="text-base md:text-lg font-bold text-[#e8630a] mb-3">
+                                            ${item.price.toLocaleString('es-AR')}
+                                        </p>
 
-                                        {/* Info */}
-                                        <div className="flex-grow">
-                                            <Link href={item.isCollection ? `/coleccion/${item.slug}` : `/producto/${item.slug}`}>
-                                                <h3 className="font-bold text-base md:text-lg text-gray-900 hover:text-primary transition-colors mb-1">
-                                                    {item.name}
-                                                </h3>
-                                            </Link>
-                                            {item.isCollection && (
-                                                <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest inline-block mb-3">
-                                                    Pack Ahorro
-                                                </span>
-                                            )}
-                                            <p className="text-lg md:text-xl font-bold text-primary mb-4">
-                                                ${item.price.toLocaleString('es-AR')}
-                                            </p>
-
-                                            <div className="flex items-center gap-6">
-                                                {/* Quantity Controls */}
-                                                <div className="flex items-center gap-3 bg-gray-50 rounded-lg px-3 py-1.5 border border-gray-100">
-                                                    <button
-                                                        onClick={() => handleQuantityChange(item.productId, item.quantity - 1)}
-                                                        className="text-lg font-bold text-gray-400 hover:text-primary transition-colors"
-                                                    >
-                                                        −
-                                                    </button>
-                                                    <span className="text-sm font-bold w-6 text-center">
-                                                        {item.quantity}
-                                                    </span>
-                                                    <button
-                                                        onClick={() => handleQuantityChange(item.productId, item.quantity + 1)}
-                                                        className="text-lg font-bold text-gray-400 hover:text-primary transition-colors"
-                                                    >
-                                                        +
-                                                    </button>
-                                                </div>
-
-                                                {/* Remove Button */}
+                                        <div className="flex items-center gap-4 flex-wrap">
+                                            {/* Quantity Controls */}
+                                            <div className="flex items-center gap-2 bg-[#f8f9fb] rounded-lg px-3 py-1.5 border border-[#e2e8f0]">
                                                 <button
-                                                    onClick={() => handleRemove(item.productId)}
-                                                    className="text-gray-400 hover:text-red-500 transition-colors font-semibold text-[10px] uppercase tracking-wider"
+                                                    onClick={() => handleQuantityChange(item.productId, item.quantity - 1)}
+                                                    className="text-base font-bold text-[#64748b] hover:text-[#0f2044] transition-colors"
                                                 >
-                                                    Eliminar
+                                                    −
+                                                </button>
+                                                <span className="text-sm font-bold w-6 text-center">
+                                                    {item.quantity}
+                                                </span>
+                                                <button
+                                                    onClick={() => handleQuantityChange(item.productId, item.quantity + 1)}
+                                                    className="text-base font-bold text-[#64748b] hover:text-[#0f2044] transition-colors"
+                                                >
+                                                    +
                                                 </button>
                                             </div>
-                                        </div>
 
-                                        {/* Subtotal Item */}
-                                        <div className="text-right flex flex-col justify-center">
-                                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">Subtotal</p>
-                                            <p className="text-lg md:text-xl font-bold text-gray-900">
-                                                ${(item.price * item.quantity).toLocaleString('es-AR')}
-                                            </p>
+                                            {/* Remove Button */}
+                                            <button
+                                                onClick={() => handleRemove(item.productId)}
+                                                className="text-[#64748b] hover:text-red-500 transition-colors font-bold text-xs uppercase tracking-wider"
+                                            >
+                                                Eliminar
+                                            </button>
                                         </div>
+                                    </div>
+
+                                    {/* Subtotal */}
+                                    <div className="text-right flex flex-col justify-center">
+                                        <p className="text-xs text-[#64748b] font-bold uppercase tracking-wider mb-1">Subtotal</p>
+                                        <p className="text-base md:text-lg font-bold text-[#0f2044]">
+                                            ${(item.price * item.quantity).toLocaleString('es-AR')}
+                                        </p>
                                     </div>
                                 </div>
                             ))}
@@ -182,92 +193,74 @@ export default function CarritoPage() {
 
                         {/* Summary */}
                         <div className="lg:col-span-1">
-                            <div className="bg-white rounded-3xl p-8 shadow-xl shadow-black/5 sticky top-24 border border-gray-100">
-                                <h2 className="text-xl font-bold mb-6">Resumen</h2>
+                            <div className="card p-6 md:p-8 sticky top-[100px] md:top-24">
+                                <h2 className="text-lg md:text-xl font-bold text-[#0f2044] mb-6">Resumen</h2>
 
-                                <div className="space-y-4 mb-6">
-                                    <div className="flex justify-between text-lg">
-                                        <span className="text-gray-600">Subtotal</span>
-                                        <span className="font-bold">${subtotal.toLocaleString('es-AR')}</span>
+                                <div className="space-y-4 mb-6 pb-6 border-b border-[#e2e8f0]">
+                                    <div className="flex justify-between">
+                                        <span className="text-sm text-[#64748b]">Subtotal</span>
+                                        <span className="font-bold text-[#0f2044]">${subtotal.toLocaleString('es-AR')}</span>
                                     </div>
-                                    <div className="flex justify-between text-lg">
-                                        <span className="text-gray-600">Envío</span>
-                                        <span className={`font-bold uppercase tracking-widest text-sm ${isFreeShipping ? 'text-emerald-500' : 'text-gray-500'}`}>
-                                            {isFreeShipping ? 'Gratis' : 'A calcular'}
+                                    <div className="flex justify-between">
+                                        <span className="text-sm text-[#64748b]">Envío</span>
+                                        <span className={`font-bold text-sm ${isFreeShipping ? 'text-[#10b981]' : 'text-[#64748b]'}`}>
+                                            {isFreeShipping ? '¡Gratis!' : 'A calcular'}
                                         </span>
                                     </div>
                                 </div>
 
-                                <div className="border-t border-gray-100 pt-6 mb-8">
-                                    <div className="flex justify-between text-2xl">
-                                        <span className="font-bold">Total</span>
-                                        <span className="font-bold text-primary">${subtotal.toLocaleString('es-AR')}</span>
+                                <div className="mb-8">
+                                    <div className="flex justify-between">
+                                        <span className="font-bold text-[#0f2044]">Total</span>
+                                        <span className="text-lg font-bold text-[#e8630a]">${subtotal.toLocaleString('es-AR')}</span>
                                     </div>
-                                    {!isFreeShipping && <p className="text-[10px] text-gray-400 mt-2">+ Costo de envío</p>}
+                                    {!isFreeShipping && <p className="text-[10px] text-[#64748b] mt-2">+ Costo de envío</p>}
                                 </div>
 
-                                {isFreeShipping ? (
-                                    <div className="bg-emerald-50 rounded-2xl p-4 mb-8 border border-emerald-100/50 flex items-center gap-3">
-                                        <span className="text-xl">🚚</span>
-                                        <p className="text-xs text-emerald-900 font-semibold leading-relaxed">
-                                            ¡Tu pedido califica para <span className="text-emerald-600 font-bold uppercase">Envío Gratis</span>!
-                                        </p>
-                                    </div>
-                                ) : (
-                                    <div className="bg-blue-50 rounded-2xl p-4 mb-8">
-                                        <p className="text-xs text-blue-900 font-medium">
-                                            💡 El costo de envío se calculará en el checkout.
+                                {isFreeShipping && (
+                                    <div className="bg-[#f0fdf4] rounded-lg p-4 mb-8 border border-[#dcfce7] flex items-start gap-3">
+                                        <span className="text-lg flex-shrink-0">🚚</span>
+                                        <p className="text-xs text-[#166534] font-bold leading-relaxed">
+                                            ¡Tu pedido califica para <span className="text-[#10b981]">ENVÍO GRATIS</span>!
                                         </p>
                                     </div>
                                 )}
 
                                 {subtotal < minPurchase && (
-                                    <div className="bg-red-50 rounded-2xl p-4 mb-8 border border-red-100/50 flex items-center gap-3">
-                                        <span className="text-xl">⚠️</span>
-                                        <p className="text-xs text-red-900 font-semibold leading-relaxed">
-                                            La compra mínima es de <span className="font-bold">${minPurchase.toLocaleString('es-AR')}</span>.
+                                    <div className="bg-[#fef2f2] rounded-lg p-4 mb-8 border border-[#fecaca] flex items-start gap-3">
+                                        <span className="text-lg flex-shrink-0">⚠️</span>
+                                        <p className="text-xs text-[#991b1b] font-bold leading-relaxed">
+                                            Compra mínima: <span>${minPurchase.toLocaleString('es-AR')}</span>
                                         </p>
-                                    </div>
-                                )}
-
-                                {cart.some(item => item.isInternational) && (
-                                    <div className="bg-blue-50 rounded-2xl p-5 mb-8 border border-blue-100/50 flex items-start gap-4">
-                                        <span className="text-2xl mt-1">🌎</span>
-                                        <div className="space-y-1">
-                                            <p className="text-xs text-blue-900 font-black uppercase tracking-widest">Aviso Importante</p>
-                                            <p className="text-[11px] text-blue-800 font-medium leading-relaxed">
-                                                Tu carrito contiene productos de <span className="font-black italic">Importación Directa</span>. Tené en cuenta que estos artículos pueden estar sujetos a normativas aduaneras y costos fronterizos adicionales al momento de ingresar al país.
-                                            </p>
-                                        </div>
                                     </div>
                                 )}
 
                                 <Link
                                     href={subtotal < minPurchase ? "#" : "/checkout"}
-                                    className={`block w-full py-4 text-white text-center rounded-2xl font-bold text-xs uppercase tracking-widest transition-all shadow-lg ${subtotal < minPurchase
-                                        ? 'bg-gray-200 cursor-not-allowed grayscale'
-                                        : 'bg-primary hover:bg-gold-accent shadow-primary/10'
+                                    className={`block w-full py-4 text-white text-center rounded-lg font-bold text-sm uppercase tracking-widest transition-all ${subtotal < minPurchase
+                                        ? 'bg-[#cbd5e1] cursor-not-allowed'
+                                        : 'btn btn-primary'
                                         }`}
                                     onClick={(e) => {
                                         if (subtotal < minPurchase) {
                                             e.preventDefault();
-                                            alert(`La compra mínima requerida es de $${minPurchase.toLocaleString('es-AR')}`);
+                                            alert(`Compra mínima: $${minPurchase.toLocaleString('es-AR')}`);
                                         }
                                     }}
                                 >
-                                    Continuar Pago
+                                    Continuar al Pago
                                 </Link>
 
                                 <Link
                                     href="/productos"
-                                    className="block w-full py-3 text-center text-gray-400 font-bold text-[10px] uppercase tracking-widest mt-4 hover:text-primary transition-colors"
+                                    className="block w-full py-3 text-center text-[#64748b] font-bold text-xs uppercase tracking-widest mt-4 hover:text-[#0f2044] transition-colors"
                                 >
                                     ← Seguir Explorando
                                 </Link>
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
             </main>
 
             <Footer />

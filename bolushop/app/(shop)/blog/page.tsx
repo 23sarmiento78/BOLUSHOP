@@ -3,12 +3,12 @@ import Header from "@/components/shop/Header";
 import Footer from "@/components/shop/Footer";
 import Image from "next/image";
 import Link from "next/link";
-import { Calendar, User, ChevronRight } from "lucide-react";
 import { transformImageUrl } from "@/lib/images";
+import { ChevronRight } from "lucide-react";
 
 export const metadata = {
     title: "Blog | BoluShop Argentina",
-    description: "Inspiración, tecnología y novedades. Descubre los mejores artículos en nuestro blog oficial."
+    description: "Guías, tips y recomendaciones sobre regalos, hogar y tecnología.",
 };
 
 export default async function BlogPage() {
@@ -18,59 +18,84 @@ export default async function BlogPage() {
     return (
         <>
             <Header />
-            <main className="min-h-screen pt-32 pb-24 bg-gray-50/30">
-                <div className="container mx-auto px-4">
-                    <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
-                        <span className="inline-block px-4 py-1.5 bg-black text-white rounded-full text-[10px] font-black uppercase tracking-[0.3em]">Insights & Novedades</span>
-                        <h1 className="text-5xl md:text-7xl font-black text-gray-900 tracking-tighter">Nuestro <span className="italic text-primary">Blog</span></h1>
-                        <p className="text-gray-500 text-lg font-medium">Información, guías de compra y las últimas tendencias en tecnología y bazar premium.</p>
-                    </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                        {publishedPosts.map((post, idx) => (
-                            <Link
-                                href={`/blog/${post.slug}`}
-                                key={post.id}
-                                className={`group flex flex-col bg-white rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-gray-100 ${idx === 0 ? "md:col-span-2 lg:flex-row h-full" : ""}`}
-                            >
-                                <div className={`relative ${idx === 0 ? "md:w-1/2 h-[350px] md:h-full" : "h-[280px]"}`}>
-                                    {post.image ? (
-                                        <Image src={transformImageUrl(post.image)} alt={post.title} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
-                                    ) : (
-                                        <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">📷</div>
-                                    )}
-                                    <div className="absolute top-6 left-6">
-                                        <span className="px-4 py-2 bg-white/90 backdrop-blur-md rounded-2xl text-[10px] font-black uppercase tracking-widest text-gray-900 shadow-sm border border-gray-100">
-                                            {post.category}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className={`p-8 md:p-12 flex flex-col justify-center ${idx === 0 ? "md:w-1/2" : ""}`}>
-                                    <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-gray-400 mb-6">
-                                        <div className="flex items-center gap-1"><Calendar size={12} /> {new Date(post.createdAt).toLocaleDateString()}</div>
-                                        <div className="flex items-center gap-1"><User size={12} /> {post.author}</div>
-                                    </div>
-                                    <h2 className={`${idx === 0 ? "text-3xl md:text-4xl" : "text-2xl"} font-black text-gray-900 mb-4 tracking-tight group-hover:text-primary transition-colors leading-tight`}>
-                                        {post.title}
-                                    </h2>
-                                    <p className="text-gray-500 text-sm leading-relaxed mb-8 line-clamp-3 font-medium">
-                                        {post.excerpt}
-                                    </p>
-                                    <div className="mt-auto inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] group-hover:gap-4 transition-all">
-                                        Leer Artículo <ChevronRight size={16} />
-                                    </div>
-                                </div>
-                            </Link>
-                        ))}
+            <main className="min-h-screen bg-white">
+                {/* Page Header */}
+                <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-8 md:py-12 px-4 md:px-6">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="flex items-center gap-2 mb-4 text-xs text-gray-300">
+                            <Link href="/" className="hover:text-white">Inicio</Link>
+                            <ChevronRight size={14} />
+                            <span>Blog</span>
+                        </div>
+                        <h1 className="text-3xl md:text-4xl font-bold mb-2">Blog de BoluShop</h1>
+                        <p className="text-sm md:text-base text-gray-300">
+                            Guías, tips y recomendaciones sobre regalos, hogar y tecnología
+                        </p>
                     </div>
+                </section>
 
-                    {publishedPosts.length === 0 && (
-                        <div className="py-40 text-center">
-                            <p className="text-gray-400 font-bold text-xl italic">No hay artículos publicados todavía. ¡Vuelve pronto!</p>
+                {/* Blog Grid */}
+                <section className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16">
+                    {publishedPosts.length === 0 ? (
+                        <div className="text-center py-16">
+                            <p className="text-[#64748b] text-sm">No hay artículos publicados todavía</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                            {publishedPosts.map(post => (
+                                <Link
+                                    key={post.id}
+                                    href={`/blog/${post.slug}`}
+                                    className="group"
+                                >
+                                    <div className="card overflow-hidden h-full flex flex-col hover:shadow-lg">
+                                        {/* Image */}
+                                        <div className="relative bg-[#f8f9fb] overflow-hidden h-40 md:h-48">
+                                            {post.image ? (
+                                                <Image
+                                                    src={transformImageUrl(post.image)}
+                                                    alt={post.title}
+                                                    fill
+                                                    className="object-cover group-hover:scale-105 transition-transform"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full bg-gradient-to-br from-[#eef3fb] to-[#dde8f5] flex items-center justify-center text-2xl">
+                                                    📰
+                                                </div>
+                                            )}
+                                            {post.category && (
+                                                <div className="absolute top-3 left-3 bg-white/90 text-[#185fa5] text-[9px] font-bold px-2 py-1 rounded-md backdrop-blur-sm">
+                                                    {post.category}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Content */}
+                                        <div className="p-4 flex-1 flex flex-col">
+                                            <h3 className="text-sm md:text-base font-bold text-[#0f2044] mb-2 line-clamp-2 group-hover:text-[#e8630a] transition-colors">
+                                                {post.title}
+                                            </h3>
+                                            <p className="text-xs text-[#64748b] line-clamp-2 flex-1 mb-3">
+                                                {post.excerpt}
+                                            </p>
+                                            <div className="flex items-center justify-between pt-3 border-t border-[#e2e8f0]">
+                                                <span className="text-xs text-[#64748b]">
+                                                    {new Date(post.createdAt).toLocaleDateString('es-AR')}
+                                                </span>
+                                                <span className="text-xs font-bold text-[#0f2044] group-hover:text-[#e8630a] transition-colors">
+                                                    Leer →
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
                         </div>
                     )}
-                </div>
+                </section>
             </main>
+
             <Footer />
         </>
     );

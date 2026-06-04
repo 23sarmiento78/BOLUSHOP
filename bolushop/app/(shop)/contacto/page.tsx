@@ -1,72 +1,114 @@
 import Header from "@/components/shop/Header";
 import Footer from "@/components/shop/Footer";
-import { Mail, Phone, MapPin, Instagram } from "lucide-react";
+import Link from "next/link";
+import { Mail, Phone, MapPin, ChevronRight } from "lucide-react";
 
 export default function ContactoPage() {
     return (
         <>
             <Header />
-            <main className="min-h-screen bg-white pt-32 pb-24">
-                <div className="container mx-auto px-6">
-                    <div className="max-w-6xl mx-auto">
-                        <div className="flex flex-col md:flex-row gap-16">
-                            <div className="flex-1">
-                                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary mb-6 block">Hablemos</span>
-                                <h1 className="text-6xl font-black text-gray-900 mb-8 tracking-tighter">Estamos a un <span className="text-primary italic">click</span> de distancia.</h1>
-                                <p className="text-gray-500 text-xl font-medium mb-12 leading-relaxed">¿Dudas sobre un pedido? ¿Buscás un producto que no está en catálogo? Nuestro equipo de soporte está listo para ayudarte en el día.</p>
+            <main className="min-h-screen bg-white">
+                <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-8 md:py-12 px-4 md:px-6">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="flex items-center gap-2 mb-4 text-xs text-gray-300">
+                            <Link href="/" className="hover:text-white">Inicio</Link>
+                            <ChevronRight size={14} />
+                            <span>Contacto</span>
+                        </div>
+                        <h1 className="text-3xl md:text-4xl font-bold mb-2">Contacto</h1>
+                        <p className="text-sm md:text-base text-gray-300 max-w-2xl">
+                            Estamos aquí para ayudarte. Contáctanos cuando lo necesites y te responderemos rápido.
+                        </p>
+                    </div>
+                </section>
 
-                                <div className="space-y-8">
-                                    <div className="flex items-center gap-6 group">
-                                        <div className="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                                            <Mail size={24} />
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Email</p>
-                                            <p className="text-xl font-bold text-gray-900">sarmientoisrael118@gmail.com</p>
-                                        </div>
+                <section className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16">
+                    <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10">
+                        <div className="space-y-10">
+                            <div className="rounded-[2rem] border border-[#e2e8f0] bg-[#f8f9fb] p-10 shadow-card">
+                                <div className="flex items-start gap-4 mb-8">
+                                    <div className="rounded-3xl bg-[#0f2044] p-4 text-white">
+                                        <Mail size={28} />
                                     </div>
-                                    <div className="flex items-center gap-6 group">
-                                        <div className="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center text-green-500 group-hover:scale-110 transition-transform">
-                                            <Phone size={24} />
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">WhatsApp</p>
-                                            <p className="text-xl font-bold text-gray-900">+54 3541237972</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-6 group">
-                                        <div className="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform">
-                                            <MapPin size={24} />
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Ubicación</p>
-                                            <p className="text-xl font-bold text-gray-900">Villa Carlos Paz, Córdoba</p>
-                                        </div>
+                                    <div>
+                                        <p className="text-xs uppercase tracking-[0.35em] text-[#64748b] font-black mb-2">Email</p>
+                                        <p className="text-xl font-black text-[#0f2044]">sarmientoisrael118@gmail.com</p>
+                                        <a href="mailto:sarmientoisrael118@gmail.com" className="text-[#e8630a] font-bold hover:underline">Enviar correo →</a>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="flex-1">
-                                <div className="bg-gray-50 rounded-[3rem] p-10 md:p-16 border border-gray-100">
-                                    <form className="space-y-6">
-                                        <div>
-                                            <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3 px-1">Tu Nombre</label>
-                                            <input type="text" className="w-full bg-white border-2 border-transparent focus:border-primary/20 rounded-2xl py-4 px-6 font-bold outline-none transition-all" placeholder="Juan Pérez" />
+                                <div className="flex flex-col sm:flex-row gap-4">
+                                    <div className="rounded-[2rem] bg-white border border-[#e2e8f0] p-6 flex-1">
+                                        <div className="flex items-center gap-3 mb-4">
+                                            <Phone size={20} className="text-[#10b981]" />
+                                            <span className="font-bold text-[#0f2044]">WhatsApp</span>
                                         </div>
-                                        <div>
-                                            <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3 px-1">Tu Email</label>
-                                            <input type="email" className="w-full bg-white border-2 border-transparent focus:border-primary/20 rounded-2xl py-4 px-6 font-bold outline-none transition-all" placeholder="juan@email.com" />
+                                        <p className="text-[#64748b]">+54 3541237972</p>
+                                        <a href="https://wa.me/543541237972" className="text-[#10b981] font-bold hover:underline">Escribir →</a>
+                                    </div>
+                                    <div className="rounded-[2rem] bg-white border border-[#e2e8f0] p-6 flex-1">
+                                        <div className="flex items-center gap-3 mb-4">
+                                            <MapPin size={20} className="text-red-500" />
+                                            <span className="font-bold text-[#0f2044]">Ubicación</span>
                                         </div>
-                                        <div>
-                                            <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3 px-1">Mensaje</label>
-                                            <textarea rows={4} className="w-full bg-white border-2 border-transparent focus:border-primary/20 rounded-2xl py-4 px-6 font-bold outline-none transition-all resize-none" placeholder="¿En qué podemos ayudarte?"></textarea>
-                                        </div>
-                                        <button type="submit" className="w-full py-5 bg-black text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-black/10">Enviar Mensaje</button>
-                                    </form>
+                                        <p className="text-[#64748b]">Villa Carlos Paz, Córdoba</p>
+                                        <p className="text-[#64748b]">Argentina</p>
+                                    </div>
+                                </div>
+
+                                <div className="mt-10 rounded-[2rem] bg-[#0f2044] p-8 text-white">
+                                    <h2 className="text-xl font-black mb-4">Horario de Atención</h2>
+                                    <p className="text-sm leading-relaxed">Lunes a Viernes: 09:00 - 18:00</p>
+                                    <p className="text-sm leading-relaxed">Sábado: 10:00 - 16:00</p>
+                                    <p className="text-sm leading-relaxed">Domingo: Consultar por WhatsApp</p>
                                 </div>
                             </div>
                         </div>
+
+                        <div className="rounded-[2rem] border border-[#e2e8f0] bg-white p-10 shadow-card">
+                            <h2 className="text-2xl font-black text-[#0f2044] mb-6">Envía tu Mensaje</h2>
+                            <form className="space-y-5">
+                                <div>
+                                    <label className="block text-xs uppercase tracking-[0.35em] text-[#64748b] font-black mb-2">Nombre</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        placeholder="Tu nombre"
+                                        className="w-full rounded-3xl border border-[#e2e8f0] bg-[#f8f9fb] px-4 py-4 text-base outline-none transition focus:border-[#0f2044]"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs uppercase tracking-[0.35em] text-[#64748b] font-black mb-2">Email</label>
+                                    <input
+                                        type="email"
+                                        required
+                                        placeholder="tu@email.com"
+                                        className="w-full rounded-3xl border border-[#e2e8f0] bg-[#f8f9fb] px-4 py-4 text-base outline-none transition focus:border-[#0f2044]"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs uppercase tracking-[0.35em] text-[#64748b] font-black mb-2">Asunto</label>
+                                    <input
+                                        type="text"
+                                        placeholder="¿Cómo podemos ayudarte?"
+                                        className="w-full rounded-3xl border border-[#e2e8f0] bg-[#f8f9fb] px-4 py-4 text-base outline-none transition focus:border-[#0f2044]"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs uppercase tracking-[0.35em] text-[#64748b] font-black mb-2">Mensaje</label>
+                                    <textarea
+                                        required
+                                        rows={5}
+                                        placeholder="Cuéntanos tu consulta..."
+                                        className="w-full rounded-3xl border border-[#e2e8f0] bg-[#f8f9fb] px-4 py-4 text-base outline-none transition focus:border-[#0f2044] resize-none"
+                                    />
+                                </div>
+                                <button type="submit" className="w-full rounded-3xl bg-[#e8630a] text-white py-4 text-lg font-black hover:bg-[#d55708] transition">
+                                    Enviar Mensaje
+                                </button>
+                            </form>
+                        </div>
                     </div>
-                </div>
+                </section>
             </main>
             <Footer />
         </>

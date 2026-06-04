@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import Script from "next/script";
@@ -94,10 +94,21 @@ export async function generateMetadata(): Promise<Metadata> {
   // Solo añadir manifiesto e instalar si la IP es la correcta
   if (isAllowed) {
     metadata.manifest = '/manifest.json';
-    (metadata as any).themeColor = '#0F172A';
   }
 
   return metadata;
+}
+
+export async function generateViewport(): Promise<Viewport> {
+  const headerList = await headers();
+  const cookies = headerList.get('cookie') || '';
+  const isAllowed = cookies.includes('admin_authenticated=true');
+
+  return {
+    width: 'device-width',
+    initialScale: 1,
+    ...(isAllowed ? { themeColor: '#0F172A' } : {}),
+  };
 }
 
 export default async function RootLayout({
