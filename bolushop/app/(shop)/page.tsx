@@ -35,44 +35,46 @@ export default async function HomePage() {
 
             <main className="min-h-screen">
                 {/* HERO SECTION */}
-                <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-8 md:py-16 px-4 md:px-6">
-                    <div className="max-w-7xl mx-auto flex gap-6 md:gap-12 items-center">
+                <section className="relative overflow-hidden bg-gradient-to-br from-[#0f2044] via-[#152d5d] to-[#1a3a6b] text-white py-10 md:py-20 px-4 md:px-6 rounded-[2rem] shadow-2xl shadow-black/20">
+                    <div className="pointer-events-none absolute left-0 top-0 h-96 w-96 rounded-full bg-[#e8630a]/30 blur-3xl" />
+                    <div className="pointer-events-none absolute right-0 bottom-0 h-72 w-72 rounded-full bg-[#34d399]/25 blur-3xl" />
+                    <div className="max-w-7xl mx-auto relative flex flex-col lg:flex-row gap-10 lg:gap-16 items-center">
                         {/* Left side - Text */}
-                        <div className="flex-1">
-                            <div className="inline-flex items-center gap-2 bg-[#e8630a]/20 border border-[#e8630a]/40 rounded-full px-3 py-1 mb-4">
-                                <span className="text-[10px] text-[#f09f5a] font-bold">✨ Nueva temporada 2026</span>
+                        <div className="flex-1 max-w-2xl">
+                            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 mb-6 backdrop-blur-sm">
+                                <span className="text-[10px] uppercase tracking-[0.35em] text-[#f9e5c1] font-bold">✨ Nueva temporada 2026</span>
                             </div>
-                            <h1 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
+                            <h1 className="text-4xl md:text-6xl font-black mb-6 leading-tight md:leading-[1.01] tracking-tight">
                                 Regalos originales y<br />
-                                <span className="text-[#e8630a]">accesorios para tu hogar</span><br />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#facc15] to-[#fb923c]">accesorios para tu hogar</span><br />
                                 en Argentina
                             </h1>
-                            <p className="text-xs md:text-sm text-gray-300 mb-6 max-w-md">
+                            <p className="text-sm md:text-base text-[#d1d5db] mb-8 max-w-xl leading-relaxed">
                                 Productos curados con envío gratis a todo el país.<br />
                                 Pagá en cuotas sin interés. Devolución en 30 días.
                             </p>
-                            <div className="flex gap-3">
-                                <Link href="/productos" className="btn btn-primary text-xs md:text-sm px-4 md:px-6 py-2 md:py-3">
+                            <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+                                <Link href="/productos" className="inline-flex items-center justify-center rounded-full bg-[#f59e0b] px-6 py-3 text-sm font-bold text-[#0f172a] shadow-lg shadow-[#f59e0b]/30 transition hover:scale-[1.01] hover:bg-[#fbbf24]">
                                     Ver ofertas del día
                                 </Link>
-                                <Link href="/colecciones" className="btn btn-outline text-xs md:text-sm px-4 md:px-6 py-2 md:py-3 border border-white text-white">
+                                <Link href="/colecciones" className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/15">
                                     Colecciones
                                 </Link>
                             </div>
                         </div>
 
                         {/* Right side - Product Image */}
-                        <div className="hidden md:flex flex-1 justify-end">
-                            <div className="w-48 h-48 bg-white/10 rounded-lg p-4 flex items-center justify-center border border-white/20">
-                                {featuredProducts[0] && (
+                        <div className="hidden lg:flex flex-1 justify-end">
+                            <div className="relative w-72 h-72 rounded-[2rem] bg-white/10 border border-white/20 shadow-2xl shadow-black/20 backdrop-blur-xl overflow-hidden">
+                                <div className="absolute inset-0 bg-[radial-gradient(circle,_rgba(255,255,255,0.12),transparent_55%)]" />
+                                {featuredProducts[0] ? (
                                     <Image
                                         src={featuredProducts[0].image}
                                         alt="Featured"
-                                        width={160}
-                                        height={160}
-                                        className="object-contain"
+                                        fill
+                                        className="object-contain p-8"
                                     />
-                                )}
+                                ) : null}
                             </div>
                         </div>
                     </div>
