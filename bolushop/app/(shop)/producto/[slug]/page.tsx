@@ -18,27 +18,41 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
+    const productUrl = `${siteUrl}/producto/${product.slug}`;
     const imageUrls = [product.image, ...(product.images || [])].filter(Boolean);
     const categoryText = product.category ? product.category.toLowerCase() : 'uso diario';
-    const metaDescription = `${product.name} es un regalo ideal para ${categoryText}. Envío gratis a todo el país y pago seguro con cuotas sin interés.`;
+
+    const cleanDescription = product.description
+        ? product.description.replace(/<[^>]*>?/gm, '').replace(/\s+/g, ' ').trim()
+        : '';
+    const descriptionText = cleanDescription
+        .replace(/^Características generales:\s*/i, '')
+        .replace(/^Características generales\s*/i, '')
+        .slice(0, 160);
+
+    const metaDescription = product.metaDescription || descriptionText ||
+        `${product.name} es un regalo ideal para ${categoryText}. Envío gratis a todo el país y pago seguro con cuotas sin interés.`;
+
+    const pageTitle = `Comprar ${product.name} | BoluShop Argentina | Regalos originales`;
 
     return {
         metadataBase: new URL(siteUrl),
-        title: `${product.name} | BoluShop`,
+        title: pageTitle,
         description: metaDescription,
         alternates: {
-            canonical: `${siteUrl}/producto/${product.slug}`,
+            canonical: productUrl,
         },
         openGraph: {
-            title: `${product.name} | BoluShop`,
+            title: pageTitle,
             description: metaDescription,
-            url: `${siteUrl}/producto/${product.slug}`,
+            url: productUrl,
+            siteName: 'BoluShop',
+            locale: 'es_AR',
             images: imageUrls.map((url) => ({ url, alt: `${product.name} - foto del producto` })),
-            type: 'website',
         },
         twitter: {
             card: 'summary_large_image',
-            title: `${product.name} | BoluShop`,
+            title: pageTitle,
             description: metaDescription,
             images: imageUrls,
         },
