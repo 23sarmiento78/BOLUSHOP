@@ -34,81 +34,77 @@ export default function ProductCard({ product }: Props) {
         setTimeout(() => setIsAdding(false), 2000);
     };
 
-    const rating = 4.8; // Placeholder, should come from product data
-    const soldCount = 100; // Placeholder
+    const badgeLabel = product.isMlReferral ? 'Imperdible ML' : 'Nuevo';
+    const badgeClass = product.isMlReferral ? 'badge-ml' : 'badge';
+    const installmentText = product.isMlReferral ? 'Ver en Mercado Libre' : `Pago único`;
 
     return (
         <Link href={`/producto/${product.slug}`} className="group block">
-            <div className="card overflow-hidden flex flex-col h-full hover:shadow-md">
-                {/* Image Section */}
-                <div className="relative bg-[#f8f9fb] aspect-square overflow-hidden">
+            <div className="card overflow-hidden flex flex-col h-full hover:shadow-lg transition-shadow duration-200">
+                <div className="relative bg-[#eef3fb] aspect-square overflow-hidden flex items-center justify-center">
                     <Image
                         src={transformImageUrl(product.image)}
                         alt={product.name}
                         fill
-                        className="object-contain p-4 transition-transform group-hover:scale-110"
+                        className="object-contain p-4 transition-transform duration-500 group-hover:scale-105"
                         sizes="(max-width: 768px) 100vw, 25vw"
                     />
-
-                    {/* Badge */}
-                    {product.isMlReferral ? (
-                        <div className="absolute top-2 left-2 badge badge-ml">
-                            <span className="text-[9px]">Selección ML</span>
-                        </div>
-                    ) : (
-                        <div className="absolute top-2 left-2 badge">
-                            <span className="text-[9px]">Nuevo</span>
-                        </div>
-                    )}
+                    <div className={`absolute top-3 left-3 ${badgeClass} text-[10px] font-semibold px-3 py-1.5 rounded-full`}>
+                        {badgeLabel}
+                    </div>
                 </div>
 
-                {/* Content Section */}
-                <div className="p-3 md:p-4 flex flex-col flex-grow">
-                    <span className="text-[9px] font-medium text-[#64748b] uppercase tracking-wider mb-1">
-                        {product.category}
-                    </span>
+                <div className="p-4 md:p-5 flex flex-col flex-1">
+                    <div className="flex items-center justify-between gap-2 mb-3">
+                        <span className="text-[10px] uppercase tracking-[0.35em] text-[#64748b]">
+                            {product.category}
+                        </span>
+                        {product.isMlReferral && (
+                            <span className="text-[9px] font-semibold text-[#c47a00] bg-[#fff9e6] border border-[#f0c040] rounded-full px-2 py-1">
+                                ML
+                            </span>
+                        )}
+                    </div>
 
-                    <h3 className="text-[11px] md:text-xs font-bold text-[#1e293b] line-clamp-2 leading-tight mb-2 group-hover:text-[#0f2044] transition-colors">
+                    <h3 className="text-sm md:text-base font-semibold text-[#0f2044] leading-snug line-clamp-2 mb-3">
                         {product.name}
                     </h3>
 
-                    {/* Rating */}
-                    <div className="flex items-center gap-1 mb-2">
-                        <div className="flex text-[#f0a500]">
+                    <div className="flex items-center gap-2 mb-4">
+                        <div className="flex gap-0.5 text-[#f0a500]">
                             {[...Array(5)].map((_, i) => (
-                                <Star key={i} size={10} fill="currentColor" />
+                                <Star key={i} size={12} fill="currentColor" />
                             ))}
                         </div>
-                        <span className="text-[8px] text-[#64748b]">({rating})</span>
+                        <span className="text-[10px] text-[#64748b]">4.9</span>
                     </div>
 
-                    <div className="mt-auto">
-                        {/* Price */}
-                        <div className="mb-2">
-                            <span className="text-[9px] text-[#64748b] block mb-0.5">Precio</span>
-                            <span className="text-sm md:text-base font-bold text-[#0f2044]">
+                    <div className="mt-auto space-y-3">
+                        <div>
+                            <div className="text-[10px] text-[#64748b] uppercase tracking-[0.35em] mb-1">Precio</div>
+                            <div className="text-base md:text-lg font-bold text-[#0f2044]">
                                 ${product.price.toLocaleString('es-AR')}
-                            </span>
+                            </div>
                         </div>
+                        <div className="text-[10px] text-[#64748b]">{installmentText}</div>
 
-                        {/* Add to cart button */}
                         <button
                             onClick={handleAddToCart}
-                            className={`w-full py-2 px-2 rounded-md text-[9px] font-bold uppercase transition-all ${
+                            className={`w-full rounded-xl py-3 text-[11px] font-bold uppercase tracking-[0.25em] transition-all ${
                                 product.isMlReferral
                                     ? 'bg-[#fff9e6] text-[#c47a00] hover:bg-[#f0c040]'
-                                    : 'bg-[#0f2044] text-white hover:bg-opacity-90'
+                                    : 'bg-[#0f2044] text-white hover:bg-[#0b1938]'
                             }`}
                         >
                             {product.isMlReferral ? (
-                                <div className="flex items-center justify-center gap-1">
-                                    <ExternalLink size={10} />
+                                <div className="flex items-center justify-center gap-2">
+                                    <ExternalLink size={14} />
                                     <span>Ver en ML</span>
                                 </div>
                             ) : (
-                                <div className="flex items-center justify-center gap-1">
-                                    <ShoppingCart size={10} />
-                                    <span>{isAdding ? '¡Agregado!' : 'Agregar'}</span>
+                                <div className="flex items-center justify-center gap-2">
+                                    <ShoppingCart size={14} />
+                                    <span>{isAdding ? '¡Agregado!' : 'Agregar al carrito'}</span>
                                 </div>
                             )}
                         </button>

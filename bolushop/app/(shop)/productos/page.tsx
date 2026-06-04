@@ -3,7 +3,6 @@ import { getCurrentHoliday } from "@/lib/holidays";
 import Header from "@/components/shop/Header";
 import Footer from "@/components/shop/Footer";
 import ProductCard from "@/components/shop/ProductCard";
-import HolidayBanner from "@/components/shop/HolidayBanner";
 import ProductSorter from "@/components/shop/ProductSorter";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -14,6 +13,7 @@ interface Props {
         coleccion?: string;
         seccion?: string;
         sort?: string;
+        price?: string;
     }>;
 }
 
@@ -37,7 +37,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 export default async function ProductosPage({ searchParams }: Props) {
     const allProducts = await getAllProducts();
     const holiday = getCurrentHoliday();
-    const { categoria, coleccion, seccion, sort } = await searchParams;
+    const { categoria, coleccion, seccion, sort, price } = await searchParams;
 
     const activeProducts = allProducts.filter(product => product.isActive !== false);
     let filteredProducts = [...activeProducts];
@@ -66,6 +66,20 @@ export default async function ProductosPage({ searchParams }: Props) {
             );
         } else {
             filteredProducts = filteredProducts.filter(product => product.collections?.includes(coleccion || ""));
+        }
+    }
+
+    if (price) {
+        switch (price) {
+            case 'under_50000':
+                filteredProducts = filteredProducts.filter(product => product.price <= 50000);
+                break;
+            case '50000_100000':
+                filteredProducts = filteredProducts.filter(product => product.price > 50000 && product.price <= 100000);
+                break;
+            case 'over_100000':
+                filteredProducts = filteredProducts.filter(product => product.price > 100000);
+                break;
         }
     }
 
@@ -100,10 +114,19 @@ export default async function ProductosPage({ searchParams }: Props) {
         ? 'Seleccionamos lo mejor de ML para que compres con la confianza de BoluShop.'
         : (holiday ? `Celebrá ${holiday.label} con nuestra selección exclusiva.` : 'Descubrí una selección curada de productos únicos.');
 
+    const buildProductLink = (params: Partial<{ seccion: string; categoria: string; coleccion: string; price: string; sort: string }>) => {
+        const queryParams = new URLSearchParams();
+        if (params.seccion) queryParams.set('seccion', params.seccion);
+        if (params.categoria) queryParams.set('categoria', params.categoria);
+        if (params.coleccion) queryParams.set('coleccion', params.coleccion);
+        if (params.price) queryParams.set('price', params.price);
+        if (params.sort) queryParams.set('sort', params.sort);
+        return `/productos${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+    };
+
     return (
         <>
             <Header />
-            <HolidayBanner />
             <main className="min-h-screen bg-[#f7f7f7]">
                 <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white pt-20 pb-20">
                     <div className="max-w-7xl mx-auto px-4 md:px-6">
@@ -118,16 +141,16 @@ export default async function ProductosPage({ searchParams }: Props) {
                 </section>
 
                 <section className="max-w-7xl mx-auto px-4 md:px-6 py-10 md:py-14">
-                    <div className="flex flex-col lg:flex-row gap-6 lg:items-center justify-between mb-10">
+                    <div className="flex flex-col lg:flex-row gap-6 lg:items-center justify-between mb-6">
                         <div className="flex flex-wrap gap-3">
                             <Link
-                                href={`/productos${sort ? `?sort=${sort}` : ''}`}
+                                href={buildProductLink({ sort, price })}
                                 className={`rounded-full px-5 py-3 text-xs font-black uppercase tracking-[0.35em] transition ${!seccion && !categoria ? 'bg-white text-[#0f2044]' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
                             >
                                 Tienda Local
                             </Link>
                             <Link
-                                href={`/productos?seccion=mercado-libre${sort ? `&sort=${sort}` : ''}`}
+                                href={buildProductLink({ seccion: 'mercado-libre', sort, price })}
                                 className={`rounded-full px-5 py-3 text-xs font-black uppercase tracking-[0.35em] transition ${seccion === 'mercado-libre' ? 'bg-[#3483FA] text-white' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
                             >
                                 Imperdibles ML
@@ -139,31 +162,90 @@ export default async function ProductosPage({ searchParams }: Props) {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-8">
-                        <aside className="space-y-4">
+                    <div className="flex flex-wrap gap-3 mb-6">
+                        <Link
+                            href={buildProductLink({ seccion, sort, price })}
+                            className={`inline-flex rounded-full border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.35em] transition ${!categoria ? 'bg-[#0f2044] text-white border-[#0f2044]' : 'bg-white text-[#64748b] border-[#e2e8f0] hover:border-[#0f2044]'}`}
+                        >
+                            Todos
+                        </Link>
+                        {categories.map(category => (
+                            <Link
+                                key={category}
+                                href={buildProductLink({ categoria: category, seccion, sort, price })}
+                                className={`inline-flex rounded-full border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.35em] transition ${categoria === category ? 'bg-[#0f2044] text-white border-[#0f2044]' : 'bg-white text-[#64748b] border-[#e2e8f0] hover:border-[#0f2044]'}`}
+                            >
+                                {category}
+                            </Link>
+                        ))}
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8">
+                        <aside className="space-y-5">
                             <div className="rounded-[2rem] bg-white border border-[#e2e8f0] p-6 shadow-sm">
-                                <h2 className="text-sm font-black uppercase tracking-[0.35em] text-[#0f2044] mb-4">Categorías</h2>
-                                <div className="space-y-2">
+                                <h2 className="text-sm font-black uppercase tracking-[0.35em] text-[#0f2044] mb-4">Precio</h2>
+                                <div className="space-y-3 text-sm text-[#64748b]">
                                     <Link
-                                        href="/productos"
-                                        className={`block rounded-full px-4 py-3 text-xs font-bold transition ${!categoria ? 'bg-[#0f2044] text-white' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
+                                        href={buildProductLink({ seccion, categoria, sort, price: 'under_50000' })}
+                                        className={`flex items-center gap-3 rounded-full px-4 py-3 transition ${price === 'under_50000' ? 'bg-[#0f2044] text-white' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
                                     >
-                                        Todos
+                                        <span>Hasta $50.000</span>
                                     </Link>
+                                    <Link
+                                        href={buildProductLink({ seccion, categoria, sort, price: '50000_100000' })}
+                                        className={`flex items-center gap-3 rounded-full px-4 py-3 transition ${price === '50000_100000' ? 'bg-[#0f2044] text-white' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
+                                    >
+                                        <span>$50k – $100k</span>
+                                    </Link>
+                                    <Link
+                                        href={buildProductLink({ seccion, categoria, sort, price: 'over_100000' })}
+                                        className={`flex items-center gap-3 rounded-full px-4 py-3 transition ${price === 'over_100000' ? 'bg-[#0f2044] text-white' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
+                                    >
+                                        <span>Más de $100k</span>
+                                    </Link>
+                                </div>
+                            </div>
+
+                            <div className="rounded-[2rem] bg-white border border-[#e2e8f0] p-6 shadow-sm">
+                                <h2 className="text-sm font-black uppercase tracking-[0.35em] text-[#0f2044] mb-4">Categoría</h2>
+                                <div className="space-y-2 text-sm text-[#64748b]">
                                     {categories.map(category => (
                                         <Link
                                             key={category}
-                                            href={`/productos?categoria=${encodeURIComponent(category)}${seccion ? `&seccion=${seccion}` : ''}${sort ? `&sort=${sort}` : ''}`}
-                                            className={`block rounded-full px-4 py-3 text-xs font-bold transition ${categoria === category ? 'bg-[#0f2044] text-white' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
+                                            href={buildProductLink({ categoria: category, seccion, sort, price })}
+                                            className={`flex items-center gap-3 rounded-full px-4 py-3 transition ${categoria === category ? 'bg-[#0f2044] text-white' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
                                         >
-                                            {category}
+                                            <span>{category}</span>
                                         </Link>
                                     ))}
                                 </div>
                             </div>
+
+                            <div className="rounded-[2rem] bg-white border border-[#e2e8f0] p-6 shadow-sm">
+                                <h2 className="text-sm font-black uppercase tracking-[0.35em] text-[#0f2044] mb-4">Envío</h2>
+                                <p className="text-sm text-[#64748b]">El costo final de envío se calcula en el checkout según tu provincia y ciudad.</p>
+                            </div>
                         </aside>
 
                         <div>
+                            <div className="mb-6 flex flex-wrap gap-3">
+                                {categoria && (
+                                    <span className="inline-flex items-center rounded-full bg-[#eef3fb] border border-[#b5d4f4] px-3 py-2 text-[10px] font-semibold text-[#185fa5]">
+                                        {categoria}
+                                    </span>
+                                )}
+                                {seccion === 'mercado-libre' && (
+                                    <span className="inline-flex items-center rounded-full bg-[#fff9e6] border border-[#f0c040] px-3 py-2 text-[10px] font-semibold text-[#c47a00]">
+                                        Imperdibles ML
+                                    </span>
+                                )}
+                                {(categoria || seccion === 'mercado-libre') && (
+                                    <Link href="/productos" className="inline-flex items-center rounded-full bg-[#0f2044] px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.35em] text-white">
+                                        Limpiar filtros
+                                    </Link>
+                                )}
+                            </div>
+
                             {filteredProducts.length > 0 ? (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                     {filteredProducts.map(product => (

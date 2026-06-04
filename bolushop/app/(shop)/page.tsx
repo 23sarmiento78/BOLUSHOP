@@ -81,19 +81,19 @@ export default async function HomePage() {
                 </section>
 
                 {/* TRUST BAR */}
-                <section className="bg-[#f8f9fb] border-b border-[#e2e8f0] py-4 px-4 md:px-6">
+                <section className="bg-[#f8f9fb] border-b border-[#e2e8f0] py-6 md:py-8 px-4 md:px-6">
                     <div className="max-w-7xl mx-auto">
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-12 text-[9px] md:text-xs text-[#64748b]">
-                            <div className="flex items-center gap-2">
-                                <Truck size={16} className="text-[#0f2044]" />
-                                <span>Envíos a todo el país — OCA / Andreani</span>
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-12 text-sm text-[#64748b]">
+                            <div className="flex items-center gap-3">
+                                <Truck size={18} className="text-[#0f2044]" />
+                                <span>Envíos a todo el país con Correo Argentino</span>
                             </div>
-                            <div className="hidden sm:flex items-center gap-2">
-                                <Shield size={16} className="text-[#0f2044]" />
+                            <div className="hidden sm:flex items-center gap-3">
+                                <Shield size={18} className="text-[#0f2044]" />
                                 <span>Compra 100% protegida</span>
                             </div>
-                            <div className="hidden md:flex items-center gap-2">
-                                <CreditCard size={16} className="text-[#0f2044]" />
+                            <div className="hidden md:flex items-center gap-3">
+                                <CreditCard size={18} className="text-[#0f2044]" />
                                 <span>Hasta 12 cuotas sin interés</span>
                             </div>
                         </div>
@@ -101,26 +101,29 @@ export default async function HomePage() {
                 </section>
 
                 {/* CATEGORIES */}
-                <section className="py-12 md:py-16 px-4 md:px-6">
+                <section className="py-14 md:py-18 px-4 md:px-6">
                     <div className="max-w-7xl mx-auto">
-                        <div className="flex justify-between items-baseline mb-8">
-                            <h2 className="text-xl md:text-2xl font-bold text-[#0f2044]">
-                                Explorá por <span className="text-[#e8630a]">categoría</span>
-                            </h2>
-                            <Link href="/productos" className="text-xs text-[#0f2044] font-bold hover:underline">
+                        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-8">
+                            <div>
+                                <p className="text-sm text-[#64748b] uppercase tracking-[0.18em] mb-2">Explorá nuestras secciones</p>
+                                <h2 className="text-2xl md:text-3xl font-bold text-[#0f2044]">
+                                    Explorá por <span className="text-[#e8630a]">categoría</span>
+                                </h2>
+                            </div>
+                            <Link href="/productos" className="text-sm text-[#0f2044] font-bold hover:underline">
                                 Ver todo →
                             </Link>
                         </div>
-                        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
+                        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-5">
                             {categories.map((cat) => (
                                 <div
                                     key={cat.id}
-                                    className="bg-[#f8f9fb] border border-[#e2e8f0] rounded-lg p-3 md:p-4 text-center hover:border-[#0f2044] transition-colors cursor-pointer"
+                                    className="group bg-white shadow-sm border border-[#e2e8f0] rounded-3xl p-5 text-center transition hover:-translate-y-1 hover:border-[#0f2044]"
                                 >
-                                    <div className="text-2xl md:text-3xl mb-2">
-                                        {typeof cat.icon === 'string' ? cat.icon : <cat.icon size={24} className="mx-auto text-[#0f2044]" />}
+                                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#f8fafc] text-[#0f2044] shadow-sm">
+                                        {typeof cat.icon === 'string' ? <span className="text-3xl">{cat.icon}</span> : <cat.icon size={28} />}
                                     </div>
-                                    <p className="text-[9px] md:text-xs font-medium text-[#1e293b]">{cat.name}</p>
+                                    <p className="text-sm font-semibold text-[#1e293b]">{cat.name}</p>
                                 </div>
                             ))}
                         </div>
@@ -128,17 +131,20 @@ export default async function HomePage() {
                 </section>
 
                 {/* FEATURED PRODUCTS */}
-                <section className="py-12 md:py-16 px-4 md:px-6">
+                <section className="py-14 md:py-18 px-4 md:px-6">
                     <div className="max-w-7xl mx-auto">
-                        <div className="flex justify-between items-baseline mb-8">
-                            <h2 className="text-xl md:text-2xl font-bold text-[#0f2044]">
-                                Más vendidos <span className="text-[#e8630a]">esta semana</span>
-                            </h2>
-                            <Link href="/productos" className="text-xs text-[#0f2044] font-bold hover:underline">
+                        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-8">
+                            <div>
+                                <p className="text-sm text-[#64748b] uppercase tracking-[0.18em] mb-2">Destacados de la semana</p>
+                                <h2 className="text-2xl md:text-3xl font-bold text-[#0f2044]">
+                                    Más vendidos <span className="text-[#e8630a]">esta semana</span>
+                                </h2>
+                            </div>
+                            <Link href="/productos" className="text-sm text-[#0f2044] font-bold hover:underline">
                                 Ver catálogo →
                             </Link>
                         </div>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
                             {featuredProducts.map(product => (
                                 <ProductCard key={product.id} product={product} />
                             ))}
@@ -148,33 +154,35 @@ export default async function HomePage() {
 
                 {/* MERCADO LIBRE SECTION */}
                 {mlProducts.length > 0 && (
-                    <section className="bg-[#fff9e6] border-t border-[#f0c040] border-b py-12 md:py-16 px-4 md:px-6">
+                    <section className="bg-[#fff9e6] border-t border-[#f0c040] border-b py-14 md:py-18 px-4 md:px-6">
                         <div className="max-w-7xl mx-auto">
                             <div className="mb-8">
-                                <div className="flex items-center gap-2 mb-4">
-                                    <h2 className="text-xl md:text-2xl font-bold text-[#0f2044]">Recomendados en</h2>
-                                    <span className="bg-[#f0c040] text-[#7a4f00] text-xs font-bold px-3 py-1 rounded-md">Mercado Libre</span>
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
+                                    <div className="flex items-center gap-2">
+                                        <h2 className="text-2xl md:text-3xl font-bold text-[#0f2044]">Recomendados en</h2>
+                                        <span className="bg-[#f0c040] text-[#7a4f00] text-sm font-bold px-3 py-1 rounded-md">Mercado Libre</span>
+                                    </div>
                                 </div>
-                                <p className="text-[9px] md:text-xs text-[#8a6500] flex items-center gap-2">
-                                    <span>ℹ️</span>
-                                    <span>Links de afiliado — si comprás a través de estos links podemos recibir una comisión sin costo adicional para vos.</span>
+                                <p className="text-sm text-[#8a6500] max-w-2xl">
+                                    <span className="mr-2">ℹ️</span>
+                                    Links de afiliado — si comprás a través de estos links podemos recibir una comisión sin costo adicional para vos.
                                 </p>
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
                                 {mlProducts.map(product => (
                                     <a
                                         key={product.id}
                                         href={product.mlAffiliateUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="bg-white border border-[#f0d080] rounded-lg p-4 hover:shadow-md transition-shadow"
+                                        className="group block rounded-3xl border border-[#f0d080] bg-white p-5 transition-shadow hover:shadow-[0_20px_60px_rgba(240,192,64,0.18)]"
                                     >
-                                        <span className="inline-block bg-[#fff9e6] text-[#c47a00] text-[9px] font-bold px-2 py-1 rounded mb-3 border border-[#f0c040]">
+                                        <span className="inline-block rounded-full bg-[#fff9e6] text-[#c47a00] text-xs font-bold px-3 py-1 mb-4 border border-[#f0c040]">
                                             Selección ML
                                         </span>
-                                        <h3 className="text-xs font-bold text-[#0f2044] mb-2 line-clamp-2">{product.name}</h3>
-                                        <p className="text-sm font-bold text-[#0f2044] mb-2">${product.price.toLocaleString('es-AR')}</p>
-                                        <p className="text-[9px] text-[#8a6500] font-medium">↗ Ver en Mercado Libre</p>
+                                        <h3 className="text-sm md:text-base font-bold text-[#0f2044] mb-3 line-clamp-2">{product.name}</h3>
+                                        <p className="text-lg md:text-xl font-black text-[#0f2044] mb-4">${product.price.toLocaleString('es-AR')}</p>
+                                        <p className="text-sm text-[#8a6500] font-medium">↗ Ver en Mercado Libre</p>
                                     </a>
                                 ))}
                             </div>
@@ -184,36 +192,39 @@ export default async function HomePage() {
 
                 {/* BLOG SECTION */}
                 {recentPosts.length > 0 && (
-                    <section className="bg-[#f8f9fb] py-12 md:py-16 px-4 md:px-6">
+                    <section className="bg-[#f8f9fb] py-14 md:py-18 px-4 md:px-6">
                         <div className="max-w-7xl mx-auto">
-                            <div className="flex justify-between items-baseline mb-8">
-                                <h2 className="text-xl md:text-2xl font-bold text-[#0f2044]">
-                                    Del <span className="text-[#e8630a]">blog</span> — guías y recomendaciones
-                                </h2>
-                                <Link href="/blog" className="text-xs text-[#0f2044] font-bold hover:underline">
+                            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-8">
+                                <div>
+                                    <p className="text-sm text-[#64748b] uppercase tracking-[0.18em] mb-2">Lecturas recomendadas</p>
+                                    <h2 className="text-2xl md:text-3xl font-bold text-[#0f2044]">
+                                        Del <span className="text-[#e8630a]">blog</span> — guías y recomendaciones
+                                    </h2>
+                                </div>
+                                <Link href="/blog" className="text-sm text-[#0f2044] font-bold hover:underline">
                                     Ver todos →
                                 </Link>
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
                                 {recentPosts.map(post => (
-                                    <Link key={post.id} href={`/blog/${post.slug}`} className="card overflow-hidden hover:shadow-md transition-shadow group">
-                                        <div className="h-32 bg-[#eef3fb] flex items-center justify-center">
+                                    <Link key={post.id} href={`/blog/${post.slug}`} className="group block overflow-hidden rounded-3xl border border-transparent bg-white shadow-sm transition hover:border-[#e2e8f0] hover:shadow-md">
+                                        <div className="h-44 bg-[#eef3fb] overflow-hidden">
                                             {post.image && (
                                                 <Image
                                                     src={post.image}
                                                     alt={post.title}
-                                                    width={200}
-                                                    height={200}
-                                                    className="object-cover w-full h-full group-hover:scale-105 transition-transform"
+                                                    width={400}
+                                                    height={240}
+                                                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
                                                 />
                                             )}
                                         </div>
-                                        <div className="p-3 md:p-4">
-                                            <span className="text-[9px] bg-[#e6f1fb] text-[#185fa5] px-2 py-1 rounded inline-block mb-2 font-bold">
+                                        <div className="p-4 md:p-5">
+                                            <span className="text-xs bg-[#e6f1fb] text-[#185fa5] px-3 py-1 rounded inline-block mb-3 font-bold">
                                                 {post.category}
                                             </span>
-                                            <h3 className="text-xs font-bold text-[#0f2044] line-clamp-2 mb-1">{post.title}</h3>
-                                            <p className="text-[9px] text-[#64748b]">{post.author || 'BoluShop'}</p>
+                                            <h3 className="text-base md:text-lg font-bold text-[#0f2044] line-clamp-2 mb-2">{post.title}</h3>
+                                            <p className="text-sm text-[#64748b]">{post.author || 'BoluShop'}</p>
                                         </div>
                                     </Link>
                                 ))}

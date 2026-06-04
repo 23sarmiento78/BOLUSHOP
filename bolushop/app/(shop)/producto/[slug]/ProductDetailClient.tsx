@@ -20,7 +20,10 @@ interface Props {
 export default function ProductDetailClient({ product, relatedProducts, reviews }: Props) {
     const [quantity, setQuantity] = useState(1);
     const [isAdding, setIsAdding] = useState(false);
-    const [activeImage, setActiveImage] = useState(product.image);
+    const imageSources = product.images && product.images.length > 0
+        ? Array.from(new Set([...product.images, product.image]))
+        : [product.image];
+    const [activeImage, setActiveImage] = useState(imageSources[0]);
 
     const handleAddToCart = () => {
         setIsAdding(true);
@@ -65,35 +68,28 @@ export default function ProductDetailClient({ product, relatedProducts, reviews 
                         <div className="space-y-10">
                             <div className="rounded-[2rem] border border-[#e2e8f0] bg-[#f8f9fb] p-6 md:p-8">
                                 <div className="flex flex-col lg:flex-row gap-8">
-                                    <div className="lg:w-[55%]">
-                                        <div className="relative aspect-square rounded-[2rem] overflow-hidden bg-white shadow-card">
+                                    <div className="lg:w-[48%]">
+                                        <div className="relative w-full overflow-hidden rounded-[2rem] bg-white shadow-card aspect-[4/3] max-h-[520px] md:max-h-[560px]">
                                             <Image
                                                 src={transformImageUrl(activeImage)}
                                                 alt={product.name}
                                                 fill
                                                 className="object-contain p-4"
                                                 priority
-                                                sizes="(max-width: 1024px) 100vw, 55vw"
+                                                sizes="(max-width: 1024px) 100vw, 48vw"
                                             />
                                         </div>
 
-                                        {(product.images && product.images.length > 0) && (
+                                        {(imageSources.length > 1) && (
                                             <div className="mt-4 grid grid-cols-4 gap-3">
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setActiveImage(product.image)}
-                                                    className={`rounded-2xl overflow-hidden h-20 border transition ${activeImage === product.image ? 'border-[#0f2044] shadow-lg shadow-[#0f2044]/10' : 'border-[#e2e8f0]'}`}
-                                                >
-                                                    <Image src={transformImageUrl(product.image)} alt="Principal" fill className="object-cover" />
-                                                </button>
-                                                {product.images.map((img, idx) => (
+                                                {imageSources.map((img, idx) => (
                                                     <button
                                                         key={idx}
                                                         type="button"
                                                         onClick={() => setActiveImage(img)}
-                                                        className={`rounded-2xl overflow-hidden h-20 border transition ${activeImage === img ? 'border-[#0f2044] shadow-lg shadow-[#0f2044]/10' : 'border-[#e2e8f0]'}`}
+                                                        className={`relative rounded-2xl overflow-hidden h-20 aspect-square border transition ${activeImage === img ? 'border-[#0f2044] shadow-lg shadow-[#0f2044]/10' : 'border-[#e2e8f0]'}`}
                                                     >
-                                                        <Image src={transformImageUrl(img)} alt={`Foto ${idx + 1}`} fill className="object-cover" />
+                                                        <Image src={transformImageUrl(img)} alt={idx === 0 ? 'Principal' : `Foto ${idx + 1}`} fill className="object-cover" />
                                                     </button>
                                                 ))}
                                             </div>

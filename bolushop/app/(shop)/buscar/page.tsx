@@ -22,7 +22,7 @@ export default async function BuscarPage({ searchParams }: Props) {
         <>
             <Header />
 
-            <main className="min-h-screen bg-sand-white pt-32 pb-24">
+            <main className="min-h-screen bg-[#f7f7f7] pt-32 pb-24">
                 <div className="container mx-auto px-4">
                     {/* Search Header */}
                     <div className="max-w-4xl mb-16">
