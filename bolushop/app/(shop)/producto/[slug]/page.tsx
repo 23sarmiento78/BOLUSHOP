@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         .replace(/^Características generales\s*/i, '')
         .slice(0, 160);
 
-    const metaDescription = product.metaDescription || descriptionText ||
+    const metaDescription = descriptionText ||
         `${product.name} es un regalo ideal para ${categoryText}. Envío gratis a todo el país y pago seguro con cuotas sin interés.`;
 
     const pageTitle = `Comprar ${product.name} | BoluShop Argentina | Regalos originales`;
