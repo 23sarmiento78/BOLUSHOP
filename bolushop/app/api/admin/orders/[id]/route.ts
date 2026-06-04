@@ -1,14 +1,14 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getOrderById } from '@/lib/db';
 
 type Params = {
-    params: {
+    params: Promise<{
         id: string;
-    };
+    }>;
 };
 
-export async function GET(_req: Request, { params }: Params) {
-    const orderId = params.id;
+export async function GET(_req: NextRequest, { params }: Params) {
+    const { id: orderId } = await params;
 
     try {
         const order = await getOrderById(orderId);
