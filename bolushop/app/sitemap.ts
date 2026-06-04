@@ -31,7 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             url: `${baseUrl}/producto/${product.slug}`,
             lastModified: new Date(product.createdAt),
             changeFrequency: 'weekly' as const,
-            priority: 0.7,
+            priority: 0.8,
         }));
 
     // Categories

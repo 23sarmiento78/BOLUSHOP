@@ -15,12 +15,20 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const { slug } = await params;
     const post = await getPostBySlug(slug);
     if (!post) return { title: "Artículo no encontrado" };
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
+    const postUrl = `${siteUrl}/blog/${post.slug}`;
+    const description = post.metaDescription || post.excerpt;
+
     return {
         title: post.metaTitle || `${post.title} | Blog BoluShop`,
-        description: post.metaDescription || post.excerpt,
+        description,
+        alternates: {
+            canonical: postUrl,
+        },
         openGraph: {
             title: post.metaTitle || post.title,
-            description: post.metaDescription || post.excerpt,
+            description,
+            url: postUrl,
             images: [post.image ? transformImageUrl(post.image) : '/icon.png'],
         }
     };
