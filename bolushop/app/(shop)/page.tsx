@@ -7,10 +7,38 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { Truck, CreditCard, Shield, Gift, Home, Zap, Gamepad2 } from "lucide-react";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
+
 export const metadata: Metadata = {
-    title: "Regalos Originales y Hogar | BoluShop Argentina",
-    description: "Regalos originales y accesorios para el hogar de Argentina. Envío gratis, cuotas sin interés, compra protegida.",
-    keywords: "regalos originales, hogar, accesorios, argentina"
+    metadataBase: new URL(siteUrl),
+    title: "Regalos Originales y Hogar | BoluShop",
+    description: "Regalos originales y accesorios para el hogar en Argentina. Envío gratis a todo el país, cuotas sin interés y compra 100% protegida. ¡Descubrí BoluShop!",
+    keywords: "regalos originales, hogar, accesorios, argentina",
+    alternates: {
+        canonical: `${siteUrl}/`,
+    },
+    openGraph: {
+        type: "website",
+        locale: "es_AR",
+        url: `${siteUrl}/`,
+        title: "Regalos Originales y Hogar | BoluShop",
+        description: "Regalos originales y accesorios para el hogar en Argentina. Envío gratis a todo el país, cuotas sin interés y compra 100% protegida. ¡Descubrí BoluShop!",
+        siteName: "BoluShop",
+        images: [
+            {
+                url: `${siteUrl}/icon.png`,
+                width: 512,
+                height: 512,
+                alt: "BoluShop"
+            }
+        ]
+    },
+    twitter: {
+        card: "summary",
+        title: "Regalos Originales y Hogar | BoluShop",
+        description: "Regalos originales y accesorios para el hogar en Argentina. Envío gratis a todo el país, cuotas sin interés y compra 100% protegida. ¡Descubrí BoluShop!",
+        images: [`${siteUrl}/icon.png`],
+    }
 };
 
 export default async function HomePage() {

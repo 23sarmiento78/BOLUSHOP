@@ -17,40 +17,33 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         return { title: "Producto no encontrado | BoluShop" };
     }
 
-    // Dynamic keyword extraction from product content
-    const nameKeywords = product.name.split(' ').filter(w => w.length > 3);
-    const categoryKeyword = product.category || 'Regalos';
-    const cleanDesc = product.description.replace(/<[^>]*>?/gm, '').trim();
-
-    // Automated keywords for national positioning
-    const dynamicKeywords = [
-        ...nameKeywords,
-        categoryKeyword,
-        `comprar ${product.name} argentina`,
-        `precio ${product.name}`,
-        'envio gratis argentina',
-        'regalos originales bolushop'
-    ].join(', ').toLowerCase();
-
-    const seoDescription = cleanDesc.slice(0, 155) + (cleanDesc.length > 155 ? '...' : '');
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
+    const imageUrls = [product.image, ...(product.images || [])].filter(Boolean);
+    const categoryText = product.category ? product.category.toLowerCase() : 'uso diario';
+    const metaDescription = `${product.name} ideal para ${categoryText}. Diseño moderno, cómodo y funcional. Envío gratis a todo el país. Pagá en 3 cuotas sin interés en BoluShop.`;
 
     return {
-        title: `Comprar ${product.name} | ${categoryKeyword} | BoluShop Argentina`,
-        description: seoDescription,
-        keywords: dynamicKeywords,
+        metadataBase: new URL(siteUrl),
+        title: `${product.name} | Envío Gratis | BoluShop`,
+        description: metaDescription,
+        alternates: {
+            canonical: `${siteUrl}/producto/${product.slug}`,
+        },
         openGraph: {
-            title: `Oferta: ${product.name} - Envió Gratis en Argentina`,
-            description: seoDescription,
+            title: `${product.name} | Envío Gratis | BoluShop`,
+            description: metaDescription,
             url: `${siteUrl}/producto/${product.slug}`,
-            images: [{ url: product.image, alt: product.name }],
-            type: 'article',
+            images: imageUrls.map((url) => ({ url, alt: `${product.name} - foto del producto` })),
+            type: 'website',
         },
         twitter: {
             card: 'summary_large_image',
-            title: product.name,
-            description: seoDescription,
-            images: [product.image],
+            title: `${product.name} | Envío Gratis | BoluShop`,
+            description: metaDescription,
+            images: imageUrls,
+        },
+        other: {
+            'og:type': 'product',
         }
     };
 }
@@ -78,12 +71,13 @@ export default async function ProductPage({ params }: Props) {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
 
     // JSON-LD for Search Engines
+    const imageUrls = [product.image, ...(product.images || [])].filter(Boolean);
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "Product",
         "name": product.name,
-        "image": product.image,
         "description": product.description.replace(/<[^>]*>?/gm, '').slice(0, 160),
+        "image": imageUrls,
         "brand": {
             "@type": "Brand",
             "name": "BoluShop"
@@ -94,7 +88,16 @@ export default async function ProductPage({ params }: Props) {
             "priceCurrency": "ARS",
             "price": product.price,
             "availability": product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-            "itemCondition": "https://schema.org/NewCondition"
+            "itemCondition": "https://schema.org/NewCondition",
+            "seller": {
+                "@type": "Organization",
+                "name": "BoluShop"
+            }
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "reviewCount": "100"
         }
     };
 

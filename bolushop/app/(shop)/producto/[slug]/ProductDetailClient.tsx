@@ -20,10 +20,21 @@ interface Props {
 export default function ProductDetailClient({ product, relatedProducts, reviews }: Props) {
     const [quantity, setQuantity] = useState(1);
     const [isAdding, setIsAdding] = useState(false);
-    const imageSources = product.images && product.images.length > 0
-        ? Array.from(new Set([...product.images, product.image]))
-        : [product.image];
+    const imageSources = [product.image, ...(product.images || [])].filter(Boolean).reduce<string[]>((acc, image) => {
+        if (!acc.includes(image)) acc.push(image);
+        return acc;
+    }, []);
     const [activeImage, setActiveImage] = useState(imageSources[0]);
+
+    const getImageAlt = (index: number) => {
+        if (index === 0) return `${product.name} - vista frontal`;
+        if (index === 1) return `${product.name} - vista lateral`;
+        if (index === 2) return `${product.name} - detalle`;
+        return `${product.name} - vista adicional ${index + 1}`;
+    };
+
+    const activeImageIndex = imageSources.findIndex((img) => img === activeImage);
+    const activeImageAlt = getImageAlt(activeImageIndex === -1 ? 0 : activeImageIndex);
 
     const handleAddToCart = () => {
         setIsAdding(true);
@@ -72,7 +83,7 @@ export default function ProductDetailClient({ product, relatedProducts, reviews 
                                         <div className="relative w-full overflow-hidden rounded-[2rem] bg-white shadow-card aspect-[4/3] max-h-[520px] md:max-h-[560px]">
                                             <Image
                                                 src={transformImageUrl(activeImage)}
-                                                alt={product.name}
+                                                alt={activeImageAlt}
                                                 fill
                                                 className="object-contain p-4"
                                                 priority
@@ -89,7 +100,7 @@ export default function ProductDetailClient({ product, relatedProducts, reviews 
                                                         onClick={() => setActiveImage(img)}
                                                         className={`relative rounded-2xl overflow-hidden h-20 aspect-square border transition ${activeImage === img ? 'border-[#0f2044] shadow-lg shadow-[#0f2044]/10' : 'border-[#e2e8f0]'}`}
                                                     >
-                                                        <Image src={transformImageUrl(img)} alt={idx === 0 ? 'Principal' : `Foto ${idx + 1}`} fill className="object-cover" />
+                                                        <Image src={transformImageUrl(img)} alt={getImageAlt(idx)} fill className="object-cover" />
                                                     </button>
                                                 ))}
                                             </div>
@@ -152,6 +163,9 @@ export default function ProductDetailClient({ product, relatedProducts, reviews 
                             {product.features && product.features.length > 0 && (
                                 <div className="rounded-[2rem] border border-[#e2e8f0] bg-[#f8f9fb] p-8">
                                     <h2 className="text-2xl font-bold text-[#0f2044] mb-6">Especificaciones</h2>
+                                    <p className="text-sm text-[#64748b] leading-7 mb-6">
+                                        {`${product.name} es una opción ideal para quienes buscan ${product.category ? product.category.toLowerCase() : 'productos de calidad'} con diseño práctico y acabados confiables. Perfecto para usar todos los días o regalar en ocasiones especiales. Disfrutá de envío gratis y pago en cuotas sin interés.`}
+                                    </p>
                                     <div className="grid gap-3">
                                         {product.features.map((feature, index) => {
                                             const [label, value] = feature.includes(':') ? feature.split(/:(.*)/s) : ['Detalle', feature];

@@ -18,18 +18,39 @@ interface Props {
 }
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
     const { categoria, coleccion } = await searchParams;
-    let title = "Catálogo de Productos | BoluShop Argentina";
+    let title = "Productos | BoluShop";
+    let description = "Descubrí todos los productos de BoluShop con envío gratis en Argentina y cuotas sin interés. Comprá regalos originales y accesorios para tu hogar.";
 
     if (categoria) {
-        title = `${categoria} | Productos BoluShop Argentina`;
+        title = `${categoria} | BoluShop`;
+        description = `Descubrí productos de ${categoria} en BoluShop con envío gratis a todo el país y cuotas sin interés.`;
     } else if (coleccion) {
-        title = `Colección ${coleccion} | BoluShop Argentina`;
+        title = `Colección ${coleccion} | BoluShop`;
+        description = `Descubrí la colección ${coleccion} en BoluShop con envío gratis a todo el país y cuotas sin interés.`;
     }
 
     return {
+        metadataBase: new URL(siteUrl),
         title,
-        description: "Explorá nuestro catálogo completo en Argentina. Envíos gratis a todo el país, cuotas sin interés y la mejor calidad en productos seleccionados.",
+        description,
+        alternates: {
+            canonical: `${siteUrl}/productos`,
+        },
+        openGraph: {
+            type: "website",
+            locale: "es_AR",
+            url: `${siteUrl}/productos`,
+            title,
+            description,
+            siteName: "BoluShop",
+        },
+        twitter: {
+            card: "summary",
+            title,
+            description,
+        },
         keywords: "comprar productos online argentina, catalogo bolushop, ofertas marketplace argentina, envios gratis",
     };
 }

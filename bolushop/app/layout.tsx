@@ -54,7 +54,7 @@ export async function generateMetadata(): Promise<Metadata> {
       follow: true,
     },
     alternates: {
-      canonical: "/",
+      canonical: siteUrl,
     },
     openGraph: {
       type: "website",
@@ -121,25 +121,26 @@ export default async function RootLayout({
 
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Organization",
+    "@type": "OnlineStore",
     "name": settings.siteName,
     "url": siteUrl,
     "logo": `${siteUrl}/icon.png`,
+    "description": "Tienda online de regalos originales y accesorios para el hogar en Argentina. Envío gratis, cuotas sin interés y compra 100% protegida.",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Villa Carlos Paz",
+      "addressRegion": "Córdoba",
+      "addressCountry": "AR"
+    },
     "contactPoint": {
       "@type": "ContactPoint",
-      "telephone": "+54-354-123-7972",
+      "telephone": "+54-9-3541-237972",
       "contactType": "customer service",
-      "areaServed": "AR",
       "availableLanguage": "Spanish"
     },
     "sameAs": [
-      "https://www.instagram.com/bolushop.arg",
-      "https://www.tiktok.com/@bolushop.ok"
-    ],
-    "address": {
-      "@type": "PostalAddress",
-      "addressCountry": "AR"
-    }
+      "https://instagram.com/bolushop.arg"
+    ]
   };
 
   return (

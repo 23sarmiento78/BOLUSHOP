@@ -15,10 +15,23 @@ interface Props {
 export async function generateMetadata({ params }: Props) {
     const collection = await getCollectionBySlug(params.slug);
     if (!collection) return { title: 'Colección no encontrada' };
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
+    const collectionUrl = `${siteUrl}/coleccion/${collection.slug}`;
 
     return {
         title: `${collection.name} | BoluShop`,
-        description: collection.description || `Explora nuestra colección de ${collection.name} con excelentes ofertas.`
+        description: collection.description || `Explora nuestra colección de ${collection.name} con excelentes ofertas.`,
+        alternates: {
+            canonical: collectionUrl,
+        },
+        openGraph: {
+            type: 'website',
+            locale: 'es_AR',
+            url: collectionUrl,
+            title: `${collection.name} | BoluShop`,
+            description: collection.description || `Explora nuestra colección de ${collection.name} con excelentes ofertas.`,
+            siteName: 'BoluShop',
+        }
     };
 }
 
