@@ -20,17 +20,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
     const imageUrls = [product.image, ...(product.images || [])].filter(Boolean);
     const categoryText = product.category ? product.category.toLowerCase() : 'uso diario';
-    const metaDescription = `${product.name} ideal para ${categoryText}. Diseño moderno, cómodo y funcional. Envío gratis a todo el país. Pagá en 3 cuotas sin interés en BoluShop.`;
+    const metaDescription = `${product.name} es un regalo ideal para ${categoryText}. Envío gratis a todo el país y pago seguro con cuotas sin interés.`;
 
     return {
         metadataBase: new URL(siteUrl),
-        title: `${product.name} | Envío Gratis | BoluShop`,
+        title: `${product.name} | BoluShop`,
         description: metaDescription,
         alternates: {
             canonical: `${siteUrl}/producto/${product.slug}`,
         },
         openGraph: {
-            title: `${product.name} | Envío Gratis | BoluShop`,
+            title: `${product.name} | BoluShop`,
             description: metaDescription,
             url: `${siteUrl}/producto/${product.slug}`,
             images: imageUrls.map((url) => ({ url, alt: `${product.name} - foto del producto` })),
@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         },
         twitter: {
             card: 'summary_large_image',
-            title: `${product.name} | Envío Gratis | BoluShop`,
+            title: `${product.name} | BoluShop`,
             description: metaDescription,
             images: imageUrls,
         },

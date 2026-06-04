@@ -40,10 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const metadata: Metadata = {
     metadataBase: new URL(siteUrl),
-    title: {
-      default: `${settings.siteName} | Tienda de Regalos Originales y Gadgets en Argentina`,
-      template: `%s | ${settings.siteName} Regalos`
-    },
+    title: `${settings.siteName} | Tienda de Regalos Originales y Gadgets en Argentina`,
     description: settings.siteDescription || "¿Buscás el regalo perfecto? En BoluShop encontrá regalos originales, tecnología, gadgets y curiosidades. Envíos gratis a todo el país y cuotas sin interés. ¡Sorprendé hoy!",
     keywords: "regalos originales argentina, tienda de regalos, cosas curiosas, gadgets tecnologicos, regalos para hombres, regalos para novios, comprar regalos online, bolushop, envios a todo el pais, bazar premium",
     authors: [{ name: settings.siteName }],
