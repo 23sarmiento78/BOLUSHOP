@@ -4,9 +4,9 @@ import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata = buildPageMetadata({
     title: "Contacto",
-    description: "Contactá a BoluShop en Villa Carlos Paz, Córdoba. WhatsApp, email y formulario de contacto. Te respondemos rápido para ayudarte con tu compra.",
+    description: "Contactá a BoluShop. Tienda 100% online de regalos y accesorios para el hogar con envíos a todo Argentina. WhatsApp y email.",
     path: "/contacto",
-    keywords: ["contacto bolushop", "whatsapp bolushop", "atencion al cliente argentina"],
+    keywords: ["contacto bolushop", "whatsapp bolushop", "tienda online argentina contacto"],
 });
 
 export default function ContactoPage() {
@@ -36,8 +36,8 @@ export default function ContactoPage() {
                                     </div>
                                     <div>
                                         <p className="text-xs uppercase tracking-[0.35em] text-[#64748b] font-black mb-2">Email</p>
-                                        <p className="text-xl font-black text-[#0f2044]">sarmientoisrael118@gmail.com</p>
-                                        <a href="mailto:sarmientoisrael118@gmail.com" className="text-[#e8630a] font-bold hover:underline">Enviar correo →</a>
+                                        <p className="text-xl font-black text-[#0f2044]">23sarmiento@gmail.com</p>
+                                        <a href="mailto:23sarmiento@gmail.com" className="text-[#e8630a] font-bold hover:underline">Enviar correo →</a>
                                     </div>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-4">
@@ -52,10 +52,10 @@ export default function ContactoPage() {
                                     <div className="rounded-[2rem] bg-white border border-[#e2e8f0] p-6 flex-1">
                                         <div className="flex items-center gap-3 mb-4">
                                             <MapPin size={20} className="text-red-500" />
-                                            <span className="font-bold text-[#0f2044]">Ubicación</span>
+                                            <span className="font-bold text-[#0f2044]">Modelo de negocio</span>
                                         </div>
-                                        <p className="text-[#64748b]">Villa Carlos Paz, Córdoba</p>
-                                        <p className="text-[#64748b]">Argentina</p>
+                                        <p className="text-[#64748b]">Tienda 100% online</p>
+                                        <p className="text-[#64748b]">Comercio electrónico</p>
                                     </div>
                                 </div>
 

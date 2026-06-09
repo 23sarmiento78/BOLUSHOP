@@ -89,7 +89,7 @@ export function buildWebSiteJsonLd() {
 export function buildOrganizationJsonLd(settings: { siteName: string; siteDescription: string }) {
     return {
         "@context": "https://schema.org",
-        "@type": "Organization",
+        "@type": "OnlineBusiness",
         name: settings.siteName,
         url: SITE_URL,
         logo: absoluteUrl("/icon.png"),

@@ -17,16 +17,16 @@ export default function PrivacidadPage() {
                         <div className="prose prose-gray max-w-none space-y-10 text-gray-600">
                             <section>
                                 <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Responsable del Tratamiento</h2>
-                                <p>El sitio web <b>BoluShop</b> es propiedad y está operado por <b>Israel Enrique Sarmiento Escuela</b>, con domicilio en Villa Carlos Paz, Córdoba, Argentina. Puedes contactarnos por correo electrónico en <b>sarmientoisrael118@gmail.com</b>.</p>
+                                <p>El sitio web <b>BoluShop</b> es propiedad y está operado por <b>Israel Enrique Sarmiento Escuela</b>, con domicilio en Villa Carlos Paz, Córdoba, Argentina. Somos una tienda 100% online dedicada al comercio electrónico. Puedes contactarnos por correo electrónico en <b>23sarmiento@gmail.com</b>.</p>
                             </section>
 
                             <section>
                                 <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Introducción</h2>
-                                <p>En BoluShop, valoramos tu privacidad y nos comprometemos a proteger tus datos personales. Esta Política de Privacidad describe cómo recopilamos, usamos y compartimos tu información cuando visitas o realizas una compra en nuestro sitio.</p>
+                                <p>En BoluShop, valoramos tu privacidad y nos comprometemos a proteger tus datos personales. Somos una tienda 100% online especializada en recomendar y comercializar productos seleccionados a través de internet, sin local físico, sin almacenamiento propio y con entregas a domicilio a través de logística externa. Esta Política de Privacidad describe cómo recopilamos, usamos y compartimos tu información cuando visitas o realizas una compra en nuestro sitio.</p>
                             </section>
 
                             <section>
-                                <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Información que recopilamos</h2>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-4">3. Información que recopilamos</h2>
                                 <p>Recopilamos información necesaria para procesar tus pedidos y mejorar tu experiencia:</p>
                                 <ul className="list-disc pl-6 space-y-2">
                                     <li><b>Información de contacto:</b> Nombre, correo electrónico, dirección de envío y número de teléfono.</li>
@@ -36,7 +36,7 @@ export default function PrivacidadPage() {
                             </section>
 
                             <section>
-                                <h2 className="text-2xl font-bold text-gray-900 mb-4">3. Cómo usamos tu información</h2>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-4">4. Cómo usamos tu información</h2>
                                 <p>Utilizamos tus datos para:</p>
                                 <ul className="list-disc pl-6 space-y-2">
                                     <li>Procesar y enviar tus pedidos.</li>
@@ -47,12 +47,12 @@ export default function PrivacidadPage() {
                             </section>
 
                             <section>
-                                <h2 className="text-2xl font-bold text-gray-900 mb-4">4. Terceros y Referidos</h2>
-                                <p>BoluShop participa en el programa de afiliados de Mercado Libre. Al interactuar con productos marcados como "Imperdibles ML", es posible que seas redirigido a mercadolibre.com.ar, quienes tienen su propia política de privacidad.</p>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Proveedores y dropshipping</h2>
+                                <p>BoluShop opera bajo un modelo de comercio electrónico dropshipping. Los productos son abastecidos, gestionados y enviados por proveedores externos especializados en logística y distribución. No contamos con local físico ni almacenamiento propio. Trabajamos con socios logísticos seleccionados que se encargan del despacho, envío y, en su caso, de la gestión de devoluciones. En todo momento, BoluShop actúa como responsable final de la experiencia de compra y del cumplimiento de las políticas de privacidad aquí descriptas.</p>
                             </section>
 
                             <section>
-                                <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Tus derechos</h2>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Tus derechos</h2>
                                 <p>Tienes derecho a acceder, corregir o eliminar tus datos personales en cualquier momento. Para hacerlo, puedes contactarnos a través de nuestra página de contacto.</p>
                             </section>
                         </div>

@@ -4,9 +4,9 @@ import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata = buildPageMetadata({
     title: "Sobre Nosotros",
-    description: "Conocé la historia de BoluShop, tienda de regalos originales y accesorios para el hogar en Villa Carlos Paz, Córdoba. Selección experta y envío a todo Argentina.",
+    description: "Conocé BoluShop, tienda de regalos y accesorios para el hogar en Argentina. Somos una tienda 100% online especializada en dropshipping con envíos a domicilio.",
     path: "/nosotros",
-    keywords: ["bolushop nosotros", "tienda regalos cordoba", "villa carlos paz"],
+    keywords: ["bolushop nosotros", "tienda regalos online argentina", "dropshipping argentina"],
 });
 
 export default function NosotrosPage() {
@@ -34,10 +34,10 @@ export default function NosotrosPage() {
                             </span>
                             <h2 className="text-3xl md:text-4xl font-black text-[#0f2044]">Nacimos para hacer los regalos más fáciles.</h2>
                             <p className="text-[#64748b] leading-relaxed text-base md:text-lg">
-                                BoluShop nació en Villa Carlos Paz, Córdoba, con una misión simple: ayudarte a encontrar el regalo perfecto sin perder tiempo ni plata.
+                                BoluShop es una tienda 100% online especializada en regalos originales y accesorios para el hogar, con envíos a todo el país.
                             </p>
                             <p className="text-[#64748b] leading-relaxed text-base md:text-lg">
-                                Seleccionamos cada producto con criterio y lo respaldamos con envío gratis, atención real y recomendaciones confiables.
+                                Trabajamos bajo un modelo de comercio electrónico que nos permite ofrecerte una amplia variedad de productos seleccionados, con la comodidad de recibirlos en tu hogar sin trámites complicados.
                             </p>
                         </div>
 
@@ -77,10 +77,10 @@ export default function NosotrosPage() {
                             </div>
                             <div className="rounded-[1.5rem] bg-white border border-[#e2e8f0] p-6 shadow-sm">
                                 <div className="inline-flex items-center rounded-full bg-[#eef3fb] px-3 py-1 text-[10px] font-semibold text-[#0f2044] uppercase tracking-[0.35em] mb-4">
-                                    Envío gratis siempre
+                                    Envío a todo el país
                                 </div>
                                 <p className="text-sm text-[#64748b] leading-relaxed">
-                                    A todo el país, sin monto mínimo. Coordinamos con Correo Argentino
+                                    A toda la República Argentina, coordinamos el método más conveniente para tu zona.
                                 </p>
                             </div>
                             <div className="rounded-[1.5rem] bg-white border border-[#e2e8f0] p-6 shadow-sm">
@@ -96,7 +96,7 @@ export default function NosotrosPage() {
                                     Atención por WhatsApp
                                 </div>
                                 <p className="text-sm text-[#64748b] leading-relaxed">
-                                    Respondemos rápido. Estamos disponibles para resolver cualquier duda.
+                                    Respondemos rápido. Estamos disponibles para resolver cualquier duda sobre tu compra.
                                 </p>
                             </div>
                         </div>
@@ -108,7 +108,7 @@ export default function NosotrosPage() {
                                 <p className="text-sm uppercase tracking-[0.35em] text-[#64748b] font-bold mb-3">Cómo llegamos hasta acá</p>
                                 <p className="text-lg md:text-xl font-black text-[#0f2044] mb-4">Una historia de crecimiento desde Córdoba hacia todo el país.</p>
                                 <p className="text-[#64748b] leading-relaxed">
-                                    Empezamos con una pequeña curaduría de regalos y hoy entregamos experiencia, confianza y productos seleccionados con criterio.
+                                    Empezamos con una pequeña curaduría de regalos y hoy entregamos experiencia, confianza y productos seleccionados con criterio, siempre desde la comodidad de tu casa.
                                 </p>
                             </div>
                             <div className="space-y-4">
@@ -117,7 +117,7 @@ export default function NosotrosPage() {
                                         <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#0f2044] text-white">2024</span>
                                         <div>
                                             <p className="font-bold text-[#0f2044]">Fundación de BoluShop</p>
-                                            <p className="text-sm text-[#64748b]">Israel Sarmiento crea la tienda con foco en regalos originales y envíos a todo el país.</p>
+                                            <p className="text-sm text-[#64748b]">Creación de la tienda online con foco en regalos originales y envíos a todo el país.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -125,8 +125,8 @@ export default function NosotrosPage() {
                                     <div className="flex items-center gap-3 mb-2">
                                         <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#0f2044] text-white">2025</span>
                                         <div>
-                                            <p className="font-bold text-[#0f2044]">Primeros productos y afiliados ML</p>
-                                            <p className="text-sm text-[#64748b]">Se incorpora la sección de Mercado Libre con links de afiliado seleccionados a mano.</p>
+                                            <p className="font-bold text-[#0f2044]">Expansión del catálogo</p>
+                                            <p className="text-sm text-[#64748b]">Ampliación de la variedad de productos y mejora de la experiencia de compra.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -153,7 +153,7 @@ export default function NosotrosPage() {
                                 <Link href="https://wa.me/543541237972" className="inline-flex items-center justify-center rounded-xl bg-white/10 border border-white/20 px-5 py-3 text-sm font-semibold text-white hover:bg-white/20 transition">
                                     WhatsApp
                                 </Link>
-                                <Link href="mailto:contacto@bolushop.com" className="inline-flex items-center justify-center rounded-xl bg-[#e8630a] px-5 py-3 text-sm font-semibold text-white hover:bg-[#d65a05] transition">
+                                <Link href="mailto:23sarmiento@gmail.com" className="inline-flex items-center justify-center rounded-xl bg-[#e8630a] px-5 py-3 text-sm font-semibold text-white hover:bg-[#d65a05] transition">
                                     Email
                                 </Link>
                             </div>
