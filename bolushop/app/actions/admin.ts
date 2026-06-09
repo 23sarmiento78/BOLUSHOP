@@ -24,7 +24,7 @@ import {
 import { Product, Collection, Category, Order, BlogPost } from "@/lib/types";
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from "@/lib/supabase";
-import { sendNewsletterCampaign } from "@/lib/brevo";
+import { sendNewsletterCampaign, sendTestNewsletterEmail, type NewsletterCampaign } from "@/lib/brevo";
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { transformImageUrl } from "@/lib/images";
 import OAuth from 'oauth-1.0a';
@@ -462,12 +462,66 @@ export async function deleteNewsletterSubscriberAction(email: string) {
     return success;
 }
 
-export async function sendNewsletterCampaignAction(campaign: {
+type NewsletterCampaignInput = {
     subject: string;
     bannerUrl?: string;
     content: string;
     collectionId?: string;
-}) {
+    productIds?: string[];
+};
+
+async function resolveNewsletterCampaign(input: NewsletterCampaignInput): Promise<NewsletterCampaign> {
+    const collections = await getAllCollections();
+    const products = await getAllProducts();
+    const collection = collections.find((c) => c.id === input.collectionId);
+
+    const selectedProducts = (input.productIds || [])
+        .map((id) => products.find((p) => p.id === id))
+        .filter((p): p is Product => Boolean(p))
+        .map((p) => ({
+            id: p.id,
+            name: p.name,
+            slug: p.slug,
+            price: p.price,
+            image: transformImageUrl(p.image),
+        }));
+
+    return {
+        subject: input.subject,
+        bannerUrl: input.bannerUrl,
+        content: input.content,
+        collectionId: input.collectionId,
+        collectionName: collection?.name,
+        collectionDescription: collection?.description,
+        products: selectedProducts,
+    };
+}
+
+export async function sendTestNewsletterCampaignAction(
+    campaign: NewsletterCampaignInput,
+    testEmail: string
+) {
+    try {
+        if (!process.env.BREVO_API_KEY) {
+            return { success: false, message: "Falta configurar BREVO_API_KEY en las variables de entorno." };
+        }
+
+        if (!campaign.subject || !campaign.content) {
+            return { success: false, message: "El asunto y el contenido son obligatorios." };
+        }
+
+        const resolved = await resolveNewsletterCampaign(campaign);
+        await sendTestNewsletterEmail(resolved, testEmail);
+
+        return { success: true, message: `Email de prueba enviado a ${testEmail}` };
+    } catch (e: unknown) {
+        console.error("❌ Brevo Test Email Error:", e);
+        const message = e instanceof Error ? e.message : "Error al enviar la prueba";
+        return { success: false, message };
+    }
+}
+
+export async function sendNewsletterCampaignAction(campaign: NewsletterCampaignInput) {
     try {
         if (!process.env.BREVO_API_KEY) {
             return {
@@ -483,7 +537,8 @@ export async function sendNewsletterCampaignAction(campaign: {
             return { success: false, message: "No hay suscriptores" };
         }
 
-        const result = await sendNewsletterCampaign(campaign, emails);
+        const resolved = await resolveNewsletterCampaign(campaign);
+        const result = await sendNewsletterCampaign(resolved, emails);
 
         return {
             success: true,
