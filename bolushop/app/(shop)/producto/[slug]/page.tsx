@@ -2,7 +2,9 @@ import { getAllProducts, getProductReviews } from "@/lib/db";
 import { getRelatedProducts } from "@/app/actions/shop";
 import { notFound } from "next/navigation";
 import ProductDetailClient from "./ProductDetailClient";
+import JsonLd from "@/components/shop/JsonLd";
 import type { Metadata } from "next";
+import { buildPageMetadata, buildProductJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo";
 
 interface Props {
     params: Promise<{ slug: string }>;
@@ -11,70 +13,41 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params;
     const products = await getAllProducts();
-    const product = products.find(p => p.slug === slug);
+    const product = products.find((p) => p.slug === slug);
 
     if (!product) {
-        return { title: "Producto no encontrado | BoluShop" };
+        return buildPageMetadata({
+            title: "Producto no encontrado",
+            description: "El producto que buscás no está disponible en BoluShop.",
+            path: `/producto/${slug}`,
+            noIndex: true,
+        });
     }
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
-    const productUrl = `${siteUrl}/producto/${product.slug}`;
-    const imageUrls = [product.image, ...(product.images || [])].filter(Boolean);
-    const categoryText = product.category ? product.category.toLowerCase() : 'uso diario';
-
     const cleanDescription = product.description
-        ? product.description.replace(/<[^>]*>?/gm, '').replace(/\s+/g, ' ').trim()
-        : '';
-    const descriptionText = cleanDescription
-        .replace(/^Características generales:\s*/i, '')
-        .replace(/^Características generales\s*/i, '')
-        .slice(0, 160);
+        ? product.description.replace(/<[^>]*>?/gm, "").replace(/\s+/g, " ").trim().slice(0, 160)
+        : `${product.name} — regalo original con envío gratis a todo Argentina. Comprá en BoluShop con cuotas sin interés.`;
 
-    const metaDescription = descriptionText ||
-        `${product.name} es un regalo ideal para ${categoryText}. Envío gratis a todo el país y pago seguro con cuotas sin interés.`;
-
-    const pageTitle = `Comprar ${product.name} | BoluShop Argentina | Regalos originales`;
-
-    return {
-        metadataBase: new URL(siteUrl),
-        title: pageTitle,
-        description: metaDescription,
-        alternates: {
-            canonical: productUrl,
-        },
-        openGraph: {
-            title: pageTitle,
-            description: metaDescription,
-            url: productUrl,
-            siteName: 'BoluShop',
-            locale: 'es_AR',
-            images: imageUrls.map((url) => ({ url, alt: `${product.name} - foto del producto` })),
-        },
-        twitter: {
-            card: 'summary_large_image',
-            title: pageTitle,
-            description: metaDescription,
-            images: imageUrls,
-        },
-        other: {
-            'og:type': 'product',
-        }
-    };
+    return buildPageMetadata({
+        title: `Comprar ${product.name}`,
+        description: cleanDescription,
+        path: `/producto/${product.slug}`,
+        image: product.image,
+        keywords: [product.name, product.category, "comprar online argentina", "bolushop"],
+    });
 }
 
 export async function generateStaticParams() {
     const products = await getAllProducts();
     return products
-        .filter(p => p.isActive !== false)
-        .map((product) => ({
-            slug: product.slug,
-        }));
+        .filter((p) => p.isActive !== false)
+        .map((product) => ({ slug: product.slug }));
 }
 
 export default async function ProductPage({ params }: Props) {
     const { slug } = await params;
     const products = await getAllProducts();
-    const product = products.find(p => p.slug === slug);
+    const product = products.find((p) => p.slug === slug);
 
     if (!product || product.isActive === false) {
         notFound();
@@ -82,45 +55,19 @@ export default async function ProductPage({ params }: Props) {
 
     const relatedProducts = await getRelatedProducts(product.id, product.category);
     const reviews = await getProductReviews(product.id);
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
 
-    // JSON-LD for Search Engines
-    const imageUrls = [product.image, ...(product.images || [])].filter(Boolean);
-    const jsonLd = {
-        "@context": "https://schema.org",
-        "@type": "Product",
-        "name": product.name,
-        "description": product.description.replace(/<[^>]*>?/gm, '').slice(0, 160),
-        "image": imageUrls,
-        "brand": {
-            "@type": "Brand",
-            "name": "BoluShop"
-        },
-        "offers": {
-            "@type": "Offer",
-            "url": `${siteUrl}/producto/${product.slug}`,
-            "priceCurrency": "ARS",
-            "price": product.price,
-            "availability": product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-            "itemCondition": "https://schema.org/NewCondition",
-            "seller": {
-                "@type": "Organization",
-                "name": "BoluShop"
-            }
-        },
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "reviewCount": "100"
-        }
-    };
+    const structuredData = [
+        buildProductJsonLd(product, reviews),
+        buildBreadcrumbJsonLd([
+            { name: "Inicio", path: "/" },
+            { name: "Productos", path: "/productos" },
+            { name: product.name, path: `/producto/${product.slug}` },
+        ]),
+    ];
 
     return (
         <>
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
+            <JsonLd data={structuredData} />
             <ProductDetailClient product={product} relatedProducts={relatedProducts} reviews={reviews} />
         </>
     );

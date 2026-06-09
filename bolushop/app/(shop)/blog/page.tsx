@@ -1,15 +1,15 @@
 import { getAllPosts } from "@/lib/db";
-import Header from "@/components/shop/Header";
-import Footer from "@/components/shop/Footer";
 import Image from "next/image";
 import Link from "next/link";
 import { transformImageUrl } from "@/lib/images";
 import { ChevronRight } from "lucide-react";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata = {
-    title: "Blog | BoluShop Argentina",
-    description: "Guías, tips y recomendaciones sobre regalos, hogar y tecnología.",
-};
+export const metadata = buildPageMetadata({
+    title: "Blog — Guías y Recomendaciones",
+    description: "Guías, tips y recomendaciones sobre regalos originales, hogar y tecnología en BoluShop Argentina.",
+    path: "/blog",
+});
 
 export default async function BlogPage() {
     const posts = await getAllPosts();
@@ -20,8 +20,6 @@ export default async function BlogPage() {
 
     return (
         <>
-            <Header />
-
             <main className="min-h-screen bg-[#f7f7f7]">
                 <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-10 md:py-14 px-4 md:px-6">
                     <div className="max-w-7xl mx-auto">
@@ -139,9 +137,6 @@ export default async function BlogPage() {
                         <button className="btn btn-outline">Cargar más artículos</button>
                     </div>
                 </section>
-            </main>
-
-            <Footer />
-        </>
+            </main>        </>
     );
 }

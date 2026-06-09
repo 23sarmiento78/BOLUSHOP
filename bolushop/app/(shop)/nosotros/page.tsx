@@ -1,13 +1,17 @@
-import Header from "@/components/shop/Header";
-import Footer from "@/components/shop/Footer";
 import Link from "next/link";
 import { ChevronRight, Heart, Zap, Users, ShieldCheck, Truck } from "lucide-react";
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata = buildPageMetadata({
+    title: "Sobre Nosotros",
+    description: "Conocé la historia de BoluShop, tienda de regalos originales y accesorios para el hogar en Villa Carlos Paz, Córdoba. Selección experta y envío a todo Argentina.",
+    path: "/nosotros",
+    keywords: ["bolushop nosotros", "tienda regalos cordoba", "villa carlos paz"],
+});
 
 export default function NosotrosPage() {
     return (
-        <>
-            <Header />
-            <main className="min-h-screen bg-[#f7f7f7]">
+            <main className="min-h-screen bg-[#faf9f7]">
                 <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-10 md:py-14 px-4 md:px-6">
                     <div className="max-w-7xl mx-auto">
                         <div className="flex items-center gap-2 mb-4 text-xs text-white/70">
@@ -157,7 +161,5 @@ export default function NosotrosPage() {
                     </div>
                 </section>
             </main>
-            <Footer />
-        </>
     );
 }

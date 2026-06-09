@@ -3,8 +3,6 @@
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import Header from "@/components/shop/Header";
-import Footer from "@/components/shop/Footer";
 import { AlertCircle } from "lucide-react";
 
 function RechazadoContent() {
@@ -64,9 +62,7 @@ function RechazadoContent() {
 
 export default function RechazadoPage() {
     return (
-        <>
-            <Header />
-            <main className="min-h-screen bg-white">
+        <>            <main className="min-h-screen bg-white">
                 <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-10 md:py-16 px-4 md:px-6 text-center">
                     <div className="max-w-3xl mx-auto">
                         <h1 className="text-3xl md:text-5xl font-black mb-4">Pago Rechazado</h1>
@@ -85,8 +81,6 @@ export default function RechazadoPage() {
                         <RechazadoContent />
                     </Suspense>
                 </section>
-            </main>
-            <Footer />
-        </>
+            </main>        </>
     );
 }

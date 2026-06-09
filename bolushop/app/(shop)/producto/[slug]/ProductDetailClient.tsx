@@ -3,8 +3,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import { transformImageUrl } from "@/lib/images";
-import Header from "@/components/shop/Header";
-import Footer from "@/components/shop/Footer";
 import ProductCard from "@/components/shop/ProductCard";
 import { Product, Review } from "@/lib/types";
 import { addToCart } from "@/lib/cart";
@@ -51,12 +49,9 @@ export default function ProductDetailClient({ product, relatedProducts, reviews 
         : 5;
 
     return (
-        <>
-            <Header />
-
-            <main className="min-h-screen bg-white">
-                <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-10 md:py-14">
-                    <div className="max-w-7xl mx-auto px-4">
+            <main className="min-h-screen bg-[#faf9f7]">
+                <section className="hero-mesh text-white py-10 md:py-14">
+                    <div className="container-shop">
                         <div className="flex flex-col md:flex-row items-start justify-between gap-6">
                             <div className="max-w-2xl">
                                 <p className="text-xs uppercase tracking-[0.3em] text-[#cbd5e1] mb-2">Producto</p>
@@ -74,7 +69,7 @@ export default function ProductDetailClient({ product, relatedProducts, reviews 
                     </div>
                 </section>
 
-                <section className="max-w-7xl mx-auto px-4 py-12 md:py-16">
+                <section className="container-shop py-12 md:py-16">
                     <div className="grid grid-cols-1 lg:grid-cols-[1.7fr_0.95fr] gap-10">
                         <div className="space-y-10">
                             <div className="rounded-[2rem] border border-[#e2e8f0] bg-[#f8f9fb] p-6 md:p-8">
@@ -283,9 +278,6 @@ export default function ProductDetailClient({ product, relatedProducts, reviews 
                     )}
                 </section>
             </main>
-
-            <Footer />
-        </>
     );
 }
 

@@ -1,11 +1,14 @@
-import Header from "@/components/shop/Header";
-import Footer from "@/components/shop/Footer";
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata = buildPageMetadata({
+    title: "Política de Privacidad",
+    description: "Política de privacidad de BoluShop. Conocé cómo protegemos tus datos personales al comprar regalos y accesorios para el hogar en Argentina.",
+    path: "/politica-de-privacidad",
+});
 
 export default function PrivacidadPage() {
     return (
-        <>
-            <Header />
-            <main className="min-h-screen bg-gray-50 pt-32 pb-24">
+        <>            <main className="min-h-screen bg-gray-50 pt-32 pb-24">
                 <div className="container mx-auto px-6">
                     <div className="max-w-3xl mx-auto bg-white p-12 md:p-20 rounded-[3rem] shadow-xl shadow-gray-200/50 border border-gray-100">
                         <h1 className="text-4xl font-black text-gray-900 mb-8 tracking-tight">Política de Privacidad</h1>
@@ -55,8 +58,6 @@ export default function PrivacidadPage() {
                         </div>
                     </div>
                 </div>
-            </main>
-            <Footer />
-        </>
+            </main>        </>
     );
 }

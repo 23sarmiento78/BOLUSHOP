@@ -1,39 +1,38 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getAllProducts, getAllOrders, saveCategories } from "@/lib/db";
-
-export const dynamic = "force-dynamic";
-import fs from 'fs';
-import path from 'path';
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import AdminStatCard from "@/components/admin/AdminStatCard";
+import fs from "fs";
+import path from "path";
 import {
     Package,
     ShoppingCart,
     AlertTriangle,
     TrendingUp,
     ArrowRight,
-    Search,
     PlusCircle,
     Settings,
     Mail,
     Tags,
     Truck,
-    Smartphone,
-    Monitor,
-    Download
-} from 'lucide-react';
+    FileText,
+    FolderTree,
+    Layers,
+} from "lucide-react";
+
+export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
     const products = await getAllProducts();
     const orders = await getAllOrders();
 
-    // Force fix for category images
     try {
-        const categoriesPath = path.join(process.cwd(), 'data', 'categories.json');
+        const categoriesPath = path.join(process.cwd(), "data", "categories.json");
         if (fs.existsSync(categoriesPath)) {
-            const rawCategories = fs.readFileSync(categoriesPath, 'utf-8').trim();
+            const rawCategories = fs.readFileSync(categoriesPath, "utf-8").trim();
             if (rawCategories) {
-                const localCategories = JSON.parse(rawCategories);
-                await saveCategories(localCategories);
+                await saveCategories(JSON.parse(rawCategories));
             }
         }
     } catch (e) {
@@ -41,201 +40,185 @@ export default async function AdminDashboard() {
     }
 
     const lowStockProducts = products.filter((p) => p.stock < 5);
+    const activeProducts = products.filter((p) => p.isActive !== false);
 
     const now = new Date();
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
     const nextMonthStart = new Date(now.getFullYear(), now.getMonth() + 1, 1);
 
+    const monthlyOrders = orders.filter((o) => {
+        const d = new Date(o.date);
+        return d >= monthStart && d < nextMonthStart;
+    });
+
     const totalRevenue = orders
-        .filter((o) => ['paid', 'shipped', 'delivered'].includes(o.status))
+        .filter((o) => ["paid", "shipped", "delivered"].includes(o.status))
         .filter((o) => {
-            const orderDate = new Date(o.date);
-            return orderDate >= monthStart && orderDate < nextMonthStart;
+            const d = new Date(o.date);
+            return d >= monthStart && d < nextMonthStart;
         })
         .reduce((acc, o) => acc + o.total, 0);
 
+    const pendingOrders = orders.filter((o) => o.status === "pending" || o.status === "paid").length;
+
+    const quickActions = [
+        { href: "/admin/products", label: "Productos", desc: "Gestionar inventario", icon: Package, color: "bg-orange-50 text-orange-500" },
+        { href: "/admin/orders", label: "Pedidos", desc: "Ver y actualizar", icon: Truck, color: "bg-blue-50 text-blue-500" },
+        { href: "/admin/collections", label: "Colecciones", desc: "Landings temáticas", icon: Tags, color: "bg-purple-50 text-purple-500" },
+        { href: "/admin/blog", label: "Blog", desc: "Artículos y SEO", icon: FileText, color: "bg-emerald-50 text-emerald-500" },
+        { href: "/admin/categories", label: "Categorías", desc: "Organizar catálogo", icon: FolderTree, color: "bg-cyan-50 text-cyan-600" },
+        { href: "/admin/newsletter", label: "Newsletter", desc: "Campañas email", icon: Mail, color: "bg-pink-50 text-pink-500" },
+        { href: "/admin/mercado-libre", label: "Mercado Libre", desc: "Afiliados ML", icon: Layers, color: "bg-yellow-50 text-yellow-600" },
+        { href: "/admin/settings", label: "Configuración", desc: "Precios y envíos", icon: Settings, color: "bg-slate-50 text-slate-500" },
+    ];
+
     return (
-        <div className="max-w-7xl mx-auto space-y-12">
-            {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div>
-                    <h1 className="text-5xl font-black text-gray-900 tracking-tighter mb-4 leading-none">
-                        Dashboard <span className="text-primary/20">Overview</span>
-                    </h1>
-                    <p className="text-gray-400 font-bold uppercase text-[10px] tracking-[0.3em]">
-                        Bienvenido al centro de control de BoluShop
-                    </p>
-                </div>
-                <div className="flex gap-4">
-                    <Link href="/admin/products" className="bg-primary text-white px-8 py-4 rounded-xl font-bold uppercase tracking-widest text-xs shadow-xl shadow-primary/20 hover:scale-105 transition-transform flex items-center gap-2">
-                        <PlusCircle size={16} /> Nuevo Producto
+        <div className="space-y-8">
+            <AdminPageHeader
+                title="Dashboard"
+                subtitle="Resumen de tu tienda BoluShop"
+                actions={
+                    <Link href="/admin/products" className="admin-btn admin-btn-primary">
+                        <PlusCircle size={16} />
+                        Nuevo producto
                     </Link>
-                </div>
+                }
+            />
+
+            {/* Stats */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+                <AdminStatCard
+                    label="Productos activos"
+                    value={activeProducts.length}
+                    icon={Package}
+                    badge={<span className="admin-badge admin-badge-success">de {products.length}</span>}
+                />
+                <AdminStatCard
+                    label="Pedidos del mes"
+                    value={monthlyOrders.length}
+                    icon={ShoppingCart}
+                    badge={pendingOrders > 0 ? <span className="admin-badge admin-badge-warning">{pendingOrders} pendientes</span> : undefined}
+                />
+                <AdminStatCard
+                    label="Stock crítico"
+                    value={lowStockProducts.length}
+                    icon={AlertTriangle}
+                    badge={lowStockProducts.length > 0 ? <span className="admin-badge admin-badge-danger">Atención</span> : <span className="admin-badge admin-badge-success">OK</span>}
+                />
+                <AdminStatCard
+                    label="Ventas del mes"
+                    value={`$${totalRevenue.toLocaleString("es-AR")}`}
+                    icon={TrendingUp}
+                    accent
+                />
             </div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden group hover:shadow-xl transition-all duration-500">
-                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform">
-                        <Package size={80} />
-                    </div>
-                    <p className="text-gray-400 font-bold uppercase text-[10px] tracking-widest mb-4">Total Productos</p>
-                    <div className="flex items-baseline gap-2">
-                        <p className="text-4xl font-bold text-gray-900">{products.length}</p>
-                        <span className="text-xs font-bold text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded-full">Activos</span>
-                    </div>
-                </div>
-
-                <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden group hover:shadow-xl transition-all duration-500">
-                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform">
-                        <ShoppingCart size={80} />
-                    </div>
-                    <p className="text-gray-400 font-bold uppercase text-[10px] tracking-widest mb-4">Órdenes Totales</p>
-                    <p className="text-4xl font-bold text-gray-900">{orders.length}</p>
-                </div>
-
-                <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden group hover:shadow-xl transition-all duration-500">
-                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform">
-                        <AlertTriangle size={80} />
-                    </div>
-                    <p className="text-gray-400 font-bold uppercase text-[10px] tracking-widest mb-4">Stock Crítico</p>
-                    <div className="flex items-baseline gap-2">
-                        <p className="text-4xl font-bold text-rose-500">{lowStockProducts.length}</p>
-                        <span className="text-[10px] font-bold uppercase text-rose-400 bg-rose-50 px-2 py-0.5 rounded-full">Atención</span>
-                    </div>
-                </div>
-
-                <div className="bg-gradient-to-br from-gray-900 to-gray-800 p-8 rounded-3xl shadow-2xl relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-4 opacity-10">
-                        <TrendingUp size={80} className="text-primary" />
-                    </div>
-                    <p className="text-primary font-bold uppercase text-[10px] tracking-widest mb-4">Ventas Brutas (mes actual)</p>
-                    <p className="text-3xl font-bold text-white">
-                        ${totalRevenue.toLocaleString('es-AR')}
-                    </p>
-                    <p className="text-[10px] font-bold text-gray-400 mt-2 uppercase">Pesos Argentinos · Incluye solo pedidos pagados</p>
-                </div>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-                {/* Actions */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Accesos rápidos */}
                 <div className="lg:col-span-2">
-                    <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
-                        <span className="w-8 h-8 rounded-xl bg-gray-900 text-white flex items-center justify-center text-sm">⚡</span>
-                        Accesos Directos
-                    </h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {[
-                            { href: "/admin/products", label: "Gestión Productos", icon: Package, color: "text-amber-500", bg: "bg-amber-50" },
-                            { href: "/admin/orders", label: "Ver Pedidos", icon: Truck, color: "text-blue-500", bg: "bg-blue-50" },
-                            { href: "/admin/collections", label: "Colecciones", icon: Tags, color: "text-purple-500", bg: "bg-purple-50" },
-                            { href: "/admin/newsletter", label: "Marketing", icon: Mail, color: "text-pink-500", bg: "bg-pink-50" },
-                            { href: "/admin/settings", label: "Configuración", icon: Settings, color: "text-slate-500", bg: "bg-slate-50" },
-                        ].map((action) => (
-                            <Link
-                                key={action.href}
-                                href={action.href}
-                                className="group bg-white p-6 rounded-3xl border-2 border-transparent hover:border-gray-100 hover:shadow-2xl transition-all duration-300"
-                            >
-                                <div className={`w-14 h-14 ${action.bg} ${action.color} rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                                    <action.icon size={28} />
-                                </div>
-                                <p className="font-bold text-gray-900 group-hover:text-primary transition-colors">{action.label}</p>
-                                <div className="mt-4 flex items-center gap-2 text-gray-300 font-bold text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
-                                    Abrir Módulo <ArrowRight size={12} />
-                                </div>
-                            </Link>
-                        ))}
+                    <h3 className="text-sm font-semibold text-[#64748b] uppercase tracking-wider mb-4">Accesos rápidos</h3>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3">
+                        {quickActions.map((action) => {
+                            const Icon = action.icon;
+                            return (
+                                <Link key={action.href + action.label} href={action.href} className="admin-action-tile">
+                                    <div className={`admin-action-icon ${action.color}`}>
+                                        <Icon size={20} />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-semibold text-[#0a1628]">{action.label}</p>
+                                        <p className="text-[11px] text-[#94a3b8]">{action.desc}</p>
+                                    </div>
+                                </Link>
+                            );
+                        })}
                     </div>
                 </div>
 
-                {/* Stock List */}
+                {/* Alertas stock */}
                 <div>
-                    <h2 className="text-2xl font-black mb-8 flex items-center gap-3">
-                        <span className="w-8 h-8 rounded-xl bg-rose-500 text-white flex items-center justify-center text-sm">🚨</span>
-                        Alertas
-                    </h2>
-                    <div className="bg-white rounded-[2rem] border border-gray-100 p-8 shadow-sm">
+                    <h3 className="text-sm font-semibold text-[#64748b] uppercase tracking-wider mb-4">Alertas de stock</h3>
+                    <div className="admin-card">
                         {lowStockProducts.length > 0 ? (
-                            <div className="space-y-6">
-                                {lowStockProducts.slice(0, 4).map(p => (
-                                    <div key={p.id} className="group flex items-center justify-between gap-4 p-4 rounded-2xl hover:bg-gray-50 transition-colors">
-                                        <div className="flex items-center gap-4 truncate">
-                                            <div className="relative w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100">
-                                                <Image src={p.image || "/icon.png"} alt={p.name} fill className="object-cover" />
-                                            </div>
-                                            <div className="truncate">
-                                                <p className="font-bold text-gray-900 truncate">{p.name}</p>
-                                                <p className="text-[10px] font-bold uppercase tracking-widest text-rose-500">Solo {p.stock} unidades</p>
-                                            </div>
+                            <div className="space-y-3">
+                                {lowStockProducts.slice(0, 5).map((p) => (
+                                    <div key={p.id} className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#f8f9fb] transition-colors group">
+                                        <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-[#f0f1f5] shrink-0">
+                                            <Image src={p.image || "/icon.png"} alt={p.name} fill className="object-cover" />
                                         </div>
-                                        <Link href={`/admin/products?search=${p.id}`} className="p-2 bg-gray-100 rounded-lg text-gray-400 hover:bg-primary hover:text-white transition-all">
+                                        <div className="min-w-0 flex-1">
+                                            <p className="text-sm font-medium text-[#0a1628] truncate">{p.name}</p>
+                                            <p className="text-[11px] text-red-500 font-medium">{p.stock} unidades</p>
+                                        </div>
+                                        <Link
+                                            href="/admin/products"
+                                            className="p-1.5 rounded-lg text-[#94a3b8] hover:bg-[#0a1628] hover:text-white transition-all opacity-0 group-hover:opacity-100"
+                                        >
                                             <ArrowRight size={14} />
                                         </Link>
                                     </div>
                                 ))}
-                                {lowStockProducts.length > 4 && (
-                                    <Link href="/admin/products" className="block text-center pt-4 border-t border-gray-50 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-primary transition-colors">
-                                        Ver todos los repuestos ({lowStockProducts.length})
+                                {lowStockProducts.length > 5 && (
+                                    <Link href="/admin/products" className="block text-center text-xs font-semibold text-[#ff6b35] pt-3 border-t border-[#e2e8f0]">
+                                        Ver todos ({lowStockProducts.length})
                                     </Link>
                                 )}
                             </div>
                         ) : (
-                            <div className="text-center py-20 grayscale opacity-30">
-                                <Search size={40} className="mx-auto mb-4" />
-                                <p className="text-xs font-black uppercase tracking-[0.2em]">Todo excelente</p>
+                            <div className="text-center py-10 text-[#94a3b8]">
+                                <Package size={32} className="mx-auto mb-3 opacity-30" />
+                                <p className="text-sm font-medium">Stock en orden</p>
                             </div>
                         )}
                     </div>
                 </div>
             </div>
 
-            {/* Native Apps Section */}
-            <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm mt-12">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
-                    <div>
-                        <h2 className="text-3xl font-black text-gray-900 tracking-tighter mb-2">
-                            Aplicaciones <span className="text-primary">Nativas</span>
-                        </h2>
-                        <p className="text-gray-400 font-bold uppercase text-[10px] tracking-[0.2em]">
-                            Descarga el Panel Admin en todos tus dispositivos
-                        </p>
+            {/* Pedidos recientes */}
+            {orders.length > 0 && (
+                <div>
+                    <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-sm font-semibold text-[#64748b] uppercase tracking-wider">Últimos pedidos</h3>
+                        <Link href="/admin/orders" className="text-xs font-semibold text-[#ff6b35] hover:underline flex items-center gap-1">
+                            Ver todos <ArrowRight size={12} />
+                        </Link>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <a
-                            href="/apps/bolushop-admin.exe"
-                            download
-                            className="flex items-center gap-4 bg-gray-50 hover:bg-gray-900 hover:text-white p-5 rounded-2xl transition-all group border border-transparent hover:border-gray-800 shadow-sm"
-                        >
-                            <div className="bg-white group-hover:bg-gray-800 p-3 rounded-xl shadow-inner transition-colors">
-                                <Monitor size={24} />
-                            </div>
-                            <div>
-                                <p className="font-bold text-sm">Windows App</p>
-                                <p className="text-[10px] opacity-50 font-bold uppercase tracking-widest flex items-center gap-1">
-                                    Descargar .exe <Download size={10} />
-                                </p>
-                            </div>
-                        </a>
-
-                        <a
-                            href="/apps/bolushop-admin.apk"
-                            download
-                            className="flex items-center gap-4 bg-gray-50 hover:bg-primary/90 hover:text-white p-5 rounded-2xl transition-all group border border-transparent hover:border-primary shadow-sm"
-                        >
-                            <div className="bg-white group-hover:bg-primary p-3 rounded-xl shadow-inner transition-colors">
-                                <Smartphone size={24} />
-                            </div>
-                            <div>
-                                <p className="font-bold text-sm">Android App</p>
-                                <p className="text-[10px] opacity-70 font-bold uppercase tracking-widest flex items-center gap-1">
-                                    Descargar .apk <Download size={10} />
-                                </p>
-                            </div>
-                        </a>
+                    <div className="admin-card overflow-hidden !p-0">
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-sm">
+                                <thead>
+                                    <tr className="border-b border-[#e2e8f0] bg-[#f8f9fb]">
+                                        <th className="text-left px-4 py-3 text-xs font-semibold text-[#64748b]">Cliente</th>
+                                        <th className="text-left px-4 py-3 text-xs font-semibold text-[#64748b] hidden sm:table-cell">Fecha</th>
+                                        <th className="text-left px-4 py-3 text-xs font-semibold text-[#64748b]">Total</th>
+                                        <th className="text-left px-4 py-3 text-xs font-semibold text-[#64748b]">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {orders.slice(0, 5).map((order) => (
+                                        <tr key={order.id} className="border-b border-[#f1f5f9] last:border-0 hover:bg-[#fafbfc]">
+                                            <td className="px-4 py-3 font-medium text-[#0a1628]">{order.payer.name}</td>
+                                            <td className="px-4 py-3 text-[#64748b] hidden sm:table-cell">
+                                                {new Date(order.date).toLocaleDateString("es-AR")}
+                                            </td>
+                                            <td className="px-4 py-3 font-semibold">${order.total.toLocaleString("es-AR")}</td>
+                                            <td className="px-4 py-3">
+                                                <span className={`admin-badge ${
+                                                    order.status === "delivered" ? "admin-badge-success" :
+                                                    order.status === "cancelled" ? "admin-badge-danger" :
+                                                    order.status === "pending" ? "admin-badge-warning" : "admin-badge-info"
+                                                }`}>
+                                                    {order.status}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 }

@@ -1,268 +1,337 @@
-import { getAllProducts, getAllCategories, getAllCollections, getAllPosts } from "@/lib/db";
-import Header from "@/components/shop/Header";
-import Footer from "@/components/shop/Footer";
+import { getAllProducts, getAllCategories, getAllPosts } from "@/lib/db";
 import ProductCard from "@/components/shop/ProductCard";
 import Link from "next/link";
 import Image from "next/image";
-import type { Metadata } from "next";
-import { Truck, CreditCard, Shield, Gift, Home, Zap, Gamepad2 } from "lucide-react";
+import { buildPageMetadata } from "@/lib/seo";
+import {
+    Truck, Shield, CreditCard, Gift, Home, Zap, Gamepad2,
+    ArrowRight, Sparkles, Star, RefreshCw,
+} from "lucide-react";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
-
-export const metadata: Metadata = {
-    metadataBase: new URL(siteUrl),
-    title: "Regalos Originales y Hogar | BoluShop",
-    description: "Regalos originales y accesorios para el hogar en Argentina. Envío gratis a todo el país, cuotas sin interés y compra 100% protegida. ¡Descubrí BoluShop!",
-    keywords: "regalos originales, hogar, accesorios, argentina",
-    alternates: {
-        canonical: `${siteUrl}/`,
-    },
-    openGraph: {
-        type: "website",
-        locale: "es_AR",
-        url: `${siteUrl}/`,
-        title: "Regalos Originales y Hogar | BoluShop",
-        description: "Regalos originales y accesorios para el hogar en Argentina. Envío gratis a todo el país, cuotas sin interés y compra 100% protegida. ¡Descubrí BoluShop!",
-        siteName: "BoluShop",
-        images: [
-            {
-                url: `${siteUrl}/icon.png`,
-                width: 512,
-                height: 512,
-                alt: "BoluShop"
-            }
-        ]
-    },
-    twitter: {
-        card: "summary",
-        title: "Regalos Originales y Hogar | BoluShop",
-        description: "Regalos originales y accesorios para el hogar en Argentina. Envío gratis a todo el país, cuotas sin interés y compra 100% protegida. ¡Descubrí BoluShop!",
-        images: [`${siteUrl}/icon.png`],
-    }
-};
+export const metadata = buildPageMetadata({
+    title: "Regalos Originales y Hogar en Argentina",
+    description:
+        "Descubrí regalos originales y accesorios para el hogar en BoluShop. Envío gratis a todo el país, cuotas sin interés y compra 100% protegida. ¡Sorprendé hoy!",
+    path: "/",
+    keywords: [
+        "regalos originales argentina",
+        "accesorios hogar",
+        "tienda online regalos",
+        "envio gratis",
+        "bolushop",
+    ],
+});
 
 export default async function HomePage() {
     const allProducts = await getAllProducts();
-    const activeProducts = allProducts.filter(p => p.isActive !== false && p.price > 0);
-    const featuredProducts = activeProducts.slice(0, 4);
-    const mlProducts = activeProducts.filter(p => p.isMlReferral).slice(0, 3);
+    const activeProducts = allProducts.filter((p) => p.isActive !== false && p.price > 0);
+    const featuredProducts = activeProducts.slice(0, 8);
+    const mlProducts = activeProducts.filter((p) => p.isMlReferral).slice(0, 3);
+    const heroProduct = featuredProducts[0];
     const allPosts = await getAllPosts();
-    const recentPosts = allPosts.filter(p => p.isPublished).slice(0, 3);
+    const recentPosts = allPosts.filter((p) => p.isPublished).slice(0, 3);
+    const categories = await getAllCategories();
 
-    const categories = [
-        { id: 1, name: 'Organización del hogar', icon: Home },
-        { id: 2, name: 'Regalos originales', icon: Gift },
-        { id: 3, name: 'Cocina y comedor', icon: '🍳' },
-        { id: 4, name: 'Gadgets tech', icon: Zap },
-        { id: 5, name: 'Juegos y entretenimiento', icon: Gamepad2 },
-    ];
+    const getCategoryIcon = (slug: string) => {
+        const icons: Record<string, typeof Home> = { hogar: Home, regalos: Gift, tech: Zap, juegos: Gamepad2 };
+        const Icon = icons[slug] || Gift;
+        return <Icon size={24} />;
+    };
 
     return (
-        <>
-            <Header />
+        <div className="min-h-screen">
+            {/* HERO */}
+            <section className="hero-mesh text-white relative overflow-hidden">
+                <div className="absolute inset-0 opacity-30">
+                    <div className="absolute top-20 left-10 w-72 h-72 bg-[#ff6b35] rounded-full blur-[120px]" />
+                    <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#f5c842] rounded-full blur-[150px]" />
+                </div>
 
-            <main className="min-h-screen">
-                {/* HERO SECTION */}
-                <section className="relative overflow-hidden bg-gradient-to-br from-[#0f2044] via-[#152d5d] to-[#1a3a6b] text-white py-10 md:py-20 px-4 md:px-6 rounded-[2rem] shadow-2xl shadow-black/20">
-                    <div className="pointer-events-none absolute left-0 top-0 h-96 w-96 rounded-full bg-[#e8630a]/30 blur-3xl" />
-                    <div className="pointer-events-none absolute right-0 bottom-0 h-72 w-72 rounded-full bg-[#34d399]/25 blur-3xl" />
-                    <div className="max-w-7xl mx-auto relative flex flex-col lg:flex-row gap-10 lg:gap-16 items-center">
-                        {/* Left side - Text */}
-                        <div className="flex-1 max-w-2xl">
-                            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 mb-6 backdrop-blur-sm">
-                                <span className="text-[10px] uppercase tracking-[0.35em] text-[#f9e5c1] font-bold">✨ Nueva temporada 2026</span>
+                <div className="container-shop relative py-16 md:py-24 lg:py-28">
+                    <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                        <div className="animate-fade-up">
+                            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15 rounded-full px-4 py-1.5 mb-6 text-xs font-medium text-white/80">
+                                <Sparkles size={14} className="text-[#f5c842]" />
+                                Nueva temporada 2026
                             </div>
-                            <h1 className="text-4xl md:text-6xl font-black mb-6 leading-tight md:leading-[1.01] tracking-tight">
-                                Regalos originales y<br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#facc15] to-[#fb923c]">accesorios para tu hogar</span><br />
-                                en Argentina
+
+                            <h1
+                                className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.08] mb-6"
+                                style={{ fontFamily: "var(--font-display)" }}
+                            >
+                                Regalos que{" "}
+                                <span className="text-gradient">sorprenden</span>
+                                <br />
+                                para tu hogar
                             </h1>
-                            <p className="text-sm md:text-base text-[#d1d5db] mb-8 max-w-xl leading-relaxed">
-                                Productos curados con envío gratis a todo el país.<br />
+
+                            <p className="text-base md:text-lg text-white/65 max-w-lg mb-8 leading-relaxed">
+                                Productos curados con envío gratis a todo Argentina.
                                 Pagá en cuotas sin interés. Devolución en 30 días.
                             </p>
-                            <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
-                                <Link href="/productos" className="inline-flex items-center justify-center rounded-full bg-[#f59e0b] px-6 py-3 text-sm font-bold text-[#0f172a] shadow-lg shadow-[#f59e0b]/30 transition hover:scale-[1.01] hover:bg-[#fbbf24]">
-                                    Ver ofertas del día
+
+                            <div className="flex flex-wrap gap-3 mb-10">
+                                <Link href="/productos" className="btn btn-primary">
+                                    Ver catálogo
+                                    <ArrowRight size={16} />
                                 </Link>
-                                <Link href="/colecciones" className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/15">
+                                <Link href="/colecciones" className="btn btn-outline !text-white !border-white/30 hover:!bg-white/10">
                                     Colecciones
                                 </Link>
                             </div>
-                        </div>
 
-                        {/* Right side - Product Image */}
-                        <div className="hidden lg:flex flex-1 justify-end">
-                            <div className="relative w-72 h-72 rounded-[2rem] bg-white/10 border border-white/20 shadow-2xl shadow-black/20 backdrop-blur-xl overflow-hidden">
-                                <div className="absolute inset-0 bg-[radial-gradient(circle,_rgba(255,255,255,0.12),transparent_55%)]" />
-                                {featuredProducts[0] ? (
-                                    <Image
-                                        src={featuredProducts[0].image}
-                                        alt="Featured"
-                                        fill
-                                        className="object-contain p-8"
-                                    />
-                                ) : null}
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* TRUST BAR */}
-                <section className="bg-[#f8f9fb] border-b border-[#e2e8f0] py-6 md:py-8 px-4 md:px-6">
-                    <div className="max-w-7xl mx-auto">
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-12 text-sm text-[#64748b]">
-                            <div className="flex items-center gap-3">
-                                <Truck size={18} className="text-[#0f2044]" />
-                                <span>Envíos a todo el país con Correo Argentino</span>
-                            </div>
-                            <div className="hidden sm:flex items-center gap-3">
-                                <Shield size={18} className="text-[#0f2044]" />
-                                <span>Compra 100% protegida</span>
-                            </div>
-                            <div className="hidden md:flex items-center gap-3">
-                                <CreditCard size={18} className="text-[#0f2044]" />
-                                <span>Hasta 12 cuotas sin interés</span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* CATEGORIES */}
-                <section className="py-14 md:py-18 px-4 md:px-6">
-                    <div className="max-w-7xl mx-auto">
-                        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-8">
-                            <div>
-                                <p className="text-sm text-[#64748b] uppercase tracking-[0.18em] mb-2">Explorá nuestras secciones</p>
-                                <h2 className="text-2xl md:text-3xl font-bold text-[#0f2044]">
-                                    Explorá por <span className="text-[#e8630a]">categoría</span>
-                                </h2>
-                            </div>
-                            <Link href="/productos" className="text-sm text-[#0f2044] font-bold hover:underline">
-                                Ver todo →
-                            </Link>
-                        </div>
-                        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-5">
-                            {categories.map((cat) => (
-                                <div
-                                    key={cat.id}
-                                    className="group bg-white shadow-sm border border-[#e2e8f0] rounded-3xl p-5 text-center transition hover:-translate-y-1 hover:border-[#0f2044]"
-                                >
-                                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#f8fafc] text-[#0f2044] shadow-sm">
-                                        {typeof cat.icon === 'string' ? <span className="text-3xl">{cat.icon}</span> : <cat.icon size={28} />}
+                            <div className="flex gap-8 text-center">
+                                {[
+                                    { value: "500+", label: "Productos" },
+                                    { value: "4.9★", label: "Valoración" },
+                                    { value: "24hs", label: "Envío rápido" },
+                                ].map((stat) => (
+                                    <div key={stat.label}>
+                                        <div className="text-xl font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>
+                                            {stat.value}
+                                        </div>
+                                        <div className="text-[11px] text-white/45 uppercase tracking-wider">{stat.label}</div>
                                     </div>
-                                    <p className="text-sm font-semibold text-[#1e293b]">{cat.name}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* FEATURED PRODUCTS */}
-                <section className="py-14 md:py-18 px-4 md:px-6">
-                    <div className="max-w-7xl mx-auto">
-                        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-8">
-                            <div>
-                                <p className="text-sm text-[#64748b] uppercase tracking-[0.18em] mb-2">Destacados de la semana</p>
-                                <h2 className="text-2xl md:text-3xl font-bold text-[#0f2044]">
-                                    Más vendidos <span className="text-[#e8630a]">esta semana</span>
-                                </h2>
-                            </div>
-                            <Link href="/productos" className="text-sm text-[#0f2044] font-bold hover:underline">
-                                Ver catálogo →
-                            </Link>
-                        </div>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
-                            {featuredProducts.map(product => (
-                                <ProductCard key={product.id} product={product} />
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* MERCADO LIBRE SECTION */}
-                {mlProducts.length > 0 && (
-                    <section className="bg-[#fff9e6] border-t border-[#f0c040] border-b py-14 md:py-18 px-4 md:px-6">
-                        <div className="max-w-7xl mx-auto">
-                            <div className="mb-8">
-                                <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
-                                    <div className="flex items-center gap-2">
-                                        <h2 className="text-2xl md:text-3xl font-bold text-[#0f2044]">Recomendados en</h2>
-                                        <span className="bg-[#f0c040] text-[#7a4f00] text-sm font-bold px-3 py-1 rounded-md">Mercado Libre</span>
-                                    </div>
-                                </div>
-                                <p className="text-sm text-[#8a6500] max-w-2xl">
-                                    <span className="mr-2">ℹ️</span>
-                                    Links de afiliado — si comprás a través de estos links podemos recibir una comisión sin costo adicional para vos.
-                                </p>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
-                                {mlProducts.map(product => (
-                                    <a
-                                        key={product.id}
-                                        href={product.mlAffiliateUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="group block rounded-3xl border border-[#f0d080] bg-white p-5 transition-shadow hover:shadow-[0_20px_60px_rgba(240,192,64,0.18)]"
-                                    >
-                                        <span className="inline-block rounded-full bg-[#fff9e6] text-[#c47a00] text-xs font-bold px-3 py-1 mb-4 border border-[#f0c040]">
-                                            Selección ML
-                                        </span>
-                                        <h3 className="text-sm md:text-base font-bold text-[#0f2044] mb-3 line-clamp-2">{product.name}</h3>
-                                        <p className="text-lg md:text-xl font-black text-[#0f2044] mb-4">${product.price.toLocaleString('es-AR')}</p>
-                                        <p className="text-sm text-[#8a6500] font-medium">↗ Ver en Mercado Libre</p>
-                                    </a>
                                 ))}
                             </div>
                         </div>
-                    </section>
-                )}
 
-                {/* BLOG SECTION */}
-                {recentPosts.length > 0 && (
-                    <section className="bg-[#f8f9fb] py-14 md:py-18 px-4 md:px-6">
-                        <div className="max-w-7xl mx-auto">
-                            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-8">
-                                <div>
-                                    <p className="text-sm text-[#64748b] uppercase tracking-[0.18em] mb-2">Lecturas recomendadas</p>
-                                    <h2 className="text-2xl md:text-3xl font-bold text-[#0f2044]">
-                                        Del <span className="text-[#e8630a]">blog</span> — guías y recomendaciones
-                                    </h2>
-                                </div>
-                                <Link href="/blog" className="text-sm text-[#0f2044] font-bold hover:underline">
-                                    Ver todos →
-                                </Link>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
-                                {recentPosts.map(post => (
-                                    <Link key={post.id} href={`/blog/${post.slug}`} className="group block overflow-hidden rounded-3xl border border-transparent bg-white shadow-sm transition hover:border-[#e2e8f0] hover:shadow-md">
-                                        <div className="h-44 bg-[#eef3fb] overflow-hidden">
-                                            {post.image && (
-                                                <Image
-                                                    src={post.image}
-                                                    alt={post.title}
-                                                    width={400}
-                                                    height={240}
-                                                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-                                                />
-                                            )}
+                        {heroProduct && (
+                            <div className="hidden lg:block animate-float">
+                                <div className="relative">
+                                    <div className="absolute -inset-4 bg-gradient-to-br from-[#ff6b35]/20 to-[#f5c842]/10 rounded-[2rem] blur-2xl" />
+                                    <div className="relative bg-white/10 backdrop-blur-xl border border-white/15 rounded-[2rem] p-8 shadow-2xl">
+                                        <div className="relative aspect-square rounded-2xl overflow-hidden bg-white/5 mb-5">
+                                            <Image
+                                                src={heroProduct.image}
+                                                alt={heroProduct.name}
+                                                fill
+                                                className="object-contain p-6"
+                                                priority
+                                            />
                                         </div>
-                                        <div className="p-4 md:p-5">
-                                            <span className="text-xs bg-[#e6f1fb] text-[#185fa5] px-3 py-1 rounded inline-block mb-3 font-bold">
+                                        <div className="flex items-center gap-1 text-[#f5c842] mb-2">
+                                            {[...Array(5)].map((_, i) => (
+                                                <Star key={i} size={12} fill="currentColor" />
+                                            ))}
+                                            <span className="text-white/50 text-xs ml-2">Destacado</span>
+                                        </div>
+                                        <h2 className="text-lg font-semibold text-white mb-2 truncate-2" style={{ fontFamily: "var(--font-display)" }}>
+                                            {heroProduct.name}
+                                        </h2>
+                                        <p className="text-2xl font-bold text-[#ff6b35]" style={{ fontFamily: "var(--font-display)" }}>
+                                            ${heroProduct.price.toLocaleString("es-AR")}
+                                        </p>
+                                        <Link
+                                            href={`/producto/${heroProduct.slug}`}
+                                            className="mt-4 btn btn-primary w-full text-sm"
+                                        >
+                                            Ver producto
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </section>
+
+            {/* TRUST BAR */}
+            <section className="bg-white border-b border-[#e8e4df] py-5">
+                <div className="container-shop">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs md:text-sm text-[#64748b]">
+                        {[
+                            { icon: Truck, text: "Envío a todo el país" },
+                            { icon: Shield, text: "Compra protegida" },
+                            { icon: CreditCard, text: "Cuotas sin interés" },
+                            { icon: RefreshCw, text: "Devolución 30 días" },
+                        ].map(({ icon: Icon, text }) => (
+                            <div key={text} className="flex items-center justify-center gap-2">
+                                <Icon size={16} className="text-[#ff6b35] flex-shrink-0" />
+                                <span>{text}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* CATEGORIES */}
+            <section className="section-padding">
+                <div className="container-shop">
+                    <div className="flex items-end justify-between mb-10">
+                        <div>
+                            <p className="text-xs uppercase tracking-widest text-[#94a3b8] mb-2">Explorá</p>
+                            <h2 className="text-2xl md:text-3xl font-semibold" style={{ fontFamily: "var(--font-display)" }}>
+                                Por <span className="text-gradient">categoría</span>
+                            </h2>
+                        </div>
+                        <Link href="/productos" className="text-sm font-semibold text-[#0a1628] hover:text-[#ff6b35] flex items-center gap-1 transition-colors">
+                            Ver todo <ArrowRight size={14} />
+                        </Link>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                        {(categories.length > 0 ? categories.slice(0, 5) : [
+                            { slug: "hogar", name: "Hogar" },
+                            { slug: "regalos", name: "Regalos" },
+                            { slug: "cocina", name: "Cocina" },
+                            { slug: "tech", name: "Tech" },
+                            { slug: "juegos", name: "Juegos" },
+                        ]).map((cat, i) => (
+                            <Link
+                                key={cat.slug}
+                                href={`/productos?categoria=${cat.slug}`}
+                                className={`group text-center p-6 rounded-2xl border transition-all hover:-translate-y-1 ${
+                                    i === 0
+                                        ? "bg-[#0a1628] text-white border-[#0a1628] shadow-lg"
+                                        : "bg-white border-[#e8e4df] hover:border-[#ff6b35]/30 hover:shadow-md"
+                                }`}
+                            >
+                                <div className={`mx-auto mb-3 w-12 h-12 rounded-xl flex items-center justify-center ${
+                                    i === 0 ? "bg-white/10 text-[#ff6b35]" : "bg-[#faf9f7] text-[#0a1628]"
+                                }`}>
+                                    {getCategoryIcon(cat.slug)}
+                                </div>
+                                <span className={`text-sm font-medium ${i === 0 ? "text-white" : "text-[#0a1628]"}`}>
+                                    {cat.name}
+                                </span>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* FEATURED PRODUCTS */}
+            <section className="section-padding bg-white">
+                <div className="container-shop">
+                    <div className="flex items-end justify-between mb-10">
+                        <div>
+                            <p className="text-xs uppercase tracking-widest text-[#94a3b8] mb-2">Selección</p>
+                            <h2 className="text-2xl md:text-3xl font-semibold" style={{ fontFamily: "var(--font-display)" }}>
+                                Más vendidos <span className="text-gradient">esta semana</span>
+                            </h2>
+                        </div>
+                        <Link href="/productos" className="text-sm font-semibold text-[#0a1628] hover:text-[#ff6b35] flex items-center gap-1">
+                            Catálogo <ArrowRight size={14} />
+                        </Link>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
+                        {featuredProducts.map((product) => (
+                            <ProductCard key={product.id} product={product} />
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* ML SECTION */}
+            {mlProducts.length > 0 && (
+                <section className="section-padding bg-[#fff8e6] border-y border-[#f0c040]/40">
+                    <div className="container-shop">
+                        <div className="mb-8">
+                            <div className="flex items-center gap-3 mb-3">
+                                <h2 className="text-2xl font-semibold text-[#0a1628]" style={{ fontFamily: "var(--font-display)" }}>
+                                    Recomendados en
+                                </h2>
+                                <span className="badge-ml text-xs font-bold px-3 py-1">Mercado Libre</span>
+                            </div>
+                            <p className="text-sm text-[#9a6b00]">
+                                Links de afiliado — comisión sin costo extra para vos.
+                            </p>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            {mlProducts.map((product) => (
+                                <a
+                                    key={product.id}
+                                    href={product.mlAffiliateUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer sponsored"
+                                    className="group block bg-white rounded-2xl border border-[#f0c040]/50 p-6 hover:shadow-lg transition-all hover:-translate-y-1"
+                                >
+                                    <span className="badge-ml text-[10px] mb-3 inline-block">Selección ML</span>
+                                    <h3 className="font-semibold text-[#0a1628] truncate-2 mb-3" style={{ fontFamily: "var(--font-display)" }}>
+                                        {product.name}
+                                    </h3>
+                                    <p className="text-xl font-bold text-[#0a1628] mb-2">
+                                        ${product.price.toLocaleString("es-AR")}
+                                    </p>
+                                    <span className="text-sm text-[#9a6b00] font-medium group-hover:underline">
+                                        Ver en Mercado Libre →
+                                    </span>
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
+
+            {/* BLOG */}
+            {recentPosts.length > 0 && (
+                <section className="section-padding">
+                    <div className="container-shop">
+                        <div className="flex items-end justify-between mb-10">
+                            <div>
+                                <p className="text-xs uppercase tracking-widest text-[#94a3b8] mb-2">Blog</p>
+                                <h2 className="text-2xl md:text-3xl font-semibold" style={{ fontFamily: "var(--font-display)" }}>
+                                    Guías y <span className="text-gradient">recomendaciones</span>
+                                </h2>
+                            </div>
+                            <Link href="/blog" className="text-sm font-semibold text-[#0a1628] hover:text-[#ff6b35] flex items-center gap-1">
+                                Ver blog <ArrowRight size={14} />
+                            </Link>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                            {recentPosts.map((post) => (
+                                <Link
+                                    key={post.id}
+                                    href={`/blog/${post.slug}`}
+                                    className="group card overflow-hidden"
+                                >
+                                    <div className="h-48 bg-[#f5f3f0] overflow-hidden relative">
+                                        {post.image && (
+                                            <Image
+                                                src={post.image}
+                                                alt={post.title}
+                                                fill
+                                                className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                            />
+                                        )}
+                                    </div>
+                                    <div className="p-5">
+                                        {post.category && (
+                                            <span className="text-[10px] font-bold uppercase tracking-wider text-[#ff6b35] mb-2 block">
                                                 {post.category}
                                             </span>
-                                            <h3 className="text-base md:text-lg font-bold text-[#0f2044] line-clamp-2 mb-2">{post.title}</h3>
-                                            <p className="text-sm text-[#64748b]">{post.author || 'BoluShop'}</p>
-                                        </div>
-                                    </Link>
-                                ))}
-                            </div>
+                                        )}
+                                        <h3 className="font-semibold text-[#0a1628] truncate-2 mb-2" style={{ fontFamily: "var(--font-display)" }}>
+                                            {post.title}
+                                        </h3>
+                                        <p className="text-xs text-[#94a3b8]">{post.author || "BoluShop"}</p>
+                                    </div>
+                                </Link>
+                            ))}
                         </div>
-                    </section>
-                )}
-            </main>
+                    </div>
+                </section>
+            )}
 
-            <Footer />
-        </>
+            {/* CTA */}
+            <section className="hero-mesh py-16 md:py-20">
+                <div className="container-shop text-center">
+                    <h2
+                        className="text-3xl md:text-4xl font-semibold text-white mb-4"
+                        style={{ fontFamily: "var(--font-display)" }}
+                    >
+                        ¿Listo para sorprender?
+                    </h2>
+                    <p className="text-white/60 mb-8 max-w-md mx-auto">
+                        Explorá nuestro catálogo completo con envío gratis y la mejor selección de regalos.
+                    </p>
+                    <Link href="/productos" className="btn btn-primary text-base px-8">
+                        Explorar productos
+                        <ArrowRight size={18} />
+                    </Link>
+                </div>
+            </section>
+        </div>
     );
 }

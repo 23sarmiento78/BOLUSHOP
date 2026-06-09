@@ -794,6 +794,15 @@ export async function addProductReview(review: Review): Promise<boolean> {
     return true;
 }
 // Newsletter API
+async function syncSubscriberToBrevo(email: string) {
+    try {
+        const { addContactToNewsletter } = await import("./brevo");
+        await addContactToNewsletter(email);
+    } catch (error) {
+        console.error("❌ Brevo subscribe sync error:", error);
+    }
+}
+
 export async function subscribeToNewsletter(email: string): Promise<boolean> {
     const emails = readJson<Newsletter[]>(NEWSLETTER_FILE, []);
 
@@ -822,6 +831,8 @@ export async function subscribeToNewsletter(email: string): Promise<boolean> {
     } catch (e) {
         console.error("❌ Supabase Newsletter Sync Error:", e);
     }
+
+    await syncSubscriberToBrevo(entry.email);
     return true;
 }
 
@@ -856,6 +867,14 @@ export async function deleteNewsletterSubscriber(email: string): Promise<boolean
     } catch (e) {
         console.error("❌ Supabase Newsletter Delete Error:", e);
     }
+
+    try {
+        const { removeContactFromNewsletter } = await import("./brevo");
+        await removeContactFromNewsletter(email);
+    } catch (e) {
+        console.error("❌ Brevo unsubscribe sync error:", e);
+    }
+
     return true;
 }
 

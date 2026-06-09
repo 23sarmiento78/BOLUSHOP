@@ -1,13 +1,17 @@
-import Header from "@/components/shop/Header";
-import Footer from "@/components/shop/Footer";
 import Link from "next/link";
 import { Mail, Phone, MapPin, ChevronRight } from "lucide-react";
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata = buildPageMetadata({
+    title: "Contacto",
+    description: "Contactá a BoluShop en Villa Carlos Paz, Córdoba. WhatsApp, email y formulario de contacto. Te respondemos rápido para ayudarte con tu compra.",
+    path: "/contacto",
+    keywords: ["contacto bolushop", "whatsapp bolushop", "atencion al cliente argentina"],
+});
 
 export default function ContactoPage() {
     return (
-        <>
-            <Header />
-            <main className="min-h-screen bg-white">
+            <main className="min-h-screen bg-[#faf9f7]">
                 <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-8 md:py-12 px-4 md:px-6">
                     <div className="max-w-7xl mx-auto">
                         <div className="flex items-center gap-2 mb-4 text-xs text-gray-300">
@@ -110,7 +114,5 @@ export default function ContactoPage() {
                     </div>
                 </section>
             </main>
-            <Footer />
-        </>
     );
 }

@@ -76,25 +76,25 @@ export default function SettingsPage() {
     };
 
     if (loading) return (
-        <div className="flex flex-col items-center justify-center p-20 gap-4">
-            <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-            <p className="font-bold text-gray-400 uppercase tracking-widest text-xs">Cargando configuración...</p>
+        <div className="flex flex-col items-center justify-center py-24 gap-4">
+            <div className="w-10 h-10 border-2 border-[#ff6b35] border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-sm text-[#64748b] font-medium">Cargando configuración...</p>
         </div>
     );
 
     return (
-        <div className="max-w-4xl">
-            <div className="mb-10">
-                <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-2">Estrategia Comercial</h1>
-                <p className="text-gray-500 font-medium">Configurá el margen, costos de envío y la lógica de "Envío Gratis".</p>
+        <div className="max-w-3xl space-y-6">
+            <div className="admin-page-header">
+                <h2 className="admin-page-title">Configuración</h2>
+                <p className="admin-page-subtitle">Margen, envíos, identidad y SEO de la tienda</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Lógica de Precios y Envío Gratis */}
-                <div className="bg-white p-8 md:p-12 rounded-[3rem] shadow-sm border border-gray-100 ring-4 ring-emerald-50/50">
-                    <h2 className="text-xl font-black text-gray-900 mb-8 flex items-center gap-3">
-                        <span className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">🚀</span>
-                        Lógica de "Envío Gratis Total"
+                <div className="admin-card">
+                    <h2 className="text-base font-semibold text-[#0a1628] mb-6 flex items-center gap-2">
+                        <span className="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center text-sm">🚀</span>
+                        Envío gratis y precios
                     </h2>
 
                     <div className="mb-10 p-6 bg-emerald-50/50 rounded-3xl border border-emerald-100 space-y-4">
@@ -193,9 +193,9 @@ export default function SettingsPage() {
                 </div>
 
                 {/* Identidad y SEO */}
-                <div className="bg-white p-8 md:p-12 rounded-[3rem] shadow-sm border border-gray-100">
-                    <h2 className="text-xl font-black text-gray-900 mb-8 flex items-center gap-3">
-                        <span className="w-10 h-10 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center">🌐</span>
+                <div className="admin-card">
+                    <h2 className="text-base font-semibold text-[#0a1628] mb-6 flex items-center gap-2">
+                        <span className="w-8 h-8 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center text-sm">🌐</span>
                         Identidad y SEO
                     </h2>
 
@@ -243,7 +243,7 @@ export default function SettingsPage() {
                     <button
                         type="submit"
                         disabled={saving}
-                        className="w-full md:w-auto px-12 py-5 bg-gray-900 text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl hover:scale-105 transition-all disabled:opacity-50 active:scale-95"
+                        className="admin-btn admin-btn-primary !px-8 !py-3 disabled:opacity-50"
                     >
                         {saving ? 'Guardando...' : 'Guardar Configuración'}
                     </button>

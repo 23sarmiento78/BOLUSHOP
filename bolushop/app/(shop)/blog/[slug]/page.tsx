@@ -1,37 +1,36 @@
 import { getPostBySlug, getAllPosts, getAllProducts } from "@/lib/db";
-import Header from "@/components/shop/Header";
-import Footer from "@/components/shop/Footer";
 import ProductCard from "@/components/shop/ProductCard";
 import NewsletterForm from "@/components/shop/NewsletterForm";
+import JsonLd from "@/components/shop/JsonLd";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Calendar, User, ArrowLeft, Share2, ShoppingBag, Clock, Instagram, Facebook } from "lucide-react";
+import { Calendar, ArrowLeft, Share2, ShoppingBag, Clock, Instagram, Facebook } from "lucide-react";
 import Logo from "@/components/shop/Logo";
 import { transformImageUrl } from "@/lib/images";
 import Script from "next/script";
+import { buildPageMetadata, buildBlogPostJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
     const post = await getPostBySlug(slug);
-    if (!post) return { title: "Artículo no encontrado" };
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
-    const postUrl = `${siteUrl}/blog/${post.slug}`;
-    const description = post.metaDescription || post.excerpt;
+    if (!post) {
+        return buildPageMetadata({
+            title: "Artículo no encontrado",
+            description: "El artículo que buscás no está disponible.",
+            path: `/blog/${slug}`,
+            noIndex: true,
+        });
+    }
 
-    return {
-        title: post.metaTitle || `${post.title} | Blog BoluShop`,
-        description,
-        alternates: {
-            canonical: postUrl,
-        },
-        openGraph: {
-            title: post.metaTitle || post.title,
-            description,
-            url: postUrl,
-            images: [post.image ? transformImageUrl(post.image) : '/icon.png'],
-        }
-    };
+    return buildPageMetadata({
+        title: post.metaTitle || post.title,
+        description: post.metaDescription || post.excerpt || post.title,
+        path: `/blog/${post.slug}`,
+        image: post.image || "/icon.png",
+        type: "article",
+        publishedTime: post.createdAt,
+    });
 }
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -62,9 +61,18 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             .join('');
     };
 
+    const structuredData = [
+        buildBlogPostJsonLd(post),
+        buildBreadcrumbJsonLd([
+            { name: "Inicio", path: "/" },
+            { name: "Blog", path: "/blog" },
+            { name: post.title, path: `/blog/${post.slug}` },
+        ]),
+    ];
+
     return (
         <>
-            <Header />
+            <JsonLd data={structuredData} />
             <main className="min-h-screen bg-white">
                 <article>
                     {/* Hero Section - Magazine Style */}
@@ -214,8 +222,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 </article>
 
                 {/* Newsletter */}
-                <section className="bg-gray-50 py-24 border-t border-gray-100">
-                    <div className="container mx-auto px-4 max-w-4xl">
+                <section className="bg-[#faf9f7] py-12 md:py-16 border-t border-[#e8e4df]">
+                    <div className="container-shop max-w-2xl text-center">
+                        <h2 className="text-xl md:text-2xl font-semibold text-[#0a1628] mb-2" style={{ fontFamily: "var(--font-display)" }}>
+                            ¿Te gustó el artículo?
+                        </h2>
+                        <p className="text-sm text-[#64748b] mb-6">Recibí más guías y ofertas en tu correo.</p>
                         <NewsletterForm />
                     </div>
                 </section>
@@ -248,8 +260,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                         </div>
                     </section>
                 )}
-            </main>
-            <Footer />
-        </>
+            </main>        </>
     );
 }

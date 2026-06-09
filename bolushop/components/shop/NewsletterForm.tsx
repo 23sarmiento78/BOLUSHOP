@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Mail, ArrowRight, CheckCircle2 } from "lucide-react";
+import { subscribeToNewsletterAction } from "@/app/actions/shop";
 
 export default function NewsletterForm() {
     const [email, setEmail] = useState("");
@@ -14,64 +15,70 @@ export default function NewsletterForm() {
 
         setStatus("loading");
         try {
-            const res = await fetch("/api/newsletter", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email })
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                throw new Error(data.error || "Error al suscribirse");
-            }
-
+            await subscribeToNewsletterAction(email);
             setStatus("success");
             setMessage("¡Gracias por suscribirte!");
             setEmail("");
-        } catch (error: any) {
+        } catch (error: unknown) {
             setStatus("error");
-            setMessage(error.message || "Ocurrió un error");
+            setMessage(error instanceof Error ? error.message : "Ocurrió un error");
         }
     };
 
     return (
-        <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto">
-            <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Tu mejor email..."
-                    className="block w-full pl-12 pr-32 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all backdrop-blur-sm"
-                    required
-                    disabled={status === "loading" || status === "success"}
-                />
-                <div className="absolute inset-y-2 right-2">
+        <div className="w-full max-w-lg mx-auto">
+            <form onSubmit={handleSubmit} className="space-y-3">
+                <label htmlFor="blog-newsletter-email" className="sr-only">
+                    Tu correo electrónico
+                </label>
+                <div className="flex flex-col gap-3 sm:flex-row">
+                    <div className="relative min-w-0 flex-1">
+                        <Mail
+                            size={16}
+                            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#94a3b8]"
+                            aria-hidden
+                        />
+                        <input
+                            id="blog-newsletter-email"
+                            type="email"
+                            inputMode="email"
+                            autoComplete="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="tu@email.com"
+                            required
+                            disabled={status === "loading" || status === "success"}
+                            className="w-full min-w-0 rounded-xl border border-[#e8e4df] bg-white py-3.5 pl-11 pr-4 text-sm text-[#0a1628] outline-none transition placeholder:text-[#94a3b8] focus:border-[#ff6b35] focus:ring-2 focus:ring-[#ff6b35]/20 disabled:opacity-60"
+                        />
+                    </div>
                     <button
                         type="submit"
                         disabled={status === "loading" || status === "success"}
-                        className="h-full px-6 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-bold text-sm tracking-wide transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg shadow-emerald-500/20"
+                        className="flex w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-[#0a1628] px-6 py-3.5 text-sm font-bold text-white transition hover:bg-[#152238] disabled:opacity-60 sm:w-auto"
                     >
                         {status === "loading" ? (
                             "Enviando..."
                         ) : status === "success" ? (
-                            <CheckCircle2 size={18} />
+                            <>
+                                <CheckCircle2 size={16} /> ¡Listo!
+                            </>
                         ) : (
-                            <>Unirme <ArrowRight size={16} /></>
+                            <>
+                                Unirme <ArrowRight size={16} />
+                            </>
                         )}
                     </button>
                 </div>
-            </div>
-            {message && (
-                <div className={`mt-3 text-sm font-medium flex items-center gap-2 ${status === "success" ? "text-emerald-400" : "text-red-400"}`}>
-                    {status === "success" ? <CheckCircle2 size={16} /> : null}
-                    {message}
-                </div>
-            )}
-        </form>
+                {message && (
+                    <p
+                        className={`text-sm font-medium ${
+                            status === "success" ? "text-[#10b981]" : "text-[#ef4444]"
+                        }`}
+                    >
+                        {message}
+                    </p>
+                )}
+            </form>
+        </div>
     );
 }

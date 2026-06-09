@@ -1,11 +1,14 @@
-import Header from "@/components/shop/Header";
-import Footer from "@/components/shop/Footer";
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata = buildPageMetadata({
+    title: "Términos y Condiciones",
+    description: "Términos y condiciones de uso de BoluShop. Información sobre compras, envíos, devoluciones y uso del sitio en Argentina.",
+    path: "/terminos-y-condiciones",
+});
 
 export default function TerminosPage() {
     return (
-        <>
-            <Header />
-            <main className="min-h-screen bg-white pt-32 pb-24">
+        <>            <main className="min-h-screen bg-white pt-32 pb-24">
                 <div className="container mx-auto px-6">
                     <div className="max-w-4xl mx-auto">
                         <h1 className="text-4xl md:text-6xl font-black text-gray-900 mb-12 tracking-tighter">Términos y Condiciones</h1>
@@ -41,8 +44,6 @@ export default function TerminosPage() {
                         </div>
                     </div>
                 </div>
-            </main>
-            <Footer />
-        </>
+            </main>        </>
     );
 }

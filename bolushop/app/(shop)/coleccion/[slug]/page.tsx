@@ -1,8 +1,6 @@
 import { Suspense } from "react";
 import { getCollectionBySlug, getAllProducts } from "@/lib/db";
 import ProductCard from "@/components/shop/ProductCard";
-import Header from "@/components/shop/Header";
-import Footer from "@/components/shop/Footer";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -50,9 +48,7 @@ export default async function CollectionPage({ params }: Props) {
     );
 
     return (
-        <>
-            <Header />
-            <main className="min-h-screen bg-white">
+        <>            <main className="min-h-screen bg-white">
                 {/* Page Header */}
                 <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-8 md:py-12 px-4 md:px-6">
                     <div className="max-w-7xl mx-auto">
@@ -84,8 +80,6 @@ export default async function CollectionPage({ params }: Props) {
                         </div>
                     )}
                 </section>
-            </main>
-            <Footer />
-        </>
+            </main>        </>
     );
 }
