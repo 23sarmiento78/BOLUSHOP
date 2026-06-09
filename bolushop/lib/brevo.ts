@@ -1,11 +1,22 @@
 const BREVO_API_URL = "https://api.brevo.com/v3";
 const NEWSLETTER_LIST_NAME = "BoluShop Newsletter";
 
+export interface NewsletterCampaignProduct {
+    id: string;
+    name: string;
+    slug: string;
+    price: number;
+    image: string;
+}
+
 export interface NewsletterCampaign {
     subject: string;
     bannerUrl?: string;
     content: string;
     collectionId?: string;
+    collectionName?: string;
+    collectionDescription?: string;
+    products?: NewsletterCampaignProduct[];
 }
 
 function getApiKey(): string {
@@ -55,6 +66,53 @@ async function brevoRequest<T = Record<string, unknown>>(
     return data as T;
 }
 
+function buildProductsBlock(products: NewsletterCampaignProduct[], siteUrl: string): string {
+    if (!products.length) return "";
+
+    let tableRows = "";
+    for (let i = 0; i < products.length; i += 2) {
+        const p1 = products[i];
+        const p2 = products[i + 1];
+        tableRows += `<tr>
+            <td style="width: 50%; padding: 8px; vertical-align: top;">
+                <div style="border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
+                    <a href="${siteUrl}/producto/${p1.slug}" style="text-decoration: none; color: inherit;">
+                        <img src="${p1.image}" alt="${p1.name}" style="width: 100%; height: 140px; object-fit: contain; background: #f8f9fb; display: block;" />
+                        <div style="padding: 12px;">
+                            <p style="margin: 0 0 6px; font-size: 13px; font-weight: 700; color: #0a1628;">${p1.name}</p>
+                            <p style="margin: 0; font-size: 15px; font-weight: 700; color: #ff6b35;">$${p1.price.toLocaleString("es-AR")}</p>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            ${
+                p2
+                    ? `<td style="width: 50%; padding: 8px; vertical-align: top;">
+                <div style="border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
+                    <a href="${siteUrl}/producto/${p2.slug}" style="text-decoration: none; color: inherit;">
+                        <img src="${p2.image}" alt="${p2.name}" style="width: 100%; height: 140px; object-fit: contain; background: #f8f9fb; display: block;" />
+                        <div style="padding: 12px;">
+                            <p style="margin: 0 0 6px; font-size: 13px; font-weight: 700; color: #0a1628;">${p2.name}</p>
+                            <p style="margin: 0; font-size: 15px; font-weight: 700; color: #ff6b35;">$${p2.price.toLocaleString("es-AR")}</p>
+                        </div>
+                    </a>
+                </div>
+            </td>`
+                    : `<td style="width: 50%; padding: 8px;"></td>`
+            }
+        </tr>`;
+    }
+
+    return `
+        <div style="margin-top: 32px;">
+            <p style="text-transform: uppercase; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; color: #ff6b35; margin-bottom: 16px;">Productos destacados</p>
+            <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
+                ${tableRows}
+            </table>
+        </div>
+    `;
+}
+
 export function buildNewsletterHtml(campaign: NewsletterCampaign): string {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bolushop.com";
     const year = new Date().getFullYear();
@@ -62,10 +120,16 @@ export function buildNewsletterHtml(campaign: NewsletterCampaign): string {
     const collectionBlock = campaign.collectionId
         ? `
             <div style="background-color: #F8FAFC; border-radius: 12px; padding: 24px; text-align: center; border: 1px solid #E2E8F0; margin-top: 32px;">
-                <p style="text-transform: uppercase; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; color: #ff6b35; margin-bottom: 8px;">Promoción Exclusiva</p>
+                <p style="text-transform: uppercase; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; color: #ff6b35; margin-bottom: 8px;">Colección destacada</p>
+                ${campaign.collectionName ? `<h3 style="margin: 0 0 8px; font-size: 18px; color: #0a1628;">${campaign.collectionName}</h3>` : ""}
+                ${campaign.collectionDescription ? `<p style="margin: 0 0 16px; font-size: 14px; color: #64748b;">${campaign.collectionDescription}</p>` : ""}
                 <a href="${siteUrl}/productos?coleccion=${campaign.collectionId}" style="display: inline-block; background-color: #0a1628; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px;">Ver Colección</a>
             </div>
         `
+        : "";
+
+    const productsBlock = campaign.products?.length
+        ? buildProductsBlock(campaign.products, siteUrl)
         : "";
 
     const bannerBlock = campaign.bannerUrl
@@ -87,6 +151,7 @@ export function buildNewsletterHtml(campaign: NewsletterCampaign): string {
                     <div style="width: 48px; height: 4px; background: #ff6b35; border-radius: 2px; margin-bottom: 24px;"></div>
                     <h1 style="color: #0a1628; font-size: 24px; font-weight: 700; margin: 0 0 24px; line-height: 1.3;">${campaign.subject}</h1>
                     <p style="color: #475569; font-size: 16px; line-height: 1.7; white-space: pre-line; margin: 0 0 32px;">${campaign.content}</p>
+                    ${productsBlock}
                     ${collectionBlock}
                     <div style="margin-top: 40px; padding-top: 24px; border-top: 1px solid #e2e8f0; text-align: center;">
                         <div style="width: 36px; height: 36px; background: #0a1628; border-radius: 8px; color: white; font-weight: 700; font-size: 16px; line-height: 36px; margin: 0 auto 12px;">B</div>
@@ -212,6 +277,29 @@ export async function sendNewsletterCampaign(
         campaignId: created.id,
         recipientCount: subscriberEmails.length,
     };
+}
+
+export async function sendTestNewsletterEmail(
+    campaign: NewsletterCampaign,
+    testEmail: string
+): Promise<void> {
+    const email = testEmail.toLowerCase().trim();
+    if (!email.includes("@")) {
+        throw new Error("Email de prueba inválido.");
+    }
+
+    const htmlContent = buildNewsletterHtml(campaign);
+    const sender = getSender();
+
+    await brevoRequest("/smtp/email", {
+        method: "POST",
+        body: JSON.stringify({
+            sender,
+            to: [{ email }],
+            subject: `[PRUEBA] ${campaign.subject}`,
+            htmlContent,
+        }),
+    });
 }
 
 export async function isBrevoConfigured(): Promise<boolean> {
