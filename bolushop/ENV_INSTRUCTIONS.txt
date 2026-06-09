@@ -1,3 +1,12 @@
+# Brevo (Email Marketing / Newsletter)
+# API Key: https://app.brevo.com/settings/keys/api
+BREVO_API_KEY=tu_api_key_de_brevo
+# Email remitente verificado en Brevo (obligatorio para enviar campañas)
+BREVO_SENDER_EMAIL=contacto@bolushop.com
+BREVO_SENDER_NAME=BoluShop
+# Opcional: ID de lista existente en Brevo. Si no se define, se crea "BoluShop Newsletter" automáticamente.
+# BREVO_LIST_ID=2
+
 # Mercado Pago Credentials
 # Conseguilas en: https://www.mercadopago.com.ar/developers/panel
 # Usá las "Test" para probar y las "Production" para vender de verdad.

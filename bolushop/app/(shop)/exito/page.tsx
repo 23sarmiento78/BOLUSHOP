@@ -3,8 +3,6 @@
 import { useEffect, Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import Header from "@/components/shop/Header";
-import Footer from "@/components/shop/Footer";
 import { clearCart } from "@/lib/cart";
 import { Order } from "@/lib/types";
 import { CheckCircle2, ShoppingBag, MessageCircle } from "lucide-react";
@@ -130,9 +128,7 @@ function ExitoContent() {
 
 export default function ExitoPage() {
     return (
-        <>
-            <Header />
-            <main className="min-h-screen bg-white">
+        <>            <main className="min-h-screen bg-white">
                 <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-8 md:py-12 px-4 md:px-6 flex items-center justify-center min-h-[30vh]">
                     <div className="max-w-7xl mx-auto text-center">
                         <h1 className="text-3xl md:text-4xl font-bold mb-2">Pedido Confirmado</h1>
@@ -153,8 +149,6 @@ export default function ExitoPage() {
                         <ExitoContent />
                     </Suspense>
                 </section>
-            </main>
-            <Footer />
-        </>
+            </main>        </>
     );
 }

@@ -105,12 +105,15 @@ export default function NewsletterAdminClient({ collections }: Props) {
         <div className="max-w-6xl mx-auto">
             <div className="flex justify-between items-center mb-12">
                 <div>
-                    <h1 className="text-4xl font-black mb-2">Newsletter Center</h1>
-                    <p className="text-gray-500 font-medium">Gestioná tus suscriptores y enviá campañas de Email Marketing.</p>
+                    <h1 className="admin-page-title">Newsletter</h1>
+                    <p className="admin-page-subtitle mb-6">Suscriptores y campañas de email</p>
+                    <p className="text-gray-500 font-medium">
+                        Gestioná suscriptores y enviá campañas. El envío se procesa con <strong>Brevo</strong>.
+                    </p>
                 </div>
-                <div className="bg-primary/5 px-6 py-4 rounded-2xl border border-primary/10">
-                    <p className="text-xs font-black uppercase tracking-widest text-primary mb-1">Total Suscriptores</p>
-                    <p className="text-3xl font-black text-primary">{subscribers.length}</p>
+                <div className="bg-[#fff4ee] px-6 py-4 rounded-2xl border border-[#ff6b35]/20">
+                    <p className="text-xs font-bold uppercase tracking-widest text-[#ff6b35] mb-1">Suscriptores · Brevo</p>
+                    <p className="text-3xl font-black text-[#0a1628]">{subscribers.length}</p>
                 </div>
             </div>
 
@@ -255,7 +258,7 @@ export default function NewsletterAdminClient({ collections }: Props) {
                                 disabled={isSending}
                                 className="w-full py-6 bg-primary text-white rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-2xl shadow-primary/20 flex items-center justify-center gap-3 disabled:opacity-50"
                             >
-                                {isSending ? "Enviando..." : `Enviar a ${subscribers.length} suscriptores`}
+                                {isSending ? "Enviando con Brevo..." : `Enviar campaña a ${subscribers.length} suscriptores`}
                                 <Send size={20} />
                             </button>
                         </form>

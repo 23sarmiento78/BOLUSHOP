@@ -1,5 +1,3 @@
-import Header from "@/components/shop/Header";
-import Footer from "@/components/shop/Footer";
 import TrackingPageClient from "./TrackingPageClient";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
@@ -12,9 +10,7 @@ export const metadata: Metadata = {
 
 export default function RastreoPage() {
     return (
-        <>
-            <Header />
-            <main className="min-h-screen bg-white">
+        <>            <main className="min-h-screen bg-white">
                 <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-8 md:py-12 px-4 md:px-6">
                     <div className="max-w-7xl mx-auto">
                         <div className="flex items-center gap-2 mb-4 text-xs text-gray-300">
@@ -35,8 +31,6 @@ export default function RastreoPage() {
                         <TrackingPageClient />
                     </div>
                 </section>
-            </main>
-            <Footer />
-        </>
+            </main>        </>
     );
 }

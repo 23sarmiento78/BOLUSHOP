@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { ShoppingCart, Search, Menu, X, Truck, CreditCard, Shield } from "lucide-react";
+import { ShoppingCart, Search, Menu, X } from "lucide-react";
 import { getCart } from "@/lib/cart";
-import Logo from "./Logo";
+import PromoBanner from "./PromoBanner";
 
 export default function Header() {
     const [cartCount, setCartCount] = useState(0);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
     const router = useRouter();
@@ -18,79 +19,73 @@ export default function Header() {
     useEffect(() => {
         const updateCartCount = () => {
             const cart = getCart();
-            const count = cart.reduce((acc, item) => acc + item.quantity, 0);
-            setCartCount(count);
+            setCartCount(cart.reduce((acc, item) => acc + item.quantity, 0));
         };
-
         window.addEventListener("cartUpdated", updateCartCount);
         updateCartCount();
-
-        return () => {
-            window.removeEventListener("cartUpdated", updateCartCount);
-        };
+        return () => window.removeEventListener("cartUpdated", updateCartCount);
     }, []);
+
+    useEffect(() => {
+        const onScroll = () => setIsScrolled(window.scrollY > 20);
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
+    }, []);
+
+    useEffect(() => {
+        setIsMobileMenuOpen(false);
+    }, [pathname]);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         if (searchQuery.trim()) {
             router.push(`/buscar?q=${encodeURIComponent(searchQuery)}`);
-            setIsMobileMenuOpen(false);
             setSearchQuery("");
         }
     };
 
     const navLinks = [
-        { label: 'Inicio', href: '/' },
-        { label: 'Productos', href: '/productos' },
-        { label: 'Colecciones', href: '/colecciones' },
-        { label: 'Blog', href: '/blog' },
+        { label: "Inicio", href: "/" },
+        { label: "Productos", href: "/productos" },
+        { label: "Colecciones", href: "/colecciones" },
+        { label: "Blog", href: "/blog" },
     ];
 
     return (
         <>
-            {/* Topbar con beneficios */}
-            <div className="sticky top-0 z-40 bg-[#0f2044] text-white py-3 px-4 md:px-6">
-                <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center text-sm md:text-base gap-4 md:gap-8">
-                    <div className="flex items-center gap-2 md:gap-3">
-                        <Truck size={16} />
-                        <span className="font-medium">Envío gratis en todos los productos</span>
-                    </div>
-                    <div className="hidden sm:flex items-center gap-2 md:gap-3">
-                        <CreditCard size={16} />
-                        <span className="font-medium">Cuotas sin interés</span>
-                    </div>
-                    <div className="hidden md:flex items-center gap-2 md:gap-3 ml-auto">
-                        <Shield size={16} />
-                        <span className="font-medium">Compra 100% protegida</span>
-                    </div>
-                </div>
-            </div>
+            <PromoBanner />
 
-            {/* Header Principal */}
-            <header className="sticky top-[34px] md:top-[42px] z-50 bg-white border-b border-[#f1f5f9] shadow-sm">
-                <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 md:py-4">
+            {/* Main nav */}
+            <header
+                className={`sticky top-0 z-50 transition-all duration-300 ${
+                    isScrolled
+                        ? "glass shadow-md py-2"
+                        : "bg-[#faf9f7]/95 backdrop-blur-sm py-3 border-b border-[#e8e4df]/60"
+                }`}
+            >
+                <div className="container-shop">
                     <div className="flex items-center justify-between gap-4">
-                        {/* Logo */}
-                        <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-                            <div className="w-8 h-8 bg-[#0f2044] rounded-md flex items-center justify-center">
-                                <span className="text-white font-bold text-sm">B</span>
+                        <Link href="/" className="flex items-center gap-3 flex-shrink-0 group">
+                            <div className="w-10 h-10 bg-[#0a1628] rounded-xl flex items-center justify-center transition-transform group-hover:scale-105">
+                                <span className="text-white font-bold text-lg" style={{ fontFamily: "var(--font-display)" }}>B</span>
                             </div>
                             <div className="hidden sm:block">
-                                <div className="text-lg font-bold text-[#0f2044]">BoluShop</div>
-                                <div className="text-sm text-[#e8630a]">Regalos & Hogar</div>
+                                <div className="text-lg font-semibold text-[#0a1628]" style={{ fontFamily: "var(--font-display)" }}>
+                                    BoluShop
+                                </div>
+                                <div className="text-[11px] text-[#ff6b35] font-medium tracking-wide">Regalos & Hogar</div>
                             </div>
                         </Link>
 
-                        {/* Desktop Navigation */}
-                        <nav className="hidden lg:flex items-center gap-8 mx-auto">
-                            {navLinks.map(link => (
+                        <nav className="hidden lg:flex items-center gap-1">
+                            {navLinks.map((link) => (
                                 <Link
                                     key={link.href}
                                     href={link.href}
-                                    className={`text-sm font-semibold transition-colors ${
+                                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                                         pathname === link.href
-                                            ? 'text-[#0f2044]'
-                                            : 'text-[#64748b] hover:text-[#0f2044]'
+                                            ? "bg-[#0a1628] text-white"
+                                            : "text-[#64748b] hover:text-[#0a1628] hover:bg-white"
                                     }`}
                                 >
                                     {link.label}
@@ -98,102 +93,91 @@ export default function Header() {
                             ))}
                         </nav>
 
-                        {/* Search Bar (Desktop) */}
-                        <div className="hidden md:flex items-center flex-1 max-w-md mx-4">
-                            <form onSubmit={handleSearch} className="w-full relative">
-                                <input
-                                    type="text"
-                                    placeholder="Buscar productos..."
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full bg-[#f8f9fb] border border-[#e2e8f0] rounded-full py-3 pl-4 pr-12 text-sm outline-none focus:border-[#0f2044] transition-colors"
-                                />
-                                <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748b]">
-                                    <Search size={18} />
-                                </button>
-                            </form>
-                        </div>
-
-                        {/* Cart Button */}
-                        <Link
-                            href="/carrito"
-                            className="relative flex items-center justify-center w-10 h-10 bg-[#0f2044] text-white rounded-md hover:bg-opacity-90 transition-all flex-shrink-0"
-                        >
-                            <ShoppingCart size={18} />
-                            {cartCount > 0 && (
-                                <span className="absolute -top-2 -right-2 bg-[#e8630a] text-white text-[9px] font-bold w-5 h-5 flex items-center justify-center rounded-full">
-                                    {cartCount}
-                                </span>
-                            )}
-                        </Link>
-
-                        {/* Mobile Menu Button */}
-                        <button
-                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            className="lg:hidden p-2 text-[#0f2044]"
-                        >
-                            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                        </button>
-                    </div>
-
-                    {/* Mobile Search */}
-                    <div className="md:hidden mt-4">
-                        <form onSubmit={handleSearch} className="relative">
+                        <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-sm mx-4 relative">
                             <input
-                                type="text"
-                                placeholder="Buscar..."
+                                type="search"
+                                placeholder="Buscar regalos, hogar..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full bg-[#f8f9fb] border border-[#e2e8f0] rounded-full py-3 pl-4 pr-12 text-sm outline-none focus:border-[#0f2044] transition-colors"
+                                aria-label="Buscar productos"
+                                className="w-full bg-white border border-[#e8e4df] rounded-full py-2.5 pl-4 pr-11 text-sm outline-none focus:border-[#ff6b35] focus:ring-2 focus:ring-[#ff6b35]/20 transition-all"
                             />
-                            <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748b]">
-                                <Search size={18} />
+                            <button type="submit" aria-label="Buscar" className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94a3b8] hover:text-[#0a1628]">
+                                <Search size={17} />
                             </button>
                         </form>
+
+                        <div className="flex items-center gap-2">
+                            <Link
+                                href="/carrito"
+                                aria-label={`Carrito${cartCount > 0 ? `, ${cartCount} productos` : ""}`}
+                                className="relative flex items-center justify-center w-10 h-10 bg-[#0a1628] text-white rounded-xl hover:bg-[#152238] transition-all hover:scale-105"
+                            >
+                                <ShoppingCart size={18} />
+                                {cartCount > 0 && (
+                                    <span className="absolute -top-1.5 -right-1.5 bg-[#ff6b35] text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full animate-pulse-glow">
+                                        {cartCount}
+                                    </span>
+                                )}
+                            </Link>
+
+                            <button
+                                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                                aria-label={isMobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
+                                className="lg:hidden p-2 text-[#0a1628] rounded-xl hover:bg-white"
+                            >
+                                {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+                            </button>
+                        </div>
                     </div>
+
+                    <form onSubmit={handleSearch} className="md:hidden mt-3 relative">
+                        <input
+                            type="search"
+                            placeholder="Buscar..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            aria-label="Buscar productos"
+                            className="w-full bg-white border border-[#e8e4df] rounded-full py-2.5 pl-4 pr-11 text-sm outline-none focus:border-[#ff6b35]"
+                        />
+                        <button type="submit" aria-label="Buscar" className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94a3b8]">
+                            <Search size={17} />
+                        </button>
+                    </form>
                 </div>
             </header>
 
-            {/* Mobile Menu */}
             {isMobileMenuOpen && (
-                <div className="lg:hidden fixed inset-0 z-40 bg-white top-[90px] md:top-[100px] overflow-y-auto">
-                    <div className="p-4 space-y-2">
-                        {navLinks.map(link => (
+                <div className="lg:hidden fixed inset-0 z-40 bg-[#faf9f7]/98 backdrop-blur-md top-[120px] overflow-y-auto">
+                    <div className="container-shop py-6 space-y-1">
+                        {navLinks.map((link) => (
                             <Link
                                 key={link.href}
                                 href={link.href}
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                className={`block px-4 py-3 rounded-md text-base font-semibold transition-colors ${
+                                className={`block px-5 py-3.5 rounded-2xl text-base font-medium transition-all ${
                                     pathname === link.href
-                                        ? 'bg-[#f8f9fb] text-[#0f2044] font-bold'
-                                        : 'text-[#64748b] hover:bg-[#f8f9fb]'
+                                        ? "bg-[#0a1628] text-white"
+                                        : "text-[#64748b] hover:bg-white"
                                 }`}
                             >
                                 {link.label}
                             </Link>
                         ))}
-                        <hr className="my-3" />
-                        <Link
-                            href="/rastreo"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className="block px-4 py-3 rounded-md text-sm font-medium text-[#64748b] hover:bg-[#f8f9fb]"
-                        >
-                            Seguir pedido
-                        </Link>
-                        <Link
-                            href="/contacto"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className="block px-4 py-3 rounded-md text-sm font-medium text-[#64748b] hover:bg-[#f8f9fb]"
-                        >
-                            Contacto
-                        </Link>
-                        <Link
-                            href="/nosotros"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className="block px-4 py-3 rounded-md text-sm font-medium text-[#64748b] hover:bg-[#f8f9fb]"
-                        >
-                            Sobre nosotros
-                        </Link>
+                        <hr className="my-4 border-[#e8e4df]" />
+                        {[
+                            { label: "Seguir pedido", href: "/rastreo" },
+                            { label: "Contacto", href: "/contacto" },
+                            { label: "Sobre nosotros", href: "/nosotros" },
+                            { label: "Guías y FAQ", href: "/guias" },
+                        ].map((link) => (
+                            <Link
+                                key={link.href}
+                                href={link.href}
+                                className="block px-5 py-3 text-sm text-[#64748b] hover:bg-white rounded-xl"
+                            >
+                                {link.label}
+                            </Link>
+                        ))}
                     </div>
                 </div>
             )}

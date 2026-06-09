@@ -1,18 +1,16 @@
-import Header from "@/components/shop/Header";
-import Footer from "@/components/shop/Footer";
 import Link from "next/link";
 import { BookOpen, Search, ShoppingBag, HelpCircle, ArrowRight } from "lucide-react";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata = {
-    title: "Guías de Compra | BoluShop",
-    description: "Encuentra toda la información que necesitas para realizar tus compras de forma segura y exitosa en BoluShop."
-};
+export const metadata = buildPageMetadata({
+    title: "Guías de Compra y FAQ",
+    description: "Preguntas frecuentes y guías de compra en BoluShop. Envíos, pagos, devoluciones y todo lo que necesitás saber.",
+    path: "/guias",
+});
 
 export default function GuiasPage() {
     return (
-        <>
-            <Header />
-            <main className="min-h-screen pt-32 pb-24 bg-gray-50/30">
+        <>            <main className="min-h-screen pt-32 pb-24 bg-gray-50/30">
                 <div className="container mx-auto px-6 max-w-4xl">
                     <div className="text-center mb-16 animate-in slide-in-from-bottom-8 duration-700">
                         <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-xl shadow-emerald-500/10">
@@ -88,8 +86,6 @@ export default function GuiasPage() {
                         </div>
                     </div>
                 </div>
-            </main>
-            <Footer />
-        </>
+            </main>        </>
     );
 }

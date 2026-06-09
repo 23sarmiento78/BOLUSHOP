@@ -6,8 +6,6 @@ import { getCart, getCartTotal, CartItem } from "@/lib/cart";
 import { getShippingRate } from "@/app/actions/shop";
 import { LOCATION_DATA } from "@/lib/locations";
 import { initMercadoPago } from '@mercadopago/sdk-react';
-import Header from "@/components/shop/Header";
-import Footer from "@/components/shop/Footer";
 
 export default function CheckoutPage() {
     const router = useRouter();
@@ -116,9 +114,7 @@ export default function CheckoutPage() {
     }
 
     return (
-        <>
-            <Header />
-            <main className="bg-[#f8f9fb]">
+        <>            <main className="bg-[#f8f9fb]">
                 <section className="bg-gradient-to-r from-[#0f2044] via-[#1e3a6b] to-[#0f2044] py-16">
                     <div className="max-w-7xl mx-auto px-4">
                         <div className="rounded-[3rem] bg-white/10 border border-white/20 p-10 md:p-14 text-white shadow-xl shadow-[#0f2044]/10 backdrop-blur-sm">
@@ -347,8 +343,6 @@ export default function CheckoutPage() {
                         </aside>
                     </div>
                 </section>
-            </main>
-            <Footer />
-        </>
+            </main>        </>
     );
 }

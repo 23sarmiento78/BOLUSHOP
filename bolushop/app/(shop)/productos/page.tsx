@@ -1,10 +1,9 @@
 import { getAllProducts } from "@/lib/db";
 import { getCurrentHoliday } from "@/lib/holidays";
-import Header from "@/components/shop/Header";
-import Footer from "@/components/shop/Footer";
 import ProductCard from "@/components/shop/ProductCard";
 import ProductSorter from "@/components/shop/ProductSorter";
 import Link from "next/link";
+import { buildPageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
 interface Props {
@@ -18,7 +17,6 @@ interface Props {
 }
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bolushop.com';
     const { categoria, coleccion } = await searchParams;
     let title = "Productos | BoluShop";
     let description = "Descubrí todos los productos de BoluShop con envío gratis en Argentina y cuotas sin interés. Comprá regalos originales y accesorios para tu hogar.";
@@ -31,28 +29,12 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
         description = `Descubrí la colección ${coleccion} en BoluShop con envío gratis a todo el país y cuotas sin interés.`;
     }
 
-    return {
-        metadataBase: new URL(siteUrl),
-        title,
+    return buildPageMetadata({
+        title: title.replace(" | BoluShop", ""),
         description,
-        alternates: {
-            canonical: `${siteUrl}/productos`,
-        },
-        openGraph: {
-            type: "website",
-            locale: "es_AR",
-            url: `${siteUrl}/productos`,
-            title,
-            description,
-            siteName: "BoluShop",
-        },
-        twitter: {
-            card: "summary",
-            title,
-            description,
-        },
-        keywords: "comprar productos online argentina, catalogo bolushop, ofertas marketplace argentina, envios gratis",
-    };
+        path: "/productos",
+        keywords: ["comprar productos online argentina", "catalogo bolushop", "regalos originales", "envio gratis"],
+    });
 }
 
 export default async function ProductosPage({ searchParams }: Props) {
@@ -146,9 +128,7 @@ export default async function ProductosPage({ searchParams }: Props) {
     };
 
     return (
-        <>
-            <Header />
-            <main className="min-h-screen bg-[#f7f7f7]">
+        <>            <main className="min-h-screen bg-[#f7f7f7]">
                 <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white pt-20 pb-20">
                     <div className="max-w-7xl mx-auto px-4 md:px-6">
                         <div className="max-w-4xl">
@@ -286,8 +266,6 @@ export default async function ProductosPage({ searchParams }: Props) {
                         </div>
                     </div>
                 </section>
-            </main>
-            <Footer />
-        </>
+            </main>        </>
     );
 }

@@ -3,8 +3,6 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Header from "@/components/shop/Header";
-import Footer from "@/components/shop/Footer";
 import { getCart, updateQuantity, removeFromCart, getCartTotal, CartItem } from "@/lib/cart";
 import { ChevronRight } from "lucide-react";
 
@@ -50,24 +48,18 @@ export default function CarritoPage() {
 
     if (isLoading) {
         return (
-            <>
-                <Header />
-                <div className="min-h-screen flex items-center justify-center">
+            <>                <div className="min-h-screen flex items-center justify-center">
                     <div className="text-center">
                         <div className="text-6xl mb-4">🛒</div>
                         <p className="text-[#64748b] font-bold">Cargando carrito...</p>
                     </div>
-                </div>
-                <Footer />
-            </>
+                </div>            </>
         );
     }
 
     if (cart.length === 0) {
         return (
-            <>
-                <Header />
-                <main className="min-h-screen bg-white">
+            <>                <main className="min-h-screen bg-white">
                     <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-12 md:py-16 px-4 md:px-6 flex items-center justify-center min-h-[40vh]">
                         <div className="max-w-7xl mx-auto text-center">
                             <h1 className="text-3xl md:text-4xl font-bold mb-2">Tu Carrito está Vacío</h1>
@@ -84,16 +76,12 @@ export default function CarritoPage() {
                             Ver Productos
                         </Link>
                     </section>
-                </main>
-                <Footer />
-            </>
+                </main>            </>
         );
     }
 
     return (
         <>
-            <Header />
-
             <main className="min-h-screen bg-white">
                 {/* Page Header */}
                 <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-8 md:py-12 px-4 md:px-6">
@@ -261,9 +249,6 @@ export default function CarritoPage() {
                         </div>
                     </div>
                 </section>
-            </main>
-
-            <Footer />
-        </>
+            </main>        </>
     );
 }

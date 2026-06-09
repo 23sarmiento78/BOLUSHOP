@@ -1,13 +1,13 @@
 import { searchProducts } from "@/app/actions/shop";
-import Header from "@/components/shop/Header";
-import Footer from "@/components/shop/Footer";
 import ProductCard from "@/components/shop/ProductCard";
-import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-    title: "Buscar Productos | BoluShop",
-    description: "Encontrá los productos que buscás en BoluShop",
-};
+export const metadata = buildPageMetadata({
+    title: "Buscar Productos",
+    description: "Encontrá regalos originales y accesorios para el hogar en BoluShop.",
+    path: "/buscar",
+    noIndex: true,
+});
 
 interface Props {
     searchParams: Promise<{ q?: string }>;
@@ -20,8 +20,6 @@ export default async function BuscarPage({ searchParams }: Props) {
 
     return (
         <>
-            <Header />
-
             <main className="min-h-screen bg-[#f7f7f7] pt-32 pb-24">
                 <div className="container mx-auto px-4">
                     {/* Search Header */}
@@ -63,9 +61,6 @@ export default async function BuscarPage({ searchParams }: Props) {
                         </div>
                     )}
                 </div>
-            </main>
-
-            <Footer />
-        </>
+            </main>        </>
     );
 }

@@ -220,27 +220,27 @@ export default function BlogClient({ initialPosts, allProducts }: Props) {
     };
 
     return (
-        <div className="p-6 max-w-7xl mx-auto space-y-8">
-            <div className="flex justify-between items-center">
+        <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-black text-gray-900">Gestión de Blog</h1>
-                    <p className="text-gray-500 font-medium">Crea contenido para atraer clientes y mejorar el SEO.</p>
+                    <h1 className="admin-page-title">Blog</h1>
+                    <p className="admin-page-subtitle">Artículos, SEO y contenido para redes</p>
                 </div>
-                <div className="flex gap-4">
+                <div className="flex flex-wrap gap-2">
                     <button
                         onClick={() => setIsAIModalOpen(true)}
                         disabled={isGenerating}
-                        className="bg-indigo-600 text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-600/20 disabled:opacity-50"
+                        className="admin-btn admin-btn-ghost !bg-indigo-50 !text-indigo-600 !border-indigo-100 disabled:opacity-50"
                     >
-                        <Sparkles size={20} />
+                        <Sparkles size={16} />
                         Generar con IA
                     </button>
                     <button
                         onClick={openCreateModal}
-                        className="bg-black text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-gray-800 transition-all shadow-xl shadow-black/10"
+                        className="admin-btn admin-btn-dark"
                     >
-                        <Plus size={20} />
-                        Nuevo Artículo
+                        <Plus size={16} />
+                        Nuevo artículo
                     </button>
                 </div>
             </div>
