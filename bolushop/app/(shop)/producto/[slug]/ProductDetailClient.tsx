@@ -8,14 +8,16 @@ import { Product, Review } from "@/lib/types";
 import { addToCart } from "@/lib/cart";
 import { Truck, ShieldCheck, Sparkles } from "lucide-react";
 import ProductReviews from "@/components/shop/ProductReviews";
+import Link from "next/link";
 
 interface Props {
     product: Product;
     relatedProducts: Product[];
     reviews: Review[];
+    categoryHref?: string;
 }
 
-export default function ProductDetailClient({ product, relatedProducts, reviews }: Props) {
+export default function ProductDetailClient({ product, relatedProducts, reviews, categoryHref }: Props) {
     const [quantity, setQuantity] = useState(1);
     const [isAdding, setIsAdding] = useState(false);
     const imageSources = [product.image, ...(product.images || [])].filter(Boolean).reduce<string[]>((acc, image) => {
@@ -54,7 +56,13 @@ export default function ProductDetailClient({ product, relatedProducts, reviews 
                     <div className="container-shop">
                         <div className="flex flex-col md:flex-row items-start justify-between gap-6">
                             <div className="max-w-2xl">
-                                <p className="text-xs uppercase tracking-[0.3em] text-[#cbd5e1] mb-2">Producto</p>
+                                {categoryHref ? (
+                                    <Link href={categoryHref} className="text-xs uppercase tracking-[0.3em] text-[#ff6b35] hover:text-white transition-colors mb-2 inline-block">
+                                        {product.category}
+                                    </Link>
+                                ) : (
+                                    <p className="text-xs uppercase tracking-[0.3em] text-[#cbd5e1] mb-2">{product.category}</p>
+                                )}
                                 <h1 className="text-3xl md:text-5xl font-bold tracking-tight">{product.name}</h1>
                                 <p className="mt-4 text-sm md:text-base text-[#dbeafe] max-w-2xl leading-7">{cleanDescription}</p>
                             </div>

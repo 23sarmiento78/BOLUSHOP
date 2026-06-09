@@ -176,7 +176,43 @@ export function buildProductJsonLd(product: Product, reviews: Review[]) {
                     : "https://schema.org/OutOfStock",
             itemCondition: "https://schema.org/NewCondition",
             seller: { "@type": "Organization", name: "BoluShop" },
+            shippingDetails: {
+                "@type": "OfferShippingDetails",
+                shippingRate: {
+                    "@type": "MonetaryAmount",
+                    value: "0",
+                    currency: "ARS",
+                },
+                shippingDestination: {
+                    "@type": "DefinedRegion",
+                    addressCountry: "AR",
+                },
+                deliveryTime: {
+                    "@type": "ShippingDeliveryTime",
+                    handlingTime: {
+                        "@type": "QuantitativeValue",
+                        minValue: 1,
+                        maxValue: 3,
+                        unitCode: "DAY",
+                    },
+                    transitTime: {
+                        "@type": "QuantitativeValue",
+                        minValue: 3,
+                        maxValue: 10,
+                        unitCode: "DAY",
+                    },
+                },
+            },
+            hasMerchantReturnPolicy: {
+                "@type": "MerchantReturnPolicy",
+                applicableCountry: "AR",
+                returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+                merchantReturnDays: 10,
+                returnMethod: "https://schema.org/ReturnByMail",
+                returnFees: "https://schema.org/FreeReturn",
+            },
         },
+        category: product.category,
     };
 
     if (reviews.length > 0) {
@@ -205,6 +241,42 @@ export function buildProductJsonLd(product: Product, reviews: Review[]) {
     return jsonLd;
 }
 
+export function buildItemListJsonLd(
+    items: { name: string; slug: string }[],
+    listName: string
+) {
+    return {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name: listName,
+        numberOfItems: items.length,
+        itemListElement: items.slice(0, 50).map((item, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            name: item.name,
+            url: absoluteUrl(`/producto/${item.slug}`),
+        })),
+    };
+}
+
+export function buildCollectionPageJsonLd(
+    name: string,
+    description: string,
+    path: string,
+    items: { name: string; slug: string }[]
+) {
+    return {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        name,
+        description,
+        url: absoluteUrl(path),
+        inLanguage: "es-AR",
+        isPartOf: { "@type": "WebSite", name: SITE_NAME, url: SITE_URL },
+        mainEntity: buildItemListJsonLd(items, name),
+    };
+}
+
 export function buildBlogPostJsonLd(post: BlogPost) {
     return {
         "@context": "https://schema.org",
@@ -230,6 +302,21 @@ export function buildBlogPostJsonLd(post: BlogPost) {
         },
         inLanguage: "es-AR",
         ...(post.category ? { articleSection: post.category } : {}),
+    };
+}
+
+export function buildFaqJsonLd(faqs: { question: string; answer: string }[]) {
+    return {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faqs.map((faq) => ({
+            "@type": "Question",
+            name: faq.question,
+            acceptedAnswer: {
+                "@type": "Answer",
+                text: faq.answer,
+            },
+        })),
     };
 }
 
