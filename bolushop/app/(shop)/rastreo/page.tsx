@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Seguí tu Pedido | BoluShop Argentina",
-    description: "Rastreá tu envío de Correo Argentino o Andreani en tiempo real. Ingresá tu número de pedido y consultá el estado de tu compra en BoluShop.",
+    description: "Rastreá tu envío de BoluShop. Moto mensajería en CABA/GBA y Correo Argentino al interior. Ingresá tu número de pedido y consultá el estado de tu compra.",
 };
 
 export default function RastreoPage() {

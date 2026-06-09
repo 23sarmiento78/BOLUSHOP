@@ -180,7 +180,7 @@ export default async function HomePage() {
                         ]).map((cat, i) => (
                             <Link
                                 key={cat.slug}
-                                href={`/productos?categoria=${cat.slug}`}
+                                href={`/categoria/${cat.slug}`}
                                 className={`group text-center p-6 rounded-2xl border transition-all hover:-translate-y-1 ${
                                     i === 0
                                         ? "bg-[#0a1628] text-white border-[#0a1628] shadow-lg"

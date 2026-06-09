@@ -1,9 +1,10 @@
-import { getAllProducts } from "@/lib/db";
+import { getAllProducts, getAllCategories } from "@/lib/db";
 import { getCurrentHoliday } from "@/lib/holidays";
 import ProductCard from "@/components/shop/ProductCard";
 import ProductSorter from "@/components/shop/ProductSorter";
 import Link from "next/link";
 import { buildPageMetadata } from "@/lib/seo";
+import { categoryPath, resolveCategorySlug } from "@/lib/category-utils";
 import type { Metadata } from "next";
 
 interface Props {
@@ -17,21 +18,20 @@ interface Props {
 }
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
-    const { categoria, coleccion } = await searchParams;
-    let title = "Productos | BoluShop";
-    let description = "Descubrí todos los productos de BoluShop con envío gratis en Argentina y cuotas sin interés. Comprá regalos originales y accesorios para tu hogar.";
+    const { coleccion } = await searchParams;
 
-    if (categoria) {
-        title = `${categoria} | BoluShop`;
-        description = `Descubrí productos de ${categoria} en BoluShop con envío gratis a todo el país y cuotas sin interés.`;
-    } else if (coleccion) {
-        title = `Colección ${coleccion} | BoluShop`;
-        description = `Descubrí la colección ${coleccion} en BoluShop con envío gratis a todo el país y cuotas sin interés.`;
+    if (coleccion) {
+        return buildPageMetadata({
+            title: `Colección ${coleccion}`,
+            description: `Descubrí la colección ${coleccion} en BoluShop con envío gratis a todo el país y cuotas sin interés.`,
+            path: "/productos",
+            keywords: ["comprar productos online argentina", "catalogo bolushop", "regalos originales", "envio gratis"],
+        });
     }
 
     return buildPageMetadata({
-        title: title.replace(" | BoluShop", ""),
-        description,
+        title: "Catálogo de productos",
+        description: "Descubrí todos los productos de BoluShop con envío gratis en Argentina y cuotas sin interés. Comprá regalos originales y accesorios para tu hogar.",
         path: "/productos",
         keywords: ["comprar productos online argentina", "catalogo bolushop", "regalos originales", "envio gratis"],
     });
@@ -39,6 +39,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 
 export default async function ProductosPage({ searchParams }: Props) {
     const allProducts = await getAllProducts();
+    const dbCategories = await getAllCategories();
     const holiday = getCurrentHoliday();
     const { categoria, coleccion, seccion, sort, price } = await searchParams;
 
@@ -117,15 +118,17 @@ export default async function ProductosPage({ searchParams }: Props) {
         ? 'Seleccionamos lo mejor de ML para que compres con la confianza de BoluShop.'
         : (holiday ? `Celebrá ${holiday.label} con nuestra selección exclusiva.` : 'Descubrí una selección curada de productos únicos.');
 
-    const buildProductLink = (params: Partial<{ seccion: string; categoria: string; coleccion: string; price: string; sort: string }>) => {
+    const buildProductLink = (params: Partial<{ seccion: string; coleccion: string; price: string; sort: string }>) => {
         const queryParams = new URLSearchParams();
         if (params.seccion) queryParams.set('seccion', params.seccion);
-        if (params.categoria) queryParams.set('categoria', params.categoria);
         if (params.coleccion) queryParams.set('coleccion', params.coleccion);
         if (params.price) queryParams.set('price', params.price);
         if (params.sort) queryParams.set('sort', params.sort);
         return `/productos${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
     };
+
+    const getCategoryHref = (categoryName: string) =>
+        categoryPath(resolveCategorySlug(categoryName, dbCategories));
 
     return (
         <>            <main className="min-h-screen bg-[#f7f7f7]">
@@ -146,7 +149,7 @@ export default async function ProductosPage({ searchParams }: Props) {
                         <div className="flex flex-wrap gap-3">
                             <Link
                                 href={buildProductLink({ sort, price })}
-                                className={`rounded-full px-5 py-3 text-xs font-black uppercase tracking-[0.35em] transition ${!seccion && !categoria ? 'bg-white text-[#0f2044]' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
+                                className={`rounded-full px-5 py-3 text-xs font-black uppercase tracking-[0.35em] transition ${!seccion && !coleccion ? 'bg-white text-[#0f2044]' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
                             >
                                 Tienda Local
                             </Link>
@@ -166,15 +169,15 @@ export default async function ProductosPage({ searchParams }: Props) {
                     <div className="flex flex-wrap gap-3 mb-6">
                         <Link
                             href={buildProductLink({ seccion, sort, price })}
-                            className={`inline-flex rounded-full border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.35em] transition ${!categoria ? 'bg-[#0f2044] text-white border-[#0f2044]' : 'bg-white text-[#64748b] border-[#e2e8f0] hover:border-[#0f2044]'}`}
+                            className={`inline-flex rounded-full border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.35em] transition ${!coleccion ? 'bg-[#0f2044] text-white border-[#0f2044]' : 'bg-white text-[#64748b] border-[#e2e8f0] hover:border-[#0f2044]'}`}
                         >
                             Todos
                         </Link>
                         {categories.map(category => (
                             <Link
                                 key={category}
-                                href={buildProductLink({ categoria: category, seccion, sort, price })}
-                                className={`inline-flex rounded-full border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.35em] transition ${categoria === category ? 'bg-[#0f2044] text-white border-[#0f2044]' : 'bg-white text-[#64748b] border-[#e2e8f0] hover:border-[#0f2044]'}`}
+                                href={getCategoryHref(category)}
+                                className="inline-flex rounded-full border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.35em] transition bg-white text-[#64748b] border-[#e2e8f0] hover:border-[#0f2044]"
                             >
                                 {category}
                             </Link>
@@ -187,19 +190,19 @@ export default async function ProductosPage({ searchParams }: Props) {
                                 <h2 className="text-sm font-black uppercase tracking-[0.35em] text-[#0f2044] mb-4">Precio</h2>
                                 <div className="space-y-3 text-sm text-[#64748b]">
                                     <Link
-                                        href={buildProductLink({ seccion, categoria, sort, price: 'under_50000' })}
+                                        href={buildProductLink({ seccion, sort, price: 'under_50000' })}
                                         className={`flex items-center gap-3 rounded-full px-4 py-3 transition ${price === 'under_50000' ? 'bg-[#0f2044] text-white' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
                                     >
                                         <span>Hasta $50.000</span>
                                     </Link>
                                     <Link
-                                        href={buildProductLink({ seccion, categoria, sort, price: '50000_100000' })}
+                                        href={buildProductLink({ seccion, sort, price: '50000_100000' })}
                                         className={`flex items-center gap-3 rounded-full px-4 py-3 transition ${price === '50000_100000' ? 'bg-[#0f2044] text-white' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
                                     >
                                         <span>$50k – $100k</span>
                                     </Link>
                                     <Link
-                                        href={buildProductLink({ seccion, categoria, sort, price: 'over_100000' })}
+                                        href={buildProductLink({ seccion, sort, price: 'over_100000' })}
                                         className={`flex items-center gap-3 rounded-full px-4 py-3 transition ${price === 'over_100000' ? 'bg-[#0f2044] text-white' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
                                     >
                                         <span>Más de $100k</span>
@@ -213,8 +216,8 @@ export default async function ProductosPage({ searchParams }: Props) {
                                     {categories.map(category => (
                                         <Link
                                             key={category}
-                                            href={buildProductLink({ categoria: category, seccion, sort, price })}
-                                            className={`flex items-center gap-3 rounded-full px-4 py-3 transition ${categoria === category ? 'bg-[#0f2044] text-white' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
+                                            href={getCategoryHref(category)}
+                                            className="flex items-center gap-3 rounded-full px-4 py-3 transition bg-[#f8fafb] text-[#64748b] hover:bg-white"
                                         >
                                             <span>{category}</span>
                                         </Link>
@@ -230,17 +233,12 @@ export default async function ProductosPage({ searchParams }: Props) {
 
                         <div>
                             <div className="mb-6 flex flex-wrap gap-3">
-                                {categoria && (
-                                    <span className="inline-flex items-center rounded-full bg-[#eef3fb] border border-[#b5d4f4] px-3 py-2 text-[10px] font-semibold text-[#185fa5]">
-                                        {categoria}
-                                    </span>
-                                )}
                                 {seccion === 'mercado-libre' && (
                                     <span className="inline-flex items-center rounded-full bg-[#fff9e6] border border-[#f0c040] px-3 py-2 text-[10px] font-semibold text-[#c47a00]">
                                         Imperdibles ML
                                     </span>
                                 )}
-                                {(categoria || seccion === 'mercado-libre') && (
+                                {(coleccion || seccion === 'mercado-libre') && (
                                     <Link href="/productos" className="inline-flex items-center rounded-full bg-[#0f2044] px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.35em] text-white">
                                         Limpiar filtros
                                     </Link>

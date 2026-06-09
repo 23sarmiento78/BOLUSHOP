@@ -40,8 +40,9 @@ export default function Footer() {
                         <ul className="space-y-3 text-sm text-white/60">
                             {[
                                 { label: "Todos los productos", href: "/productos" },
-                                { label: "Regalos originales", href: "/productos?tipo=regalos" },
-                                { label: "Hogar", href: "/productos?tipo=hogar" },
+                                { label: "Regalos originales", href: "/regalos/originales-argentina" },
+                                { label: "Regalos cumpleaños", href: "/regalos/para-cumpleanos" },
+                                { label: "Hogar", href: "/categoria/hogar" },
                                 { label: "Colecciones", href: "/colecciones" },
                                 { label: "Blog", href: "/blog" },
                             ].map((link) => (

@@ -4,6 +4,9 @@ export interface Category {
     slug: string;
     description?: string;
     image?: string;
+    seoTitle?: string;
+    seoDescription?: string;
+    seoContent?: string;
 }
 
 export interface Collection {

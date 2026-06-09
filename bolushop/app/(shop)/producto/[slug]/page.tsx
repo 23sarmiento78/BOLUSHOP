@@ -1,10 +1,11 @@
-import { getAllProducts, getProductReviews } from "@/lib/db";
+import { getAllProducts, getProductReviews, getAllCategories } from "@/lib/db";
 import { getRelatedProducts } from "@/app/actions/shop";
 import { notFound } from "next/navigation";
 import ProductDetailClient from "./ProductDetailClient";
 import JsonLd from "@/components/shop/JsonLd";
 import type { Metadata } from "next";
 import { buildPageMetadata, buildProductJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo";
+import { categoryPath, resolveCategorySlug } from "@/lib/category-utils";
 
 interface Props {
     params: Promise<{ slug: string }>;
@@ -55,12 +56,15 @@ export default async function ProductPage({ params }: Props) {
 
     const relatedProducts = await getRelatedProducts(product.id, product.category);
     const reviews = await getProductReviews(product.id);
+    const categories = await getAllCategories();
+    const categoryHref = categoryPath(resolveCategorySlug(product.category, categories));
 
     const structuredData = [
         buildProductJsonLd(product, reviews),
         buildBreadcrumbJsonLd([
             { name: "Inicio", path: "/" },
             { name: "Productos", path: "/productos" },
+            { name: product.category, path: categoryHref },
             { name: product.name, path: `/producto/${product.slug}` },
         ]),
     ];
@@ -68,7 +72,12 @@ export default async function ProductPage({ params }: Props) {
     return (
         <>
             <JsonLd data={structuredData} />
-            <ProductDetailClient product={product} relatedProducts={relatedProducts} reviews={reviews} />
+            <ProductDetailClient
+                product={product}
+                relatedProducts={relatedProducts}
+                reviews={reviews}
+                categoryHref={categoryHref}
+            />
         </>
     );
 }

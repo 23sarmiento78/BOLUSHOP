@@ -667,6 +667,14 @@ export async function getAllCategories(): Promise<Category[]> {
     return localCategories;
 }
 
+export async function getCategoryBySlug(slug: string): Promise<Category | undefined> {
+    const categories = await getAllCategories();
+    const normalized = slug.toLowerCase();
+    return categories.find(
+        (c) => c.slug.toLowerCase() === normalized || c.id.toLowerCase() === normalized
+    );
+}
+
 export async function saveCategories(categories: Category[]): Promise<{ success: boolean, error?: string }> {
     const localSuccess = writeJson(CATEGORIES_FILE, categories);
     try {

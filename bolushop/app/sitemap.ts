@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 import { getAllProducts, getAllCategories, getAllCollections, getAllPosts } from "@/lib/db";
 import { SITE_URL } from "@/lib/seo";
+import { LANDING_PAGES, landingPath } from "@/lib/landing-pages";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const staticRoutes: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[0]["changeFrequency"] }[] = [
@@ -36,7 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     const categories = await getAllCategories();
     const categoryEntries = categories.map((category) => ({
-        url: `${SITE_URL}/productos?categoria=${category.slug}`,
+        url: `${SITE_URL}/categoria/${category.slug}`,
         lastModified: new Date(),
         changeFrequency: "weekly" as const,
         priority: 0.7,
@@ -60,5 +61,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             priority: 0.6,
         }));
 
-    return [...routes, ...productEntries, ...categoryEntries, ...collectionEntries, ...postEntries];
+    const landingEntries = LANDING_PAGES.map((landing) => ({
+        url: `${SITE_URL}${landingPath(landing.slug)}`,
+        lastModified: new Date(),
+        changeFrequency: "weekly" as const,
+        priority: 0.75,
+    }));
+
+    return [...routes, ...productEntries, ...categoryEntries, ...collectionEntries, ...postEntries, ...landingEntries];
 }

@@ -2,8 +2,22 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
+    const { pathname, searchParams } = request.nextUrl;
+
+    // Redirect legacy category URLs to clean /categoria/[slug] routes
+    if (pathname === '/productos') {
+        const categoria = searchParams.get('categoria');
+        const hasOtherFilters = searchParams.get('coleccion') || searchParams.get('seccion');
+        if (categoria && !hasOtherFilters) {
+            const url = request.nextUrl.clone();
+            url.pathname = `/categoria/${encodeURIComponent(categoria)}`;
+            url.search = '';
+            return NextResponse.redirect(url, 301);
+        }
+    }
+
     // Only protect /admin routes
-    if (request.nextUrl.pathname.startsWith('/admin')) {
+    if (pathname.startsWith('/admin')) {
 
         // Allow access to login page
         if (request.nextUrl.pathname === '/admin/login') {
@@ -22,5 +36,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: '/admin/:path*',
+    matcher: ['/admin/:path*', '/productos'],
 };
