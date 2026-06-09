@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata = buildPageMetadata({
@@ -16,23 +17,33 @@ export default function TerminosPage() {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                             <div className="md:col-span-2 space-y-12 text-gray-600 leading-relaxed">
                                 <section>
-                                    <h2 className="text-xl font-black text-gray-900 uppercase tracking-widest mb-4">1. Identidad</h2>
-                                    <p>BoluShop es una plataforma comercial operada por <b>Israel Enrique Sarmiento Escuela</b>, con base de operaciones en Villa Carlos Paz, Córdoba, Argentina. Al acceder y utilizar este sitio, aceptas cumplir con estos términos y condiciones.</p>
+                                    <h2 className="text-xl font-black text-gray-900 uppercase tracking-widest mb-4">1. Identidad del comercio</h2>
+                                    <p>BoluShop es una tienda 100% online operada por <b>Israel Enrique Sarmiento Escuela</b>, dedicada a la comercialización de productos a través de comercio electrónico. Nuestro modelo de negocio se basa en la venta de productos seleccionados que son abastecidos por proveedores externos especializados en logística y envíos. Al acceder y utilizar este sitio, aceptas cumplir con estos términos y condiciones.</p>
                                 </section>
 
                                 <section>
-                                    <h2 className="text-xl font-black text-gray-900 uppercase tracking-widest mb-4">2. Envíos y Logística</h2>
-                                    <p>Realizamos envíos a toda la República Argentina a través de diversas empresas logísticas. Los tiempos de entrega son estimativos y pueden variar según la zona y la demanda.</p>
+                                    <h2 className="text-xl font-black text-gray-900 uppercase tracking-widest mb-4">2. Productos y proveedores</h2>
+                                    <p>Los productos ofrecidos en BoluShop son comercializados bajo un esquema de dropshipping. Esto significa que los productos son abastecidos, despachados y gestionados logísticamente por nuestros proveedores asociados, quienes cuentan con la capacidad operativa para cumplir con los plazos de entrega en todo el país. BoluShop actúa como intermediario entre el cliente y el proveedor, facilitando la experiencia de compra y el soporte postventa.</p>
                                 </section>
 
                                 <section>
-                                    <h2 className="text-xl font-black text-gray-900 uppercase tracking-widest mb-4">3. Productos de Mercado Libre (Referidos)</h2>
-                                    <p>Algunos productos mostrados en nuestro catálogo son seleccionados de Mercado Libre bajo una modalidad de recomendación/afiliado. BoluShop no es el vendedor directo de estos artículos; la transacción final se realiza en la plataforma de Mercado Libre bajo sus propios términos de Compra Protegida.</p>
+                                    <h2 className="text-xl font-black text-gray-900 uppercase tracking-widest mb-4">3. Envíos y Logística</h2>
+                                    <p>Realizamos envíos a toda la República Argentina a través de diversas empresas logísticas. Los tiempos de entrega son estimativos y pueden variar según la zona y la demanda. Una vez realizado el pedido, el proveedor se encarga del despacho y entrega del producto.</p>
                                 </section>
 
                                 <section>
-                                    <h2 className="text-xl font-black text-gray-900 uppercase tracking-widest mb-4">4. Propiedad Intelectual</h2>
+                                    <h2 className="text-xl font-black text-gray-900 uppercase tracking-widest mb-4">4. Devoluciones y garantías</h2>
+                                    <p>Contamos con políticas de devolución y garantía aplicables a todos los productos. Para más detalles sobre plazos, condiciones y procedimientos, consultá nuestra página de <Link href="/garantias" className="text-[#e8630a] hover:underline">Garantías y Devoluciones</Link>.</p>
+                                </section>
+
+                                <section>
+                                    <h2 className="text-xl font-black text-gray-900 uppercase tracking-widest mb-4">5. Propiedad Intelectual</h2>
                                     <p>Todo el contenido de este sitio, incluyendo logos, diseños, textos y código, es propiedad de BoluShop o se utiliza bajo licencia. Queda prohibida su reproducción sin consentimiento.</p>
+                                </section>
+
+                                <section>
+                                    <h2 className="text-xl font-black text-gray-900 uppercase tracking-widest mb-4">6. Modificaciones</h2>
+                                    <p>Nos reservamos el derecho de modificar estos términos y condiciones en cualquier momento. Las modificaciones entrarán en vigor inmediatamente después de su publicación en el sitio.</p>
                                 </section>
                             </div>
 

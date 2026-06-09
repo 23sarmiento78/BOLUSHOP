@@ -65,6 +65,8 @@ export default function Footer() {
                                 { label: "Rastreo de pedido", href: "/rastreo" },
                                 { label: "Contacto", href: "/contacto" },
                                 { label: "Nosotros", href: "/nosotros" },
+                                { label: "Términos y Condiciones", href: "/terminos-y-condiciones" },
+                                { label: "Política de Privacidad", href: "/politica-de-privacidad" },
                             ].map((link) => (
                                 <li key={link.href}>
                                     <Link href={link.href} className="hover:text-[#ff6b35] transition-colors">{link.label}</Link>
@@ -76,13 +78,10 @@ export default function Footer() {
                     <div className="lg:col-span-3">
                         <h4 className="text-xs font-bold uppercase tracking-widest text-white/40 mb-5">Contacto</h4>
                         <div className="space-y-3 text-sm text-white/60">
-                            <div className="flex gap-2.5">
-                                <MapPin size={15} className="flex-shrink-0 mt-0.5 text-[#ff6b35]" />
-                                <span>Villa Carlos Paz, Córdoba, Argentina</span>
-                            </div>
+                            <p className="text-xs text-white/40 uppercase tracking-widest mb-2 font-bold">Tienda 100% Online</p>
                             <div className="flex gap-2.5">
                                 <Mail size={15} className="flex-shrink-0 mt-0.5 text-[#ff6b35]" />
-                                <a href="mailto:contacto@bolushop.com" className="hover:text-white transition-colors">contacto@bolushop.com</a>
+                                <a href="mailto:23sarmiento@gmail.com" className="hover:text-white transition-colors">23sarmiento@gmail.com</a>
                             </div>
                             <div className="flex gap-2.5">
                                 <Phone size={15} className="flex-shrink-0 mt-0.5 text-[#ff6b35]" />

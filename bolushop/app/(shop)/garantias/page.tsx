@@ -79,16 +79,18 @@ export default function GarantiasPage() {
                             <li>El producto debe estar <strong className="text-[#0a1628]">completo y sin uso</strong>, con su caja, accesorios y packaging original.</li>
                             <li>Durante los 10 días de devolución exprés, el reintegro incluye el envío de ida y el de la devolución.</li>
                             <li>Una vez finalizado ese plazo, la garantía en curso no cubre gastos de flete hacia nuestro depósito.</li>
+                            <li>Para productos de Mercado Libre, la devolución y el proceso de compra se gestionan directamente desde Mercado Libre.</li>
                         </ul>
                     </div>
 
-                    <div className="card p-6 md:p-8 border-[#3483FA]/20 bg-[#f0f6ff]">
+                    <div className="card p-6 md:p-8">
                         <h2 className="text-lg font-semibold text-[#0a1628] mb-3" style={{ fontFamily: "var(--font-display)" }}>
                             Productos de Mercado Libre
                         </h2>
                         <p className="text-sm text-[#64748b] leading-relaxed">
-                            Para los productos comprados a través de los links de referidos de Mercado Libre, la devolución
-                            y el proceso de compra se gestionan directamente desde Mercado Libre.
+                            Nuestra tienda incluye productos seleccionados de Mercado Libre bajo modalidad de afiliado. 
+                            Al tratarse de productos pertenecientes a esa plataforma, las transacciones, devoluciones 
+                            y la Compra Protegida se gestionan directamente desde Mercado Libre, bajo sus propios términos y condiciones.
                         </p>
                         <Link
                             href="/productos?seccion=mercado-libre"

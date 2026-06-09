@@ -44,7 +44,7 @@ export async function generateMetadata(): Promise<Metadata> {
         },
         description:
             settings.siteDescription ||
-            "Regalos originales y accesorios para el hogar en Argentina. Envío gratis, cuotas sin interés y compra 100% protegida.",
+            "Tienda online de regalos originales y accesorios para el hogar en Argentina. Comprá 100% online con envíos a domicilio a todo el país.",
         keywords: [
             "regalos originales argentina",
             "tienda de regalos online",
@@ -52,8 +52,8 @@ export async function generateMetadata(): Promise<Metadata> {
             "gadgets argentina",
             "bolushop",
             "envio gratis argentina",
-            "regalos villa carlos paz",
-            "comprar regalos cordoba",
+            "comprar regalos online",
+            "tienda dropshipping argentina",
         ],
         authors: [{ name: settings.siteName, url: SITE_URL }],
         creator: settings.siteName,
