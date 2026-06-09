@@ -4,6 +4,7 @@ import { Toaster } from "sonner";
 import Script from "next/script";
 import NextTopLoader from "nextjs-toploader";
 import { headers } from "next/headers";
+import { Analytics } from "@vercel/analytics/next";
 import { getSettings } from "@/lib/db";
 import WhatsAppButton from "@/components/shop/WhatsAppButton";
 import CookieConsent from "@/components/shop/CookieConsent";
@@ -137,6 +138,7 @@ export default async function RootLayout({
                 <WhatsAppButton />
                 <CookieConsent />
                 <Toaster position="top-center" richColors />
+                <Analytics />
                 <Script
                     src="https://www.mercadopago.com/v2/security.js"
                     strategy="lazyOnload"
