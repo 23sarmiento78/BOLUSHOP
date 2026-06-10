@@ -54,15 +54,23 @@ export async function GET(request: NextRequest) {
         const tokenData = await tokenResponse.json();
         const expiresAt = new Date(Date.now() + tokenData.expires_in * 1000).toISOString();
 
-        const { error: dbError } = await supabaseServer
+        const tokenRow = {
+            access_token: tokenData.access_token,
+            refresh_token: tokenData.refresh_token,
+            expires_at: expiresAt,
+            updated_at: new Date().toISOString(),
+        };
+
+        // id es GENERATED ALWAYS en Supabase: no se puede insertar id manualmente
+        const { data: existing } = await supabaseServer
             .from('meli_auth')
-            .upsert({
-                id: 1,
-                access_token: tokenData.access_token,
-                refresh_token: tokenData.refresh_token,
-                expires_at: expiresAt,
-                updated_at: new Date().toISOString(),
-            }, { onConflict: 'id' });
+            .select('id')
+            .limit(1)
+            .maybeSingle();
+
+        const { error: dbError } = existing?.id
+            ? await supabaseServer.from('meli_auth').update(tokenRow).eq('id', existing.id)
+            : await supabaseServer.from('meli_auth').insert(tokenRow);
 
         if (dbError) {
             console.error('Supabase save error:', dbError);
