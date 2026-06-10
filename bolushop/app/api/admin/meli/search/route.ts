@@ -15,6 +15,9 @@ export async function GET(request: NextRequest) {
     } catch (error: unknown) {
         const message = error instanceof Error ? error.message : 'Error interno';
         console.error('Meli search error:', error);
-        return NextResponse.json({ error: message }, { status: 500 });
+        const status = message.includes('No hay tokens') || message.includes('Reconectá')
+            ? 401
+            : 500;
+        return NextResponse.json({ error: message }, { status });
     }
 }

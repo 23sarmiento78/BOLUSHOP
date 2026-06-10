@@ -85,7 +85,7 @@ export default function ResearchClient() {
         <div className="space-y-8 animate-in fade-in duration-700">
             <AdminPageHeader
                 title="Product Scout"
-                subtitle="Investigá tendencias en Mercado Libre y optimizá productos con IA"
+                subtitle="Búsqueda vía catálogo Meli (requiere cuenta conectada). Precio y vendidos pueden no estar disponibles."
                 actions={
                     <Link
                         href="/admin/meli/optimized"
@@ -156,7 +156,7 @@ export default function ResearchClient() {
                                 <thead>
                                     <tr className="bg-gray-50 text-[10px] font-black uppercase tracking-widest text-gray-500">
                                         <th className="px-6 py-4">Producto</th>
-                                        <th className="px-4 py-4">Precio</th>
+                                        <th className="px-4 py-4">Precio ref.</th>
                                         <th className="px-4 py-4">Vendidos</th>
                                         <th className="px-4 py-4">Link</th>
                                         <th className="px-6 py-4 text-right">Acción</th>
@@ -186,10 +186,10 @@ export default function ResearchClient() {
                                                 </div>
                                             </td>
                                             <td className="px-4 py-4 font-black text-gray-900 whitespace-nowrap">
-                                                ${item.price.toLocaleString("es-AR")}
+                                                {item.price > 0 ? `$${item.price.toLocaleString("es-AR")}` : "—"}
                                             </td>
                                             <td className="px-4 py-4 font-bold text-gray-600 whitespace-nowrap">
-                                                {item.sold_quantity.toLocaleString("es-AR")}
+                                                {item.sold_quantity > 0 ? item.sold_quantity.toLocaleString("es-AR") : "—"}
                                             </td>
                                             <td className="px-4 py-4">
                                                 <a

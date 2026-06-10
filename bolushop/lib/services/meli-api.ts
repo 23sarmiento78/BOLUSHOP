@@ -1,78 +1,150 @@
+import { getMeliAccessToken } from '@/lib/services/meli-tokens';
 import type { MeliItemDetails, MeliPublishResult, MeliSearchResponse, MeliSearchResult } from '@/lib/types/meli-scout';
 
-const MLA_SEARCH_URL = 'https://api.mercadolibre.com/sites/MLA/search';
+const MELI_PRODUCTS_SEARCH_URL = 'https://api.mercadolibre.com/products/search';
 const MELI_ITEMS_URL = 'https://api.mercadolibre.com/items';
+const MELI_PRODUCTS_URL = 'https://api.mercadolibre.com/products';
 
-interface MeliRawSearchItem {
+interface CatalogProductPicture {
+    url?: string;
+}
+
+interface CatalogProductResult {
     id: string;
-    title: string;
-    price: number;
-    thumbnail: string;
-    permalink: string;
-    sold_quantity?: number;
+    name: string;
+    domain_id?: string;
+    pictures?: CatalogProductPicture[];
 }
 
-interface MeliRawSearchResponse {
-    query: string;
-    paging: { total: number };
-    results: MeliRawSearchItem[];
+interface CatalogSearchResponse {
+    keywords?: string;
+    paging?: { total: number };
+    results?: CatalogProductResult[];
 }
 
-function mapSearchItem(item: MeliRawSearchItem): MeliSearchResult {
+function mapCatalogProduct(product: CatalogProductResult): MeliSearchResult {
     return {
-        id: item.id,
-        title: item.title,
-        price: item.price,
-        thumbnail: item.thumbnail,
-        permalink: item.permalink,
-        sold_quantity: item.sold_quantity ?? 0,
+        id: product.id,
+        title: product.name,
+        price: 0,
+        thumbnail: product.pictures?.[0]?.url ?? '',
+        permalink: `https://www.mercadolibre.com.ar/p/${product.id}`,
+        sold_quantity: 0,
     };
 }
 
-export async function searchMeliProducts(query: string, limit = 20): Promise<MeliSearchResponse> {
+async function searchViaCatalogApi(
+    query: string,
+    limit: number,
+    accessToken: string,
+): Promise<MeliSearchResponse> {
     const params = new URLSearchParams({
+        site_id: 'MLA',
+        status: 'active',
         q: query.trim(),
-        sort: 'sold_quantity_desc',
         limit: String(limit),
     });
 
-    const response = await fetch(`${MLA_SEARCH_URL}?${params.toString()}`, {
-        headers: { Accept: 'application/json' },
-        next: { revalidate: 0 },
+    const response = await fetch(`${MELI_PRODUCTS_SEARCH_URL}?${params.toString()}`, {
+        headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+        },
     });
 
     if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`Error de Mercado Libre (${response.status}): ${errorText}`);
+        throw new Error(`Error de búsqueda en catálogo Meli (${response.status}): ${errorText}`);
     }
 
-    const data: MeliRawSearchResponse = await response.json();
+    const data: CatalogSearchResponse = await response.json();
 
     return {
-        query: data.query ?? query,
+        query: data.keywords ?? query,
         total: data.paging?.total ?? 0,
-        results: (data.results ?? []).map(mapSearchItem),
+        results: (data.results ?? []).map(mapCatalogProduct),
     };
 }
 
-export async function fetchMeliItemDetails(itemId: string): Promise<MeliItemDetails> {
-    const response = await fetch(`${MELI_ITEMS_URL}/${itemId}`, {
-        headers: { Accept: 'application/json' },
-        next: { revalidate: 0 },
+async function resolveCategoryFromProduct(
+    productId: string,
+    accessToken: string,
+): Promise<string | null> {
+    const productRes = await fetch(`${MELI_PRODUCTS_URL}/${productId}`, {
+        headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+        },
     });
 
-    if (!response.ok) {
-        throw new Error(`No se pudo obtener datos del ítem ${itemId} en Meli`);
+    if (!productRes.ok) return null;
+
+    const product = await productRes.json();
+    const domainId = product.domain_id as string | undefined;
+    if (!domainId) return null;
+
+    const domainRes = await fetch(
+        `https://api.mercadolibre.com/domains/${domainId}/categories`,
+        {
+            headers: {
+                Accept: 'application/json',
+                Authorization: `Bearer ${accessToken}`,
+            },
+        },
+    );
+
+    if (!domainRes.ok) return null;
+
+    const categories = await domainRes.json();
+    return categories?.[0]?.category_id ?? null;
+}
+
+export async function searchMeliProducts(query: string, limit = 20): Promise<MeliSearchResponse> {
+    const accessToken = await getMeliAccessToken();
+    return searchViaCatalogApi(query, limit, accessToken);
+}
+
+export async function fetchMeliItemDetails(itemId: string, accessToken?: string): Promise<MeliItemDetails> {
+    const token = accessToken ?? await getMeliAccessToken();
+
+    const itemResponse = await fetch(`${MELI_ITEMS_URL}/${itemId}`, {
+        headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    if (itemResponse.ok) {
+        const data = await itemResponse.json();
+        return {
+            category_id: data.category_id,
+            condition: data.condition ?? 'new',
+            listing_type_id: data.listing_type_id ?? 'gold_special',
+            currency_id: data.currency_id ?? 'ARS',
+            pictures: data.pictures ?? [],
+        };
     }
 
-    const data = await response.json();
+    const categoryId = await resolveCategoryFromProduct(itemId, token);
+    if (!categoryId) {
+        throw new Error(`No se pudo obtener categoría para el producto ${itemId}`);
+    }
+
+    const productRes = await fetch(`${MELI_PRODUCTS_URL}/${itemId}`, {
+        headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    const product = productRes.ok ? await productRes.json() : null;
 
     return {
-        category_id: data.category_id,
-        condition: data.condition ?? 'new',
-        listing_type_id: data.listing_type_id ?? 'gold_special',
-        currency_id: data.currency_id ?? 'ARS',
-        pictures: data.pictures ?? [],
+        category_id: categoryId,
+        condition: 'new',
+        listing_type_id: 'gold_special',
+        currency_id: 'ARS',
+        pictures: (product?.pictures ?? []).map((p: { url: string }) => ({ url: p.url })),
     };
 }
 
@@ -87,7 +159,7 @@ export async function publishMeliDraft(
         asPaused?: boolean;
     },
 ): Promise<MeliPublishResult> {
-    const source = await fetchMeliItemDetails(params.sourceItemId);
+    const source = await fetchMeliItemDetails(params.sourceItemId, accessToken);
 
     const pictures: { source: string }[] = [];
     if (params.thumbnail) {
@@ -100,10 +172,12 @@ export async function publishMeliDraft(
         }
     }
 
+    const price = params.price > 0 ? params.price : 1000;
+
     const itemPayload: Record<string, unknown> = {
         title: params.seoTitle.slice(0, 60),
         category_id: source.category_id,
-        price: params.price,
+        price,
         currency_id: source.currency_id,
         available_quantity: 1,
         buying_mode: 'buy_it_now',
