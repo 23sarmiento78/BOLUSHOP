@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabase-server';
 
+const MELI_REDIRECT_URI = 'https://bolushop.com/api/auth/callback';
+const MELI_TOKEN_URL = 'https://api.mercadolibre.com/oauth/token';
+const SUCCESS_REDIRECT = 'https://bolushop.com/admin';
+
 export async function GET(request: NextRequest) {
     try {
         const { searchParams } = new URL(request.url);
@@ -17,8 +21,7 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
         }
 
-        // Mercado Libre OAuth token endpoint
-        const tokenResponse = await fetch('https://api.mercadolibre.com/oauth/token', {
+        const tokenResponse = await fetch(MELI_TOKEN_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -28,22 +31,20 @@ export async function GET(request: NextRequest) {
                 client_id: clientId,
                 client_secret: clientSecret,
                 code: code,
-                redirect_uri: `${process.env.NEXT_PUBLIC_URL || process.env.NEXT_PUBLIC_SITE_URL}/api/auth/callback`,
+                redirect_uri: MELI_REDIRECT_URI,
             }),
         });
 
         if (!tokenResponse.ok) {
             const errorText = await tokenResponse.text();
             console.error('Meli token error:', errorText);
-            return NextResponse.json({ error: 'Failed to obtain tokens from Mercado Libre' }, { status: 400 });
+            return NextResponse.json({ error: 'Failed to obtain tokens from Mercado Libre', details: errorText }, { status: 500 });
         }
 
         const tokenData = await tokenResponse.json();
 
-        // Calculate expiration (tokens expire in 6 hours)
-        const expiresAt = new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString();
+        const expiresAt = new Date(Date.now() + tokenData.expires_in * 1000).toISOString();
 
-        // Save to Supabase meli_auth table
         const { error: dbError } = await supabaseServer
             .from('meli_auth')
             .upsert({
@@ -55,14 +56,10 @@ export async function GET(request: NextRequest) {
 
         if (dbError) {
             console.error('Supabase save error:', dbError);
-            return NextResponse.json({ error: 'Failed to save tokens' }, { status: 500 });
+            return NextResponse.json({ error: 'Failed to save tokens', details: dbError.message }, { status: 500 });
         }
 
-        return NextResponse.json({
-            success: true,
-            message: 'Authentication successful',
-            expires_at: expiresAt,
-        });
+        return NextResponse.redirect(SUCCESS_REDIRECT);
 
     } catch (error: any) {
         console.error('Callback error:', error);
