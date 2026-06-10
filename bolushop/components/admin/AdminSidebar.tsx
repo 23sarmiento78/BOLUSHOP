@@ -19,6 +19,7 @@ import {
     Menu,
     X,
     ChevronRight,
+    Radar,
 } from "lucide-react";
 
 const NAV_SECTIONS = [
@@ -35,6 +36,8 @@ const NAV_SECTIONS = [
             { name: "Categorías", href: "/admin/categories", icon: FolderTree },
             { name: "Colecciones", href: "/admin/collections", icon: Layers },
             { name: "Mercado Libre", href: "/admin/mercado-libre", icon: Package, badge: "ML" },
+            { name: "Product Scout", href: "/admin/meli/research", icon: Radar, badge: "AI" },
+            { name: "Optimizados ML", href: "/admin/meli/optimized", icon: Package },
             { name: "Importar", href: "/admin/upload", icon: Upload },
         ],
     },
