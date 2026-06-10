@@ -14,6 +14,7 @@ import {
     getNewsletterSubscribers,
     deleteNewsletterSubscriber,
     deleteProduct,
+    deleteProducts,
     deleteCategory,
     deleteCollection,
     deleteAllProducts,
@@ -31,36 +32,42 @@ import OAuth from 'oauth-1.0a';
 import CryptoJS from 'crypto-js';
 
 export async function deleteProductAction(id: string) {
-    const success = await deleteProduct(id);
-    if (!success) return { success: false, error: "No se pudo eliminar el producto." };
+    const result = await deleteProduct(id);
+    if (!result.success) {
+        return { success: false, error: result.error || "No se pudo eliminar el producto." };
+    }
 
     revalidatePath("/admin/products");
     revalidatePath("/admin");
     revalidatePath("/");
+    revalidatePath("/feed.xml");
     return { success: true };
 }
 
 export async function deleteAllProductsAction() {
-    const success = await deleteAllProducts();
-    if (!success) return { success: false, error: "No se pudieron borrar los productos de la base de datos." };
+    const result = await deleteAllProducts();
+    if (!result.success) {
+        return { success: false, error: result.error || "No se pudieron borrar los productos de la base de datos." };
+    }
 
     revalidatePath("/admin/products");
     revalidatePath("/admin");
     revalidatePath("/");
+    revalidatePath("/feed.xml");
     return { success: true };
 }
 
 export async function deleteMultipleProductsAction(idsToDelete: string[]) {
     try {
-        // En paralelo para velocidad
-        const results = await Promise.all(idsToDelete.map(id => deleteProduct(id)));
-        const allSuccess = results.every(r => r === true);
-
-        if (!allSuccess) return { success: false, error: "Algunos productos no pudieron ser eliminados." };
+        const result = await deleteProducts(idsToDelete);
+        if (!result.success) {
+            return { success: false, error: result.error || "Algunos productos no pudieron ser eliminados." };
+        }
 
         revalidatePath("/admin/products");
         revalidatePath("/admin");
         revalidatePath("/");
+        revalidatePath("/feed.xml");
         return { success: true };
     } catch (e) {
         return { success: false, error: "Error al eliminar múltiples productos." };
