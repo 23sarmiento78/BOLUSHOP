@@ -1,16 +1,35 @@
 "use client";
 
-import { useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Image from 'next/image';
-import { Search, Package, Plus, CheckCircle2, AlertCircle, ExternalLink, RefreshCw, Zap } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Search, Plus, CheckCircle2, AlertCircle, ExternalLink, RefreshCw, Zap } from 'lucide-react';
+import { buildMeliAuthorizationUrl } from '@/lib/meli-oauth';
 
-export default function MercadoLibreAdmin() {
+function MercadoLibreContent() {
+    const searchParams = useSearchParams();
+    const router = useRouter();
     const [url, setUrl] = useState('');
     const [loading, setLoading] = useState(false);
     const [previewData, setPreviewData] = useState<any>(null);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [saving, setSaving] = useState(false);
+
+    const meliAuthUrl = buildMeliAuthorizationUrl();
+
+    useEffect(() => {
+        const connected = searchParams.get('connected');
+        const oauthError = searchParams.get('error');
+
+        if (connected === 'true') {
+            setSuccess('¡Cuenta de Mercado Libre conectada con éxito!');
+            router.replace('/admin/mercado-libre');
+        } else if (oauthError) {
+            setError(oauthError);
+            router.replace('/admin/mercado-libre');
+        }
+    }, [searchParams, router]);
 
     const handleSearch = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -90,19 +109,32 @@ export default function MercadoLibreAdmin() {
                     <p className="text-gray-500 font-medium italic">Sincroniza productos externos con un solo click usando el motor de scraping de BoluShop.</p>
                 </div>
                 <div className="flex items-center gap-3">
-                    <a
-                        href={`https://auth.mercadolibre.com.ar/authorization?response_type=code&client_id=${process.env.NEXT_PUBLIC_MELI_CLIENT_ID}&redirect_uri=${encodeURIComponent(process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_URL || '')}/api/auth/callback`}
-                        className="bg-[#FFE600] text-gray-900 px-6 py-3 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-yellow-400 transition-all flex items-center gap-2 shadow-lg"
-                    >
-                        <ExternalLink size={18} />
-                        Conectar Cuenta ML
-                    </a>
+                    {meliAuthUrl ? (
+                        <a
+                            href={meliAuthUrl}
+                            className="bg-[#FFE600] text-gray-900 px-6 py-3 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-yellow-400 transition-all flex items-center gap-2 shadow-lg"
+                        >
+                            <ExternalLink size={18} />
+                            Conectar Cuenta ML
+                        </a>
+                    ) : (
+                        <span className="text-xs font-bold text-red-600">
+                            Falta NEXT_PUBLIC_MELI_CLIENT_ID en Vercel
+                        </span>
+                    )}
                     <div className="flex items-center gap-2 px-4 py-2 bg-[#FFE600]/20 border border-[#FFE600]/40 rounded-2xl">
                         <Zap className="text-[#8B7E00]" size={20} fill="currentColor" />
                         <span className="text-[10px] font-black uppercase tracking-widest text-gray-900">Auto-Sincronización Activa</span>
                     </div>
                 </div>
             </div>
+
+            {success && (
+                <div className="bg-green-50 text-green-700 p-6 rounded-2xl border border-green-100 flex items-center gap-4 font-bold text-sm">
+                    <CheckCircle2 size={24} />
+                    {success}
+                </div>
+            )}
 
             {/* URL Search Card */}
             <div className="bg-white rounded-[2.5rem] p-10 md:p-14 shadow-xl shadow-gray-200/50 border border-gray-100">
@@ -257,5 +289,13 @@ export default function MercadoLibreAdmin() {
                 </div>
             )}
         </div>
+    );
+}
+
+export default function MercadoLibreAdmin() {
+    return (
+        <Suspense fallback={<div className="p-8 text-gray-500 font-medium">Cargando...</div>}>
+            <MercadoLibreContent />
+        </Suspense>
     );
 }
