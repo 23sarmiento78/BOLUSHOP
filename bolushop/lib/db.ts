@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { supabase } from './supabase';
+import { supabaseServer } from './supabase-server';
 import { supabaseReviews } from './supabase-reviews';
 
 // Define paths
@@ -141,7 +142,30 @@ export async function saveSettings(settings: Settings): Promise<{ success: boole
     }
 }
 
-// Products API
+function mapSupabaseProduct(p: Record<string, unknown>): Product {
+    return {
+        id: String(p.id),
+        name: String(p.name),
+        slug: String(p.slug),
+        price: Number(p.price),
+        cost: p.cost != null ? Number(p.cost) : undefined,
+        image: String(p.image ?? ''),
+        images: (p.images as string[]) || [],
+        category: String(p.category ?? ''),
+        categoryId: p.category_id != null ? String(p.category_id) : undefined,
+        description: String(p.description ?? ''),
+        features: (p.features as string[]) || [],
+        stock: Number(p.stock ?? 0),
+        collections: (p.collections as string[]) || [],
+        createdAt: String(p.created_at ?? new Date().toISOString()),
+        isActive: p.is_active !== false,
+        mlAffiliateUrl: p.ml_affiliate_url != null ? String(p.ml_affiliate_url) : undefined,
+        mlItemId: p.ml_item_id != null ? String(p.ml_item_id) : undefined,
+        isMlReferral: Boolean(p.is_ml_referral),
+    };
+}
+
+// Products API — Supabase es la fuente de verdad en producción (Vercel no persiste data/*.json).
 export async function getAllProducts(): Promise<Product[]> {
     const localProducts = readJson<Product[]>(PRODUCTS_FILE, []);
     try {
@@ -150,35 +174,14 @@ export async function getAllProducts(): Promise<Product[]> {
             .select('*')
             .order('created_at', { ascending: false });
 
-        if (data && data.length > 0) {
-            const supabaseProducts = data.map(p => ({
-                id: p.id,
-                name: p.name,
-                slug: p.slug,
-                price: p.price,
-                cost: p.cost,
-                image: p.image,
-                images: p.images || [],
-                category: p.category,
-                categoryId: p.category_id,
-                description: p.description,
-                features: p.features || [],
-                stock: p.stock,
-                collections: p.collections || [],
-                createdAt: p.created_at,
-                isActive: p.is_active ?? true,
-                mlAffiliateUrl: p.ml_affiliate_url,
-                mlItemId: p.ml_item_id,
-                isMlReferral: p.is_ml_referral
-            }));
-
-            // Merge: Supabase takes precedence
-            const productsMap = new Map<string, Product>();
-            localProducts.forEach(p => productsMap.set(p.id, p));
-            supabaseProducts.forEach(p => productsMap.set(p.id, p));
-            return Array.from(productsMap.values()).sort((a, b) =>
+        if (!error && data) {
+            return data.map((p) => mapSupabaseProduct(p)).sort((a, b) =>
                 new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
             );
+        }
+
+        if (error) {
+            console.error("❌ Supabase Products Fetch Error:", error);
         }
     } catch (e) {
         console.error("❌ Supabase Products Fetch Error:", e);
@@ -211,7 +214,7 @@ export async function saveProducts(products: Product[]): Promise<{ success: bool
             is_ml_referral: p.isMlReferral
         }));
 
-        const { error } = await supabase.from('products').upsert(toUpsert, { onConflict: 'id' });
+        const { error } = await supabaseServer.from('products').upsert(toUpsert, { onConflict: 'id' });
         if (error) {
             console.error("❌ Supabase Products Sync Error:", error);
             return {
@@ -219,6 +222,29 @@ export async function saveProducts(products: Product[]): Promise<{ success: bool
                 error: (error as any).message || JSON.stringify(error)
             };
         }
+
+        const keepIds = new Set(products.map((p) => p.id));
+        const { data: existingRows, error: fetchError } = await supabaseServer
+            .from('products')
+            .select('id');
+
+        if (!fetchError && existingRows?.length) {
+            const orphanIds = existingRows
+                .map((row) => String(row.id))
+                .filter((id) => !keepIds.has(id));
+
+            if (orphanIds.length > 0) {
+                const { error: deleteError } = await supabaseServer
+                    .from('products')
+                    .delete()
+                    .in('id', orphanIds);
+
+                if (deleteError) {
+                    console.error("❌ Supabase Products Orphan Cleanup Error:", deleteError);
+                }
+            }
+        }
+
         return { success: true };
     } catch (e: any) {
         console.error("❌ Supabase Products Sync Error:", e);
@@ -229,35 +255,59 @@ export async function saveProducts(products: Product[]): Promise<{ success: bool
     }
 }
 
-export async function deleteProduct(id: string): Promise<boolean> {
-    const products = await getAllProducts();
-    const filtered = products.filter(p => p.id !== id);
-    const localSuccess = writeJson(PRODUCTS_FILE, filtered);
+export async function deleteProduct(id: string): Promise<{ success: boolean; error?: string }> {
     try {
-        const { error } = await supabase.from('products').delete().eq('id', id);
+        const { error } = await supabaseServer.from('products').delete().eq('id', id);
         if (error) {
             console.error("❌ Supabase Product Delete Error:", error);
-            return localSuccess;
+            return { success: false, error: error.message };
         }
-        return true;
-    } catch (e) {
+
+        const localProducts = readJson<Product[]>(PRODUCTS_FILE, []);
+        writeJson(PRODUCTS_FILE, localProducts.filter((p) => p.id !== id));
+        return { success: true };
+    } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : 'Error desconocido';
         console.error("❌ Supabase Product Delete Error:", e);
-        return localSuccess;
+        return { success: false, error: message };
     }
 }
 
-export async function deleteAllProducts(): Promise<boolean> {
-    const localSuccess = writeJson(PRODUCTS_FILE, []);
+export async function deleteProducts(ids: string[]): Promise<{ success: boolean; error?: string }> {
+    if (ids.length === 0) return { success: true };
+
     try {
-        const { error } = await supabase.from('products').delete().neq('id', '0');
+        const { error } = await supabaseServer.from('products').delete().in('id', ids);
+        if (error) {
+            console.error("❌ Supabase Products Bulk Delete Error:", error);
+            return { success: false, error: error.message };
+        }
+
+        const idSet = new Set(ids);
+        const localProducts = readJson<Product[]>(PRODUCTS_FILE, []);
+        writeJson(PRODUCTS_FILE, localProducts.filter((p) => !idSet.has(p.id)));
+        return { success: true };
+    } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : 'Error desconocido';
+        console.error("❌ Supabase Products Bulk Delete Error:", e);
+        return { success: false, error: message };
+    }
+}
+
+export async function deleteAllProducts(): Promise<{ success: boolean; error?: string }> {
+    try {
+        const { error } = await supabaseServer.from('products').delete().neq('id', '');
         if (error) {
             console.error("❌ Supabase Delete All Products Error:", error);
-            return localSuccess;
+            return { success: false, error: error.message };
         }
-        return true;
-    } catch (e) {
+
+        writeJson(PRODUCTS_FILE, []);
+        return { success: true };
+    } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : 'Error desconocido';
         console.error("❌ Supabase Delete All Products Error:", e);
-        return localSuccess;
+        return { success: false, error: message };
     }
 }
 
