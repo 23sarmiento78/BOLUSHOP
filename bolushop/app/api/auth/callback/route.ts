@@ -54,19 +54,30 @@ export async function GET(request: NextRequest) {
         const tokenData = await tokenResponse.json();
         const expiresAt = new Date(Date.now() + tokenData.expires_in * 1000).toISOString();
 
-        const tokenRow = {
+        const tokenRow: Record<string, string> = {
             access_token: tokenData.access_token,
-            refresh_token: tokenData.refresh_token,
             expires_at: expiresAt,
             updated_at: new Date().toISOString(),
         };
+        // Meli no siempre devuelve refresh_token en re-autorizaciones
+        if (tokenData.refresh_token) {
+            tokenRow.refresh_token = tokenData.refresh_token;
+        }
 
-        // id es GENERATED ALWAYS en Supabase: no se puede insertar id manualmente
         const { data: existing } = await supabaseServer
             .from('meli_auth')
-            .select('id')
+            .select('id, refresh_token')
             .limit(1)
             .maybeSingle();
+
+        if (!existing?.id && !tokenRow.refresh_token) {
+            console.error('Meli no devolvió refresh_token en la primera autorización');
+            return NextResponse.redirect(
+                getMeliAdminReturnUrl({
+                    error: 'Mercado Libre no envió refresh_token. Revocá el acceso de BoluShop en Meli y volvé a conectar.',
+                })
+            );
+        }
 
         const { error: dbError } = existing?.id
             ? await supabaseServer.from('meli_auth').update(tokenRow).eq('id', existing.id)
