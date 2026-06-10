@@ -9,4 +9,7 @@ CREATE TABLE IF NOT EXISTS meli_auth (
   CONSTRAINT meli_auth_single_row CHECK (id = 1)
 );
 
+-- Si la tabla ya existía sin user_id, agregar la columna:
+ALTER TABLE meli_auth ADD COLUMN IF NOT EXISTS user_id BIGINT;
+
 ALTER TABLE meli_auth ENABLE ROW LEVEL SECURITY;

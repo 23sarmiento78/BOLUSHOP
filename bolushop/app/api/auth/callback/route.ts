@@ -61,7 +61,6 @@ export async function GET(request: NextRequest) {
                 access_token: tokenData.access_token,
                 refresh_token: tokenData.refresh_token,
                 expires_at: expiresAt,
-                user_id: tokenData.user_id ?? null,
                 updated_at: new Date().toISOString(),
             }, { onConflict: 'id' });
 
