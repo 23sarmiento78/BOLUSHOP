@@ -38,7 +38,7 @@ const NAV_SECTIONS = [
             { name: "Mercado Libre", href: "/admin/mercado-libre", icon: Package, badge: "ML" },
             { name: "Product Scout", href: "/admin/meli/research", icon: Radar, badge: "AI" },
             { name: "Optimizados ML", href: "/admin/meli/optimized", icon: Package },
-            { name: "Importar", href: "/admin/upload", icon: Upload },
+            { name: "CSV Dropers + IA", href: "/admin/upload", icon: Upload },
         ],
     },
     {
