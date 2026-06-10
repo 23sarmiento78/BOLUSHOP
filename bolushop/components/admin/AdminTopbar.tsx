@@ -14,7 +14,7 @@ const PAGE_TITLES: Record<string, string> = {
     "/admin/mercado-libre": "Mercado Libre",
     "/admin/newsletter": "Newsletter",
     "/admin/settings": "Configuración",
-    "/admin/upload": "Importar datos",
+    "/admin/upload": "CSV Dropers + IA",
 };
 
 function getPageTitle(pathname: string): string {

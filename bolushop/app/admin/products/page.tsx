@@ -3,7 +3,7 @@ import { getAllProducts } from "@/lib/db";
 import ProductsTable from "./ProductsTable";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import AdminStatCard from "@/components/admin/AdminStatCard";
-import { Plus, Download, Package, Filter } from "lucide-react";
+import { Plus, Sparkles, Package, Filter } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -19,8 +19,8 @@ export default async function ProductsManagerPage() {
                 subtitle="Administrá el inventario de tu tienda"
                 actions={
                     <>
-                        <Link href="/admin/upload" className="admin-btn admin-btn-ghost">
-                            <Download size={15} /> Importar
+                        <Link href="/admin/upload" className="admin-btn admin-btn-primary">
+                            <Sparkles size={15} /> Reescribir catálogo (CSV + IA)
                         </Link>
                         <span className="admin-btn admin-btn-primary cursor-default opacity-80">
                             <Plus size={15} /> Crear desde tabla
