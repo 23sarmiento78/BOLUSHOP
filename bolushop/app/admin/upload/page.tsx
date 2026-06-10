@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
 import { Loader2, Sparkles, Upload, AlertTriangle } from 'lucide-react';
 
-type ImportMode = 'full' | 'quick';
+type ImportMode = 'full' | 'quick' | 'full-with-images';
 
 export default function UploadPage() {
     const [status, setStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle');
@@ -38,6 +38,25 @@ export default function UploadPage() {
         });
     }
 
+    async function parseServerResponse(res: Response) {
+        const text = await res.text();
+        if (!res.ok) {
+            let data;
+            try {
+                data = JSON.parse(text);
+            } catch {
+                throw new Error(`Error del servidor (${res.status}): ${text.replace(/\s+/g, ' ').slice(0, 300)}`);
+            }
+            throw new Error(data?.error || data?.message || `Error del servidor (${res.status})`);
+        }
+
+        try {
+            return JSON.parse(text);
+        } catch {
+            throw new Error(`Respuesta inválida del servidor: ${text.replace(/\s+/g, ' ').slice(0, 300)}`);
+        }
+    }
+
     async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>, mode: ImportMode) {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -61,17 +80,18 @@ export default function UploadPage() {
         setDetails([]);
 
         try {
-            const { data: csvData } = await parseCsvFile(file);
-
             if (mode === 'full') {
+                const formData = new FormData();
+                formData.append('csv', file);
+                formData.append('replaceCatalog', 'true');
+
                 const res = await fetch('/api/admin/products/import-dropers', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ rows: csvData, replaceCatalog: true }),
+                    body: formData,
                 });
-                const result = await res.json();
+                const result = await parseServerResponse(res);
 
-                if (!res.ok || !result.success) {
+                if (!result.success) {
                     throw new Error(result.error || 'Error en la importación completa');
                 }
 
@@ -85,6 +105,7 @@ export default function UploadPage() {
                     setDetails(result.errors.slice(0, 10));
                 }
             } else {
+                const { data: csvData } = await parseCsvFile(file);
                 const result = await importProductsAction(csvData, 'dropers-csv');
                 if (!result.success) throw new Error(result.error);
                 setStatus('success');

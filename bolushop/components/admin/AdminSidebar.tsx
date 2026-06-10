@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     LayoutDashboard,
     ShoppingBag,
@@ -141,7 +141,14 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 }
 
 export default function AdminSidebar() {
+    const pathname = usePathname();
     const [mobileOpen, setMobileOpen] = useState(false);
+
+    useEffect(() => {
+        if (mobileOpen) {
+            setMobileOpen(false);
+        }
+    }, [pathname, mobileOpen]);
 
     return (
         <>

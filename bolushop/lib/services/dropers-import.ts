@@ -1,11 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
 import { getAllProducts, saveProducts } from '@/lib/db';
 import type { Product } from '@/lib/types';
-import { checkDroppersAvailability, type DroppersAvailabilityResult } from '@/lib/services/droppers-scraper';
+import { checkDroppersAvailability, type DroppersAvailabilityResult, fetchDroppersProductImages } from '@/lib/services/droppers-scraper';
 import { optimizeProductCopy } from '@/lib/services/gemini-product';
 
 const MIN_BASE_PRICE = 100;
 const CONCURRENCY = 3;
+const IMAGE_FETCH_DELAY = 800;
 
 export interface DropersCsvRow {
     [key: string]: string | number | undefined;
@@ -15,6 +16,7 @@ export interface DropersImportOptions {
     replaceCatalog?: boolean;
     skipAi?: boolean;
     skipDroppersCheck?: boolean;
+    skipImageFetch?: boolean;
 }
 
 export interface DropersImportResult {
@@ -25,6 +27,7 @@ export interface DropersImportResult {
     unavailable: number;
     optimized: number;
     skipped: number;
+    imagesFetched?: number;
     errors: string[];
 }
 
@@ -93,6 +96,10 @@ function mapCsvRowToProduct(row: DropersCsvRow, existing?: Product): Product | n
         finalImage = existing.image;
     }
 
+    if (finalImage === '/icon.png' || !finalImage) {
+        finalImage = '/placeholder.png';
+    }
+
     return {
         id: productId,
         name,
@@ -130,11 +137,44 @@ async function processInBatches<T, R>(
     return results;
 }
 
+async function fetchImagesProgressively(products: Product[], onProgress?: (done: number, total: number) => void): Promise<Product[]> {
+    const updated = [...products];
+    const productsNeedingImages = products.filter(
+        p => p.image === '/placeholder.png' || p.image === '/icon.png' || !p.image
+    );
+
+    for (let i = 0; i < productsNeedingImages.length; i++) {
+        const product = productsNeedingImages[i];
+        const index = updated.findIndex(p => p.id === product.id);
+        
+        if (index !== -1) {
+            try {
+                const imageResult = await fetchDroppersProductImages(product.name, product.slug);
+                if (imageResult.images.length > 0) {
+                    updated[index] = {
+                        ...updated[index],
+                        image: imageResult.images[0],
+                        images: imageResult.images
+                    };
+                }
+            } catch (error) {
+                console.warn(`No se obtuvieron imágenes para ${product.name}:`, error);
+            }
+        }
+
+        if (onProgress) onProgress(i + 1, productsNeedingImages.length);
+        
+        await new Promise(resolve => setTimeout(resolve, IMAGE_FETCH_DELAY));
+    }
+
+    return updated;
+}
+
 export async function importDropersCsv(
     rows: DropersCsvRow[],
     options: DropersImportOptions = {},
 ): Promise<DropersImportResult> {
-    const { replaceCatalog = true, skipAi = false, skipDroppersCheck = false } = options;
+    const { replaceCatalog = true, skipAi = false, skipDroppersCheck = false, skipImageFetch = false } = options;
 
     const existingProducts = await getAllProducts();
     const existingMap = new Map(existingProducts.map((p) => [p.id, p]));
@@ -167,7 +207,7 @@ export async function importDropersCsv(
             let availability: DroppersAvailabilityResult = { available: true, matchedBy: 'none', resultCount: 0 };
 
             if (!skipDroppersCheck) {
-                availability = await checkDroppersAvailability(product.name, product.slug);
+                availability = await checkDroppersAvailability(product.name, product.slug, product.id);
             }
 
             if (!availability.available) {
@@ -209,7 +249,15 @@ export async function importDropersCsv(
         }
     });
 
-    const products = processed.map((entry) => entry.product);
+    let products = processed.map((entry) => entry.product);
+
+    let imagesFetched = 0;
+    if (!skipImageFetch) {
+        products = await fetchImagesProgressively(products);
+        imagesFetched = products.filter(
+            p => !p.image.includes('/placeholder.png') && !p.image.includes('/icon.png')
+        ).length;
+    }
 
     for (const entry of processed) {
         result.imported++;
@@ -234,6 +282,7 @@ export async function importDropersCsv(
         return result;
     }
 
+    result.imagesFetched = imagesFetched;
     result.success = true;
     return result;
 }
