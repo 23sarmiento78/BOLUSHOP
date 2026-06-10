@@ -70,15 +70,6 @@ export async function GET(request: NextRequest) {
             .limit(1)
             .maybeSingle();
 
-        if (!existing?.id && !tokenRow.refresh_token) {
-            console.error('Meli no devolvió refresh_token en la primera autorización');
-            return NextResponse.redirect(
-                getMeliAdminReturnUrl({
-                    error: 'Mercado Libre no envió refresh_token. Revocá el acceso de BoluShop en Meli y volvé a conectar.',
-                })
-            );
-        }
-
         const { error: dbError } = existing?.id
             ? await supabaseServer.from('meli_auth').update(tokenRow).eq('id', existing.id)
             : await supabaseServer.from('meli_auth').insert(tokenRow);
@@ -87,6 +78,15 @@ export async function GET(request: NextRequest) {
             console.error('Supabase save error:', dbError);
             return NextResponse.redirect(
                 getMeliAdminReturnUrl({ error: 'Error al guardar tokens en la base de datos' })
+            );
+        }
+
+        if (!tokenRow.refresh_token && !existing?.refresh_token) {
+            console.warn('Meli conectado sin refresh_token — falta scope offline_access o revocar acceso previo');
+            return NextResponse.redirect(
+                getMeliAdminReturnUrl({
+                    warning: 'Conectado parcialmente: no se recibió refresh_token. Activá offline_access en Meli, revocá el acceso y reconectá.',
+                })
             );
         }
 

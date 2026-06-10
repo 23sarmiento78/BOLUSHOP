@@ -21,9 +21,13 @@ function MercadoLibreContent() {
     useEffect(() => {
         const connected = searchParams.get('connected');
         const oauthError = searchParams.get('error');
+        const warning = searchParams.get('warning');
 
         if (connected === 'true') {
             setSuccess('¡Cuenta de Mercado Libre conectada con éxito!');
+            router.replace('/admin/mercado-libre');
+        } else if (warning) {
+            setError(warning);
             router.replace('/admin/mercado-libre');
         } else if (oauthError) {
             setError(oauthError);
