@@ -6,6 +6,7 @@ import JsonLd from "@/components/shop/JsonLd";
 import type { Metadata } from "next";
 import { buildPageMetadata, buildProductJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo";
 import { categoryPath, resolveCategorySlug } from "@/lib/category-utils";
+import type { Product } from "@/lib/types";
 
 interface Props {
     params: Promise<{ slug: string }>;
@@ -47,27 +48,59 @@ export async function generateStaticParams() {
 
 export default async function ProductPage({ params }: Props) {
     const { slug } = await params;
-    const products = await getAllProducts();
-    const product = products.find((p) => p.slug === slug);
+    let products: Product[] = [];
+    let product: Product | undefined;
+
+    try {
+        products = await getAllProducts();
+        product = products.find((p) => p.slug === slug);
+    } catch (error) {
+        console.error('Error loading products:', error);
+        notFound();
+    }
 
     if (!product || product.isActive === false) {
         notFound();
     }
 
-    const relatedProducts = await getRelatedProducts(product.id, product.category);
-    const reviews = await getProductReviews(product.id);
-    const categories = await getAllCategories();
-    const categoryHref = categoryPath(resolveCategorySlug(product.category, categories));
+    let relatedProducts: Product[] = [];
+    let reviews: any[] = [];
+    let categories: any[] = [];
+    let categoryHref = '/productos';
 
-    const structuredData = [
-        buildProductJsonLd(product, reviews),
-        buildBreadcrumbJsonLd([
-            { name: "Inicio", path: "/" },
-            { name: "Productos", path: "/productos" },
-            { name: product.category, path: categoryHref },
-            { name: product.name, path: `/producto/${product.slug}` },
-        ]),
-    ];
+    try {
+        relatedProducts = await getRelatedProducts(product.id, product.category);
+    } catch (e) {
+        relatedProducts = [];
+    }
+    
+    try {
+        reviews = await getProductReviews(product.id);
+    } catch (e) {
+        reviews = [];
+    }
+    
+    try {
+        categories = await getAllCategories();
+        categoryHref = categoryPath(resolveCategorySlug(product.category, categories));
+    } catch (e) {
+        categoryHref = '/productos';
+    }
+
+    const structuredData: any[] = [];
+    try {
+        structuredData.push(
+            buildProductJsonLd(product, reviews),
+            buildBreadcrumbJsonLd([
+                { name: "Inicio", path: "/" },
+                { name: "Productos", path: "/productos" },
+                { name: product.category, path: categoryHref },
+                { name: product.name, path: `/producto/${product.slug}` },
+            ])
+        );
+    } catch (e) {
+        console.error('Error building structured data:', e);
+    }
 
     return (
         <>
