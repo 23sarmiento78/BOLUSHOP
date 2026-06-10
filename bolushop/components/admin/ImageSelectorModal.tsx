@@ -352,3 +352,4 @@ function injectDroppersScript(popup: Window) {
     } catch (error) {
         console.warn('No se pudo inyectar script en Droppers:', error);
     }
+}
