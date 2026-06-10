@@ -32,6 +32,8 @@ export function buildMeliAuthorizationUrl(): string {
         response_type: 'code',
         client_id: clientId,
         redirect_uri: getMeliRedirectUri(),
+        // Requerido para recibir refresh_token (renovación automática)
+        scope: 'offline_access read write',
     });
 
     return `${MELI_AUTH_URL}?${params.toString()}`;
