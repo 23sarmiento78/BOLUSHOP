@@ -30,12 +30,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         ? product.description.replace(/<[^>]*>?/gm, "").replace(/\s+/g, " ").trim().slice(0, 160)
         : `${product.name} — regalo original con envío gratis a todo Argentina. Comprá en BoluShop con cuotas sin interés.`;
 
+    const adsenseKeywords = product.seoKeywords
+        ? product.seoKeywords.split(",").map((k) => k.trim()).filter(Boolean)
+        : [];
+
+    const keywords = [...new Set([
+        ...adsenseKeywords,
+        product.name,
+        product.category,
+        "comprar online argentina",
+        "bolushop",
+    ])];
+
     return buildPageMetadata({
         title: `Comprar ${product.name}`,
         description: cleanDescription,
         path: `/producto/${product.slug}`,
         image: product.image,
-        keywords: [product.name, product.category, "comprar online argentina", "bolushop"],
+        keywords,
     });
 }
 

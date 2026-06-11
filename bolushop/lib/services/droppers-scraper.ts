@@ -187,7 +187,7 @@ function extractImagesFromHtml(html: string): string[] {
     return images.slice(0, 5);
 }
 
-function extractImagesFromDetailHtml(html: string): string[] {
+function extractImagesFromDetailHtml(html: string, maxImages = 5): string[] {
     const images: string[] = [];
     const patterns = [
         /<img[^>]+class=["'][^"']*fotorama__img[^"']*["'][^>]+src=["']([^"']+)["'][^>]*>/gi,
@@ -200,13 +200,21 @@ function extractImagesFromDetailHtml(html: string): string[] {
         let match;
         while ((match = regex.exec(html)) !== null) {
             const src = toAbsoluteUrl(match[1]);
-            if (src && !src.includes('placeholder') && !src.includes('data:') && !images.includes(src)) {
+            if (
+                src &&
+                !src.includes('placeholder') &&
+                !src.includes('data:') &&
+                !src.includes('logo') &&
+                !src.includes('/stores/') &&
+                !src.includes('/static/') &&
+                !images.includes(src)
+            ) {
                 images.push(src);
             }
         }
     }
 
-    return images.slice(0, 5);
+    return maxImages > 0 ? images.slice(0, maxImages) : images;
 }
 
 function isOutOfStockPage(html: string): boolean {
@@ -266,13 +274,13 @@ export async function searchDroppersProducts(query: string): Promise<DroppersSea
     return [];
 }
 
-export async function fetchDroppersProductDetailImages(productUrl: string): Promise<string[]> {
+export async function fetchDroppersProductDetailImages(productUrl: string, maxImages = 5): Promise<string[]> {
     if (!productUrl?.trim()) return [];
     try {
         const response = await fetch(productUrl, { headers: BROWSER_HEADERS, next: { revalidate: 0 } });
         if (!response.ok) return [];
         const html = await response.text();
-        const images = extractImagesFromDetailHtml(html);
+        const images = extractImagesFromDetailHtml(html, maxImages);
         if (images.length > 0) return images;
         return extractImagesFromHtml(html);
     } catch (error) {

@@ -6,6 +6,8 @@ import { createCollectionAction, deleteCollectionAction, updateCollectionAction 
 import { useRouter } from "next/navigation";
 import { HOLIDAYS } from "@/lib/holidays"; // Import new holidays config
 import { transformImageUrl } from "@/lib/images";
+import GenerateCollectionsModal from "@/components/admin/collections/GenerateCollectionsModal";
+import { Sparkles } from "lucide-react";
 
 interface Props {
     initialCollections: Collection[];
@@ -27,6 +29,7 @@ export default function CollectionsClient({ initialCollections, initialProducts 
     });
     const [isSaving, setIsSaving] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
+    const [showAiModal, setShowAiModal] = useState(false);
 
     const router = useRouter();
 
@@ -89,7 +92,14 @@ export default function CollectionsClient({ initialCollections, initialProducts 
 
     return (
         <div className="space-y-6">
-            <div className="flex justify-end">
+            <div className="flex flex-col sm:flex-row justify-end gap-3">
+                <button
+                    type="button"
+                    onClick={() => setShowAiModal(true)}
+                    className="admin-btn admin-btn-dark px-8 py-4 !rounded-2xl !text-sm !uppercase !tracking-widest"
+                >
+                    <Sparkles size={16} /> Generar ofertas con IA
+                </button>
                 <button
                     onClick={() => setIsCreating(true)}
                     className="bg-primary text-white font-black px-8 py-4 rounded-2xl shadow-xl shadow-primary/20 hover:scale-105 transition-all text-sm uppercase tracking-widest"
@@ -97,6 +107,13 @@ export default function CollectionsClient({ initialCollections, initialProducts 
                     + Nueva Promoción / Colección
                 </button>
             </div>
+
+            {showAiModal && (
+                <GenerateCollectionsModal
+                    products={initialProducts}
+                    onClose={() => setShowAiModal(false)}
+                />
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {initialCollections.length === 0 && (

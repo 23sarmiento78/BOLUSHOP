@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { Loader2, Search, ExternalLink, CheckCircle2, SkipForward } from 'lucide-react';
+import DroppersProductImagePickerModal from '@/components/admin/DroppersProductImagePickerModal';
 
 interface DropperItem {
     productId: string;
@@ -31,6 +32,7 @@ export default function DroppersSearchSelector({ items, onComplete }: DroppersSe
     const [error, setError] = useState('');
     const [savedState, setSavedState] = useState<'idle' | 'saving' | 'success' | 'error'>('idle');
     const [savedMessage, setSavedMessage] = useState('');
+    const [pickerResult, setPickerResult] = useState<DroppersSearchResult | null>(null);
 
     const currentItem = items[currentIndex];
     const defaultQuery = useMemo(() => `${currentItem.sku} ${currentItem.name}`, [currentItem]);
@@ -93,9 +95,21 @@ export default function DroppersSearchSelector({ items, onComplete }: DroppersSe
         }
     }
 
-    async function handleSelect(result: DroppersSearchResult) {
+    function openImagePicker(result: DroppersSearchResult) {
+        if (!result.productUrl) {
+            setSavedState('error');
+            setSavedMessage('Este resultado no tiene URL de producto para extraer imágenes.');
+            return;
+        }
+        setPickerResult(result);
+    }
+
+    async function handleConfirmImages(images: string[]) {
+        if (!pickerResult || images.length === 0) return;
+
         setSavedState('saving');
-        setSavedMessage('Guardando imagen...');
+        setSavedMessage('Guardando imágenes seleccionadas...');
+        setPickerResult(null);
 
         try {
             const res = await fetch('/api/admin/products/import-dropers-photos-save', {
@@ -103,9 +117,8 @@ export default function DroppersSearchSelector({ items, onComplete }: DroppersSe
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     productId: currentItem.productId,
-                    imageUrl: result.imageUrl,
-                    images: result.imageUrl ? [result.imageUrl] : undefined,
-                    productUrl: result.productUrl,
+                    imageUrl: images[0],
+                    images,
                 }),
             });
             const json = await res.json();
@@ -113,7 +126,7 @@ export default function DroppersSearchSelector({ items, onComplete }: DroppersSe
                 throw new Error(json?.error || 'Error al guardar selección');
             }
             setSavedState('success');
-            setSavedMessage('Imagen guardada. Avanzando...');
+            setSavedMessage(`${images.length} imagen${images.length > 1 ? 'es' : ''} guardada${images.length > 1 ? 's' : ''}. Avanzando...`);
             setTimeout(() => {
                 goNext();
             }, 800);
@@ -216,7 +229,19 @@ export default function DroppersSearchSelector({ items, onComplete }: DroppersSe
                 {results.length > 0 ? (
                     <div className="grid gap-4 md:grid-cols-2">
                         {results.map((result, index) => (
-                            <div key={`${result.productUrl}-${index}`} className="rounded-[2rem] border border-gray-200 bg-white p-5 shadow-sm">
+                            <div
+                                key={`${result.productUrl}-${index}`}
+                                role="button"
+                                tabIndex={0}
+                                onClick={() => openImagePicker(result)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        e.preventDefault();
+                                        openImagePicker(result);
+                                    }
+                                }}
+                                className="rounded-[2rem] border border-gray-200 bg-white p-5 shadow-sm cursor-pointer transition hover:border-[#1E5BC6]/40 hover:shadow-md"
+                            >
                                 <div className="flex items-start gap-4">
                                     <img
                                         src={result.imageUrl || 'https://via.placeholder.com/200x200?text=Sin+imagen'}
@@ -237,6 +262,7 @@ export default function DroppersSearchSelector({ items, onComplete }: DroppersSe
                                             href={result.productUrl}
                                             target="_blank"
                                             rel="noreferrer"
+                                            onClick={(e) => e.stopPropagation()}
                                             className="inline-flex items-center gap-2 rounded-full border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100"
                                         >
                                             <ExternalLink size={16} /> Ver producto
@@ -244,7 +270,10 @@ export default function DroppersSearchSelector({ items, onComplete }: DroppersSe
                                     )}
                                     <button
                                         type="button"
-                                        onClick={() => handleSelect(result)}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            openImagePicker(result);
+                                        }}
                                         className="inline-flex items-center gap-2 rounded-full bg-[#1E5BC6] px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
                                     >
                                         <CheckCircle2 size={16} /> Esto es correcto
@@ -279,6 +308,15 @@ export default function DroppersSearchSelector({ items, onComplete }: DroppersSe
                     <Search size={16} /> Buscar ahora
                 </button>
             </div>
+
+            {pickerResult && (
+                <DroppersProductImagePickerModal
+                    productTitle={pickerResult.title}
+                    productUrl={pickerResult.productUrl}
+                    onConfirm={handleConfirmImages}
+                    onClose={() => setPickerResult(null)}
+                />
+            )}
         </div>
     );
 }
