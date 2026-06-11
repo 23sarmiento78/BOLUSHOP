@@ -24,6 +24,29 @@ export default function ImageSelectorModal({ items, onComplete }: ImageSelectorM
 
     const currentItem = items[currentIndex];
     const progress = Math.round(((currentIndex + 1) / items.length) * 100);
+    const [pasteValue, setPasteValue] = useState('');
+
+    const bookmarkletCode = "javascript:(()=>{function onClick(e){e.preventDefault();e.stopPropagation();const img=(e.target.closest && e.target.closest('img'))||document.querySelector('img');const src=img?img.src:window.location.href;window.opener.postMessage({type:'DROP_PRODUCT_SELECTED',imageUrl:src,images:[src]},'*');alert('Imagen enviada');}document.addEventListener('click',onClick,true);alert('Ahora haz clic en la imagen del producto para enviarla');})();";
+
+    function copyBookmarklet() {
+        try {
+            navigator.clipboard.writeText(bookmarkletCode);
+            alert('Bookmarklet copiado al portapapeles. Pégalo en la barra de favoritos o ejecútalo en la página.');
+        } catch (err) {
+            console.warn('Clipboard failed', err);
+            alert('No se pudo copiar automáticamente. Copia manualmente el texto del bookmarklet.');
+        }
+    }
+
+    function applyPasted() {
+        const v = pasteValue.trim();
+        if (!v) return;
+        // Si es una lista separada por comas, tomar la primera como imagen
+        const parts = v.split(',').map(s => s.trim()).filter(Boolean);
+        setSelectedImageUrl(parts[0]);
+        setSelectedImages(parts);
+        setPasteValue('');
+    }
 
     useEffect(() => {
         setSelectedImageUrl(null);
@@ -33,16 +56,16 @@ export default function ImageSelectorModal({ items, onComplete }: ImageSelectorM
 
     useEffect(() => {
         const handleMessage = (event: MessageEvent) => {
-            if (event.origin !== window.location.origin && !event.origin.includes('localhost')) {
-                return;
-            }
-
-            if (event.data.type === 'DROP_PRODUCT_SELECTED') {
+            // Aceptamos mensajes del popup/bookmarklet; validamos por tipo
+            try {
+                if (!event.data || event.data.type !== 'DROP_PRODUCT_SELECTED') return;
                 const { imageUrl, images } = event.data;
                 if (imageUrl) {
                     setSelectedImageUrl(imageUrl);
                     setSelectedImages(images || [imageUrl]);
                 }
+            } catch (err) {
+                // ignore
             }
         };
 
@@ -219,48 +242,58 @@ export default function ImageSelectorModal({ items, onComplete }: ImageSelectorM
                 </div>
 
                 {/* Status Side */}
-                <div className="flex-1 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-gray-200 flex flex-col items-center justify-center p-8">
-                    {droppersOpen ? (
-                        <div className="text-center space-y-4">
-                            <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto">
-                                <ExternalLink className="text-green-600" size={32} />
+                <div className="flex-1 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-gray-200 flex flex-col p-4 overflow-hidden">
+                    <div className="flex-1 flex flex-col gap-4">
+                        {/* Iframe preview */}
+                        <div className="flex-1 rounded-md overflow-hidden border bg-white">
+                            <iframe
+                                title="Droppers Preview"
+                                src={currentItem.searchUrl}
+                                className="w-full h-full"
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="bg-white p-3 rounded-md border">
+                                <p className="text-sm font-semibold mb-2">Abrir en ventana</p>
+                                <p className="text-xs text-gray-600 mb-3">Si necesitas seleccionar directamente en la página, abre en una pestaña separada.</p>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={openDroppers}
+                                        className="px-3 py-2 bg-[#1E5BC6] text-white rounded-md flex items-center gap-2"
+                                    >
+                                        <ExternalLink size={14} />
+                                        Abrir en pestaña
+                                    </button>
+                                    <button
+                                        onClick={copyBookmarklet}
+                                        className="px-3 py-2 bg-gray-200 text-gray-900 rounded-md"
+                                    >
+                                        Copiar bookmarklet
+                                    </button>
+                                </div>
+
+                                <p className="text-xs text-gray-500 mt-3">Instrucciones: copia el bookmarklet y ejecútalo en la pestaña de Droppers. Luego haz click en la imagen del producto.</p>
                             </div>
-                            <h3 className="text-lg font-bold text-gray-900">Ventana abierta</h3>
-                            <p className="text-sm text-gray-600">
-                                Ve a la ventana de Droppers y haz click en la tarjeta del producto correcto.
-                            </p>
-                            <p className="text-xs text-gray-500 font-mono bg-white p-3 rounded-lg border border-gray-200">
-                                {currentItem.name}
-                            </p>
-                            <div className="pt-4 space-y-2">
-                                <p className="text-xs text-green-700 font-semibold">
-                                    ✓ La imagen se capturará automáticamente cuando hagas click
-                                </p>
-                                {selectedImageUrl && (
-                                    <p className="text-xs text-green-700 font-semibold animate-pulse">
-                                        ✓ Imagen recibida - Presiona "Siguiente"
-                                    </p>
-                                )}
+
+                            <div className="bg-white p-3 rounded-md border">
+                                <p className="text-sm font-semibold mb-2">Pegar URL / imagen (fallback)</p>
+                                <p className="text-xs text-gray-600 mb-2">Pega la URL de la imagen o múltiples URLs separadas por comas.</p>
+                                <div className="flex gap-2">
+                                    <input
+                                        value={pasteValue}
+                                        onChange={(e) => setPasteValue(e.target.value)}
+                                        placeholder="https://.../imagen.jpg"
+                                        className="flex-1 px-2 py-2 border rounded-md"
+                                    />
+                                    <button onClick={applyPasted} className="px-3 py-2 bg-green-600 text-white rounded-md">Usar</button>
+                                </div>
                             </div>
                         </div>
-                    ) : (
-                        <div className="text-center space-y-4">
-                            <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mx-auto">
-                                <ExternalLink className="text-blue-600" size={32} />
-                            </div>
-                            <h3 className="text-lg font-bold text-gray-900">Abre Droppers</h3>
-                            <p className="text-sm text-gray-600 max-w-xs">
-                                Haz click en el botón abajo para abrir una ventana con los resultados de búsqueda
-                            </p>
-                            <button
-                                onClick={openDroppers}
-                                className="px-6 py-3 bg-[#1E5BC6] text-white font-bold rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2 mx-auto transition-all"
-                            >
-                                <ExternalLink size={18} />
-                                Abrir Droppers
-                            </button>
-                        </div>
-                    )}
+                    </div>
+                    <div className="mt-3 text-xs text-gray-500">
+                        <p>Nota: si el bookmarklet no funciona por políticas de la página, copia manualmente la URL de la imagen y pégala en el campo de la derecha.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -317,29 +350,51 @@ function injectDroppersScript(popup: Window) {
     }
     
     function handleProductClick(e) {
-        const clickedElement = e.target;
-        let productElement = null;
-        
-        // Buscar el elemento producto más cercano
-        for (const selector of productSelectors) {
-            productElement = clickedElement.closest(selector);
-            if (productElement) break;
-        }
-        
-        if (!productElement) return;
-        
-        const images = extractImages(productElement);
-        if (images.length > 0) {
-            console.log('[DROPERS] Imágenes encontradas:', images);
-            window.opener.postMessage({
-                type: 'DROP_PRODUCT_SELECTED',
-                imageUrl: images[0],
-                images: images
-            }, '*');
-            
-            // Marcar como seleccionado visualmente
-            productElement.style.border = '3px solid #1E5BC6';
-            productElement.style.backgroundColor = 'rgba(30, 91, 198, 0.1)';
+        try {
+            const target = e.target instanceof Element ? e.target : (e.target && e.target.parentElement) ? e.target.parentElement : null;
+            if (!target) return;
+
+            // Evitar que un click en el enlace navegue fuera
+            if (e.preventDefault) e.preventDefault();
+            if (e.stopPropagation) e.stopPropagation();
+
+            let productElement = null;
+            // Buscar el elemento producto más cercano
+            for (const selector of productSelectors) {
+                if (typeof target.closest === 'function') {
+                    const found = target.closest(selector);
+                    if (found) {
+                        productElement = found;
+                        break;
+                    }
+                }
+            }
+
+            if (!productElement) return;
+
+            const images = extractImages(productElement);
+            if (images.length > 0) {
+                console.log('[DROPERS] Imágenes encontradas:', images);
+                try {
+                    window.opener.postMessage({
+                        type: 'DROP_PRODUCT_SELECTED',
+                        imageUrl: images[0],
+                        images: images
+                    }, '*');
+                } catch (err) {
+                    console.warn('[DROPERS] postMessage falló:', err);
+                }
+
+                try { if (window.opener && window.opener.focus) window.opener.focus(); } catch {}
+
+                // Marcar como seleccionado visualmente
+                try {
+                    productElement.style.border = '3px solid #1E5BC6';
+                    productElement.style.backgroundColor = 'rgba(30, 91, 198, 0.1)';
+                } catch (err) {}
+            }
+        } catch (err) {
+            console.warn('[DROPERS] handle click error', err);
         }
     }
     
