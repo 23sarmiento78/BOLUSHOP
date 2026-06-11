@@ -32,7 +32,7 @@ const NAV_SECTIONS = [
         items: [
             { name: "Productos", href: "/admin/products", icon: ShoppingBag },
             { name: "Categorías", href: "/admin/categories", icon: FolderTree },
-            { name: "Colecciones", href: "/admin/collections", icon: Layers },
+            { name: "Ofertas y descuentos", href: "/admin/ofertas", icon: Layers },
             { name: "Mercado Libre", href: "/admin/mercado-libre", icon: Package, badge: "ML" },
             { name: "Product Scout", href: "/admin/meli/research", icon: Radar, badge: "AI" },
             { name: "Optimizados ML", href: "/admin/meli/optimized", icon: Package },

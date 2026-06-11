@@ -110,7 +110,7 @@ export default function CarritoPage() {
                                 >
                                     {/* Image */}
                                     <Link
-                                        href={item.isCollection ? `/coleccion/${item.slug}` : `/producto/${item.slug}`}
+                                        href={item.isCollection ? `/oferta/${item.slug}` : `/producto/${item.slug}`}
                                         className="relative w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden bg-[#f8f9fb] flex-shrink-0"
                                     >
                                         <Image
@@ -124,7 +124,7 @@ export default function CarritoPage() {
 
                                     {/* Info */}
                                     <div className="flex-grow">
-                                        <Link href={item.isCollection ? `/coleccion/${item.slug}` : `/producto/${item.slug}`}>
+                                        <Link href={item.isCollection ? `/oferta/${item.slug}` : `/producto/${item.slug}`}>
                                             <h3 className="font-bold text-sm md:text-base text-[#0f2044] hover:text-[#e8630a] transition-colors mb-1">
                                                 {item.name}
                                             </h3>

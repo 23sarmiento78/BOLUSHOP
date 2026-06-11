@@ -43,7 +43,7 @@ export default function Footer() {
                                 { label: "Regalos originales", href: "/regalos/originales-argentina" },
                                 { label: "Regalos cumpleaños", href: "/regalos/para-cumpleanos" },
                                 { label: "Hogar", href: "/categoria/hogar" },
-                                { label: "Colecciones", href: "/colecciones" },
+                                { label: "Ofertas y descuentos", href: "/ofertas" },
                                 { label: "Blog", href: "/blog" },
                             ].map((link) => (
                                 <li key={link.href}>

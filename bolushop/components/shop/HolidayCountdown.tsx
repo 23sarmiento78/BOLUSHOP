@@ -78,7 +78,7 @@ export default function HolidayCountdown({ holiday }: CountdownProps) {
                 </div>
 
                 <Link
-                    href="/colecciones"
+                    href="/ofertas"
                     className="px-6 py-3 rounded-xl font-bold uppercase text-xs tracking-widest transition-transform hover:scale-105 shadow-lg whitespace-nowrap"
                     style={{ backgroundColor: 'white', color: holiday.colors.primary }}
                 >

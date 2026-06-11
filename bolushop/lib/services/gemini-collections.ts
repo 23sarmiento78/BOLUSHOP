@@ -16,7 +16,7 @@ function slugify(value: string): string {
 }
 
 function uniqueSlug(base: string, used: Set<string>): string {
-    let slug = slugify(base) || 'coleccion';
+    let slug = slugify(base) || 'oferta';
     let suffix = 1;
     while (used.has(slug)) {
         slug = `${slugify(base)}-${suffix}`;
