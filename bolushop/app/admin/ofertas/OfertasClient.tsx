@@ -14,7 +14,7 @@ interface Props {
     initialProducts: Product[];
 }
 
-export default function CollectionsClient({ initialCollections, initialProducts }: Props) {
+export default function OfertasClient({ initialCollections, initialProducts }: Props) {
     const [isCreating, setIsCreating] = useState(false);
     const [editingCollection, setEditingCollection] = useState<Collection | null>(null);
     const [newCollection, setNewCollection] = useState<Partial<Collection>>({
@@ -65,7 +65,7 @@ export default function CollectionsClient({ initialCollections, initialProducts 
     }
 
     const handleDelete = async (id: string) => {
-        if (!confirm("¿Eliminar esta colección?")) return;
+        if (!confirm("¿Eliminar esta oferta?")) return;
         const res = await deleteCollectionAction(id);
         if (res.success) router.refresh();
         else alert(res.error);
@@ -104,7 +104,7 @@ export default function CollectionsClient({ initialCollections, initialProducts 
                     onClick={() => setIsCreating(true)}
                     className="bg-primary text-white font-black px-8 py-4 rounded-2xl shadow-xl shadow-primary/20 hover:scale-105 transition-all text-sm uppercase tracking-widest"
                 >
-                    + Nueva Promoción / Colección
+                    + Nueva oferta manual
                 </button>
             </div>
 
@@ -118,7 +118,7 @@ export default function CollectionsClient({ initialCollections, initialProducts 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {initialCollections.length === 0 && (
                     <div className="col-span-full bg-white p-20 rounded-[3rem] border border-dashed border-gray-200 text-center">
-                        <p className="text-gray-400 font-bold uppercase tracking-widest">No hay colecciones creadas</p>
+                        <p className="text-gray-400 font-bold uppercase tracking-widest">No hay ofertas creadas</p>
                     </div>
                 )}
                 {initialCollections.map(col => {
@@ -158,7 +158,17 @@ export default function CollectionsClient({ initialCollections, initialProducts 
                                 )}
                             </div>
 
-                            <div className="text-[10px] font-black uppercase tracking-widest text-gray-300">Slug: {col.slug}</div>
+                            <div className="flex items-center justify-between gap-2 mt-2">
+                                <div className="text-[10px] font-black uppercase tracking-widest text-gray-300">/{col.slug}</div>
+                                <a
+                                    href={`/oferta/${col.slug}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-[10px] font-bold text-[#1E5BC6] hover:underline"
+                                >
+                                    Ver en tienda →
+                                </a>
+                            </div>
                         </div>
                     );
                 })}
@@ -169,7 +179,7 @@ export default function CollectionsClient({ initialCollections, initialProducts 
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
                     <div className="bg-white rounded-[3rem] p-10 max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-in zoom-in-95 duration-200">
                         <div className="flex justify-between items-center mb-8">
-                            <h2 className="text-3xl font-black">{isCreating ? 'Nueva Promoción' : 'Editar Promoción'}</h2>
+                            <h2 className="text-3xl font-black">{isCreating ? 'Nueva oferta' : 'Editar oferta'}</h2>
                             <button onClick={() => { setIsCreating(false); setEditingCollection(null); }} className="text-gray-400 hover:text-gray-900 font-black">CERRAR</button>
                         </div>
 
@@ -216,7 +226,7 @@ export default function CollectionsClient({ initialCollections, initialProducts 
                                             ))}
                                         </select>
                                         <p className="text-[10px] text-gray-400 mt-2 font-medium">
-                                            Si asignás un evento, esta colección tendrá un diseño especial durante las fechas correspondientes.
+                                            Si asignás un evento, esta oferta tendrá un diseño especial durante las fechas correspondientes.
                                         </p>
                                     </div>
 

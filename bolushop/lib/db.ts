@@ -631,8 +631,9 @@ export async function getAllCollections(): Promise<Collection[]> {
 }
 
 export async function getCollectionBySlug(slug: string): Promise<Collection | undefined> {
+    const normalized = slug.trim().toLowerCase();
     const collections = await getAllCollections();
-    return collections.find(c => c.slug === slug);
+    return collections.find((c) => c.slug === slug || c.slug.toLowerCase() === normalized);
 }
 
 export async function saveCollections(collections: Collection[]): Promise<{ success: boolean, error?: string }> {

@@ -7,7 +7,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const staticRoutes: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[0]["changeFrequency"] }[] = [
         { path: "", priority: 1, changeFrequency: "daily" },
         { path: "/productos", priority: 0.9, changeFrequency: "daily" },
-        { path: "/colecciones", priority: 0.8, changeFrequency: "weekly" },
+        { path: "/ofertas", priority: 0.8, changeFrequency: "weekly" },
         { path: "/blog", priority: 0.8, changeFrequency: "weekly" },
         { path: "/nosotros", priority: 0.6, changeFrequency: "monthly" },
         { path: "/contacto", priority: 0.6, changeFrequency: "monthly" },
@@ -45,7 +45,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     const collections = await getAllCollections();
     const collectionEntries = collections.map((collection) => ({
-        url: `${SITE_URL}/coleccion/${collection.slug}`,
+        url: `${SITE_URL}/oferta/${collection.slug}`,
         lastModified: new Date(),
         changeFrequency: "weekly" as const,
         priority: 0.7,

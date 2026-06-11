@@ -64,7 +64,7 @@ export default async function AdminDashboard() {
     const quickActions = [
         { href: "/admin/products", label: "Productos", desc: "Gestionar inventario", icon: Package, color: "bg-orange-50 text-orange-500" },
         { href: "/admin/orders", label: "Pedidos", desc: "Ver y actualizar", icon: Truck, color: "bg-blue-50 text-blue-500" },
-        { href: "/admin/collections", label: "Colecciones", desc: "Landings temáticas", icon: Tags, color: "bg-purple-50 text-purple-500" },
+        { href: "/admin/ofertas", label: "Ofertas y descuentos", desc: "Promociones temáticas", icon: Tags, color: "bg-purple-50 text-purple-500" },
         { href: "/admin/blog", label: "Blog", desc: "Artículos y SEO", icon: FileText, color: "bg-emerald-50 text-emerald-500" },
         { href: "/admin/categories", label: "Categorías", desc: "Organizar catálogo", icon: FolderTree, color: "bg-cyan-50 text-cyan-600" },
         { href: "/admin/newsletter", label: "Newsletter", desc: "Campañas email", icon: Mail, color: "bg-pink-50 text-pink-500" },

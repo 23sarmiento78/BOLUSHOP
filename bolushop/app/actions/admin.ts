@@ -274,18 +274,18 @@ export async function createCollectionAction(collection: Omit<Collection, 'id'>)
 
     collections.push(newCollection);
     const result = await saveCollections(collections);
-    if (!result.success) return { success: false, error: result.error || "Error al guardar colección" };
-    revalidatePath("/admin/collections");
-    revalidatePath("/colecciones");
+    if (!result.success) return { success: false, error: result.error || "Error al guardar oferta" };
+    revalidatePath("/admin/ofertas");
+    revalidatePath("/ofertas");
     revalidatePath("/");
     return { success: true, collection: newCollection };
 }
 
 export async function deleteCollectionAction(id: string) {
     const success = await deleteCollection(id);
-    if (!success) return { success: false, error: "Error al borrar colección" };
-    revalidatePath("/admin/collections");
-    revalidatePath("/colecciones");
+    if (!success) return { success: false, error: "Error al borrar oferta" };
+    revalidatePath("/admin/ofertas");
+    revalidatePath("/ofertas");
     revalidatePath("/");
     return { success: true };
 }
@@ -297,21 +297,21 @@ export async function updateCollectionAction(updatedCollection: Collection) {
     if (index !== -1) {
         collections[index] = updatedCollection;
         const result = await saveCollections(collections);
-        if (!result.success) return { success: false, error: result.error || "Error al actualizar colección" };
-        revalidatePath("/admin/collections");
-        revalidatePath("/colecciones");
+        if (!result.success) return { success: false, error: result.error || "Error al actualizar oferta" };
+        revalidatePath("/admin/ofertas");
+        revalidatePath("/ofertas");
         revalidatePath("/");
-        revalidatePath(`/coleccion/${updatedCollection.slug}`);
+        revalidatePath(`/oferta/${updatedCollection.slug}`);
         return { success: true };
     }
-    return { success: false, error: "Colección no encontrada" };
+    return { success: false, error: "Oferta no encontrada" };
 }
 
 export async function publishCollectionsBatchAction(
     collections: Omit<Collection, 'id'>[],
 ) {
     if (!collections.length) {
-        return { success: false, error: 'No hay colecciones para publicar' };
+        return { success: false, error: 'No hay ofertas para publicar' };
     }
 
     const existing = await getAllCollections();
@@ -336,15 +336,15 @@ export async function publishCollectionsBatchAction(
 
     const result = await saveCollections([...existing, ...newCollections]);
     if (!result.success) {
-        return { success: false, error: result.error || 'Error al publicar colecciones' };
+        return { success: false, error: result.error || 'Error al publicar ofertas' };
     }
 
-    revalidatePath('/admin/collections');
-    revalidatePath('/colecciones');
+    revalidatePath('/admin/ofertas');
+    revalidatePath('/ofertas');
     revalidatePath('/');
 
     for (const col of newCollections) {
-        revalidatePath(`/coleccion/${col.slug}`);
+        revalidatePath(`/oferta/${col.slug}`);
     }
 
     return { success: true, count: newCollections.length };

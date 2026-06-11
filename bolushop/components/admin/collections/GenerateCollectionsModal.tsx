@@ -76,7 +76,7 @@ export default function GenerateCollectionsModal({ products, onClose }: Props) {
         }
 
         const confirmed = confirm(
-            `¿Publicar ${selected.length} colección(es) en la tienda?\n\nAparecerán en /colecciones y en la home si están destacadas.`,
+            `¿Publicar ${selected.length} oferta(s) en la tienda?\n\nAparecerán en /ofertas y en la home si están destacadas.`,
         );
         if (!confirmed) return;
 

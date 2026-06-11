@@ -75,8 +75,8 @@ export default async function HomePage() {
                                     Ver catálogo
                                     <ArrowRight size={16} />
                                 </Link>
-                                <Link href="/colecciones" className="btn btn-outline !text-white !border-white/30 hover:!bg-white/10">
-                                    Colecciones
+                                <Link href="/ofertas" className="btn btn-outline !text-white !border-white/30 hover:!bg-white/10">
+                                    Ofertas
                                 </Link>
                             </div>
 
