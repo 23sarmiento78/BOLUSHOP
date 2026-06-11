@@ -2,10 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Papa from 'papaparse';
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
-import ImageSelectorModal from '@/components/admin/ImageSelectorModal';
-import { Loader2, Upload, ImagePlus, AlertTriangle } from 'lucide-react';
+import DroppersSearchSelector from '@/components/admin/DroppersSearchSelector';
+import { Loader2, ImagePlus, AlertTriangle } from 'lucide-react';
 
 interface ProcessItem {
     productId: string;
@@ -64,7 +63,7 @@ export default function UploadImagesPage() {
         }
     }
 
-    function handleModalComplete() {
+    function handleSelectorComplete() {
         setStatus('idle');
         setItems([]);
         router.push('/admin/products');
@@ -72,7 +71,7 @@ export default function UploadImagesPage() {
     }
 
     if (status === 'ready' && items.length > 0) {
-        return <ImageSelectorModal items={items} onComplete={handleModalComplete} />;
+        return <DroppersSearchSelector items={items} onComplete={handleSelectorComplete} />;
     }
 
     return (
@@ -102,7 +101,7 @@ export default function UploadImagesPage() {
                 </div>
 
                 <p className="text-sm text-gray-600">
-                    Se abrirá un modal fullscreen donde podrás ver los resultados de Droppers. Selecciona la tarjeta correcta del producto y presiona Siguiente. Si no encuentras el producto, presiona Saltar para marcarlo como no disponible.
+                    Se mostrará una búsqueda interna de Droppers directamente en el admin. Selecciona la tarjeta correcta del producto y presiona "Esto es correcto". Si no encuentras el producto, presiona "Saltar producto".
                 </p>
 
                 <label className="block">

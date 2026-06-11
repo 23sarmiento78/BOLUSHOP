@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Papa from 'papaparse';
 import { getAllProducts } from '@/lib/db';
+import { encodeDroppersQuery } from '@/lib/services/droppers-scraper';
 
 function detectDelimiter(csvText: string): string {
     const firstLine = csvText.split(/\r?\n/)[0] || '';
@@ -71,7 +72,9 @@ export async function POST(request: NextRequest) {
             const product = products.find((p) => p.id === sku || p.slug === slug);
             if (!product || product.isActive === false) continue;
 
-            const searchUrl = `https://droppers.com.ar/catalogsearch/result/?q=${encodeURIComponent(name)}`;
+            const searchQuery = sku ? `${sku} ${name}` : name;
+            const encodedQuery = encodeDroppersQuery(searchQuery);
+            const searchUrl = `https://droppers.com.ar/catalogsearch/result/?q=${encodedQuery}`;
             toProcess.push({
                 productId: product.id,
                 sku,
