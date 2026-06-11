@@ -30,6 +30,7 @@ export default function DroppersProductImagePickerModal({
             return;
         }
 
+        const droppersUrl = productUrl;
         let cancelled = false;
 
         async function loadImages() {
@@ -40,7 +41,7 @@ export default function DroppersProductImagePickerModal({
 
             try {
                 const res = await fetch(
-                    `/api/admin/products/droppers-product-images?url=${encodeURIComponent(productUrl)}`,
+                    `/api/admin/products/droppers-product-images?url=${encodeURIComponent(droppersUrl)}`,
                 );
                 const json = await res.json();
 
