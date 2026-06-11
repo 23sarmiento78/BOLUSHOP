@@ -233,13 +233,12 @@ export default function ProductsTable({ initialProducts }: Props) {
 
     return (
         <div className="space-y-6">
-            {/* Header / Actions Bar */}
-            <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 bg-white p-5 rounded-2xl shadow-sm border border-gray-100 mt-2">
-                <div>
-                    <h2 className="text-xl font-bold text-gray-900">Gestión de Productos</h2>
-                    <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-widest">{filteredProducts.length} productos en catálogo</p>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2">
+            {/* Toolbar */}
+            <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-widest px-1">
+                    {filteredProducts.length} productos en catálogo
+                </p>
+                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                     <button
                         onClick={() => setIsBulkPriceModalOpen(true)}
                         className="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-gray-200 transition-all flex items-center justify-center gap-2"

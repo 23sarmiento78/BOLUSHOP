@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useState } from "react";
 import { usePathname } from "next/navigation";
 import AdminSidebar from "./AdminSidebar";
 import AdminTopbar from "./AdminTopbar";
@@ -7,6 +8,9 @@ import AdminTopbar from "./AdminTopbar";
 export default function AdminShell({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const isLogin = pathname === "/admin/login";
+    const [mobileNavOpen, setMobileNavOpen] = useState(false);
+    const closeMobileNav = useCallback(() => setMobileNavOpen(false), []);
+    const openMobileNav = useCallback(() => setMobileNavOpen(true), []);
 
     if (isLogin) {
         return <div className="admin-root">{children}</div>;
@@ -14,11 +18,11 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
 
     return (
         <div className="admin-root admin-shell">
-            <AdminSidebar />
+            <AdminSidebar mobileOpen={mobileNavOpen} onMobileClose={closeMobileNav} />
             <div className="admin-main">
-                <AdminTopbar />
+                <AdminTopbar onMenuOpen={openMobileNav} />
                 <div className="admin-content">
-                    <div className="max-w-7xl mx-auto pb-16">{children}</div>
+                    <div className="admin-content-inner">{children}</div>
                 </div>
             </div>
         </div>

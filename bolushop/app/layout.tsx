@@ -7,8 +7,7 @@ import { headers } from "next/headers";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { getSettings } from "@/lib/db";
-import WhatsAppButton from "@/components/shop/WhatsAppButton";
-import CookieConsent from "@/components/shop/CookieConsent";
+import ConditionalShopChrome from "@/components/shop/ConditionalShopChrome";
 import JsonLd from "@/components/shop/JsonLd";
 import {
     buildWebSiteJsonLd,
@@ -135,9 +134,8 @@ export default async function RootLayout({
             <body className={`${jakarta.variable} ${fraunces.variable} antialiased flex flex-col min-h-screen`}>
                 <JsonLd data={structuredData} />
                 <NextTopLoader color="#ff6b35" showSpinner={false} shadow="0 0 10px #ff6b35,0 0 5px #ff6b35" />
-                <main className="flex-grow">{children}</main>
-                <WhatsAppButton />
-                <CookieConsent />
+                <main className="flex-grow min-w-0">{children}</main>
+                <ConditionalShopChrome />
                 <Toaster position="top-center" richColors />
                 <Analytics />
                 <SpeedInsights />

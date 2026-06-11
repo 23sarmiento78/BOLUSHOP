@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
     LayoutDashboard,
     ShoppingBag,
@@ -14,9 +14,9 @@ import {
     Mail,
     Settings,
     Upload,
+    ImagePlus,
     Store,
     LogOut,
-    Menu,
     X,
     ChevronRight,
     Radar,
@@ -25,9 +25,7 @@ import {
 const NAV_SECTIONS = [
     {
         label: "General",
-        items: [
-            { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
-        ],
+        items: [{ name: "Dashboard", href: "/admin", icon: LayoutDashboard }],
     },
     {
         label: "Catálogo",
@@ -39,13 +37,12 @@ const NAV_SECTIONS = [
             { name: "Product Scout", href: "/admin/meli/research", icon: Radar, badge: "AI" },
             { name: "Optimizados ML", href: "/admin/meli/optimized", icon: Package },
             { name: "CSV Dropers + IA", href: "/admin/upload", icon: Upload },
+            { name: "Fotos desde CSV", href: "/admin/upload-images", icon: ImagePlus },
         ],
     },
     {
         label: "Ventas",
-        items: [
-            { name: "Pedidos", href: "/admin/orders", icon: Truck },
-        ],
+        items: [{ name: "Pedidos", href: "/admin/orders", icon: Truck }],
     },
     {
         label: "Contenido",
@@ -56,13 +53,15 @@ const NAV_SECTIONS = [
     },
     {
         label: "Sistema",
-        items: [
-            { name: "Configuración", href: "/admin/settings", icon: Settings },
-        ],
+        items: [{ name: "Configuración", href: "/admin/settings", icon: Settings }],
     },
 ];
 
-function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
+interface SidebarContentProps {
+    onNavigate?: () => void;
+}
+
+function SidebarContent({ onNavigate }: SidebarContentProps) {
     const pathname = usePathname();
     const router = useRouter();
 
@@ -93,7 +92,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
                 </Link>
             </div>
 
-            <nav className="flex-1 overflow-y-auto py-3">
+            <nav className="flex-1 overflow-y-auto py-3 overscroll-contain">
                 {NAV_SECTIONS.map((section) => (
                     <div key={section.label}>
                         <div className="admin-nav-section">{section.label}</div>
@@ -107,14 +106,14 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
                                     onClick={onNavigate}
                                     className={`admin-nav-link ${active ? "active" : ""}`}
                                 >
-                                    <Icon size={17} />
-                                    <span className="flex-1">{item.name}</span>
+                                    <Icon size={17} className="shrink-0" />
+                                    <span className="flex-1 truncate">{item.name}</span>
                                     {"badge" in item && item.badge && (
-                                        <span className="text-[9px] font-bold bg-[#fff8e6] text-[#c47a00] px-1.5 py-0.5 rounded">
+                                        <span className="text-[9px] font-bold bg-[#fff8e6] text-[#c47a00] px-1.5 py-0.5 rounded shrink-0">
                                             {item.badge}
                                         </span>
                                     )}
-                                    {active && <ChevronRight size={14} className="text-white/30" />}
+                                    {active && <ChevronRight size={14} className="text-white/30 shrink-0" />}
                                 </Link>
                             );
                         })}
@@ -122,16 +121,16 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
                 ))}
             </nav>
 
-            <div className="p-3 border-t border-white/6 space-y-1">
-                <Link
-                    href="/"
-                    onClick={onNavigate}
-                    className="admin-nav-link"
-                >
+            <div className="p-3 border-t border-white/6 space-y-1 shrink-0">
+                <Link href="/" onClick={onNavigate} className="admin-nav-link">
                     <Store size={17} />
                     Ver tienda
                 </Link>
-                <button onClick={handleLogout} className="admin-nav-link w-full text-left !text-red-400 hover:!text-red-300 hover:!bg-red-500/10">
+                <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="admin-nav-link w-full text-left !text-red-400 hover:!text-red-300 hover:!bg-red-500/10"
+                >
                     <LogOut size={17} />
                     Cerrar sesión
                 </button>
@@ -140,47 +139,48 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
     );
 }
 
-export default function AdminSidebar() {
+interface Props {
+    mobileOpen: boolean;
+    onMobileClose: () => void;
+}
+
+export default function AdminSidebar({ mobileOpen, onMobileClose }: Props) {
     const pathname = usePathname();
-    const [mobileOpen, setMobileOpen] = useState(false);
 
     useEffect(() => {
-        if (mobileOpen) {
-            setMobileOpen(false);
-        }
-    }, [pathname, mobileOpen]);
+        onMobileClose();
+    }, [pathname, onMobileClose]);
+
+    useEffect(() => {
+        if (!mobileOpen) return;
+        const prev = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        return () => {
+            document.body.style.overflow = prev;
+        };
+    }, [mobileOpen]);
 
     return (
         <>
-            {/* Mobile toggle */}
-            <button
-                onClick={() => setMobileOpen(true)}
-                className="lg:hidden fixed top-4 left-4 z-40 w-10 h-10 bg-white border border-[#e2e8f0] rounded-xl flex items-center justify-center shadow-md"
-                aria-label="Abrir menú"
-            >
-                <Menu size={20} className="text-[#0a1628]" />
-            </button>
-
-            {/* Desktop sidebar */}
-            <aside className="admin-sidebar hidden lg:flex flex-col">
+            <aside className="admin-sidebar admin-sidebar-desktop hidden lg:flex flex-col">
                 <SidebarContent />
             </aside>
 
-            {/* Mobile drawer */}
             {mobileOpen && (
-                <div className="admin-sidebar-mobile lg:hidden">
-                    <div className="admin-sidebar-backdrop" onClick={() => setMobileOpen(false)} />
-                    <aside className="admin-sidebar flex flex-col w-[280px] shadow-2xl">
-                        <div className="flex justify-end p-3">
+                <div className="admin-sidebar-mobile lg:hidden" role="dialog" aria-modal="true">
+                    <div className="admin-sidebar-backdrop" onClick={onMobileClose} aria-hidden="true" />
+                    <aside className="admin-sidebar admin-sidebar-drawer flex flex-col">
+                        <div className="flex justify-end p-3 shrink-0">
                             <button
-                                onClick={() => setMobileOpen(false)}
+                                type="button"
+                                onClick={onMobileClose}
                                 className="p-2 text-white/50 hover:text-white rounded-lg hover:bg-white/10"
                                 aria-label="Cerrar menú"
                             >
                                 <X size={20} />
                             </button>
                         </div>
-                        <SidebarContent onNavigate={() => setMobileOpen(false)} />
+                        <SidebarContent onNavigate={onMobileClose} />
                     </aside>
                 </div>
             )}
