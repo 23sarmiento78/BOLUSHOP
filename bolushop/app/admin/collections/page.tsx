@@ -12,7 +12,7 @@ export default async function CollectionsPage() {
         <div className="space-y-6">
             <AdminPageHeader
                 title="Colecciones"
-                subtitle="Agrupá productos para landings temáticas en la tienda"
+                subtitle="Agrupá productos para landings temáticas o generá ofertas automáticas con IA"
             />
             <CollectionsClient initialCollections={collections} initialProducts={products} />
         </div>

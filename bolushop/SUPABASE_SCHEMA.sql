@@ -37,6 +37,7 @@ create table if not exists public.products (
   stock integer default 0,
   collections jsonb, -- Array de IDs de colecciones
   is_active boolean default true,
+  seo_keywords text, -- Keywords AdSense/SEO generadas por Gemini
   cj_sku text, -- Columna para sincronización con CJ Dropshipping
   cj_product_id text -- ID de CJ Dropshipping para un link directo
 );

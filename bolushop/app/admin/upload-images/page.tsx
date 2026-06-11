@@ -101,7 +101,7 @@ export default function UploadImagesPage() {
                 </div>
 
                 <p className="text-sm text-gray-600">
-                    Se mostrará una búsqueda interna de Droppers directamente en el admin. Selecciona la tarjeta correcta del producto y presiona "Esto es correcto". Si no encuentras el producto, presiona "Saltar producto".
+                    Se mostrará una búsqueda interna de Droppers directamente en el admin. Haz clic en la tarjeta del producto correcto, elige hasta 4 fotos en el modal y guarda. Si no encuentras el producto, presiona "Saltar producto".
                 </p>
 
                 <label className="block">

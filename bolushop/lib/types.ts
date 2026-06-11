@@ -42,6 +42,7 @@ export interface Product {
     mlAffiliateUrl?: string; // Mercado Libre referral link
     mlItemId?: string;       // Mercado Libre item ID
     isMlReferral?: boolean;  // Flag to identify ML products
+    seoKeywords?: string;    // Keywords AdSense / SEO (comma-separated)
 }
 
 export interface Order {

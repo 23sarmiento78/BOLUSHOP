@@ -162,6 +162,7 @@ function mapSupabaseProduct(p: Record<string, unknown>): Product {
         mlAffiliateUrl: p.ml_affiliate_url != null ? String(p.ml_affiliate_url) : undefined,
         mlItemId: p.ml_item_id != null ? String(p.ml_item_id) : undefined,
         isMlReferral: Boolean(p.is_ml_referral),
+        seoKeywords: p.seo_keywords != null ? String(p.seo_keywords) : undefined,
     };
 }
 
@@ -211,7 +212,8 @@ export async function saveProducts(products: Product[]): Promise<{ success: bool
             is_active: p.isActive ?? true,
             ml_affiliate_url: p.mlAffiliateUrl,
             ml_item_id: p.mlItemId,
-            is_ml_referral: p.isMlReferral
+            is_ml_referral: p.isMlReferral,
+            seo_keywords: p.seoKeywords ?? null,
         }));
 
         const { error } = await supabaseServer.from('products').upsert(toUpsert, { onConflict: 'id' });

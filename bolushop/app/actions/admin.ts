@@ -307,6 +307,49 @@ export async function updateCollectionAction(updatedCollection: Collection) {
     return { success: false, error: "Colección no encontrada" };
 }
 
+export async function publishCollectionsBatchAction(
+    collections: Omit<Collection, 'id'>[],
+) {
+    if (!collections.length) {
+        return { success: false, error: 'No hay colecciones para publicar' };
+    }
+
+    const existing = await getAllCollections();
+    const usedSlugs = new Set(existing.map((c) => c.slug));
+
+    const newCollections = collections.map((col) => {
+        let slug = col.slug;
+        let suffix = 1;
+        while (usedSlugs.has(slug)) {
+            slug = `${col.slug}-${suffix}`;
+            suffix += 1;
+        }
+        usedSlugs.add(slug);
+
+        return {
+            ...col,
+            id: uuidv4(),
+            slug,
+            productIds: col.productIds ?? [],
+        };
+    });
+
+    const result = await saveCollections([...existing, ...newCollections]);
+    if (!result.success) {
+        return { success: false, error: result.error || 'Error al publicar colecciones' };
+    }
+
+    revalidatePath('/admin/collections');
+    revalidatePath('/colecciones');
+    revalidatePath('/');
+
+    for (const col of newCollections) {
+        revalidatePath(`/coleccion/${col.slug}`);
+    }
+
+    return { success: true, count: newCollections.length };
+}
+
 // Category Actions
 export async function createCategoryAction(category: Omit<Category, 'id'>) {
     const categories = await getAllCategories();

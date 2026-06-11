@@ -25,19 +25,26 @@ export async function POST(request: NextRequest) {
                 stock: 0,
                 isActive: false,
             };
+        } else if (Array.isArray(images) && images.length > 0) {
+            const chosenImages = images.slice(0, 4);
+            products[productIndex] = {
+                ...products[productIndex],
+                image: chosenImages[0],
+                images: chosenImages,
+            };
         } else if (productUrl) {
             const detailImages = await fetchDroppersProductDetailImages(productUrl);
-            const chosenImages = detailImages.length > 0 ? detailImages : images || (imageUrl ? [imageUrl] : []);
+            const chosenImages = detailImages.length > 0 ? detailImages : imageUrl ? [imageUrl] : [];
             products[productIndex] = {
                 ...products[productIndex],
                 image: chosenImages[0] || imageUrl || products[productIndex].image,
                 images: chosenImages,
             };
-        } else if (imageUrl && images) {
+        } else if (imageUrl) {
             products[productIndex] = {
                 ...products[productIndex],
                 image: imageUrl,
-                images: images,
+                images: [imageUrl],
             };
         }
 
