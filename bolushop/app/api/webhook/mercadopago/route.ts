@@ -56,12 +56,16 @@ export async function POST(req: NextRequest) {
         if (kind === 'payment' && paymentId) {
             console.log(`🔍 Fetching details for payment ${paymentId}...`);
 
-            // Try different tokens if available
-            const MP_ACCESS_TOKEN = process.env.MP_BRICKS_ACCESS_TOKEN || process.env.MP_PRO_ACCESS_TOKEN || process.env.MP_ACCESS_TOKEN;
+            // Test and live notifications must be fetched with credentials from the same environment.
+            // Never use a production token to look up a sandbox payment.
+            const isLiveNotification = body.live_mode !== false;
+            const MP_ACCESS_TOKEN = isLiveNotification
+                ? (process.env.MP_BRICKS_ACCESS_TOKEN || process.env.MP_PRO_ACCESS_TOKEN || process.env.MP_ACCESS_TOKEN)
+                : process.env.MP_TEST_ACCESS_TOKEN;
 
             if (!MP_ACCESS_TOKEN) {
-                console.error('❌ MP Access Token not configured in webhook');
-                return NextResponse.json({ error: 'MP not configured' }, { status: 500 });
+                console.error(`❌ MP ${isLiveNotification ? 'live' : 'test'} access token not configured in webhook`);
+                return NextResponse.json({ error: 'MP environment not configured' }, { status: 500 });
             }
 
             const paymentResponse = await fetch(
