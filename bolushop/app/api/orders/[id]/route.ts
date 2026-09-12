@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getOrderById } from '@/lib/db';
+import { toPublicOrder } from '@/lib/public-order';
 
 export async function GET(
     req: NextRequest,
@@ -13,8 +14,7 @@ export async function GET(
             return NextResponse.json({ error: 'Orden no encontrada' }, { status: 404 });
         }
 
-        // Devolvemos solo lo necesario para el cliente (limpio)
-        return NextResponse.json(order);
+        return NextResponse.json(toPublicOrder(order));
     } catch (error) {
         console.error('Error fetching order:', error);
         return NextResponse.json({ error: 'Error interno' }, { status: 500 });

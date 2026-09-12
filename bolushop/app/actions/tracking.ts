@@ -1,9 +1,9 @@
 "use server";
 
 import { getOrderById } from "@/lib/db";
-import { Order } from "@/lib/types";
+import { PublicOrder, toPublicOrder } from "@/lib/public-order";
 
-export async function getOrderByIdAction(orderId: string): Promise<Order | null> {
+export async function getOrderByIdAction(orderId: string): Promise<PublicOrder | null> {
     const order = await getOrderById(orderId);
-    return order || null;
+    return order ? toPublicOrder(order) : null;
 }

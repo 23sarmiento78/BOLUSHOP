@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import { getOrderByIdAction } from "@/app/actions/tracking";
-import { Order } from "@/lib/types";
+import { PublicOrder } from "@/lib/public-order";
 import { toast } from "sonner";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function TrackingPageClient() {
     const [orderId, setOrderId] = useState("");
-    const [order, setOrder] = useState<Order | null>(null);
+    const [order, setOrder] = useState<PublicOrder | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
 
