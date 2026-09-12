@@ -30,7 +30,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { transformImageUrl } from "@/lib/images";
 import OAuth from 'oauth-1.0a';
 import CryptoJS from 'crypto-js';
-import { requireAdmin } from "@/lib/admin-auth";
+import { requireAdmin } from "@/lib/admin-auth-server";
 
 export async function deleteProductAction(id: string) {
     await requireAdmin();

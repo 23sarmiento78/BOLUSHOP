@@ -77,12 +77,4 @@ export async function verifyAdminSession(token: string | undefined | null) {
     }
 }
 
-export async function requireAdmin() {
-    const { cookies } = await import("next/headers");
-    const cookieStore = await cookies();
-    const valid = await verifyAdminSession(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
-    if (!valid) throw new Error("Unauthorized");
-    return true;
-}
-
 export { ADMIN_SESSION_COOKIE, SESSION_TTL_SECONDS };
