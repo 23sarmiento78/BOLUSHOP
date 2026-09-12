@@ -4,12 +4,12 @@ import { useEffect, Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { clearCart } from "@/lib/cart";
-import { Order } from "@/lib/types";
+import { PublicOrder } from "@/lib/public-order";
 import { CheckCircle2, ShoppingBag, MessageCircle } from "lucide-react";
 
 function ExitoContent() {
     const searchParams = useSearchParams();
-    const [orderData, setOrderData] = useState<Order | null>(null);
+    const [orderData, setOrderData] = useState<PublicOrder | null>(null);
     const [isLoadingOrder, setIsLoadingOrder] = useState(true);
     const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
 
@@ -26,10 +26,10 @@ function ExitoContent() {
         setPaymentStatus(status);
 
         if (referenceId) {
-            fetch(`/api/admin/orders/${referenceId}`)
+            fetch(`/api/orders/${referenceId}`)
                 .then(res => res.json())
                 .then(data => {
-                    if (data.order) setOrderData(data.order);
+                    if (!data.error) setOrderData(data);
                     setIsLoadingOrder(false);
                 })
                 .catch(() => setIsLoadingOrder(false));

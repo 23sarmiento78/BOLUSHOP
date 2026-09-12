@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getCart, updateQuantity, removeFromCart, getCartTotal, CartItem } from "@/lib/cart";
 import { ChevronRight } from "lucide-react";
+import { getCheckoutSettings } from "@/app/actions/shop";
 
 export default function CarritoPage() {
     const [cart, setCart] = useState<CartItem[]>([]);
@@ -15,13 +16,10 @@ export default function CarritoPage() {
     useEffect(() => {
         setCart(getCart());
 
-        fetch('/api/admin/settings')
-            .then(res => res.json())
-            .then(data => {
-                if (data.settings) {
-                    setIsFreeShipping(data.settings.isFreeShippingEnabled ?? true);
-                    setMinPurchase(data.settings.minPurchaseAmount ?? 35000);
-                }
+        getCheckoutSettings()
+            .then(({ isFreeShippingEnabled, minPurchaseAmount }) => {
+                setIsFreeShipping(isFreeShippingEnabled);
+                setMinPurchase(minPurchaseAmount);
                 setIsLoading(false);
             })
             .catch(() => setIsLoading(false));
