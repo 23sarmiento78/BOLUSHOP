@@ -40,6 +40,14 @@ export default function OrdersTable({ initialOrders }: Props) {
         cancelled: "bg-red-100 text-red-800"
     };
 
+    const statusLabels: Record<string, string> = {
+        pending: "Pendiente",
+        paid: "Pagado",
+        shipped: "Enviado",
+        delivered: "Entregado",
+        cancelled: "Cancelado",
+    };
+
     return (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             {/* Mobile Cards View */}

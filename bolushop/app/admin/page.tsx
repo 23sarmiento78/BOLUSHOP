@@ -59,7 +59,7 @@ export default async function AdminDashboard() {
         })
         .reduce((acc, o) => acc + o.total, 0);
 
-    const pendingOrders = orders.filter((o) => o.status === "pending" || o.status === "paid").length;
+    const pendingOrders = orders.filter((o) => o.status === "pending").length;
 
     const quickActions = [
         { href: "/admin/products", label: "Productos", desc: "Gestionar inventario", icon: Package, color: "bg-orange-50 text-orange-500" },

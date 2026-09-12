@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 export default async function ProductsManagerPage() {
     const products = await getAllProducts();
     const categories = new Set(products.map((p) => p.category)).size;
-    const inStock = products.filter((p) => p.stock > 0).length;
+    const inStock = products.filter((p) => p.isActive !== false && p.stock > 0).length;
 
     return (
         <div className="space-y-6">
