@@ -284,6 +284,17 @@
   background: var(--admin-sidebar-hover);
 }
 
+.admin-btn-secondary {
+  background: var(--admin-sidebar-hover);
+  color: white;
+}
+
+.admin-btn-secondary:hover {
+  background: #203452;
+  color: white;
+  transform: translateY(-1px);
+}
+
 .admin-btn-ghost {
   background: var(--admin-bg);
   color: var(--admin-muted);

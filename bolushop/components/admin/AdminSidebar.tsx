@@ -66,7 +66,7 @@ function SidebarContent({ onNavigate }: SidebarContentProps) {
     const router = useRouter();
 
     const handleLogout = async () => {
-        document.cookie = "admin_authenticated=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        await fetch("/api/auth/logout", { method: "POST" });
         router.push("/admin/login");
         router.refresh();
     };
