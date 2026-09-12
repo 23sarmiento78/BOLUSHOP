@@ -62,6 +62,14 @@ export async function getShippingRate(province: string, city: string = ""): Prom
     }
 }
 
+export async function getCheckoutSettings() {
+    const settings = await getSettings();
+    return {
+        isFreeShippingEnabled: settings.isFreeShippingEnabled ?? true,
+        minPurchaseAmount: settings.minPurchaseAmount ?? 35000,
+    };
+}
+
 export async function getProductReviewsAction(productId: string) {
     return await getProductReviews(productId);
 }

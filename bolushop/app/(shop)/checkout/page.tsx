@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { getCart, getCartTotal, CartItem } from "@/lib/cart";
-import { getShippingRate } from "@/app/actions/shop";
+import { getCheckoutSettings, getShippingRate } from "@/app/actions/shop";
 import { LOCATION_DATA } from "@/lib/locations";
 import { initMercadoPago } from '@mercadopago/sdk-react';
 
@@ -12,7 +12,6 @@ export default function CheckoutPage() {
     const [cart, setCart] = useState<CartItem[]>([]);
     const [shippingCost, setShippingCost] = useState(0);
     const [isProcessing, setIsProcessing] = useState(false);
-    const [isFreeShipping, setIsFreeShipping] = useState(true);
 
     const [formData, setFormData] = useState({
         name: "",
@@ -32,17 +31,11 @@ export default function CheckoutPage() {
             locale: 'es-AR'
         });
 
-        fetch('/api/admin/settings')
-            .then(res => res.json())
-            .then(data => {
-                if (data.settings) {
-                    setIsFreeShipping(data.settings.isFreeShippingEnabled ?? true);
-                    const minAmount = data.settings.minPurchaseAmount ?? 35000;
-                    if (getCartTotal() < minAmount) {
-                        router.push('/carrito');
-                    }
-                }
-            });
+        getCheckoutSettings().then(({ minPurchaseAmount }) => {
+            if (getCartTotal() < minPurchaseAmount) {
+                router.push('/carrito');
+            }
+        });
     }, [router]);
 
     const availableCities = useMemo(() => {
