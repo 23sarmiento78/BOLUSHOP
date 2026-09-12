@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
-import { createOrder, getSettings } from '@/lib/db';
+import { createOrder, getAllProducts, getSettings } from '@/lib/db';
 import { calculateShippingCost } from '@/lib/shipping';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -11,11 +11,42 @@ const client = new MercadoPagoConfig({ accessToken });
 export async function POST(req: NextRequest) {
     try {
         const { cart, formData } = await req.json();
+
+        if (!Array.isArray(cart) || cart.length === 0 || !formData) {
+            return NextResponse.json({ error: 'Carrito o datos del comprador inválidos' }, { status: 400 });
+        }
+
+        // Never trust prices, names, images or quantities received from the browser.
+        // Rebuild the cart from the current database state before creating a payment.
+        const products = await getAllProducts();
+        const validatedCart: any[] = [];
+        for (const item of cart) {
+            const productId = String(item.productId || item.id || '');
+            const quantity = Number(item.quantity);
+            const product = products.find((candidate) => String(candidate.id) === productId);
+
+            if (!product || product.isActive === false || !Number.isInteger(quantity) || quantity < 1) {
+                return NextResponse.json({ error: 'El carrito contiene un producto inválido' }, { status: 400 });
+            }
+            if (typeof product.stock === 'number' && quantity > product.stock) {
+                return NextResponse.json({ error: `Stock insuficiente para ${product.name}` }, { status: 400 });
+            }
+
+            validatedCart.push({
+                id: String(product.id),
+                productId: String(product.id),
+                name: product.name,
+                price: Number(product.price),
+                quantity,
+                image: product.image,
+            });
+        }
+
         const orderId = uuidv4();
         const settings = await getSettings();
 
-        // VALIDAR COMPRA MÍNIMA
-        const cartTotal = cart.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0);
+        // VALIDAR COMPRA MÍNIMA con precios vigentes del servidor
+        const cartTotal = validatedCart.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0);
         const minAmount = settings.minPurchaseAmount || 0;
         if (cartTotal < minAmount) {
             return NextResponse.json({
@@ -41,7 +72,7 @@ export async function POST(req: NextRequest) {
         console.log('Order ID:', orderId);
 
         // 2. Mapeo de Items
-        const items = cart.map((item: any) => ({
+        const items = validatedCart.map((item: any) => ({
             id: item.productId || item.id,
             title: item.name,
             unit_price: Number(item.price),
@@ -106,7 +137,7 @@ export async function POST(req: NextRequest) {
             id: orderId,
             date: new Date().toISOString(),
             status: 'pending',
-            items: cart.map((item: any) => ({ ...item, id: item.productId })),
+            items: validatedCart,
             total: items.reduce((acc: number, item: any) => acc + (item.unit_price * item.quantity), 0) + serverShippingCost,
             payer: {
                 name: formData.name,
