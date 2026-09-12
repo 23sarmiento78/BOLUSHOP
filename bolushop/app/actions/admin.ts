@@ -30,8 +30,10 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { transformImageUrl } from "@/lib/images";
 import OAuth from 'oauth-1.0a';
 import CryptoJS from 'crypto-js';
+import { requireAdmin } from "@/lib/admin-auth";
 
 export async function deleteProductAction(id: string) {
+    await requireAdmin();
     const result = await deleteProduct(id);
     if (!result.success) {
         return { success: false, error: result.error || "No se pudo eliminar el producto." };
@@ -45,6 +47,7 @@ export async function deleteProductAction(id: string) {
 }
 
 export async function deleteAllProductsAction() {
+    await requireAdmin();
     const result = await deleteAllProducts();
     if (!result.success) {
         return { success: false, error: result.error || "No se pudieron borrar los productos de la base de datos." };
@@ -58,6 +61,7 @@ export async function deleteAllProductsAction() {
 }
 
 export async function deleteMultipleProductsAction(idsToDelete: string[]) {
+    await requireAdmin();
     try {
         const result = await deleteProducts(idsToDelete);
         if (!result.success) {
@@ -75,6 +79,7 @@ export async function deleteMultipleProductsAction(idsToDelete: string[]) {
 }
 
 export async function updateProductAction(updatedProduct: Product) {
+    await requireAdmin();
     const products = await getAllProducts();
     const index = products.findIndex(p => p.id === updatedProduct.id);
 
@@ -93,6 +98,7 @@ export async function updateProductAction(updatedProduct: Product) {
 }
 
 export async function createProductAction(product: Omit<Product, 'id' | 'createdAt'>) {
+    await requireAdmin();
     const products = await getAllProducts();
     const newProduct: Product = {
         ...product,
@@ -115,6 +121,7 @@ export async function createProductAction(product: Omit<Product, 'id' | 'created
 }
 
 export async function importProductsAction(rawProducts: any[], source: string) {
+    await requireAdmin();
     try {
         const settings = await getSettings();
         const PROFIT_MARGIN = settings.profitMargin;
@@ -266,6 +273,7 @@ export async function importProductsAction(rawProducts: any[], source: string) {
 
 // Collection Actions
 export async function createCollectionAction(collection: Omit<Collection, 'id'>) {
+    await requireAdmin();
     const collections = await getAllCollections();
     const newCollection: Collection = {
         ...collection,
@@ -282,6 +290,7 @@ export async function createCollectionAction(collection: Omit<Collection, 'id'>)
 }
 
 export async function deleteCollectionAction(id: string) {
+    await requireAdmin();
     const success = await deleteCollection(id);
     if (!success) return { success: false, error: "Error al borrar oferta" };
     revalidatePath("/admin/ofertas");
@@ -291,6 +300,7 @@ export async function deleteCollectionAction(id: string) {
 }
 
 export async function updateCollectionAction(updatedCollection: Collection) {
+    await requireAdmin();
     const collections = await getAllCollections();
     const index = collections.findIndex(c => c.id === updatedCollection.id);
 
@@ -352,6 +362,7 @@ export async function publishCollectionsBatchAction(
 
 // Category Actions
 export async function createCategoryAction(category: Omit<Category, 'id'>) {
+    await requireAdmin();
     const categories = await getAllCategories();
     const newCategory: Category = {
         ...category,
@@ -366,6 +377,7 @@ export async function createCategoryAction(category: Omit<Category, 'id'>) {
 }
 
 export async function deleteCategoryAction(id: string) {
+    await requireAdmin();
     const success = await deleteCategory(id);
     if (!success) return { success: false, error: "Error al borrar categoría" };
     revalidatePath("/admin/products");
@@ -373,6 +385,7 @@ export async function deleteCategoryAction(id: string) {
 }
 
 export async function updateCategoryAction(updatedCategory: Category) {
+    await requireAdmin();
     const categories = await getAllCategories();
     const index = categories.findIndex(c => c.id === updatedCategory.id);
 
@@ -388,6 +401,7 @@ export async function updateCategoryAction(updatedCategory: Category) {
 
 // Bulk Actions
 export async function bulkUpdatePricesAction(percentage: number, productIds?: string[], categoryId?: string) {
+    await requireAdmin();
     const products = await getAllProducts();
     const multiplier = 1 + (percentage / 100);
 
@@ -410,6 +424,7 @@ export async function bulkUpdatePricesAction(percentage: number, productIds?: st
 }
 
 export async function bulkResetPricesAction(productIds?: string[], categoryId?: string) {
+    await requireAdmin();
     const [products, settings] = await Promise.all([
         getAllProducts(),
         getSettings()
@@ -438,6 +453,7 @@ export async function bulkResetPricesAction(productIds?: string[], categoryId?: 
 }
 
 export async function bulkUpdateCategoriesAction(productIds: string[], categoryName: string, categoryId: string) {
+    await requireAdmin();
     const products = await getAllProducts();
 
     const updatedProducts = products.map(p => {
@@ -456,6 +472,7 @@ export async function bulkUpdateCategoriesAction(productIds: string[], categoryN
 }
 
 export async function uploadImageAction(formData: FormData) {
+    await requireAdmin();
     const file = formData.get('file') as File;
     if (!file) return { success: false, error: "No file provided" };
 
@@ -482,11 +499,13 @@ export async function uploadImageAction(formData: FormData) {
 }
 
 export async function getCategoriesAction() {
+    await requireAdmin();
     return await getAllCategories();
 }
 
 // Orders Actions
 export async function updateOrderStatusAction(orderId: string, newStatus: string, extras: any = {}) {
+    await requireAdmin();
     try {
         await updateOrder(orderId, { status: newStatus as Order['status'], ...extras });
         revalidatePath('/admin/orders');
@@ -499,14 +518,17 @@ export async function updateOrderStatusAction(orderId: string, newStatus: string
 }
 
 export async function getAllOrdersAction() {
+    await requireAdmin();
     return await getAllOrders();
 }
 
 export async function getNewsletterSubscribersAction() {
+    await requireAdmin();
     return await getNewsletterSubscribers();
 }
 
 export async function deleteNewsletterSubscriberAction(email: string) {
+    await requireAdmin();
     const success = await deleteNewsletterSubscriber(email);
     revalidatePath("/admin/newsletter");
     return success;
@@ -572,6 +594,7 @@ export async function sendTestNewsletterCampaignAction(
 }
 
 export async function sendNewsletterCampaignAction(campaign: NewsletterCampaignInput) {
+    await requireAdmin();
     try {
         if (!process.env.BREVO_API_KEY) {
             return {
@@ -601,10 +624,12 @@ export async function sendNewsletterCampaignAction(campaign: NewsletterCampaignI
     }
 }
 export async function getPostsAction() {
+    await requireAdmin();
     return await getAllPosts();
 }
 
 export async function savePostAction(post: Partial<BlogPost>) {
+    await requireAdmin();
     const { success, error } = await savePost(post);
     if (success) {
         revalidatePath("/admin/blog");
@@ -617,6 +642,7 @@ export async function savePostAction(post: Partial<BlogPost>) {
 }
 
 export async function deletePostAction(id: string) {
+    await requireAdmin();
     const success = await deletePost(id);
     if (success) {
         revalidatePath("/admin/blog");
@@ -628,6 +654,7 @@ export async function deletePostAction(id: string) {
 }
 
 export async function generateAIArticleAction(products: Product[]) {
+    await requireAdmin();
     try {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
         const model = genAI.getGenerativeModel({ model: 'models/gemini-2.5-flash' });
@@ -681,6 +708,7 @@ IMPORTANTE: Respondé SOLO el objeto JSON limpio. No menciones precios exactos.`
 }
 
 export async function generateSocialContentAction(post: Partial<BlogPost>, platform: 'instagram' | 'twitter' | 'reddit' | 'pinterest') {
+    await requireAdmin();
     try {
         const mainApiKey = process.env.GEMINI_API_KEY;
         let specificApiKey = "";
@@ -824,6 +852,7 @@ async function ensurePublicImageUrl(rawUrl: string): Promise<string> {
  * hosteamos la imagen en Supabase y Make se encarga del resto.
  */
 export async function publishToSocialAction(post: Partial<BlogPost>, socialContent: any) {
+    await requireAdmin();
     try {
         const webhookUrl = process.env.SOCIAL_WEBHOOK_URL;
         if (!webhookUrl) {

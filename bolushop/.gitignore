@@ -44,3 +44,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# Local/private operational files
+CREDENCIALES_PROD.txt
+CONFIGURACION_ENV_MP.txt
+ENV_INSTRUCTIONS.txt
+data/orders.json
+debug.log
+debug_ml.html

@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { ADMIN_SESSION_COOKIE, verifyAdminSession } from '@/lib/admin-auth';
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
     const { pathname, searchParams } = request.nextUrl;
 
     // Redirect legacy category URLs to clean /categoria/[slug] routes
@@ -16,18 +17,17 @@ export function middleware(request: NextRequest) {
         }
     }
 
-    // Only protect /admin routes
-    if (pathname.startsWith('/admin')) {
+    // Protect both admin pages and admin API routes with the same signed session.
+    const isAdminPage = pathname.startsWith('/admin');
+    const isAdminApi = pathname.startsWith('/api/admin');
+    if (isAdminPage || isAdminApi) {
+        if (pathname === '/admin/login') return NextResponse.next();
 
-        // Allow access to login page
-        if (request.nextUrl.pathname === '/admin/login') {
-            return NextResponse.next();
-        }
-
-        // Check for auth cookie
-        const authCookie = request.cookies.get('admin_authenticated');
-
-        if (!authCookie || authCookie.value !== 'true') {
+        const valid = await verifyAdminSession(request.cookies.get(ADMIN_SESSION_COOKIE)?.value);
+        if (!valid) {
+            if (isAdminApi) {
+                return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+            }
             return NextResponse.redirect(new URL('/admin/login', request.url));
         }
     }
@@ -36,5 +36,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/admin/:path*', '/productos'],
+    matcher: ['/admin/:path*', '/api/admin/:path*', '/productos'],
 };

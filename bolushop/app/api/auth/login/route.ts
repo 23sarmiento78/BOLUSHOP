@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { ADMIN_SESSION_COOKIE, SESSION_TTL_SECONDS, createAdminSession } from '@/lib/admin-auth';
 
 export async function POST(req: NextRequest) {
     try {
@@ -8,23 +9,25 @@ export async function POST(req: NextRequest) {
         const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
         const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
-        if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+        if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD && ADMIN_EMAIL && ADMIN_PASSWORD) {
             const response = NextResponse.json({ success: true });
+            const session = await createAdminSession(email);
 
-            // Set a simple auth cookie
-            response.cookies.set('admin_authenticated', 'true', {
+            response.cookies.set(ADMIN_SESSION_COOKIE, session, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'strict',
-                maxAge: 60 * 60 * 24, // 24 hours
+                maxAge: SESSION_TTL_SECONDS,
                 path: '/',
             });
+            // Invalidate the legacy forgeable cookie if it exists.
+            response.cookies.delete('admin_authenticated');
 
             return response;
         }
 
         return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Internal error' }, { status: 500 });
     }
 }
