@@ -1,29 +1,39 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createHmac, timingSafeEqual } from 'crypto';
 
-function verifyMercadoPagoSignature(rawBody: string, signature: string | null, secret: string) {
-    if (!signature || !secret) return false;
+function verifyMercadoPagoSignature(
+    xSignature: string | null,
+    xRequestId: string | null,
+    dataId: string,
+    secret: string,
+) {
+    if (!xSignature || !xRequestId || !dataId || !secret) return false;
 
-    const normalizedSignature = signature.startsWith('sha256=') ? signature.slice(7) : signature;
-    const expectedSignature = createHmac('sha256', secret).update(rawBody).digest('hex');
-    const signatureBuffer = Buffer.from(normalizedSignature, 'utf8');
-    const expectedBuffer = Buffer.from(expectedSignature, 'utf8');
-
-    if (signatureBuffer.length !== expectedBuffer.length) {
-        return false;
+    let timestamp = '';
+    let signature = '';
+    for (const part of xSignature.split(',')) {
+        const [key, value] = part.trim().split('=', 2);
+        if (key === 'ts') timestamp = value || '';
+        if (key === 'v1') signature = value || '';
     }
+    if (!timestamp || !signature || !/^[a-f0-9]+$/i.test(signature)) return false;
 
-    try {
-        return timingSafeEqual(signatureBuffer, expectedBuffer);
-    } catch {
-        return false;
-    }
+    // Mercado Pago signs this manifest, not the raw JSON body.
+    const manifest = `id:${dataId};request-id:${xRequestId};ts:${timestamp};`;
+    const expected = createHmac('sha256', secret).update(manifest).digest('hex');
+    const receivedBuffer = Buffer.from(signature, 'hex');
+    const expectedBuffer = Buffer.from(expected, 'hex');
+
+    return receivedBuffer.length === expectedBuffer.length && timingSafeEqual(receivedBuffer, expectedBuffer);
 }
 
 export async function POST(req: NextRequest) {
     try {
         const rawBody = await req.text();
-        const signature = req.headers.get('x-hub-signature') || req.headers.get('X-Hub-Signature');
+        const body = JSON.parse(rawBody);
+        const xSignature = req.headers.get('x-signature');
+        const xRequestId = req.headers.get('x-request-id');
+        const dataId = req.nextUrl.searchParams.get('data.id') || body?.data?.id?.toString() || '';
         const webhookSecret = process.env.MP_WEBHOOK_SECRET || '';
 
         if (!webhookSecret) {
@@ -31,12 +41,10 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Webhook secret not configured' }, { status: 500 });
         }
 
-        if (!verifyMercadoPagoSignature(rawBody, signature, webhookSecret)) {
+        if (!verifyMercadoPagoSignature(xSignature, xRequestId, dataId, webhookSecret)) {
             console.error('❌ Invalid Mercado Pago webhook signature');
             return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
         }
-
-        const body = JSON.parse(rawBody);
 
         console.log('Mercado Pago Webhook:', body);
 
