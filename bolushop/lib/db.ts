@@ -443,7 +443,7 @@ export async function getOrderById(id: string): Promise<Order | undefined> {
     try {
         const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(cleanId);
 
-        let query = supabase.from('orders').select('*');
+        let query = supabaseServer.from('orders').select('*');
 
         if (isUUID) {
             query = query.eq('external_id', cleanId);
@@ -479,7 +479,7 @@ export async function getOrderById(id: string): Promise<Order | undefined> {
     }
 
     try {
-        const { data: paymentData } = await supabase
+        const { data: paymentData } = await supabaseServer
             .from('orders')
             .select('*')
             .eq('payment_id', cleanId)
