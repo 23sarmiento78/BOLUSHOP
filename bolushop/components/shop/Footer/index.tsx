@@ -1,8 +1,13 @@
 import Link from "next/link";
+import { getSettings } from "@/lib/db";
 import { Instagram, Mail, MapPin, ShieldCheck, Truck, CreditCard, Phone, ArrowUpRight } from "lucide-react";
 
-export default function Footer() {
+export default async function Footer() {
     const year = new Date().getFullYear();
+    const settings = await getSettings();
+    const rawPhone = (settings.whatsappNumber || "").replace(/\D/g, "");
+    const whatsappPhone = rawPhone.startsWith("54") ? rawPhone : `549${rawPhone}`;
+    const whatsappHref = whatsappPhone ? `https://wa.me/${whatsappPhone}` : "#";
 
     return (
         <footer className="bg-[#0a1628] text-white mt-auto">
@@ -26,7 +31,7 @@ export default function Footer() {
                             <a href="https://instagram.com/bolushop.arg" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-10 h-10 bg-white/8 rounded-xl flex items-center justify-center hover:bg-[#ff6b35] transition-colors">
                                 <Instagram size={18} />
                             </a>
-                            <a href="https://wa.me/543541237972" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="w-10 h-10 bg-white/8 rounded-xl flex items-center justify-center hover:bg-[#25D366] transition-colors">
+                            <a href={whatsappHref} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="w-10 h-10 bg-white/8 rounded-xl flex items-center justify-center hover:bg-[#25D366] transition-colors">
                                 <Phone size={18} />
                             </a>
                             <a href="mailto:contacto@bolushop.com" aria-label="Email" className="w-10 h-10 bg-white/8 rounded-xl flex items-center justify-center hover:bg-[#ff6b35] transition-colors">
@@ -85,7 +90,7 @@ export default function Footer() {
                             </div>
                             <div className="flex gap-2.5">
                                 <Phone size={15} className="flex-shrink-0 mt-0.5 text-[#ff6b35]" />
-                                <a href="https://wa.me/543541237972" className="hover:text-white transition-colors">+54 9 3541 237972</a>
+                                <a href={whatsappHref} className="hover:text-white transition-colors">+54 9 3541 237972</a>
                             </div>
                         </div>
                     </div>

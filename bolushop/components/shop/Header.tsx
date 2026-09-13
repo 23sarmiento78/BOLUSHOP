@@ -36,6 +36,20 @@ export default function Header() {
         setIsMobileMenuOpen(false);
     }, [pathname]);
 
+    useEffect(() => {
+        if (!isMobileMenuOpen) return;
+        const previousOverflow = document.body.style.overflow;
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Escape") setIsMobileMenuOpen(false);
+        };
+        document.body.style.overflow = "hidden";
+        document.addEventListener("keydown", handleKeyDown);
+        return () => {
+            document.body.style.overflow = previousOverflow;
+            document.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [isMobileMenuOpen]);
+
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         if (searchQuery.trim()) {
@@ -124,7 +138,9 @@ export default function Header() {
                             <button
                                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                                 aria-label={isMobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
-                                className="lg:hidden p-2 text-[#0a1628] rounded-xl hover:bg-white"
+                                aria-expanded={isMobileMenuOpen}
+                                aria-controls="mobile-shop-menu"
+                                className="lg:hidden p-2 text-[#0a1628] rounded-xl hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff6b35]"
                             >
                                 {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
                             </button>
@@ -148,7 +164,7 @@ export default function Header() {
             </header>
 
             {isMobileMenuOpen && (
-                <div className="lg:hidden fixed inset-0 z-40 bg-[#faf9f7]/98 backdrop-blur-md top-[120px] overflow-y-auto">
+                <div id="mobile-shop-menu" className="lg:hidden fixed inset-x-0 bottom-0 z-40 bg-[#faf9f7]/98 backdrop-blur-md top-[120px] overflow-y-auto border-t border-[#e8e4df]">
                     <div className="container-shop py-6 space-y-1">
                         {navLinks.map((link) => (
                             <Link
