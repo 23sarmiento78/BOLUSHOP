@@ -354,3 +354,23 @@ h1, h2, h3, h4 {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Public header variants are explicit so no base display rule can show two navs. */
+.shop-desktop-nav,
+.shop-desktop-search { display: none; }
+.shop-mobile-toggle { display: inline-flex; }
+.shop-mobile-search { display: block; }
+.shop-mobile-menu { display: block; }
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .shop-desktop-search { display: flex; }
+  .shop-mobile-search { display: none; }
+}
+
+@media (min-width: 1024px) {
+  .shop-desktop-nav { display: flex; }
+  .shop-desktop-search { display: flex; }
+  .shop-mobile-toggle,
+  .shop-mobile-search,
+  .shop-mobile-menu { display: none !important; }
+}

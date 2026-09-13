@@ -91,7 +91,7 @@ export default function Header() {
                             </div>
                         </Link>
 
-                        <nav className="hidden lg:flex items-center gap-1">
+                        <nav className="shop-desktop-nav hidden lg:flex items-center gap-1">
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.href}
@@ -107,7 +107,7 @@ export default function Header() {
                             ))}
                         </nav>
 
-                        <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-sm mx-4 relative">
+                        <form onSubmit={handleSearch} className="shop-desktop-search hidden md:flex flex-1 max-w-sm mx-4 relative">
                             <input
                                 type="search"
                                 placeholder="Buscar regalos, hogar..."
@@ -140,14 +140,14 @@ export default function Header() {
                                 aria-label={isMobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
                                 aria-expanded={isMobileMenuOpen}
                                 aria-controls="mobile-shop-menu"
-                                className="lg:hidden p-2 text-[#0a1628] rounded-xl hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff6b35]"
+                                className="shop-mobile-toggle lg:hidden p-2 text-[#0a1628] rounded-xl hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff6b35]"
                             >
                                 {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
                             </button>
                         </div>
                     </div>
 
-                    <form onSubmit={handleSearch} className="md:hidden mt-3 relative">
+                    <form onSubmit={handleSearch} className="shop-mobile-search md:hidden mt-3 relative">
                         <input
                             type="search"
                             placeholder="Buscar..."
@@ -164,7 +164,7 @@ export default function Header() {
             </header>
 
             {isMobileMenuOpen && (
-                <div id="mobile-shop-menu" className="lg:hidden fixed inset-x-0 bottom-0 z-40 bg-[#faf9f7]/98 backdrop-blur-md top-[120px] overflow-y-auto border-t border-[#e8e4df]">
+                <div id="mobile-shop-menu" className="shop-mobile-menu lg:hidden fixed inset-x-0 bottom-0 z-40 bg-[#faf9f7]/98 backdrop-blur-md top-[10rem] md:top-[7.5rem] overflow-y-auto border-t border-[#e8e4df]">
                     <div className="container-shop py-6 space-y-1">
                         {navLinks.map((link) => (
                             <Link
