@@ -24,31 +24,33 @@ import {
 
 const NAV_SECTIONS = [
     {
-        label: "General",
+        label: "Inicio",
         items: [{ name: "Dashboard", href: "/admin", icon: LayoutDashboard }],
     },
     {
-        label: "Catálogo",
+        label: "Operación",
         items: [
+            { name: "Pedidos", href: "/admin/orders", icon: Truck },
             { name: "Productos", href: "/admin/products", icon: ShoppingBag },
             { name: "Categorías", href: "/admin/categories", icon: FolderTree },
-            { name: "Ofertas y descuentos", href: "/admin/ofertas", icon: Layers },
-            { name: "Mercado Libre", href: "/admin/mercado-libre", icon: Package, badge: "ML" },
-            { name: "Product Scout", href: "/admin/meli/research", icon: Radar, badge: "AI" },
-            { name: "Optimizados ML", href: "/admin/meli/optimized", icon: Package },
-            { name: "CSV Dropers + IA", href: "/admin/upload", icon: Upload },
-            { name: "Fotos desde CSV", href: "/admin/upload-images", icon: ImagePlus },
+            { name: "Ofertas", href: "/admin/ofertas", icon: Layers },
         ],
-    },
-    {
-        label: "Ventas",
-        items: [{ name: "Pedidos", href: "/admin/orders", icon: Truck }],
     },
     {
         label: "Contenido",
         items: [
             { name: "Blog", href: "/admin/blog", icon: FileText },
             { name: "Newsletter", href: "/admin/newsletter", icon: Mail },
+        ],
+    },
+    {
+        label: "Herramientas avanzadas",
+        items: [
+            { name: "Mercado Libre", href: "/admin/mercado-libre", icon: Package, badge: "ML" },
+            { name: "Product Scout", href: "/admin/meli/research", icon: Radar, badge: "IA" },
+            { name: "Optimizados ML", href: "/admin/meli/optimized", icon: Package },
+            { name: "Importar CSV + IA", href: "/admin/upload", icon: Upload },
+            { name: "Actualizar fotos", href: "/admin/upload-images", icon: ImagePlus },
         ],
     },
     {

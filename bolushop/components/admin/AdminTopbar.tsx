@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ExternalLink, Menu } from "lucide-react";
 
 interface Props {
@@ -8,6 +9,23 @@ interface Props {
 }
 
 export default function AdminTopbar({ onMenuOpen }: Props) {
+    const pathname = usePathname();
+    const pageTitles: Record<string, string> = {
+        "/admin": "Dashboard",
+        "/admin/orders": "Pedidos",
+        "/admin/products": "Productos",
+        "/admin/categories": "Categorías",
+        "/admin/ofertas": "Ofertas",
+        "/admin/blog": "Blog",
+        "/admin/newsletter": "Newsletter",
+        "/admin/mercado-libre": "Mercado Libre",
+        "/admin/meli/research": "Product Scout",
+        "/admin/meli/optimized": "Optimizados ML",
+        "/admin/upload": "Importar catálogo",
+        "/admin/upload-images": "Actualizar fotos",
+        "/admin/settings": "Configuración",
+    };
+    const pageTitle = pageTitles[pathname] || "Panel Admin";
     const today = new Date().toLocaleDateString("es-AR", {
         weekday: "long",
         day: "numeric",
@@ -26,8 +44,8 @@ export default function AdminTopbar({ onMenuOpen }: Props) {
                     <Menu size={20} />
                 </button>
                 <div className="min-w-0">
+                    <p className="text-sm font-semibold text-[#0a1628] truncate">{pageTitle}</p>
                     <p className="text-[11px] text-[#94a3b8] capitalize truncate hidden sm:block">{today}</p>
-                    <p className="text-sm font-semibold text-[#0a1628] lg:hidden truncate">Panel Admin</p>
                 </div>
             </div>
 
