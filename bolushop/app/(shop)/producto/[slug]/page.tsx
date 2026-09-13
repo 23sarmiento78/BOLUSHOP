@@ -1,4 +1,4 @@
-import { getAllProducts, getProductReviews, getAllCategories } from "@/lib/db";
+import { getAllProducts, getProductReviews, getAllCategories, getSettings } from "@/lib/db";
 import { getRelatedProducts } from "@/app/actions/shop";
 import { notFound } from "next/navigation";
 import ProductDetailClient from "./ProductDetailClient";
@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     const cleanDescription = product.description
         ? product.description.replace(/<[^>]*>?/gm, "").replace(/\s+/g, " ").trim().slice(0, 160)
-        : `${product.name} — regalo original con envío gratis a todo Argentina. Comprá en BoluShop con cuotas sin interés.`;
+        : `${product.name} — producto para el hogar o regalo original disponible en BoluShop.`;
 
     const adsenseKeywords = product.seoKeywords
         ? product.seoKeywords.split(",").map((k) => k.trim()).filter(Boolean)
@@ -79,6 +79,7 @@ export default async function ProductPage({ params }: Props) {
     let reviews: any[] = [];
     let categories: any[] = [];
     let categoryHref = '/productos';
+    let isFreeShipping = false;
 
     try {
         relatedProducts = await getRelatedProducts(product.id, product.category);
@@ -97,6 +98,13 @@ export default async function ProductPage({ params }: Props) {
         categoryHref = categoryPath(resolveCategorySlug(product.category, categories));
     } catch (e) {
         categoryHref = '/productos';
+    }
+
+    try {
+        const settings = await getSettings();
+        isFreeShipping = settings.isFreeShippingEnabled ?? false;
+    } catch (e) {
+        isFreeShipping = false;
     }
 
     const structuredData: any[] = [];
@@ -122,6 +130,7 @@ export default async function ProductPage({ params }: Props) {
                 relatedProducts={relatedProducts}
                 reviews={reviews}
                 categoryHref={categoryHref}
+                isFreeShipping={isFreeShipping}
             />
         </>
     );

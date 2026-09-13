@@ -15,9 +15,10 @@ interface Props {
     relatedProducts: Product[];
     reviews: Review[];
     categoryHref?: string;
+    isFreeShipping?: boolean;
 }
 
-export default function ProductDetailClient({ product, relatedProducts, reviews, categoryHref }: Props) {
+export default function ProductDetailClient({ product, relatedProducts, reviews, categoryHref, isFreeShipping = false }: Props) {
     const [quantity, setQuantity] = useState(1);
     const [isAdding, setIsAdding] = useState(false);
     const imageSources = [product.image, ...(product.images || [])].filter(Boolean).reduce<string[]>((acc, image) => {
@@ -71,7 +72,7 @@ export default function ProductDetailClient({ product, relatedProducts, reviews,
                                 <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-[#f8fafb] text-xs uppercase tracking-[0.3em] font-black">
                                     <Sparkles size={16} /> Destacado
                                 </div>
-                                <p className="leading-relaxed text-[#e2e8f0]">Envío gratis a todo Argentina y compra protegida por BoluShop.</p>
+                                <p className="leading-relaxed text-[#e2e8f0]">{isFreeShipping ? 'Envío gratis a todo Argentina.' : 'Envío calculado según tu zona.'} Atención personalizada durante tu compra.</p>
                             </div>
                         </div>
                     </div>
@@ -123,11 +124,11 @@ export default function ProductDetailClient({ product, relatedProducts, reviews,
                                         <div className="grid gap-3 sm:grid-cols-2">
                                             <div className="rounded-3xl bg-white border border-[#e2e8f0] p-4">
                                                 <p className="text-xs uppercase tracking-[0.3em] text-[#64748b] mb-2">Stock</p>
-                                                <p className={`font-bold ${product.stock > 0 ? 'text-[#0f2044]' : 'text-orange-600'}`}>{product.stock > 0 ? `${product.stock} disponibles` : 'Agotado'}</p>
+                                                <p className={`font-bold ${product.stock > 0 ? 'text-[#0f2044]' : 'text-orange-600'}`}>{product.stock > 0 ? 'Disponible' : 'Agotado'}</p>
                                             </div>
                                             <div className="rounded-3xl bg-white border border-[#e2e8f0] p-4">
                                                 <p className="text-xs uppercase tracking-[0.3em] text-[#64748b] mb-2">Envío</p>
-                                                <p className="font-bold text-[#0f2044]">Gratis a todo el país</p>
+                                                <p className="font-bold text-[#0f2044]">{isFreeShipping ? 'Gratis a todo el país' : 'Según tu zona'}</p>
                                             </div>
                                         </div>
 
@@ -135,10 +136,6 @@ export default function ProductDetailClient({ product, relatedProducts, reviews,
                                             <div className="flex items-center justify-between text-sm text-[#64748b]">
                                                 <span>Precio</span>
                                                 <span className="font-black text-[#0f2044]">$ {product.price.toLocaleString('es-AR')}</span>
-                                            </div>
-                                            <div className="flex items-center justify-between text-sm text-[#10b981] font-bold">
-                                                <span>3 cuotas sin interés</span>
-                                                <span>$ {(product.price / 3).toLocaleString('es-AR', { maximumFractionDigits: 2 })}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -167,7 +164,7 @@ export default function ProductDetailClient({ product, relatedProducts, reviews,
                                 <div className="rounded-[2rem] border border-[#e2e8f0] bg-[#f8f9fb] p-8">
                                     <h2 className="text-2xl font-bold text-[#0f2044] mb-6">Especificaciones</h2>
                                     <p className="text-sm text-[#64748b] leading-7 mb-6">
-                                        {`${product.name} es una opción ideal para quienes buscan ${product.category ? product.category.toLowerCase() : 'productos de calidad'} con diseño práctico y acabados confiables. Perfecto para usar todos los días o regalar en ocasiones especiales. Disfrutá de envío gratis y pago en cuotas sin interés.`}
+                                        {`${product.name} es una opción ideal para quienes buscan ${product.category ? product.category.toLowerCase() : 'productos de calidad'} con diseño práctico y acabados confiables. Perfecto para usar todos los días o regalar en ocasiones especiales.`}
                                     </p>
                                     <div className="grid gap-3">
                                         {product.features.map((feature, index) => {
@@ -188,14 +185,14 @@ export default function ProductDetailClient({ product, relatedProducts, reviews,
                                     <div className="rounded-3xl bg-[#f0f9ff] p-3 text-[#185fa5]"><Truck size={20} /></div>
                                     <div>
                                         <h3 className="text-lg font-bold text-[#0f2044]">Envío rápido y seguro</h3>
-                                        <p className="text-sm text-[#64748b]">Recibí tu pedido en 1-5 días hábiles según tu zona.</p>
+                                        <p className="text-sm text-[#64748b]">Los plazos y el costo se calculan según tu zona durante la compra.</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <div className="rounded-3xl bg-[#ecfdf5] p-3 text-[#10b981]"><ShieldCheck size={20} /></div>
                                     <div>
-                                        <h3 className="text-lg font-bold text-[#0f2044]">Compra protegida</h3>
-                                        <p className="text-sm text-[#64748b]">Te ayudamos hasta que recibas tu producto correcto o gestionamos tu devolución.</p>
+                                        <h3 className="text-lg font-bold text-[#0f2044]">Atención postventa</h3>
+                                        <p className="text-sm text-[#64748b]">Estamos disponibles para ayudarte con tu compra y resolver cualquier consulta.</p>
                                     </div>
                                 </div>
                             </div>
@@ -215,7 +212,7 @@ export default function ProductDetailClient({ product, relatedProducts, reviews,
                                     </div>
                                     <div className="mb-6">
                                         <div className="text-xl font-black text-[#0f2044]">$ {product.price.toLocaleString('es-AR')}</div>
-                                        <div className="text-sm text-[#64748b] mt-2">3 cuotas de ${(product.price / 3).toLocaleString('es-AR', { maximumFractionDigits: 2 })} sin interés</div>
+                                        <div className="text-sm text-[#64748b] mt-2">El medio de pago disponible se informa durante el checkout.</div>
                                     </div>
 
                                     <div className="rounded-3xl bg-[#f8f9fb] p-4 border border-[#e2e8f0] mb-6">

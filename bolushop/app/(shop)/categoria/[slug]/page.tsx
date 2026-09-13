@@ -168,9 +168,9 @@ export default async function CategoryPage({ params }: Props) {
 
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10 max-w-3xl">
                             {[
-                                { icon: Truck, label: "Envío gratis", desc: "A todo Argentina" },
-                                { icon: CreditCard, label: "Cuotas sin interés", desc: "Con Mercado Pago" },
-                                { icon: ShieldCheck, label: "Compra protegida", desc: "Garantía BoluShop" },
+                                { icon: Truck, label: "Envíos", desc: "Según tu zona" },
+                                { icon: CreditCard, label: "Pago online", desc: "Durante el checkout" },
+                                { icon: ShieldCheck, label: "Atención", desc: "Te ayudamos con tu compra" },
                             ].map(({ icon: Icon, label, desc }) => (
                                 <div key={label} className="flex items-center gap-3 p-4 rounded-2xl bg-[#faf9f7] border border-[#e8e4df]">
                                     <Icon size={20} className="text-[#ff6b35] shrink-0" />

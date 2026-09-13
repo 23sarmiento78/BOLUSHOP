@@ -1,4 +1,4 @@
-import { getAllProducts, getAllCategories, getAllPosts } from "@/lib/db";
+import { getAllProducts, getAllCategories, getAllPosts, getSettings } from "@/lib/db";
 import ProductCard from "@/components/shop/ProductCard";
 import Link from "next/link";
 import Image from "next/image";
@@ -11,7 +11,7 @@ import {
 export const metadata = buildPageMetadata({
     title: "Regalos Originales y Hogar en Argentina",
     description:
-        "Descubrí regalos originales y accesorios para el hogar en BoluShop. Envío gratis a todo el país, cuotas sin interés y compra 100% protegida. ¡Sorprendé hoy!",
+        "Descubrí regalos originales y accesorios para el hogar en BoluShop. Explorá nuestro catálogo online y encontrá algo especial para cada ocasión.",
     path: "/",
     keywords: [
         "regalos originales argentina",
@@ -23,14 +23,19 @@ export const metadata = buildPageMetadata({
 });
 
 export default async function HomePage() {
-    const allProducts = await getAllProducts();
+    const [allProducts, allPosts, categories, settings] = await Promise.all([
+        getAllProducts(),
+        getAllPosts(),
+        getAllCategories(),
+        getSettings(),
+    ]);
     const activeProducts = allProducts.filter((p) => p.isActive !== false && p.price > 0);
     const featuredProducts = activeProducts.slice(0, 8);
     const mlProducts = activeProducts.filter((p) => p.isMlReferral).slice(0, 3);
     const heroProduct = featuredProducts[0];
-    const allPosts = await getAllPosts();
     const recentPosts = allPosts.filter((p) => p.isPublished).slice(0, 3);
-    const categories = await getAllCategories();
+    const availableCategoryIds = new Set(activeProducts.map((product) => product.category.toLowerCase()));
+    const visibleCategories = categories.filter((category) => availableCategoryIds.has(category.name.toLowerCase()));
 
     const getCategoryIcon = (slug: string) => {
         const icons: Record<string, typeof Home> = { hogar: Home, regalos: Gift, tech: Zap, juegos: Gamepad2 };
@@ -66,8 +71,8 @@ export default async function HomePage() {
                             </h1>
 
                             <p className="text-base md:text-lg text-white/65 max-w-lg mb-8 leading-relaxed">
-                                Productos curados con envío gratis a todo Argentina.
-                                Pagá en cuotas sin interés. Devolución en 30 días.
+                                Productos curados para regalar y disfrutar en casa.
+                                Encontrá tu próxima compra en un catálogo simple y claro.
                             </p>
 
                             <div className="flex flex-wrap gap-3 mb-10">
@@ -82,9 +87,9 @@ export default async function HomePage() {
 
                             <div className="flex gap-8 text-center">
                                 {[
-                                    { value: "500+", label: "Productos" },
-                                    { value: "4.9★", label: "Valoración" },
-                                    { value: "24hs", label: "Envío rápido" },
+                                    { value: activeProducts.length.toString(), label: "Productos activos" },
+                                    { value: settings.isFreeShippingEnabled ? "Gratis" : "Según zona", label: "Envío" },
+                                    { value: "Online", label: "Compra simple" },
                                 ].map((stat) => (
                                     <div key={stat.label}>
                                         <div className="text-xl font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>
@@ -141,10 +146,10 @@ export default async function HomePage() {
                 <div className="container-shop">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs md:text-sm text-[#64748b]">
                         {[
-                            { icon: Truck, text: "Envío a todo el país" },
-                            { icon: Shield, text: "Compra protegida" },
-                            { icon: CreditCard, text: "Cuotas sin interés" },
-                            { icon: RefreshCw, text: "Devolución 30 días" },
+                            { icon: Truck, text: settings.isFreeShippingEnabled ? "Envío gratis" : "Envío según zona" },
+                            { icon: Shield, text: "Atención personalizada" },
+                            { icon: CreditCard, text: "Pago online" },
+                            { icon: RefreshCw, text: "Condiciones claras" },
                         ].map(({ icon: Icon, text }) => (
                             <div key={text} className="flex items-center justify-center gap-2">
                                 <Icon size={16} className="text-[#ff6b35] flex-shrink-0" />
@@ -171,16 +176,12 @@ export default async function HomePage() {
                     </div>
 
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                        {(categories.length > 0 ? categories.slice(0, 5) : [
-                            { slug: "hogar", name: "Hogar" },
-                            { slug: "regalos", name: "Regalos" },
-                            { slug: "cocina", name: "Cocina" },
-                            { slug: "tech", name: "Tech" },
-                            { slug: "juegos", name: "Juegos" },
+                        {(visibleCategories.length > 0 ? visibleCategories.slice(0, 5) : [
+                            { slug: "", name: "Catálogo" },
                         ]).map((cat, i) => (
                             <Link
                                 key={cat.slug}
-                                href={`/categoria/${cat.slug}`}
+                                href={cat.slug ? `/categoria/${cat.slug}` : "/productos"}
                                 className={`group text-center p-6 rounded-2xl border transition-all hover:-translate-y-1 ${
                                     i === 0
                                         ? "bg-[#0a1628] text-white border-[#0a1628] shadow-lg"
@@ -324,7 +325,7 @@ export default async function HomePage() {
                         ¿Listo para sorprender?
                     </h2>
                     <p className="text-white/60 mb-8 max-w-md mx-auto">
-                        Explorá nuestro catálogo completo con envío gratis y la mejor selección de regalos.
+                        Explorá nuestro catálogo completo y encontrá la mejor opción para cada ocasión.
                     </p>
                     <Link href="/productos" className="btn btn-primary text-base px-8">
                         Explorar productos

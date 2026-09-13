@@ -23,7 +23,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     if (coleccion) {
         return buildPageMetadata({
             title: `Colección ${coleccion}`,
-            description: `Descubrí la colección ${coleccion} en BoluShop con envío gratis a todo el país y cuotas sin interés.`,
+            description: `Descubrí la colección ${coleccion} en BoluShop y encontrá productos seleccionados para tu hogar.`,
             path: "/productos",
             keywords: ["comprar productos online argentina", "catalogo bolushop", "regalos originales", "envio gratis"],
         });
@@ -31,7 +31,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 
     return buildPageMetadata({
         title: "Catálogo de productos",
-        description: "Descubrí todos los productos de BoluShop con envío gratis en Argentina y cuotas sin interés. Comprá regalos originales y accesorios para tu hogar.",
+        description: "Descubrí todos los productos de BoluShop. Comprá regalos originales y accesorios para tu hogar en Argentina.",
         path: "/productos",
         keywords: ["comprar productos online argentina", "catalogo bolushop", "regalos originales", "envio gratis"],
     });
@@ -109,6 +109,7 @@ export default async function ProductosPage({ searchParams }: Props) {
         : activeProducts.filter(product => !product.isMlReferral);
 
     const categories = Array.from(new Set(visibleProducts.map(product => product.category))).sort();
+    const hasMlProducts = activeProducts.some(product => product.isMlReferral);
 
     const displayTitle = seccion === 'mercado-libre'
         ? 'Imperdibles Mercado Libre'
@@ -153,12 +154,14 @@ export default async function ProductosPage({ searchParams }: Props) {
                             >
                                 Tienda Local
                             </Link>
-                            <Link
-                                href={buildProductLink({ seccion: 'mercado-libre', sort, price })}
-                                className={`rounded-full px-5 py-3 text-xs font-black uppercase tracking-[0.35em] transition ${seccion === 'mercado-libre' ? 'bg-[#3483FA] text-white' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
-                            >
-                                Imperdibles ML
-                            </Link>
+                            {hasMlProducts && (
+                                <Link
+                                    href={buildProductLink({ seccion: 'mercado-libre', sort, price })}
+                                    className={`rounded-full px-5 py-3 text-xs font-black uppercase tracking-[0.35em] transition ${seccion === 'mercado-libre' ? 'bg-[#3483FA] text-white' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
+                                >
+                                    Imperdibles ML
+                                </Link>
+                            )}
                         </div>
                         <div className="flex items-center gap-4">
                             <div className="text-xs font-black uppercase tracking-[0.35em] text-[#64748b]">Ordenar por</div>

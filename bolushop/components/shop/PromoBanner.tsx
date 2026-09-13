@@ -5,9 +5,9 @@ import Link from "next/link";
 import { Truck, CreditCard, Shield, X } from "lucide-react";
 
 const MESSAGES = [
-    { icon: Truck, text: "Envío gratis en todos los productos", highlight: "Envío gratis" },
-    { icon: CreditCard, text: "Hasta 12 cuotas sin interés", highlight: "cuotas sin interés" },
-    { icon: Shield, text: "Compra 100% protegida", highlight: "protegida" },
+    { icon: Truck, text: "Envío gratis según las condiciones vigentes", highlight: "Envío gratis" },
+    { icon: CreditCard, text: "Pago online durante el checkout", highlight: "Pago online" },
+    { icon: Shield, text: "Atención personalizada para tu compra", highlight: "Atención" },
 ];
 
 export default function PromoBanner() {
@@ -47,7 +47,7 @@ export default function PromoBanner() {
 
                 <div className="hidden items-center gap-4 sm:flex">
                     <Link
-                        href="/productos"
+                        href="/ofertas"
                         className="shrink-0 text-[11px] font-bold uppercase tracking-wider text-[#ff6b35] hover:text-[#ff8c5a] transition-colors"
                     >
                         Ver ofertas →
