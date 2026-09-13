@@ -425,6 +425,22 @@
   display: flex;
 }
 
+/* The component renders both variants intentionally; visibility must be
+   explicit here because .admin-sidebar itself sets display:flex. */
+.admin-sidebar-desktop {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .admin-sidebar-desktop {
+    display: flex;
+  }
+
+  .admin-sidebar-mobile {
+    display: none !important;
+  }
+}
+
 .admin-sidebar-backdrop {
   flex: 1;
   background: rgba(10, 22, 40, 0.5);
