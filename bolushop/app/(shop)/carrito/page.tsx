@@ -62,7 +62,7 @@ export default function CarritoPage() {
                         <div className="container-shop text-center">
                             <h1 className="text-3xl font-semibold tracking-tight md:text-4xl" style={{ fontFamily: "var(--font-display)" }}>Tu Carrito está Vacío</h1>
                             <p className="text-sm md:text-base text-gray-300">
-                                ¡Descubre nuestros productos y comienza a comprar!
+                                ¡Descubrí nuestros productos y empezá a comprar!
                             </p>
                         </div>
                     </section>
