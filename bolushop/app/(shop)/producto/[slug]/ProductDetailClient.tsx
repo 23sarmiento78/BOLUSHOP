@@ -38,19 +38,19 @@ export default function ProductDetailClient({ product, relatedProducts, reviews,
     const activeImageAlt = getImageAlt(activeImageIndex === -1 ? 0 : activeImageIndex);
 
     const handleAddToCart = () => {
+        if (product.stock <= 0) return;
         setIsAdding(true);
         addToCart(product, quantity);
-        setTimeout(() => {
-            setIsAdding(false);
-        }, 1500);
+        setTimeout(() => setIsAdding(false), 1500);
+    };
+
+    const handleBuyNow = () => {
+        if (product.stock <= 0) return;
+        addToCart(product, quantity);
+        window.location.href = "/checkout";
     };
 
     const cleanDescription = product.description.replace(/<[^>]*>?/gm, '').trim();
-    const reviewCount = reviews.length;
-    const averageRating = reviewCount > 0
-        ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviewCount
-        : 5;
-
     return (
             <main className="min-h-screen bg-[#faf9f7]">
                 <section className="hero-mesh text-white py-10 md:py-14">
@@ -78,10 +78,10 @@ export default function ProductDetailClient({ product, relatedProducts, reviews,
                     </div>
                 </section>
 
-                <section className="container-shop py-12 md:py-16">
+                <section className="container-shop py-10 md:py-14">
                     <div className="grid grid-cols-1 lg:grid-cols-[1.7fr_0.95fr] gap-10">
                         <div className="space-y-10">
-                            <div className="rounded-[2rem] border border-[#e2e8f0] bg-[#f8f9fb] p-6 md:p-8">
+                            <div className="rounded-[1.75rem] border border-[#e8e4df] bg-white p-4 md:p-6 shadow-sm">
                                 <div className="flex flex-col lg:flex-row gap-8">
                                     <div className="lg:w-[48%]">
                                         <div className="relative w-full overflow-hidden rounded-[2rem] bg-white shadow-card aspect-[4/3] max-h-[520px] md:max-h-[560px]">
@@ -117,7 +117,7 @@ export default function ProductDetailClient({ product, relatedProducts, reviews,
                                                 <span className="badge">{product.category || 'Regalo'}</span>
                                                 {product.isMlReferral && <span className="badge-ml">Mercado Libre</span>}
                                             </div>
-                                            <h2 className="text-3xl font-bold text-[#0f2044]">{product.name}</h2>
+                                            <h2 className="text-2xl font-semibold text-[#0f2044] md:text-3xl" style={{ fontFamily: "var(--font-display)" }}>{product.name}</h2>
                                             <p className="text-sm text-[#64748b] leading-relaxed">{cleanDescription}</p>
                                         </div>
 
@@ -132,7 +132,7 @@ export default function ProductDetailClient({ product, relatedProducts, reviews,
                                             </div>
                                         </div>
 
-                                        <div className="rounded-3xl bg-white border border-[#e2e8f0] p-5 space-y-4">
+                                        <div className="rounded-2xl bg-[#faf9f7] border border-[#e8e4df] p-5 space-y-4">
                                             <div className="flex items-center justify-between text-sm text-[#64748b]">
                                                 <span>Precio</span>
                                                 <span className="font-black text-[#0f2044]">$ {product.price.toLocaleString('es-AR')}</span>
@@ -142,7 +142,7 @@ export default function ProductDetailClient({ product, relatedProducts, reviews,
                                 </div>
                             </div>
 
-                            <div className="rounded-[2rem] border border-[#e2e8f0] bg-white p-8">
+                            <div className="rounded-[1.75rem] border border-[#e8e4df] bg-white p-6 md:p-8 shadow-sm">
                                 <h2 className="text-2xl font-bold text-[#0f2044] mb-4">Detalles rápidos</h2>
                                 <div className="grid gap-4 text-sm text-[#64748b]">
                                     <div className="flex justify-between border-b border-[#e2e8f0] pb-3">
@@ -180,7 +180,7 @@ export default function ProductDetailClient({ product, relatedProducts, reviews,
                                 </div>
                             )}
 
-                            <div className="rounded-[2rem] border border-[#e2e8f0] bg-white p-8">
+                            <div className="rounded-[1.75rem] border border-[#e8e4df] bg-white p-6 md:p-8 shadow-sm">
                                 <div className="flex items-center gap-3 mb-6">
                                     <div className="rounded-3xl bg-[#f0f9ff] p-3 text-[#185fa5]"><Truck size={20} /></div>
                                     <div>
@@ -197,7 +197,7 @@ export default function ProductDetailClient({ product, relatedProducts, reviews,
                                 </div>
                             </div>
 
-                            <div className="rounded-[2rem] border border-[#e2e8f0] bg-white p-8">
+                            <div className="rounded-[1.75rem] border border-[#e8e4df] bg-white p-6 md:p-8 shadow-sm">
                                 <h2 className="text-2xl font-bold text-[#0f2044] mb-6">Opiniones</h2>
                                 <ProductReviews productId={product.id} />
                             </div>
@@ -228,7 +228,7 @@ export default function ProductDetailClient({ product, relatedProducts, reviews,
                                             <span className="text-lg font-bold text-[#0f2044]">{quantity}</span>
                                             <button
                                                 type="button"
-                                                onClick={() => setQuantity(quantity + 1)}
+                                                onClick={() => setQuantity(Math.min(product.stock || 1, quantity + 1))}
                                                 className="h-12 w-12 rounded-2xl border border-[#e2e8f0] bg-white text-[#0f2044] font-black"
                                             >+</button>
                                         </div>
@@ -247,15 +247,16 @@ export default function ProductDetailClient({ product, relatedProducts, reviews,
                                             <button
                                                 type="button"
                                                 onClick={handleAddToCart}
-                                                disabled={isAdding}
+                                                disabled={isAdding || product.stock <= 0}
                                                 className={`w-full rounded-3xl py-4 text-sm font-bold transition ${isAdding ? 'bg-[#10b981] text-white' : 'bg-[#e8630a] text-white hover:bg-[#d55708]'}`}
                                             >
-                                                {isAdding ? '¡Agregado!' : 'Agregar al carrito'}
+                                                {product.stock <= 0 ? 'Agotado' : isAdding ? '¡Agregado!' : 'Agregar al carrito'}
                                             </button>
                                             <button
                                                 type="button"
-                                                onClick={handleAddToCart}
-                                                className="w-full rounded-3xl py-4 text-sm font-bold text-[#0f2044] bg-[#f8f9fb] hover:bg-[#eef6ff] transition"
+                                                onClick={handleBuyNow}
+                                                disabled={product.stock <= 0}
+                                                className="w-full rounded-3xl py-4 text-sm font-bold text-[#0f2044] bg-[#f8f9fb] hover:bg-[#eef6ff] transition disabled:cursor-not-allowed disabled:opacity-50"
                                             >
                                                 Comprar ahora
                                             </button>
@@ -263,8 +264,8 @@ export default function ProductDetailClient({ product, relatedProducts, reviews,
                                     )}
 
                                     <div className="mt-6 rounded-3xl bg-[#f8fafc] border border-[#e2e8f0] p-4 text-sm text-[#64748b]">
-                                        <p className="font-bold text-[#0f2044] mb-2">Protección BoluShop</p>
-                                        <p>Si no recibís tu pedido en tiempo, te asistimos hasta resolverlo.</p>
+                                        <p className="font-bold text-[#0f2044] mb-2">Atención BoluShop</p>
+                                        <p>Estamos disponibles para ayudarte con tu compra y resolver consultas.</p>
                                     </div>
                                 </div>
                             </div>

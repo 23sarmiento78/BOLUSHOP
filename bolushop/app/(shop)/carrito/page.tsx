@@ -11,7 +11,7 @@ export default function CarritoPage() {
     const [cart, setCart] = useState<CartItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isFreeShipping, setIsFreeShipping] = useState(true);
-    const [minPurchase, setMinPurchase] = useState(35000);
+    const [minPurchase, setMinPurchase] = useState(25000);
 
     useEffect(() => {
         setCart(getCart());
@@ -57,16 +57,16 @@ export default function CarritoPage() {
 
     if (cart.length === 0) {
         return (
-            <>                <main className="min-h-screen bg-white">
-                    <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-12 md:py-16 px-4 md:px-6 flex items-center justify-center min-h-[40vh]">
-                        <div className="max-w-7xl mx-auto text-center">
-                            <h1 className="text-3xl md:text-4xl font-bold mb-2">Tu Carrito está Vacío</h1>
+            <>                <main className="min-h-screen bg-[#faf9f7]">
+                    <section className="hero-mesh text-white py-16 md:py-20">
+                        <div className="container-shop text-center">
+                            <h1 className="text-3xl font-semibold tracking-tight md:text-4xl" style={{ fontFamily: "var(--font-display)" }}>Tu Carrito está Vacío</h1>
                             <p className="text-sm md:text-base text-gray-300">
                                 ¡Descubre nuestros productos y comienza a comprar!
                             </p>
                         </div>
                     </section>
-                    <section className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16 text-center">
+                    <section className="container-shop py-12 md:py-16 text-center">
                         <Link
                             href="/productos"
                             className="btn btn-primary"
@@ -80,16 +80,16 @@ export default function CarritoPage() {
 
     return (
         <>
-            <main className="min-h-screen bg-white">
+            <main className="min-h-screen bg-[#faf9f7]">
                 {/* Page Header */}
-                <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-8 md:py-12 px-4 md:px-6">
-                    <div className="max-w-7xl mx-auto">
+                <section className="hero-mesh text-white py-12 md:py-16">
+                    <div className="container-shop">
                         <div className="flex items-center gap-2 mb-4 text-xs text-gray-300">
                             <Link href="/" className="hover:text-white">Inicio</Link>
                             <ChevronRight size={14} />
                             <span>Carrito</span>
                         </div>
-                        <h1 className="text-3xl md:text-4xl font-bold mb-2">Tu Carrito de Compras</h1>
+                        <h1 className="text-3xl font-semibold tracking-tight md:text-4xl" style={{ fontFamily: "var(--font-display)" }}>Tu Carrito de Compras</h1>
                         <p className="text-sm md:text-base text-gray-300">
                             {cart.length} producto{cart.length !== 1 ? 's' : ''} en tu carrito
                         </p>
@@ -97,14 +97,14 @@ export default function CarritoPage() {
                 </section>
 
                 {/* Cart Content */}
-                <section className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16">
+                <section className="container-shop py-10 md:py-14">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
                         {/* Cart Items */}
                         <div className="lg:col-span-2 space-y-4">
                             {cart.map((item) => (
                                 <div
                                     key={item.productId}
-                                    className="card p-4 md:p-6 flex gap-4 md:gap-6"
+                                    className="card flex gap-4 p-4 md:gap-6 md:p-5"
                                 >
                                     {/* Image */}
                                     <Link
@@ -179,7 +179,7 @@ export default function CarritoPage() {
 
                         {/* Summary */}
                         <div className="lg:col-span-1">
-                            <div className="card p-6 md:p-8 sticky top-[100px] md:top-24">
+                            <div className="card sticky top-24 p-5 md:p-7">
                                 <h2 className="text-lg md:text-xl font-bold text-[#0f2044] mb-6">Resumen</h2>
 
                                 <div className="space-y-4 mb-6 pb-6 border-b border-[#e2e8f0]">

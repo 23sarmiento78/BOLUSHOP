@@ -132,20 +132,20 @@ export default async function ProductosPage({ searchParams }: Props) {
         categoryPath(resolveCategorySlug(categoryName, dbCategories));
 
     return (
-        <>            <main className="min-h-screen bg-[#f7f7f7]">
-                <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white pt-20 pb-20">
-                    <div className="max-w-7xl mx-auto px-4 md:px-6">
-                        <div className="max-w-4xl">
-                            <span className="inline-flex items-center rounded-full bg-white/10 px-4 py-2 text-[10px] uppercase tracking-[0.35em] text-white font-black mb-6">
+        <>            <main className="min-h-screen bg-[#faf9f7]">
+                <section className="hero-mesh text-white py-16 md:py-20">
+                    <div className="container-shop">
+                        <div className="max-w-3xl">
+                            <span className="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-4 py-2 text-[10px] uppercase tracking-[0.3em] text-white/80 font-bold mb-5">
                                 {seccion === 'mercado-libre' ? 'Selección Especial' : 'Catálogo Exclusivo'}
                             </span>
-                            <h1 className="text-5xl md:text-6xl font-black leading-tight mb-6">{displayTitle}</h1>
+                            <h1 className="text-4xl md:text-5xl font-semibold leading-tight mb-5" style={{ fontFamily: "var(--font-display)" }}>{displayTitle}</h1>
                             <p className="max-w-3xl text-base md:text-lg text-white/80 leading-relaxed">{displaySubtitle}</p>
                         </div>
                     </div>
                 </section>
 
-                <section className="max-w-7xl mx-auto px-4 md:px-6 py-10 md:py-14">
+                <section className="container-shop py-10 md:py-14">
                     <div className="flex flex-col lg:flex-row gap-6 lg:items-center justify-between mb-6">
                         <div className="flex flex-wrap gap-3">
                             <Link
@@ -164,7 +164,7 @@ export default async function ProductosPage({ searchParams }: Props) {
                             )}
                         </div>
                         <div className="flex items-center gap-4">
-                            <div className="text-xs font-black uppercase tracking-[0.35em] text-[#64748b]">Ordenar por</div>
+                            <div className="text-xs font-bold uppercase tracking-[0.25em] text-[#64748b]">Ordenar por</div>
                             <ProductSorter />
                         </div>
                     </div>
@@ -187,10 +187,10 @@ export default async function ProductosPage({ searchParams }: Props) {
                         ))}
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8">
+                    <div className="grid grid-cols-1 gap-8 lg:grid-cols-[240px_1fr]">
                         <aside className="space-y-5">
-                            <div className="rounded-[2rem] bg-white border border-[#e2e8f0] p-6 shadow-sm">
-                                <h2 className="text-sm font-black uppercase tracking-[0.35em] text-[#0f2044] mb-4">Precio</h2>
+                            <div className="rounded-[1.5rem] bg-white border border-[#e8e4df] p-5 shadow-sm">
+                                <h2 className="text-xs font-bold uppercase tracking-[0.25em] text-[#0f2044] mb-4">Precio</h2>
                                 <div className="space-y-3 text-sm text-[#64748b]">
                                     <Link
                                         href={buildProductLink({ seccion, sort, price: 'under_50000' })}
@@ -213,8 +213,8 @@ export default async function ProductosPage({ searchParams }: Props) {
                                 </div>
                             </div>
 
-                            <div className="rounded-[2rem] bg-white border border-[#e2e8f0] p-6 shadow-sm">
-                                <h2 className="text-sm font-black uppercase tracking-[0.35em] text-[#0f2044] mb-4">Categoría</h2>
+                            <div className="rounded-[1.5rem] bg-white border border-[#e8e4df] p-5 shadow-sm">
+                                <h2 className="text-xs font-bold uppercase tracking-[0.25em] text-[#0f2044] mb-4">Categoría</h2>
                                 <div className="space-y-2 text-sm text-[#64748b]">
                                     {categories.map(category => (
                                         <Link
@@ -228,8 +228,8 @@ export default async function ProductosPage({ searchParams }: Props) {
                                 </div>
                             </div>
 
-                            <div className="rounded-[2rem] bg-white border border-[#e2e8f0] p-6 shadow-sm">
-                                <h2 className="text-sm font-black uppercase tracking-[0.35em] text-[#0f2044] mb-4">Envío</h2>
+                            <div className="rounded-[1.5rem] bg-white border border-[#e8e4df] p-5 shadow-sm">
+                                <h2 className="text-xs font-bold uppercase tracking-[0.25em] text-[#0f2044] mb-4">Envío</h2>
                                 <p className="text-sm text-[#64748b]">El costo final de envío se calcula en el checkout según tu provincia y ciudad.</p>
                             </div>
                         </aside>
@@ -249,15 +249,15 @@ export default async function ProductosPage({ searchParams }: Props) {
                             </div>
 
                             {filteredProducts.length > 0 ? (
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <div className="grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-3">
                                     {filteredProducts.map(product => (
                                         <ProductCard key={product.id} product={product} />
                                     ))}
                                 </div>
                             ) : (
-                                <div className="rounded-[2.5rem] border border-dashed border-[#e2e8f0] bg-white p-12 text-center">
+                                <div className="rounded-[1.75rem] border border-dashed border-[#e8e4df] bg-white p-10 text-center shadow-sm">
                                     <div className="text-6xl mb-6">🔍</div>
-                                    <h2 className="text-3xl font-black text-[#0f2044] mb-4">No encontramos productos</h2>
+                                    <h2 className="text-2xl font-semibold text-[#0f2044] mb-4" style={{ fontFamily: "var(--font-display)" }}>No encontramos productos</h2>
                                     <p className="text-[#64748b] mb-8">Intentá con otra categoría o restablecé los filtros para ver nuestra selección completa.</p>
                                     <Link href="/productos" className="inline-flex items-center justify-center rounded-3xl bg-[#0f2044] px-8 py-4 text-white text-sm font-black uppercase tracking-[0.35em] hover:bg-[#0b1938]">
                                         Ver todo el catálogo
