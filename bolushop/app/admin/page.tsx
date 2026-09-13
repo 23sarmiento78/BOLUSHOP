@@ -13,12 +13,10 @@ import {
     ArrowRight,
     PlusCircle,
     Settings,
-    Mail,
     Tags,
     Truck,
     FileText,
     FolderTree,
-    Layers,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -39,7 +37,7 @@ export default async function AdminDashboard() {
         console.error("Error syncing categories:", e);
     }
 
-    const lowStockProducts = products.filter((p) => p.stock < 5);
+    const lowStockProducts = products.filter((p) => p.isActive !== false && p.stock < 5);
     const activeProducts = products.filter((p) => p.isActive !== false);
 
     const now = new Date();
@@ -60,6 +58,13 @@ export default async function AdminDashboard() {
         .reduce((acc, o) => acc + o.total, 0);
 
     const pendingOrders = orders.filter((o) => o.status === "pending").length;
+    const statusLabels: Record<string, string> = {
+        pending: "Pendiente",
+        paid: "Pagado",
+        shipped: "Enviado",
+        delivered: "Entregado",
+        cancelled: "Cancelado",
+    };
 
     const quickActions = [
         { href: "/admin/products", label: "Productos", desc: "Gestionar inventario", icon: Package, color: "bg-orange-50 text-orange-500" },
@@ -67,8 +72,6 @@ export default async function AdminDashboard() {
         { href: "/admin/ofertas", label: "Ofertas y descuentos", desc: "Promociones temáticas", icon: Tags, color: "bg-purple-50 text-purple-500" },
         { href: "/admin/blog", label: "Blog", desc: "Artículos y SEO", icon: FileText, color: "bg-emerald-50 text-emerald-500" },
         { href: "/admin/categories", label: "Categorías", desc: "Organizar catálogo", icon: FolderTree, color: "bg-cyan-50 text-cyan-600" },
-        { href: "/admin/newsletter", label: "Newsletter", desc: "Campañas email", icon: Mail, color: "bg-pink-50 text-pink-500" },
-        { href: "/admin/mercado-libre", label: "Mercado Libre", desc: "Afiliados ML", icon: Layers, color: "bg-yellow-50 text-yellow-600" },
         { href: "/admin/settings", label: "Configuración", desc: "Precios y envíos", icon: Settings, color: "bg-slate-50 text-slate-500" },
     ];
 
@@ -208,7 +211,7 @@ export default async function AdminDashboard() {
                                                     order.status === "cancelled" ? "admin-badge-danger" :
                                                     order.status === "pending" ? "admin-badge-warning" : "admin-badge-info"
                                                 }`}>
-                                                    {order.status}
+                                                    {statusLabels[order.status] || order.status}
                                                 </span>
                                             </td>
                                         </tr>
