@@ -4,7 +4,7 @@ import ProductsTable from "./ProductsTable";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import AdminStatCard from "@/components/admin/AdminStatCard";
 import OptimizeAllProductsButton from "@/components/admin/OptimizeAllProductsButton";
-import { Plus, Sparkles, Package, Filter, ImagePlus } from "lucide-react";
+import { Sparkles, Package, Filter, ImagePlus } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -27,9 +27,6 @@ export default async function ProductsManagerPage() {
                             <ImagePlus size={15} /> Actualizar fotos desde CSV
                         </Link>
                         <OptimizeAllProductsButton />
-                        <span className="admin-btn admin-btn-primary cursor-default opacity-80">
-                            <Plus size={15} /> Crear desde tabla
-                        </span>
                     </>
                 }
             />

@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { Product, Category } from "@/lib/types";
 import { transformImageUrl } from "@/lib/images";
-import { deleteProductAction, updateProductAction, deleteAllProductsAction, deleteMultipleProductsAction, createProductAction, bulkUpdatePricesAction, bulkResetPricesAction, uploadImageAction, getCategoriesAction, bulkUpdateCategoriesAction } from "@/app/actions/admin";
+import { deleteProductAction, updateProductAction, deleteMultipleProductsAction, createProductAction, bulkUpdatePricesAction, bulkResetPricesAction, uploadImageAction, getCategoriesAction, bulkUpdateCategoriesAction } from "@/app/actions/admin";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -80,19 +80,6 @@ export default function ProductsTable({ initialProducts }: Props) {
             handleRefresh();
         }
     };
-
-    const handleDeleteAll = async () => {
-        if (confirm("⚠ ¡ATENCIÓN! ⚠\n\n¿Estás seguro de que querés borrar TODOS los productos?\n\nEsta acción no se puede deshacer.")) {
-            if (confirm("Confirmación final: ¿Borrar TODO?")) {
-                const result = await deleteAllProductsAction();
-                if (result && !result.success) {
-                    alert(result.error);
-                } else {
-                    handleRefresh();
-                }
-            }
-        }
-    }
 
     const handleDeleteSelected = async () => {
         if (selectedIds.size === 0) return;
@@ -234,20 +221,20 @@ export default function ProductsTable({ initialProducts }: Props) {
     return (
         <div className="space-y-6">
             {/* Toolbar */}
-            <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+            <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 admin-card">
                 <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-widest px-1">
                     {filteredProducts.length} productos en catálogo
                 </p>
                 <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                     <button
                         onClick={() => setIsBulkPriceModalOpen(true)}
-                        className="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-gray-200 transition-all flex items-center justify-center gap-2"
+                        className="admin-btn admin-btn-ghost"
                     >
                         📈 Ajuste Masivo
                     </button>
                     <button
                         onClick={() => setIsCreating(true)}
-                        className="px-6 py-3 bg-primary text-white rounded-xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-primary/10 hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2"
+                        className="admin-btn admin-btn-primary"
                     >
                         + Nuevo Producto
                     </button>
@@ -294,12 +281,6 @@ export default function ProductsTable({ initialProducts }: Props) {
                             </button>
                         </>
                     )}
-                    <button
-                        onClick={handleDeleteAll}
-                        className="flex-grow md:flex-none px-4 py-2 text-gray-400 hover:text-red-500 rounded-xl font-bold text-[10px] uppercase tracking-wider transition-all"
-                    >
-                        Limpiar Todo
-                    </button>
                 </div>
             </div>
 
