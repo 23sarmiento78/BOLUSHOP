@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import AdminPageHeader from '@/components/admin/AdminPageHeader';
 
 export default function SettingsPage() {
     const [settings, setSettings] = useState({
@@ -51,8 +52,28 @@ export default function SettingsPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setSaving(true);
         setMessage({ type: '', text: '' });
+
+        const numericValues = [
+            settings.profitMargin,
+            settings.averageShippingCost,
+            settings.minPurchaseAmount,
+            ...Object.values(settings.shippingJson),
+        ];
+        if (numericValues.some((value) => !Number.isFinite(value) || value < 0)) {
+            setMessage({ type: 'error', text: 'Revisá los valores numéricos: no pueden ser negativos ni estar vacíos.' });
+            return;
+        }
+        if (settings.profitMargin <= 0) {
+            setMessage({ type: 'error', text: 'El multiplicador de margen debe ser mayor que cero.' });
+            return;
+        }
+        if (!settings.siteName.trim()) {
+            setMessage({ type: 'error', text: 'El nombre de la tienda no puede quedar vacío.' });
+            return;
+        }
+
+        setSaving(true);
 
         try {
             const res = await fetch('/api/admin/settings', {
@@ -84,10 +105,10 @@ export default function SettingsPage() {
 
     return (
         <div className="max-w-3xl space-y-6">
-            <div className="admin-page-header">
-                <h2 className="admin-page-title">Configuración</h2>
-                <p className="admin-page-subtitle">Margen, envíos, identidad y SEO de la tienda</p>
-            </div>
+            <AdminPageHeader
+                title="Configuración"
+                subtitle="Margen, envíos, identidad y SEO de la tienda"
+            />
 
             <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Lógica de Precios y Envío Gratis */}
@@ -106,6 +127,7 @@ export default function SettingsPage() {
                             <button
                                 type="button"
                                 onClick={() => setSettings({ ...settings, isFreeShippingEnabled: !settings.isFreeShippingEnabled })}
+                                aria-pressed={settings.isFreeShippingEnabled}
                                 className={`w-14 h-8 rounded-full transition-all relative ${settings.isFreeShippingEnabled ? 'bg-emerald-500' : 'bg-gray-200'}`}
                             >
                                 <div className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-all ${settings.isFreeShippingEnabled ? 'left-7' : 'left-1'}`} />
@@ -119,6 +141,7 @@ export default function SettingsPage() {
                             <div className="relative">
                                 <input
                                     type="number"
+                                    min="0.01"
                                     step="0.01"
                                     value={settings.profitMargin}
                                     onChange={(e) => setSettings({ ...settings, profitMargin: Number(e.target.value) })}
@@ -129,11 +152,12 @@ export default function SettingsPage() {
                         </div>
 
                         <div>
-                            <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3 px-1">Costo de Envío Promedio (Bundled)</label>
+                            <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3 px-1">Costo de envío promedio</label>
                             <div className="relative">
                                 <span className="absolute left-6 top-1/2 -translate-y-1/2 text-lg font-black text-emerald-600">$</span>
                                 <input
                                     type="number"
+                                    min="0"
                                     value={settings.averageShippingCost}
                                     onChange={(e) => setSettings({ ...settings, averageShippingCost: Number(e.target.value) })}
                                     className="w-full pl-12 pr-6 py-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20 font-black text-gray-900 text-lg"
@@ -149,6 +173,7 @@ export default function SettingsPage() {
                             <span className="absolute left-6 top-1/2 -translate-y-1/2 text-lg font-black text-primary">$</span>
                             <input
                                 type="number"
+                                min="0"
                                 value={settings.minPurchaseAmount}
                                 onChange={(e) => setSettings({ ...settings, minPurchaseAmount: Number(e.target.value) })}
                                 className="w-full pl-12 pr-6 py-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20 font-black text-gray-900 text-lg"
@@ -181,7 +206,8 @@ export default function SettingsPage() {
                                         <span className="absolute left-6 top-1/2 -translate-y-1/2 text-xs font-black text-gray-400">$</span>
                                         <input
                                             type="number"
-                                            value={zone.price}
+                                            min="0"
+                                            value={zone.price ?? 0}
                                             onChange={(e) => updateShippingZone(zone.key, Number(e.target.value))}
                                             className="w-full pl-10 pr-6 py-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20 font-black text-gray-900"
                                         />
@@ -224,9 +250,11 @@ export default function SettingsPage() {
                             <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3 px-1">Descripción Meta (SEO)</label>
                             <textarea
                                 value={settings.siteDescription}
+                                maxLength={160}
                                 onChange={(e) => setSettings({ ...settings, siteDescription: e.target.value })}
                                 className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20 font-medium text-gray-700 min-h-[100px]"
                             />
+                            <p className="mt-2 text-right text-[10px] font-bold text-gray-400">{settings.siteDescription.length}/160 caracteres</p>
                         </div>
                     </div>
                 </div>
