@@ -73,7 +73,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     return (
         <>
             <JsonLd data={structuredData} />
-            <main className="min-h-screen bg-white">
+            <main className="min-h-screen bg-[#faf9f7]">
                 <article>
                     {/* Hero Section - Magazine Style */}
                     <div className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden bg-black">
@@ -89,13 +89,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
 
                         <div className="absolute inset-0 flex flex-col justify-end pb-20 md:pb-32">
-                            <div className="container mx-auto px-4 max-w-6xl">
+                            <div className="container-shop max-w-6xl">
                                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-12 duration-1000">
                                     <div className="flex items-center gap-4">
                                         <Link href="/blog" className="bg-white/10 backdrop-blur-md border border-white/20 p-3 rounded-full text-white hover:bg-white/20 transition-all">
                                             <ArrowLeft size={20} />
                                         </Link>
-                                        <span className="px-5 py-2 bg-primary text-black rounded-full text-[11px] font-black uppercase tracking-[0.3em] shadow-2xl shadow-primary/20">
+                                        <span className="px-5 py-2 bg-[#ff6b35] text-white rounded-full text-[11px] font-black uppercase tracking-[0.3em] shadow-2xl shadow-primary/20">
                                             {post.category}
                                         </span>
                                     </div>
@@ -111,11 +111,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                                         </div>
                                         <div className="w-px h-4 bg-white/20 hidden md:block"></div>
                                         <div className="flex items-center gap-2">
-                                            <Calendar size={16} className="text-primary" /> {new Date(post.createdAt).toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                                            <Calendar size={16} className="text-[#ff6b35]" /> {new Date(post.createdAt).toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' })}
                                         </div>
                                         <div className="w-px h-4 bg-white/20 hidden md:block"></div>
                                         <div className="flex items-center gap-2">
-                                            <Clock size={16} className="text-primary" /> {readingTime} min de lectura
+                                            <Clock size={16} className="text-[#ff6b35]" /> {readingTime} min de lectura
                                         </div>
                                     </div>
                                 </div>
@@ -123,8 +123,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                         </div>
                     </div>
 
-                    <div className="container mx-auto px-4 max-w-4xl -mt-16 relative z-10 mb-24">
-                        <div className="bg-white rounded-[4rem] p-8 md:p-20 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.1)] border border-gray-50">
+                    <div className="container-shop max-w-4xl -mt-10 relative z-10 mb-16 md:-mt-16 md:mb-24">
+                        <div className="bg-white rounded-[2rem] p-6 md:p-12 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.1)] border border-gray-50">
                             {/* Intro / Excerpt */}
                             <p className="text-2xl md:text-3xl font-black text-gray-900 leading-[1.1] tracking-tighter mb-4 italic border-l-8 border-primary pl-8">
                                 {post.excerpt}
@@ -155,7 +155,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                                         <ShoppingBag size={120} />
                                     </div>
                                     <div className="relative z-10">
-                                        <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary mb-4 block">Shop the Look</span>
+                                        <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ff6b35] mb-4 block">Shop the Look</span>
                                         <h3 className="text-3xl font-black mb-10 tracking-tighter italic">Mencionado en este artículo</h3>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                             {linkedProducts.map(product => (
@@ -165,7 +165,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                                                     </div>
                                                     <div>
                                                         <h4 className="font-bold text-lg leading-tight mb-2 line-clamp-1">{product.name}</h4>
-                                                        <p className="text-primary font-black text-xl">${product.price.toLocaleString()}</p>
+                                                        <p className="text-[#ff6b35] font-black text-xl">${product.price.toLocaleString()}</p>
                                                         <span className="text-[10px] font-black uppercase tracking-widest text-white/40 mt-3 block group-hover/item:text-white transition-colors">Ver Producto →</span>
                                                     </div>
                                                 </Link>
@@ -182,8 +182,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                                     <Logo size={64} className="text-gray-900" />
                                 </div>
                                 <div className="relative z-10 text-center md:text-left">
-                                    <span className="inline-block px-3 py-1 bg-primary/10 text-primary rounded-full text-[9px] font-black uppercase tracking-widest mb-3">Redacción Oficial</span>
-                                    <h4 className="text-2xl font-black text-gray-900 mb-4 tracking-tight">Equipo de <span className="text-primary italic">BoluShop</span></h4>
+                                    <span className="inline-block px-3 py-1 bg-primary/10 text-[#ff6b35] rounded-full text-[9px] font-black uppercase tracking-widest mb-3">Redacción Oficial</span>
+                                    <h4 className="text-2xl font-black text-gray-900 mb-4 tracking-tight">Equipo de <span className="text-[#ff6b35] italic">BoluShop</span></h4>
                                     <p className="text-gray-500 font-medium leading-relaxed mb-6 text-sm md:text-base">
                                         Apasionados por la tecnología, las tendencias internacionales y la curaduría de productos únicos. Nuestro equipo recorre el mercado global para traerte solo lo que vale la pena tener.
                                     </p>
@@ -235,11 +235,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 {/* Articulos Relacionados (Footer del post) */}
                 {relatedPosts.length > 0 && (
                     <section className="bg-white py-32">
-                        <div className="container mx-auto px-4 max-w-6xl">
+                        <div className="container-shop max-w-6xl">
                             <div className="flex justify-between items-end mb-16">
                                 <div>
-                                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-4 block">Más Contenido</span>
-                                    <h3 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tighter">Lecturas <span className="text-primary italic">Recomendadas</span></h3>
+                                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#ff6b35] mb-4 block">Más Contenido</span>
+                                    <h3 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tighter">Lecturas <span className="text-[#ff6b35] italic">Recomendadas</span></h3>
                                 </div>
                                 <Link href="/blog" className="hidden md:block text-xs font-black uppercase tracking-widest text-gray-400 hover:text-black transition-colors">Ver todo el blog</Link>
                             </div>
@@ -251,8 +251,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                                             <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
                                         </div>
                                         <div className="px-2">
-                                            <span className="text-[9px] font-black uppercase tracking-widest text-primary mb-2 block">{p.category}</span>
-                                            <h4 className="text-xl font-black text-gray-900 line-clamp-2 leading-tight group-hover:text-primary transition-colors">{p.title}</h4>
+                                            <span className="text-[9px] font-black uppercase tracking-widest text-[#ff6b35] mb-2 block">{p.category}</span>
+                                            <h4 className="text-xl font-black text-gray-900 line-clamp-2 leading-tight group-hover:text-[#ff6b35] transition-colors">{p.title}</h4>
                                         </div>
                                     </Link>
                                 ))}

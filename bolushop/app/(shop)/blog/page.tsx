@@ -20,22 +20,22 @@ export default async function BlogPage() {
 
     return (
         <>
-            <main className="min-h-screen bg-[#f7f7f7]">
-                <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-10 md:py-14 px-4 md:px-6">
-                    <div className="max-w-7xl mx-auto">
+            <main className="min-h-screen bg-[#faf9f7]">
+                <section className="hero-mesh text-white py-16 md:py-20">
+                    <div className="container-shop">
                         <div className="flex items-center gap-2 mb-4 text-xs text-white/70">
                             <Link href="/" className="hover:text-white">Inicio</Link>
                             <ChevronRight size={14} />
                             <span>Blog</span>
                         </div>
-                        <h1 className="text-3xl md:text-5xl font-black mb-3">Guías y recomendaciones</h1>
+                        <h1 className="text-4xl font-semibold tracking-tight md:text-5xl" style={{ fontFamily: "var(--font-display)" }}>Guías y recomendaciones</h1>
                         <p className="max-w-3xl text-sm md:text-base text-white/80">
                             Consejos de compra, reviews y listas de regalos para cada ocasión.
                         </p>
                     </div>
                 </section>
 
-                <section className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16">
+                <section className="container-shop py-12 md:py-16">
                     <div className="flex flex-wrap gap-3 mb-8">
                         <span className="inline-flex items-center rounded-full bg-[#0f2044] px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.35em] text-white">
                             Todos
@@ -54,7 +54,7 @@ export default async function BlogPage() {
                                     <div className="inline-flex items-center rounded-full bg-[#eef3fb] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.35em] text-[#185fa5] mb-4">
                                         {featuredPost.category || 'Destacado'}
                                     </div>
-                                    <h2 className="text-2xl md:text-3xl font-black text-[#0f2044] mb-4">
+                                    <h2 className="text-2xl font-semibold text-[#0f2044] mb-4 md:text-3xl" style={{ fontFamily: "var(--font-display)" }}>
                                         {featuredPost.title}
                                     </h2>
                                     <p className="text-sm text-[#64748b] leading-relaxed mb-6">
@@ -131,10 +131,9 @@ export default async function BlogPage() {
                     </div>
                 </section>
 
-                <section className="bg-[#f8fafb] border-t border-[#e2e8f0] py-8 px-4 md:px-6">
-                    <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <span className="text-sm text-[#64748b]">Mostrando {publishedPosts.length} artículos</span>
-                        <button className="btn btn-outline">Cargar más artículos</button>
+                <section className="border-t border-[#e8e4df] bg-white py-8">
+                    <div className="container-shop flex flex-col items-center justify-between gap-4 sm:flex-row">
+                        <span className="text-sm text-[#64748b]">Mostrando {publishedPosts.length} artículos publicados</span>
                     </div>
                 </section>
             </main>        </>

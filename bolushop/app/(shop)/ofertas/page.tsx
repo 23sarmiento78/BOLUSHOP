@@ -22,22 +22,22 @@ export default async function OfertasPage() {
     const collections = await getAllCollections();
 
     return (
-        <main className="min-h-screen bg-[#f7f7f7]">
-            <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-10 md:py-14 px-4 md:px-6">
-                <div className="max-w-7xl mx-auto">
+        <main className="min-h-screen bg-[#faf9f7]">
+            <section className="hero-mesh text-white py-16 md:py-20">
+                <div className="container-shop">
                     <div className="flex items-center gap-2 mb-4 text-xs text-white/70">
                         <Link href="/" className="hover:text-white">Inicio</Link>
                         <ChevronRight size={14} />
                         <span>Ofertas y descuentos</span>
                     </div>
-                    <h1 className="text-3xl md:text-5xl font-black mb-3">Ofertas y descuentos</h1>
+                    <h1 className="text-4xl font-semibold tracking-tight md:text-5xl" style={{ fontFamily: "var(--font-display)" }}>Ofertas y descuentos</h1>
                     <p className="max-w-3xl text-sm md:text-base text-white/80">
-                        Promociones curadas para cada estilo y ocasión, con precios especiales y envío gratis.
+                        Selecciones curadas para cada estilo y ocasión, con descuentos definidos en cada colección.
                     </p>
                 </div>
             </section>
 
-            <section className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16">
+            <section className="container-shop py-12 md:py-16">
                 {collections.length === 0 ? (
                     <div className="text-center py-16 rounded-[1.5rem] bg-white border border-[#e2e8f0]">
                         <p className="text-[#64748b] font-medium">Próximamente nuevas ofertas.</p>
@@ -46,7 +46,7 @@ export default async function OfertasPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                         {collections.map((coll, index) => (
                             <Link key={coll.id} href={`/oferta/${coll.slug}`} className="group">
-                                <article className="h-full rounded-[1.75rem] overflow-hidden border border-[#e2e8f0] bg-white shadow-sm transition hover:shadow-lg">
+                                <article className="h-full rounded-[1.75rem] overflow-hidden border border-[#e8e4df] bg-white shadow-sm transition hover:shadow-lg">
                                     <div className="flex h-full flex-col">
                                         <div
                                             className={`min-h-[220px] p-8 flex flex-col justify-end gap-4 bg-gradient-to-br ${gradients[index % gradients.length]}`}
@@ -59,7 +59,7 @@ export default async function OfertasPage() {
                                                     : "Oferta"}
                                             </span>
                                             <div>
-                                                <h2 className="text-2xl md:text-3xl font-black text-white leading-tight mb-2">
+                                                <h2 className="text-2xl font-semibold leading-tight text-white md:text-3xl" style={{ fontFamily: "var(--font-display)" }}>
                                                     {coll.name}
                                                 </h2>
                                                 <p

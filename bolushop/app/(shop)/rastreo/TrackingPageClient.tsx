@@ -56,9 +56,9 @@ export default function TrackingPageClient() {
     const currentStep = order ? getStatusStep(order.status) : 0;
 
     return (
-        <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-[2rem] md:rounded-[3rem] shadow-2xl p-6 md:p-12 mb-12">
-                <h1 className="text-3xl md:text-5xl font-black text-center mb-10 tracking-tighter">Seguí tu Pedido</h1>
+        <div className="container-shop max-w-4xl mx-auto">
+            <div className="rounded-[1.75rem] border border-[#e8e4df] bg-white p-6 shadow-sm md:p-10 mb-12">
+                <h1 className="text-3xl font-semibold tracking-tight md:text-5xl text-center mb-10 tracking-tighter">Seguí tu Pedido</h1>
 
                 <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto mb-10">
                     <input
@@ -66,12 +66,12 @@ export default function TrackingPageClient() {
                         value={orderId}
                         onChange={(e) => setOrderId(e.target.value)}
                         placeholder="Número de orden"
-                        className="flex-grow px-6 py-4 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-primary focus:bg-white transition-all outline-none font-mono text-center sm:text-left"
+                        className="flex-grow px-6 py-4 rounded-2xl bg-white border border-[#e8e4df] focus:border-[#ff6b35] focus:bg-white transition-all outline-none font-mono text-center sm:text-left"
                     />
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="px-8 py-5 bg-primary text-white rounded-2xl font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/20 disabled:opacity-50"
+                        className="px-8 py-5 bg-[#ff6b35] text-white rounded-2xl font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[#ff6b35]/20 disabled:opacity-50"
                     >
                         {isLoading ? '...' : 'Buscar'}
                     </button>
@@ -88,11 +88,11 @@ export default function TrackingPageClient() {
                         <div className="border-t border-gray-100 pt-10">
                             <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start mb-10 gap-6 text-center sm:text-left">
                                 <div>
-                                    <p className="text-[10px] text-gray-400 font-extrabold uppercase tracking-[0.2em] mb-2">ID de Orden</p>
-                                    <p className="font-mono text-xl md:text-2xl font-black text-primary">{order.id}</p>
+                                    <p className="text-[10px] text-[#94a3b8] font-extrabold uppercase tracking-[0.2em] mb-2">ID de Orden</p>
+                                    <p className="font-mono text-xl md:text-2xl font-black text-[#ff6b35]">{order.id}</p>
                                 </div>
                                 <div className="sm:text-right">
-                                    <p className="text-[10px] text-gray-400 font-extrabold uppercase tracking-[0.2em] mb-2">Fecha de Compra</p>
+                                    <p className="text-[10px] text-[#94a3b8] font-extrabold uppercase tracking-[0.2em] mb-2">Fecha de Compra</p>
                                     <p className="font-bold text-lg">{new Date(order.date).toLocaleDateString()}</p>
                                 </div>
                             </div>
@@ -106,7 +106,7 @@ export default function TrackingPageClient() {
                                 </div>
                             ) : (
                                 <div className="relative mb-14 px-2 sm:px-4">
-                                    <div className="absolute top-[20px] left-0 w-full h-1 bg-gray-100 rounded-full" />
+                                    <div className="absolute top-[20px] left-0 w-full h-1 bg-[#e8e4df] rounded-full" />
                                     <div
                                         className="absolute top-[20px] left-0 h-1 bg-green-500 rounded-full transition-all duration-1000 ease-out"
                                         style={{ width: `${((currentStep - 1) / 3) * 100}%` }}
@@ -122,11 +122,11 @@ export default function TrackingPageClient() {
                                             <div key={s.step} className="flex flex-col items-center gap-3">
                                                 <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-lg md:text-xl z-10 transition-all duration-700 ${currentStep >= s.step
                                                     ? 'bg-green-500 text-white shadow-xl shadow-green-500/30 scale-110'
-                                                    : 'bg-white border-2 border-gray-100 text-gray-300'
+                                                    : 'bg-white border-2 border-gray-100 text-[#94a3b8]'
                                                     }`}>
                                                     {s.icon}
                                                 </div>
-                                                <p className={`text-[9px] md:text-[10px] font-black uppercase tracking-tighter sm:tracking-widest ${currentStep >= s.step ? 'text-green-600' : 'text-gray-300'
+                                                <p className={`text-[9px] md:text-[10px] font-black uppercase tracking-tighter sm:tracking-widest ${currentStep >= s.step ? 'text-green-600' : 'text-[#94a3b8]'
                                                     }`}>
                                                     {s.label}
                                                 </p>
@@ -137,29 +137,29 @@ export default function TrackingPageClient() {
                             )}
 
                             {/* Items */}
-                            <div className="bg-gray-50 rounded-2xl p-6 mb-8">
+                            <div className="rounded-2xl bg-[#faf9f7] p-6 mb-8">
                                 <h3 className="font-black text-lg mb-4">Productos</h3>
                                 <div className="space-y-4">
                                     {order.items.map((item, idx) => (
                                         <div key={idx} className="flex gap-4 bg-white p-4 rounded-xl shadow-sm">
-                                            <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                                            <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-[#e8e4df] flex-shrink-0">
                                                 {item.image && (
                                                     <Image src={item.image} alt={item.name} fill className="object-cover" />
                                                 )}
                                             </div>
                                             <div className="flex-grow">
-                                                <p className="font-bold text-gray-900">{item.name}</p>
-                                                <p className="text-sm text-gray-500">Cantidad: {item.quantity}</p>
+                                                <p className="font-bold text-[#0a1628]">{item.name}</p>
+                                                <p className="text-sm text-[#64748b]">Cantidad: {item.quantity}</p>
                                             </div>
-                                            <p className="font-black text-primary">
+                                            <p className="font-black text-[#ff6b35]">
                                                 ${(item.price * item.quantity).toLocaleString('es-AR')}
                                             </p>
                                         </div>
                                     ))}
                                 </div>
                                 <div className="flex justify-between items-center mt-6 pt-6 border-t border-gray-100">
-                                    <span className="font-extrabold text-gray-400 uppercase text-[10px] tracking-widest">Total Pagado</span>
-                                    <span className="text-2xl md:text-3xl font-black text-primary">
+                                    <span className="font-extrabold text-[#94a3b8] uppercase text-[10px] tracking-widest">Total Pagado</span>
+                                    <span className="text-2xl md:text-3xl font-black text-[#ff6b35]">
                                         ${order.total.toLocaleString('es-AR')}
                                     </span>
                                 </div>
@@ -176,7 +176,7 @@ export default function TrackingPageClient() {
                                     <span className="text-xl">📱</span>
                                     Consultar estado por WhatsApp
                                 </a>
-                                <Link href="/contacto" className="text-sm text-gray-500 hover:text-primary underline">
+                                <Link href="/contacto" className="text-sm text-[#64748b] hover:text-[#ff6b35] underline">
                                     ¿Tenés algún otro problema? Contactanos
                                 </Link>
                             </div>
