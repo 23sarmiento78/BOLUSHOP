@@ -129,7 +129,7 @@ export default function Header() {
                             >
                                 <ShoppingCart size={18} />
                                 {cartCount > 0 && (
-                                    <span className="absolute -top-1.5 -right-1.5 bg-[#c8f31d] text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full animate-pulse-glow">
+                                    <span className="absolute -top-1.5 -right-1.5 bg-[#c8f31d] text-[#11110f] text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full animate-pulse-glow">
                                         {cartCount}
                                     </span>
                                 )}
