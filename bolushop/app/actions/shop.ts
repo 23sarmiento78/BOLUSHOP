@@ -5,14 +5,16 @@ import { Product, Review } from "@/lib/types";
 
 export async function searchProducts(query: string): Promise<Product[]> {
     const products = await getAllProducts();
-    const searchLower = query.toLowerCase();
+    const normalize = (value: string) => value
+        .toLocaleLowerCase("es-AR")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    const searchLower = normalize(query);
 
     return products.filter(p =>
-        p.isActive !== false && (
-            p.name.toLowerCase().includes(searchLower) ||
-            p.description.toLowerCase().includes(searchLower) ||
-            p.category.toLowerCase().includes(searchLower)
-        )
+        p.isActive !== false && [p.name, p.description, p.category]
+            .filter(Boolean)
+            .some(value => normalize(value).includes(searchLower))
     );
 }
 
