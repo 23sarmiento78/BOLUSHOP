@@ -1,5 +1,6 @@
 "use server";
 
+import { headers } from "next/headers";
 import { getAllProducts, getSettings, getProductReviews, addProductReview, subscribeToNewsletter } from "@/lib/db";
 import { Product, Review } from "@/lib/types";
 
@@ -76,10 +77,52 @@ export async function getProductReviewsAction(productId: string) {
     return await getProductReviews(productId);
 }
 
-export async function addProductReviewAction(review: Review) {
-    return await addProductReview(review);
+const requestAttempts = new Map<string, number[]>();
+
+async function enforceRateLimit(scope: string, maxAttempts: number, windowMs: number) {
+    const requestHeaders = await headers();
+    const forwarded = requestHeaders.get("x-forwarded-for")?.split(",")[0]?.trim();
+    const address = forwarded || requestHeaders.get("x-real-ip") || "unknown";
+    const key = `${scope}:${address}`;
+    const now = Date.now();
+    const recent = (requestAttempts.get(key) || []).filter((timestamp) => now - timestamp < windowMs);
+
+    if (recent.length >= maxAttempts) {
+        throw new Error("Demasiados intentos. Probá nuevamente más tarde.");
+    }
+
+    recent.push(now);
+    requestAttempts.set(key, recent);
 }
 
-export async function subscribeToNewsletterAction(email: string) {
-    return await subscribeToNewsletter(email);
+export async function addProductReviewAction(review: Review) {
+    await enforceRateLimit("review", 5, 60 * 60 * 1000);
+
+    const userName = review.userName?.trim();
+    const comment = review.comment?.trim();
+    const rating = Number(review.rating);
+
+    if (!userName || userName.length > 80) {
+        throw new Error("El nombre debe tener entre 1 y 80 caracteres.");
+    }
+    if (!comment || comment.length < 8 || comment.length > 1000) {
+        throw new Error("La opinión debe tener entre 8 y 1000 caracteres.");
+    }
+    if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
+        throw new Error("La calificación no es válida.");
+    }
+
+    return await addProductReview({ ...review, userName, comment, rating });
+}
+
+export async function subscribeToNewsletterAction(email: string, honeypot = "") {
+    if (honeypot.trim()) return false;
+    await enforceRateLimit("newsletter", 3, 60 * 60 * 1000);
+
+    const normalizedEmail = email.trim().toLowerCase();
+    if (normalizedEmail.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+        throw new Error("Ingresá un email válido.");
+    }
+
+    return await subscribeToNewsletter(normalizedEmail);
 }

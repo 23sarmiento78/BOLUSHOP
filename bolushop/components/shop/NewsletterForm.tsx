@@ -8,6 +8,7 @@ export default function NewsletterForm() {
     const [email, setEmail] = useState("");
     const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
     const [message, setMessage] = useState("");
+    const [website, setWebsite] = useState("");
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -15,10 +16,16 @@ export default function NewsletterForm() {
 
         setStatus("loading");
         try {
-            await subscribeToNewsletterAction(email);
+            const subscribed = await subscribeToNewsletterAction(email, website);
+            if (!subscribed) {
+                setStatus("error");
+                setMessage("Ese email ya está suscripto.");
+                return;
+            }
             setStatus("success");
             setMessage("¡Gracias por suscribirte!");
             setEmail("");
+            setWebsite("");
         } catch (error: unknown) {
             setStatus("error");
             setMessage(error instanceof Error ? error.message : "Ocurrió un error");
@@ -31,6 +38,16 @@ export default function NewsletterForm() {
                 <label htmlFor="blog-newsletter-email" className="sr-only">
                     Tu correo electrónico
                 </label>
+                <input
+                    type="text"
+                    name="website"
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    className="pointer-events-none absolute left-[-9999px] h-px w-px opacity-0"
+                />
                 <div className="flex flex-col gap-3 sm:flex-row">
                     <div className="relative min-w-0 flex-1">
                         <Mail

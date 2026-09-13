@@ -73,7 +73,7 @@ export function buildWebSiteJsonLd() {
         name: SITE_NAME,
         url: SITE_URL,
         description:
-            "Tienda online de regalos originales y accesorios para el hogar en Argentina. Envío gratis, cuotas sin interés y compra protegida.",
+            "Tienda online de regalos originales y accesorios para el hogar en Argentina.",
         inLanguage: "es-AR",
         potentialAction: {
             "@type": "SearchAction",
@@ -119,7 +119,7 @@ export function buildOnlineStoreJsonLd(settings: { siteName: string }) {
         url: SITE_URL,
         logo: absoluteUrl("/icon.png"),
         description:
-            "Tienda online de regalos originales y accesorios para el hogar en Argentina. Envío gratis, cuotas sin interés y compra 100% protegida.",
+            "Tienda online de regalos originales y accesorios para el hogar en Argentina.",
         address: {
             "@type": "PostalAddress",
             addressLocality: "Villa Carlos Paz",
@@ -176,41 +176,6 @@ export function buildProductJsonLd(product: Product, reviews: Review[]) {
                     : "https://schema.org/OutOfStock",
             itemCondition: "https://schema.org/NewCondition",
             seller: { "@type": "Organization", name: "BoluShop" },
-            shippingDetails: {
-                "@type": "OfferShippingDetails",
-                shippingRate: {
-                    "@type": "MonetaryAmount",
-                    value: "0",
-                    currency: "ARS",
-                },
-                shippingDestination: {
-                    "@type": "DefinedRegion",
-                    addressCountry: "AR",
-                },
-                deliveryTime: {
-                    "@type": "ShippingDeliveryTime",
-                    handlingTime: {
-                        "@type": "QuantitativeValue",
-                        minValue: 1,
-                        maxValue: 3,
-                        unitCode: "DAY",
-                    },
-                    transitTime: {
-                        "@type": "QuantitativeValue",
-                        minValue: 3,
-                        maxValue: 10,
-                        unitCode: "DAY",
-                    },
-                },
-            },
-            hasMerchantReturnPolicy: {
-                "@type": "MerchantReturnPolicy",
-                applicableCountry: "AR",
-                returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
-                merchantReturnDays: 10,
-                returnMethod: "https://schema.org/ReturnByMail",
-                returnFees: "https://schema.org/FreeReturn",
-            },
         },
         category: product.category,
     };

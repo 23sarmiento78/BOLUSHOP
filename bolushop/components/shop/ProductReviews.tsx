@@ -48,7 +48,11 @@ export default function ProductReviews({ productId }: Props) {
                 date: new Date().toISOString(),
             };
 
-            await addProductReviewAction(review);
+            const saved = await addProductReviewAction(review);
+            if (!saved) {
+                toast.error("No pudimos publicar el comentario");
+                return;
+            }
             toast.success("¡Comentario añadido!");
 
             // Logic: Prepend and limit to 10 locally
@@ -130,6 +134,7 @@ export default function ProductReviews({ productId }: Props) {
                                 type="text"
                                 placeholder="Tu nombre"
                                 className="w-full px-6 py-4 rounded-xl border border-[#e8e4df] bg-white focus:border-[#ff6b35] transition-all outline-none"
+                                maxLength={80}
                                 value={newReview.userName}
                                 onChange={(e) => setNewReview({ ...newReview, userName: e.target.value })}
                             />
@@ -157,6 +162,7 @@ export default function ProductReviews({ productId }: Props) {
                                 placeholder="¿Qué te pareció el producto?"
                                 rows={4}
                                 className="w-full px-6 py-4 rounded-xl border border-[#e8e4df] bg-white focus:border-[#ff6b35] transition-all outline-none resize-none"
+                                maxLength={1000}
                                 value={newReview.comment}
                                 onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
                             />
