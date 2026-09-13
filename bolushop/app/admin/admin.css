@@ -439,10 +439,25 @@
 }
 
 .admin-sidebar-desktop {
+  display: none !important;
   height: 100vh;
   height: 100dvh;
   position: sticky;
   top: 0;
+}
+
+/* The desktop sidebar must never remain visible in the mobile layout.
+   Keep this explicit instead of relying only on utility-class generation. */
+@media (min-width: 1024px) {
+  .admin-sidebar-desktop {
+    display: flex !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  .admin-sidebar-desktop {
+    display: none !important;
+  }
 }
 
 /* Responsive tables & action bars inside admin */
