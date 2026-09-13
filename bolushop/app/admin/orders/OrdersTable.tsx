@@ -14,6 +14,8 @@ export default function OrdersTable({ initialOrders }: Props) {
     const [orders, setOrders] = useState(initialOrders);
     const [isLoading, setIsLoading] = useState(false);
     const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [statusFilter, setStatusFilter] = useState("all");
 
     const handleStatusChange = async (orderId: string, newStatus: string, extras?: any) => {
         setIsLoading(true);
@@ -48,11 +50,55 @@ export default function OrdersTable({ initialOrders }: Props) {
         cancelled: "Cancelado",
     };
 
+    const filteredOrders = orders.filter((order) => {
+        const query = searchTerm.trim().toLowerCase();
+        const matchesSearch = !query || [order.id, order.payer.name, order.payer.email]
+            .filter(Boolean)
+            .some((value) => String(value).toLowerCase().includes(query));
+        const matchesStatus = statusFilter === "all" || order.status === statusFilter;
+        return matchesSearch && matchesStatus;
+    });
+
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="space-y-4">
+            <div className="admin-card flex flex-col lg:flex-row lg:items-center gap-3">
+                <div className="min-w-0 lg:flex-1">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-[#64748b]">Bandeja de pedidos</p>
+                    <p className="text-sm text-[#94a3b8] mt-1">Filtrá por cliente, email, ID o estado.</p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2 lg:w-[34rem]">
+                    <input
+                        type="search"
+                        value={searchTerm}
+                        onChange={(event) => setSearchTerm(event.target.value)}
+                        placeholder="Buscar pedido o cliente..."
+                        className="w-full px-4 py-2.5 text-sm"
+                    />
+                    <select
+                        value={statusFilter}
+                        onChange={(event) => setStatusFilter(event.target.value)}
+                        className="w-full sm:w-44 px-4 py-2.5 text-sm"
+                        aria-label="Filtrar pedidos por estado"
+                    >
+                        <option value="all">Todos los estados</option>
+                        {Object.entries(statusLabels).map(([value, label]) => (
+                            <option key={value} value={value}>{label}</option>
+                        ))}
+                    </select>
+                </div>
+            </div>
+
+            {filteredOrders.length === 0 && (
+                <div className="admin-card text-center py-16">
+                    <p className="text-sm font-semibold text-[#0a1628]">No encontramos pedidos</p>
+                    <p className="text-xs text-[#94a3b8] mt-1">Probá cambiar la búsqueda o el estado seleccionado.</p>
+                </div>
+            )}
+
+            <div className={`admin-card !p-0 overflow-hidden ${filteredOrders.length === 0 ? "hidden" : ""}`}>
             {/* Mobile Cards View */}
             <div className="md:hidden divide-y divide-gray-100">
-                {orders.map((order) => (
+                {filteredOrders.map((order) => (
                     <div key={order.id} className="p-4">
                         <div className="flex justify-between items-start mb-3">
                             <div>
@@ -62,7 +108,7 @@ export default function OrdersTable({ initialOrders }: Props) {
                                 <p className="text-xs text-gray-600 mt-1">{new Date(order.date).toLocaleDateString()}</p>
                             </div>
                             <span className={`px-3 py-1.5 rounded-full text-xs font-black uppercase ${statusColors[order.status] || "bg-gray-100"}`}>
-                                {order.status}
+                                {statusLabels[order.status] || order.status}
                             </span>
                         </div>
                         <div className="flex justify-between items-center mb-3">
@@ -89,7 +135,7 @@ export default function OrdersTable({ initialOrders }: Props) {
                                                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                                     } disabled:opacity-50`}
                                             >
-                                                {status}
+                                                {statusLabels[status] || status}
                                             </button>
                                         ))}
                                     </div>
@@ -132,7 +178,7 @@ export default function OrdersTable({ initialOrders }: Props) {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
-                        {orders.map((order) => (
+                        {filteredOrders.map((order) => (
                             <>
                                 <tr key={order.id} className="hover:bg-gray-50 transition-colors">
                                     <td className="p-4 font-mono text-xs">{order.id}</td>
@@ -149,7 +195,7 @@ export default function OrdersTable({ initialOrders }: Props) {
                                     </td>
                                     <td className="p-4">
                                         <span className={`px-3 py-1 rounded-full text-xs font-black uppercase ${statusColors[order.status] || "bg-gray-100"}`}>
-                                            {order.status}
+                                            {statusLabels[order.status] || order.status}
                                         </span>
                                     </td>
                                     <td className="p-4">
@@ -181,7 +227,7 @@ export default function OrdersTable({ initialOrders }: Props) {
                                                                     : 'bg-white border border-gray-200 text-gray-600 hover:border-gray-900 hover:text-gray-900'
                                                                     }`}
                                                             >
-                                                                {status}
+                                                                {statusLabels[status] || status}
                                                             </button>
                                                         ))}
                                                     </div>
@@ -264,6 +310,7 @@ export default function OrdersTable({ initialOrders }: Props) {
                     </tbody>
                 </table>
             </div>
+        </div>
         </div>
     );
 }
