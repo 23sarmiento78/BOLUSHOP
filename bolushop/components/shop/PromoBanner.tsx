@@ -1,85 +1,34 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Truck, CreditCard, Shield, X } from "lucide-react";
+import { ArrowUpRight, X } from "lucide-react";
 
 const MESSAGES = [
-    { icon: Truck, text: "Envío gratis según las condiciones vigentes", highlight: "Envío gratis" },
-    { icon: CreditCard, text: "Pago online durante el checkout", highlight: "Pago online" },
-    { icon: Shield, text: "Atención personalizada para tu compra", highlight: "Atención" },
+    "Envíos según las condiciones vigentes",
+    "Productos elegidos para tu casa",
+    "Pago online durante el checkout",
 ];
 
 export default function PromoBanner() {
-    const [activeIndex, setActiveIndex] = useState(0);
-    const [dismissed, setDismissed] = useState(false);
+    const [index, setIndex] = useState(0);
+    const [hidden, setHidden] = useState(false);
 
     useEffect(() => {
-        if (dismissed) return;
-        const timer = setInterval(() => {
-            setActiveIndex((i) => (i + 1) % MESSAGES.length);
-        }, 4000);
-        return () => clearInterval(timer);
-    }, [dismissed]);
+        if (hidden) return;
+        const timer = window.setInterval(() => setIndex((value) => (value + 1) % MESSAGES.length), 4500);
+        return () => window.clearInterval(timer);
+    }, [hidden]);
 
-    if (dismissed) return null;
-
-    const current = MESSAGES[activeIndex];
-    const Icon = current.icon;
+    if (hidden) return null;
 
     return (
-        <div className="relative z-50 overflow-hidden bg-[#11110f] text-white">
-            <div className="absolute inset-0 bg-gradient-to-r from-[#c8f31d]/20 via-transparent to-[#bca7ff]/10" />
-
-            <div className="container-shop relative flex items-center justify-between gap-3 py-2.5">
-                <div className="flex min-w-0 flex-1 items-center justify-center gap-2 overflow-hidden sm:justify-start sm:gap-3">
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#c8f31d]/20">
-                        <Icon size={14} className="text-[#c8f31d]" />
-                    </div>
-                    <p className="truncate text-xs font-medium text-white/85 sm:text-sm">
-                        <span className="hidden sm:inline">{current.text}</span>
-                        <span className="sm:hidden">
-                            <span className="font-bold text-[#e0ff69]">{current.highlight}</span>
-                            {" — "}BoluShop
-                        </span>
-                    </p>
-                </div>
-
-                <div className="hidden items-center gap-4 sm:flex">
-                    <Link
-                        href="/ofertas"
-                        className="shrink-0 text-[11px] font-bold uppercase tracking-wider text-[#c8f31d] hover:text-[#e0ff69] transition-colors"
-                    >
-                        Ver ofertas →
-                    </Link>
-                    <button
-                        onClick={() => setDismissed(true)}
-                        aria-label="Cerrar banner"
-                        className="shrink-0 rounded-lg p-1 text-white/40 hover:bg-white/10 hover:text-white transition-colors"
-                    >
-                        <X size={14} />
-                    </button>
-                </div>
-
-                <button
-                    onClick={() => setDismissed(true)}
-                    aria-label="Cerrar banner"
-                    className="shrink-0 rounded-lg p-1 text-white/40 hover:bg-white/10 hover:text-white transition-colors sm:hidden"
-                >
-                    <X size={14} />
-                </button>
-            </div>
-
-            {/* Indicadores */}
-            <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-1 pb-0.5 sm:hidden">
-                {MESSAGES.map((_, i) => (
-                    <span
-                        key={i}
-                        className={`h-0.5 w-4 rounded-full transition-all ${
-                            i === activeIndex ? "bg-[#c8f31d]" : "bg-white/20"
-                        }`}
-                    />
-                ))}
+        <div className="new-promo-bar">
+            <div className="container-shop new-promo-inner">
+                <span className="new-promo-dot" aria-hidden="true" />
+                <span className="new-promo-message">{MESSAGES[index]}</span>
+                <Link href="/ofertas" className="new-promo-link">Ver ofertas <ArrowUpRight size={14} /></Link>
+                <button type="button" onClick={() => setHidden(true)} aria-label="Cerrar anuncio" className="new-promo-close"><X size={15} /></button>
             </div>
         </div>
     );

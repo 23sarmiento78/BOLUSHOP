@@ -1,340 +1,80 @@
-import { getAllProducts, getAllCategories, getAllPosts, getSettings } from "@/lib/db";
+import { getAllCategories, getAllPosts, getAllProducts, getSettings } from "@/lib/db";
 import ProductCard from "@/components/shop/ProductCard";
 import Link from "next/link";
 import Image from "next/image";
+import { ArrowUpRight, Box, House, Lightbulb, Sparkles, Tag, UserRound } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
-import {
-    Truck, Shield, CreditCard, Gift, Home, Zap, Gamepad2,
-    ArrowRight, Sparkles, Star, RefreshCw,
-} from "lucide-react";
+import { transformImageUrl } from "@/lib/images";
 
 export const metadata = buildPageMetadata({
-    title: "Regalos Originales y Hogar en Argentina",
-    description:
-        "Descubrí regalos originales y accesorios para el hogar en BoluShop. Explorá nuestro catálogo online y encontrá algo especial para cada ocasión.",
+    title: "Regalos originales y hogar en Argentina",
+    description: "Una selección de objetos útiles, regalos originales y detalles para hacer más lindo tu espacio.",
     path: "/",
-    keywords: [
-        "regalos originales argentina",
-        "accesorios hogar",
-        "tienda online regalos",
-        "envio gratis",
-        "bolushop",
-    ],
+    keywords: ["regalos originales argentina", "hogar", "objetos útiles", "BoluShop"],
 });
 
 export default async function HomePage() {
-    const [allProducts, allPosts, categories, settings] = await Promise.all([
-        getAllProducts(),
-        getAllPosts(),
-        getAllCategories(),
-        getSettings(),
-    ]);
-    const activeProducts = allProducts.filter((p) => p.isActive !== false && p.price > 0);
-    const featuredProducts = activeProducts.slice(0, 8);
-    const mlProducts = activeProducts.filter((p) => p.isMlReferral).slice(0, 3);
-    const heroProduct = featuredProducts[0];
-    const recentPosts = allPosts.filter((p) => p.isPublished).slice(0, 3);
-    const availableCategoryIds = new Set(activeProducts.map((product) => product.category.toLowerCase()));
-    const visibleCategories = categories.filter((category) => availableCategoryIds.has(category.name.toLowerCase()));
-
-    const getCategoryIcon = (slug: string) => {
-        const icons: Record<string, typeof Home> = { hogar: Home, regalos: Gift, tech: Zap, juegos: Gamepad2 };
-        const Icon = icons[slug] || Gift;
-        return <Icon size={24} />;
-    };
+    const [allProducts, allPosts, categories, settings] = await Promise.all([getAllProducts(), getAllPosts(), getAllCategories(), getSettings()]);
+    const products = allProducts.filter((product) => product.isActive !== false && product.price > 0);
+    const recentProducts = products.slice(0, 8);
+    const recentPosts = allPosts.filter((post) => post.isPublished).slice(0, 3);
+    const categoryNames = Array.from(new Set(products.map((product) => product.category))).sort();
+    const heroProduct = products[0];
+    const categoryIcons: Record<string, typeof House> = { Hogar: House, Organización: Box, Oficina: UserRound, Baño: Sparkles, Varios: Tag };
 
     return (
-        <div className="min-h-screen">
-            {/* HERO */}
-            <section className="hero-mesh text-white relative overflow-hidden">
-                <div className="absolute inset-0 opacity-30">
-                    <div className="absolute top-20 left-10 w-72 h-72 bg-[#c8f31d] rounded-full blur-[120px]" />
-                    <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#bca7ff] rounded-full blur-[150px]" />
-                </div>
-
-                <div className="container-shop relative py-16 md:py-24 lg:py-28">
-                    <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                        <div className="animate-fade-up">
-                            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15 rounded-full px-4 py-1.5 mb-6 text-xs font-medium text-white/80">
-                                <Sparkles size={14} className="text-[#bca7ff]" />
-                                Nueva temporada 2026
-                            </div>
-
-                            <h1
-                                className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.08] mb-6"
-                                style={{ fontFamily: "var(--font-display)" }}
-                            >
-                                Regalos que{" "}
-                                <span className="text-gradient">sorprenden</span>
-                                <br />
-                                para tu hogar
-                            </h1>
-
-                            <p className="text-base md:text-lg text-white/65 max-w-lg mb-8 leading-relaxed">
-                                Productos curados para regalar y disfrutar en casa.
-                                Encontrá tu próxima compra en un catálogo simple y claro.
-                            </p>
-
-                            <div className="flex flex-wrap gap-3 mb-10">
-                                <Link href="/productos" className="btn btn-primary">
-                                    Ver catálogo
-                                    <ArrowRight size={16} />
-                                </Link>
-                                <Link href="/ofertas" className="btn btn-outline !text-white !border-white/30 hover:!bg-white/10">
-                                    Ofertas
-                                </Link>
-                            </div>
-
-                            <div className="flex gap-8 text-center">
-                                {[
-                                    { value: activeProducts.length.toString(), label: "Productos activos" },
-                                    { value: settings.isFreeShippingEnabled ? "Gratis" : "Según zona", label: "Envío" },
-                                    { value: "Online", label: "Compra simple" },
-                                ].map((stat) => (
-                                    <div key={stat.label}>
-                                        <div className="text-xl font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>
-                                            {stat.value}
-                                        </div>
-                                        <div className="text-[11px] text-white/45 uppercase tracking-wider">{stat.label}</div>
-                                    </div>
-                                ))}
-                            </div>
+        <main className="new-home">
+            <section className="new-home-hero">
+                <div className="container-shop new-home-hero-grid">
+                    <div className="new-home-copy">
+                        <p className="new-eyebrow"><span /> Objetos para vivir mejor</p>
+                        <h1>Pequeñas cosas.<br /><em>Gran diferencia.</em></h1>
+                        <p className="new-home-lead">Regalos originales, detalles para tu casa y productos que resuelven lo cotidiano sin perder el estilo.</p>
+                        <div className="new-home-actions">
+                            <Link href="/productos" className="new-primary-button">Explorar tienda <ArrowUpRight size={17} /></Link>
+                            <Link href="/ofertas" className="new-text-link">Ver ofertas <span>↗</span></Link>
                         </div>
-
-                        {heroProduct && (
-                            <div className="hidden lg:block animate-float">
-                                <div className="relative">
-                                    <div className="absolute -inset-4 bg-gradient-to-br from-[#c8f31d]/20 to-[#bca7ff]/10 rounded-[2rem] blur-2xl" />
-                                    <div className="relative bg-white/10 backdrop-blur-xl border border-white/15 rounded-[2rem] p-8 shadow-2xl">
-                                        <div className="relative aspect-square rounded-2xl overflow-hidden bg-white/5 mb-5">
-                                            <Image
-                                                src={heroProduct.image}
-                                                alt={heroProduct.name}
-                                                fill
-                                                className="object-contain p-6"
-                                                priority
-                                                sizes="(max-width: 1024px) 0px, 45vw"
-                                            />
-                                        </div>
-                                        <div className="flex items-center gap-1 text-[#bca7ff] mb-2">
-                                            {[...Array(5)].map((_, i) => (
-                                                <Star key={i} size={12} fill="currentColor" />
-                                            ))}
-                                            <span className="text-white/50 text-xs ml-2">Destacado</span>
-                                        </div>
-                                        <h2 className="text-lg font-semibold text-white mb-2 truncate-2" style={{ fontFamily: "var(--font-display)" }}>
-                                            {heroProduct.name}
-                                        </h2>
-                                        <p className="text-2xl font-bold text-[#c8f31d]" style={{ fontFamily: "var(--font-display)" }}>
-                                            ${heroProduct.price.toLocaleString("es-AR")}
-                                        </p>
-                                        <Link
-                                            href={`/producto/${heroProduct.slug}`}
-                                            className="mt-4 btn btn-primary w-full text-sm"
-                                        >
-                                            Ver producto
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
+                        <div className="new-home-note"><span className="new-note-avatars"><i /><i /><i /></span><span>{products.length} productos activos para descubrir</span></div>
                     </div>
+                    {heroProduct && (
+                        <div className="new-hero-stage">
+                            <div className="new-hero-sticker new-sticker-top">Elegido<br /><b>para vos</b></div>
+                            <div className="new-hero-product-card">
+                                <div className="new-hero-image"><Image src={transformImageUrl(heroProduct.image)} alt={heroProduct.name} fill priority sizes="(max-width: 900px) 80vw, 42vw" /></div>
+                                <div className="new-hero-product-bottom"><span>Producto destacado</span><strong>${heroProduct.price.toLocaleString("es-AR")}</strong></div>
+                            </div>
+                            <div className="new-hero-sticker new-sticker-bottom">Bolu<br />Shop<span>✳</span></div>
+                        </div>
+                    )}
                 </div>
             </section>
 
-            {/* TRUST BAR */}
-            <section className="bg-white border-b border-[#deded4] py-5">
+            <section className="new-category-strip">
                 <div className="container-shop">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs md:text-sm text-[#6d726a]">
-                        {[
-                            { icon: Truck, text: settings.isFreeShippingEnabled ? "Envío gratis" : "Envío según zona" },
-                            { icon: Shield, text: "Atención personalizada" },
-                            { icon: CreditCard, text: "Pago online" },
-                            { icon: RefreshCw, text: "Condiciones claras" },
-                        ].map(({ icon: Icon, text }) => (
-                            <div key={text} className="flex items-center justify-center gap-2">
-                                <Icon size={16} className="text-[#c8f31d] flex-shrink-0" />
-                                <span>{text}</span>
-                            </div>
-                        ))}
+                    <div className="new-section-heading compact"><div><p className="new-eyebrow"><span /> Entrá por donde quieras</p><h2>Encontrá tu próximo favorito</h2></div><Link href="/productos" className="new-round-link" aria-label="Ver todos los productos"><ArrowUpRight size={20} /></Link></div>
+                    <div className="new-category-grid">
+                        {categoryNames.map((category) => { const Icon = categoryIcons[category] || Sparkles; return <Link href={`/categoria/${category.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}`} key={category} className="new-category-card"><span className="new-category-icon"><Icon size={22} /></span><span>{category}</span><ArrowUpRight size={16} /></Link>; })}
                     </div>
                 </div>
             </section>
 
-            {/* CATEGORIES */}
-            <section className="section-padding">
+            <section className="new-product-section">
                 <div className="container-shop">
-                    <div className="flex items-end justify-between mb-10">
-                        <div>
-                            <p className="text-xs uppercase tracking-widest text-[#8d9388] mb-2">Explorá</p>
-                            <h2 className="text-2xl md:text-3xl font-semibold" style={{ fontFamily: "var(--font-display)" }}>
-                                Por <span className="text-gradient">categoría</span>
-                            </h2>
-                        </div>
-                        <Link href="/productos" className="text-sm font-semibold text-[#11110f] hover:text-[#c8f31d] flex items-center gap-1 transition-colors">
-                            Ver todo <ArrowRight size={14} />
-                        </Link>
-                    </div>
-
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                        {(visibleCategories.length > 0 ? visibleCategories.slice(0, 5) : [
-                            { slug: "", name: "Catálogo" },
-                        ]).map((cat, i) => (
-                            <Link
-                                key={cat.slug}
-                                href={cat.slug ? `/categoria/${cat.slug}` : "/productos"}
-                                className={`group text-center p-6 rounded-2xl border transition-all hover:-translate-y-1 ${
-                                    i === 0
-                                        ? "bg-[#11110f] text-white border-[#11110f] shadow-lg"
-                                        : "bg-white border-[#deded4] hover:border-[#c8f31d]/30 hover:shadow-md"
-                                }`}
-                            >
-                                <div className={`mx-auto mb-3 w-12 h-12 rounded-xl flex items-center justify-center ${
-                                    i === 0 ? "bg-white/10 text-[#c8f31d]" : "bg-[#f4f4ed] text-[#11110f]"
-                                }`}>
-                                    {getCategoryIcon(cat.slug)}
-                                </div>
-                                <span className={`text-sm font-medium ${i === 0 ? "text-white" : "text-[#11110f]"}`}>
-                                    {cat.name}
-                                </span>
-                            </Link>
-                        ))}
-                    </div>
+                    <div className="new-section-heading"><div><p className="new-eyebrow"><span /> La selección de hoy</p><h2>Elegidos para tu casa</h2></div><Link href="/productos" className="new-text-link">Ver todo <span>↗</span></Link></div>
+                    <div className="new-product-grid">{recentProducts.map((product) => <ProductCard key={product.id} product={product} />)}</div>
                 </div>
             </section>
 
-            {/* FEATURED PRODUCTS */}
-            <section className="section-padding bg-white">
-                <div className="container-shop">
-                    <div className="flex items-end justify-between mb-10">
-                        <div>
-                            <p className="text-xs uppercase tracking-widest text-[#8d9388] mb-2">Selección</p>
-                            <h2 className="text-2xl md:text-3xl font-semibold" style={{ fontFamily: "var(--font-display)" }}>
-                                Más vendidos <span className="text-gradient">esta semana</span>
-                            </h2>
-                        </div>
-                        <Link href="/productos" className="text-sm font-semibold text-[#11110f] hover:text-[#c8f31d] flex items-center gap-1">
-                            Catálogo <ArrowRight size={14} />
-                        </Link>
-                    </div>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
-                        {featuredProducts.map((product) => (
-                            <ProductCard key={product.id} product={product} />
-                        ))}
-                    </div>
+            <section className="new-values-band">
+                <div className="container-shop new-values-grid">
+                    <div><p className="new-eyebrow light"><span /> Sin vueltas</p><h2>Elegí algo lindo.<br /><em>Lo demás, fácil.</em></h2></div>
+                    <div className="new-value-list"><div><Sparkles size={21} /><span><b>Selección curada</b><small>Menos ruido, mejores hallazgos.</small></span></div><div><Box size={21} /><span><b>Compra simple</b><small>Todo claro antes de pagar.</small></span></div><div><Tag size={21} /><span><b>{settings.isFreeShippingEnabled ? "Envío vigente" : "Envío según zona"}</b><small>Las condiciones aparecen en checkout.</small></span></div></div>
                 </div>
             </section>
 
-            {/* ML SECTION */}
-            {mlProducts.length > 0 && (
-                <section className="section-padding bg-[#f1efff] border-y border-[#bca7ff]/40">
-                    <div className="container-shop">
-                        <div className="mb-8">
-                            <div className="flex items-center gap-3 mb-3">
-                                <h2 className="text-2xl font-semibold text-[#11110f]" style={{ fontFamily: "var(--font-display)" }}>
-                                    Recomendados en
-                                </h2>
-                                <span className="badge-ml text-xs font-bold px-3 py-1">Mercado Libre</span>
-                            </div>
-                            <p className="text-sm text-[#9a6b00]">
-                                Links de afiliado — comisión sin costo extra para vos.
-                            </p>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            {mlProducts.map((product) => (
-                                <a
-                                    key={product.id}
-                                    href={product.mlAffiliateUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer sponsored"
-                                    className="group block bg-white rounded-2xl border border-[#bca7ff]/50 p-6 hover:shadow-lg transition-all hover:-translate-y-1"
-                                >
-                                    <span className="badge-ml text-[10px] mb-3 inline-block">Selección ML</span>
-                                    <h3 className="font-semibold text-[#11110f] truncate-2 mb-3" style={{ fontFamily: "var(--font-display)" }}>
-                                        {product.name}
-                                    </h3>
-                                    <p className="text-xl font-bold text-[#11110f] mb-2">
-                                        ${product.price.toLocaleString("es-AR")}
-                                    </p>
-                                    <span className="text-sm text-[#9a6b00] font-medium group-hover:underline">
-                                        Ver en Mercado Libre →
-                                    </span>
-                                </a>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            )}
+            {recentPosts.length > 0 && <section className="new-journal-section"><div className="container-shop"><div className="new-section-heading"><div><p className="new-eyebrow"><span /> Ideas y guías</p><h2>Para inspirarte</h2></div><Link href="/blog" className="new-text-link">Ver blog <span>↗</span></Link></div><div className="new-journal-grid">{recentPosts.map((post) => <Link href={`/blog/${post.slug}`} key={post.id} className="new-journal-card"><div className="new-journal-image">{post.image ? <Image src={transformImageUrl(post.image)} alt={post.title} fill sizes="(max-width: 768px) 100vw, 33vw" /> : <div>✳</div>}</div><div><small>{post.category || "Guía"}</small><h3>{post.title}</h3><span>Leer artículo ↗</span></div></Link>)}</div></div></section>}
 
-            {/* BLOG */}
-            {recentPosts.length > 0 && (
-                <section className="section-padding">
-                    <div className="container-shop">
-                        <div className="flex items-end justify-between mb-10">
-                            <div>
-                                <p className="text-xs uppercase tracking-widest text-[#8d9388] mb-2">Blog</p>
-                                <h2 className="text-2xl md:text-3xl font-semibold" style={{ fontFamily: "var(--font-display)" }}>
-                                    Guías y <span className="text-gradient">recomendaciones</span>
-                                </h2>
-                            </div>
-                            <Link href="/blog" className="text-sm font-semibold text-[#11110f] hover:text-[#c8f31d] flex items-center gap-1">
-                                Ver blog <ArrowRight size={14} />
-                            </Link>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                            {recentPosts.map((post) => (
-                                <Link
-                                    key={post.id}
-                                    href={`/blog/${post.slug}`}
-                                    className="group card overflow-hidden"
-                                >
-                                    <div className="h-48 bg-[#f5f3f0] overflow-hidden relative">
-                                        {post.image && (
-                                            <Image
-                                                src={post.image}
-                                                alt={post.title}
-                                                fill
-                                                className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                                sizes="(max-width: 768px) 100vw, 33vw"
-                                            />
-                                        )}
-                                    </div>
-                                    <div className="p-5">
-                                        {post.category && (
-                                            <span className="text-[10px] font-bold uppercase tracking-wider text-[#c8f31d] mb-2 block">
-                                                {post.category}
-                                            </span>
-                                        )}
-                                        <h3 className="font-semibold text-[#11110f] truncate-2 mb-2" style={{ fontFamily: "var(--font-display)" }}>
-                                            {post.title}
-                                        </h3>
-                                        <p className="text-xs text-[#8d9388]">{post.author || "BoluShop"}</p>
-                                    </div>
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            )}
-
-            {/* CTA */}
-            <section className="hero-mesh py-16 md:py-20">
-                <div className="container-shop text-center">
-                    <h2
-                        className="text-3xl md:text-4xl font-semibold text-white mb-4"
-                        style={{ fontFamily: "var(--font-display)" }}
-                    >
-                        ¿Listo para sorprender?
-                    </h2>
-                    <p className="text-white/60 mb-8 max-w-md mx-auto">
-                        Explorá nuestro catálogo completo y encontrá la mejor opción para cada ocasión.
-                    </p>
-                    <Link href="/productos" className="btn btn-primary text-base px-8">
-                        Explorar productos
-                        <ArrowRight size={18} />
-                    </Link>
-                </div>
-            </section>
-        </div>
+            <section className="new-final-cta"><div className="container-shop"><p className="new-eyebrow light"><span /> Tu próxima compra</p><h2>Algo te estaba<br /><em>esperando.</em></h2><Link href="/productos" className="new-primary-button">Ver la tienda <ArrowUpRight size={17} /></Link></div></section>
+        </main>
     );
 }
