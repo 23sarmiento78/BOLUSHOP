@@ -207,6 +207,13 @@ h1, h2, h3, h4 {
 }
 
 /* Hero gradient mesh */
+.hero-mesh h1,
+.hero-mesh h2,
+.hero-mesh h3,
+.hero-mesh h4 {
+  color: #ffffff;
+}
+
 .hero-mesh {
   background:
     radial-gradient(ellipse 80% 60% at 20% 40%, rgba(255, 107, 53, 0.18) 0%, transparent 60%),
