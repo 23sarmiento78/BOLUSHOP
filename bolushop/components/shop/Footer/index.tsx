@@ -93,9 +93,9 @@ export default function Footer() {
 
                 <div className="border-t border-white/8 pt-10">
                     <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10 mb-8 text-xs text-white/45">
-                        <span className="flex items-center gap-2"><Truck size={14} className="text-[#ff6b35]" /> Envíos a todo el país</span>
-                        <span className="flex items-center gap-2"><ShieldCheck size={14} className="text-[#ff6b35]" /> Compra protegida</span>
-                        <span className="flex items-center gap-2"><CreditCard size={14} className="text-[#ff6b35]" /> Cuotas sin interés</span>
+                        <span className="flex items-center gap-2"><Truck size={14} className="text-[#ff6b35]" /> Envíos según zona</span>
+                        <span className="flex items-center gap-2"><ShieldCheck size={14} className="text-[#ff6b35]" /> Atención personalizada</span>
+                        <span className="flex items-center gap-2"><CreditCard size={14} className="text-[#ff6b35]" /> Pago online</span>
                     </div>
 
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
