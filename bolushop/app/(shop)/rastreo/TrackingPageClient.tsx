@@ -61,7 +61,9 @@ export default function TrackingPageClient() {
                 <h1 className="text-3xl font-semibold tracking-tight md:text-5xl text-center mb-10 tracking-tighter">Seguí tu Pedido</h1>
 
                 <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto mb-10">
+                    <label htmlFor="tracking-order-id" className="sr-only">Número de pedido</label>
                     <input
+                        id="tracking-order-id"
                         type="text"
                         value={orderId}
                         onChange={(e) => setOrderId(e.target.value)}

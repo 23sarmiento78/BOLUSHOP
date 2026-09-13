@@ -141,15 +141,17 @@ export default function CarritoPage() {
                                             <div className="flex items-center gap-2 bg-[#f8f9fb] rounded-lg px-3 py-1.5 border border-[#e2e8f0]">
                                                 <button
                                                     onClick={() => handleQuantityChange(item.productId, item.quantity - 1)}
+                                                    aria-label={`Disminuir cantidad de ${item.name}`}
                                                     className="text-base font-bold text-[#64748b] hover:text-[#0f2044] transition-colors"
                                                 >
                                                     −
                                                 </button>
-                                                <span className="text-sm font-bold w-6 text-center">
+                                                <span className="text-sm font-bold w-6 text-center" aria-live="polite">
                                                     {item.quantity}
                                                 </span>
                                                 <button
                                                     onClick={() => handleQuantityChange(item.productId, item.quantity + 1)}
+                                                    aria-label={`Aumentar cantidad de ${item.name}`}
                                                     className="text-base font-bold text-[#64748b] hover:text-[#0f2044] transition-colors"
                                                 >
                                                     +

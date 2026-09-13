@@ -36,7 +36,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         }));
 
     const categories = await getAllCategories();
-    const categoryEntries = categories.map((category) => ({
+    const activeCategoryNames = new Set(
+        products.filter((product) => product.isActive !== false).map((product) => product.category.toLowerCase())
+    );
+    const categoryEntries = categories
+        .filter((category) => activeCategoryNames.has(category.name.toLowerCase()))
+        .map((category) => ({
         url: `${SITE_URL}/categoria/${category.slug}`,
         lastModified: new Date(),
         changeFrequency: "weekly" as const,

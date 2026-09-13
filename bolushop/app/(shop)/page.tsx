@@ -113,6 +113,7 @@ export default async function HomePage() {
                                                 fill
                                                 className="object-contain p-6"
                                                 priority
+                                                sizes="(max-width: 1024px) 0px, 45vw"
                                             />
                                         </div>
                                         <div className="flex items-center gap-1 text-[#f5c842] mb-2">
@@ -294,6 +295,7 @@ export default async function HomePage() {
                                                 alt={post.title}
                                                 fill
                                                 className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                                sizes="(max-width: 768px) 100vw, 33vw"
                                             />
                                         )}
                                     </div>

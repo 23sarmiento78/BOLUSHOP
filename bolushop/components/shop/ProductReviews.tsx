@@ -147,6 +147,7 @@ export default function ProductReviews({ productId }: Props) {
                                     <button
                                         key={num}
                                         type="button"
+                                        aria-label={`${num} estrella${num === 1 ? "" : "s"}`}
                                         onClick={() => setNewReview({ ...newReview, rating: num })}
                                         className={`transition-colors ${num <= newReview.rating ? 'text-[#f5c842]' : 'text-[#e8e4df]'}`}
                                     >

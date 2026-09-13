@@ -102,6 +102,8 @@ export default function ProductDetailClient({ product, relatedProducts, reviews,
                                                         key={idx}
                                                         type="button"
                                                         onClick={() => setActiveImage(img)}
+                                                        aria-label={`Ver imagen ${idx + 1} de ${imageSources.length}`}
+                                                        aria-pressed={activeImage === img}
                                                         className={`relative rounded-2xl overflow-hidden h-20 aspect-square border transition ${activeImage === img ? 'border-[#0f2044] shadow-lg shadow-[#0f2044]/10' : 'border-[#e2e8f0]'}`}
                                                     >
                                                         <Image src={transformImageUrl(img)} alt={getImageAlt(idx)} fill className="object-cover" />
@@ -223,12 +225,14 @@ export default function ProductDetailClient({ product, relatedProducts, reviews,
                                             <button
                                                 type="button"
                                                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                                                aria-label="Disminuir cantidad"
                                                 className="h-12 w-12 rounded-2xl border border-[#e2e8f0] bg-white text-[#0f2044] font-black"
                                             >-</button>
-                                            <span className="text-lg font-bold text-[#0f2044]">{quantity}</span>
+                                            <span className="text-lg font-bold text-[#0f2044]" aria-live="polite">{quantity}</span>
                                             <button
                                                 type="button"
                                                 onClick={() => setQuantity(Math.min(product.stock || 1, quantity + 1))}
+                                                aria-label="Aumentar cantidad"
                                                 className="h-12 w-12 rounded-2xl border border-[#e2e8f0] bg-white text-[#0f2044] font-black"
                                             >+</button>
                                         </div>
@@ -237,7 +241,8 @@ export default function ProductDetailClient({ product, relatedProducts, reviews,
                                     {product.isMlReferral ? (
                                         <button
                                             type="button"
-                                            onClick={() => window.open(product.mlAffiliateUrl, '_blank')}
+                                            onClick={() => product.mlAffiliateUrl && window.open(product.mlAffiliateUrl, '_blank', 'noopener,noreferrer')}
+                                            disabled={!product.mlAffiliateUrl}
                                             className="w-full rounded-3xl bg-[#fff9e6] text-[#2d3277] font-bold py-4 transition hover:bg-[#fff3c5]"
                                         >
                                             Comprar seguro en Mercado Libre

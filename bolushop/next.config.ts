@@ -9,7 +9,9 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
-    unoptimized: true,
+    unoptimized: false,
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [360, 640, 768, 1024, 1280, 1536, 1920],
     remotePatterns: [
       {
         protocol: 'https',
@@ -30,6 +32,10 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'lh3.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'drive.google.com',
       },
       {
         protocol: 'https',

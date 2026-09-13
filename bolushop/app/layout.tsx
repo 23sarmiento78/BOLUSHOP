@@ -3,7 +3,6 @@ import { Plus_Jakarta_Sans, Fraunces } from "next/font/google";
 import { Toaster } from "sonner";
 import Script from "next/script";
 import NextTopLoader from "nextjs-toploader";
-import { headers } from "next/headers";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { getSettings } from "@/lib/db";
@@ -31,10 +30,6 @@ const fraunces = Fraunces({
 
 export async function generateMetadata(): Promise<Metadata> {
     const settings = await getSettings();
-    const headerList = await headers();
-    const cookies = headerList.get("cookie") || "";
-    const isAllowed = cookies.includes("admin_authenticated=true");
-
     const metadata: Metadata = {
         metadataBase: new URL(SITE_URL),
         title: {
@@ -50,7 +45,7 @@ export async function generateMetadata(): Promise<Metadata> {
             "accesorios hogar",
             "gadgets argentina",
             "bolushop",
-            "envio gratis argentina",
+            "envíos argentina",
             "comprar regalos online",
             "tienda dropshipping argentina",
         ],
@@ -87,22 +82,14 @@ export async function generateMetadata(): Promise<Metadata> {
         },
     };
 
-    if (isAllowed) {
-        metadata.manifest = "/manifest.json";
-    }
-
     return metadata;
 }
 
-export async function generateViewport(): Promise<Viewport> {
-    const headerList = await headers();
-    const cookies = headerList.get("cookie") || "";
-    const isAllowed = cookies.includes("admin_authenticated=true");
-
+export function generateViewport(): Viewport {
     return {
         width: "device-width",
         initialScale: 1,
-        themeColor: isAllowed ? "#0a1628" : "#faf9f7",
+        themeColor: "#faf9f7",
     };
 }
 
