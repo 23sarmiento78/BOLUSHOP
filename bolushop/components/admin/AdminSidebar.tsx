@@ -61,9 +61,10 @@ const NAV_SECTIONS = [
 
 interface SidebarContentProps {
     onNavigate?: () => void;
+    onClose?: () => void;
 }
 
-function SidebarContent({ onNavigate }: SidebarContentProps) {
+function SidebarContent({ onNavigate, onClose }: SidebarContentProps) {
     const pathname = usePathname();
     const router = useRouter();
 
@@ -80,18 +81,28 @@ function SidebarContent({ onNavigate }: SidebarContentProps) {
 
     return (
         <>
-            <div className="admin-sidebar-brand">
-                <Link href="/admin" onClick={onNavigate} className="flex items-center gap-3 group">
-                    <div className="w-10 h-10 bg-[#ff6b35] rounded-xl flex items-center justify-center font-bold text-white text-lg shadow-lg shadow-[#ff6b35]/25">
+            <div className="admin-sidebar-brand flex items-center justify-between gap-3">
+                <Link href="/admin" onClick={onNavigate} className="flex items-center gap-3 group min-w-0">
+                    <div className="w-10 h-10 bg-[#ff6b35] rounded-xl flex items-center justify-center font-bold text-white text-lg shadow-lg shadow-[#ff6b35]/25 shrink-0">
                         B
                     </div>
-                    <div>
-                        <div className="font-semibold text-white text-[15px]" style={{ fontFamily: "var(--font-fraunces)" }}>
+                    <div className="min-w-0">
+                        <div className="font-semibold text-white text-[15px] truncate" style={{ fontFamily: "var(--font-fraunces)" }}>
                             BoluShop
                         </div>
                         <div className="text-[10px] text-white/40 font-medium tracking-wide">Panel Admin</div>
                     </div>
                 </Link>
+                {onClose && (
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="p-2 text-white/55 hover:text-white rounded-lg hover:bg-white/10 shrink-0"
+                        aria-label="Cerrar menú"
+                    >
+                        <X size={19} />
+                    </button>
+                )}
             </div>
 
             <nav className="flex-1 overflow-y-auto py-3 overscroll-contain">
@@ -162,6 +173,15 @@ export default function AdminSidebar({ mobileOpen, onMobileClose }: Props) {
         };
     }, [mobileOpen]);
 
+    useEffect(() => {
+        if (!mobileOpen) return;
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Escape") onMobileClose();
+        };
+        document.addEventListener("keydown", handleKeyDown);
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [mobileOpen, onMobileClose]);
+
     return (
         <>
             <aside className="admin-sidebar admin-sidebar-desktop hidden lg:flex flex-col">
@@ -172,17 +192,7 @@ export default function AdminSidebar({ mobileOpen, onMobileClose }: Props) {
                 <div className="admin-sidebar-mobile lg:hidden" role="dialog" aria-modal="true">
                     <div className="admin-sidebar-backdrop" onClick={onMobileClose} aria-hidden="true" />
                     <aside className="admin-sidebar admin-sidebar-drawer flex flex-col">
-                        <div className="flex justify-end p-3 shrink-0">
-                            <button
-                                type="button"
-                                onClick={onMobileClose}
-                                className="p-2 text-white/50 hover:text-white rounded-lg hover:bg-white/10"
-                                aria-label="Cerrar menú"
-                            >
-                                <X size={20} />
-                            </button>
-                        </div>
-                        <SidebarContent onNavigate={onMobileClose} />
+                        <SidebarContent onNavigate={onMobileClose} onClose={onMobileClose} />
                     </aside>
                 </div>
             )}
