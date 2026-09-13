@@ -48,15 +48,15 @@ export default async function HomePage() {
             {/* HERO */}
             <section className="hero-mesh text-white relative overflow-hidden">
                 <div className="absolute inset-0 opacity-30">
-                    <div className="absolute top-20 left-10 w-72 h-72 bg-[#ff6b35] rounded-full blur-[120px]" />
-                    <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#f5c842] rounded-full blur-[150px]" />
+                    <div className="absolute top-20 left-10 w-72 h-72 bg-[#c8f31d] rounded-full blur-[120px]" />
+                    <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#bca7ff] rounded-full blur-[150px]" />
                 </div>
 
                 <div className="container-shop relative py-16 md:py-24 lg:py-28">
                     <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                         <div className="animate-fade-up">
                             <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15 rounded-full px-4 py-1.5 mb-6 text-xs font-medium text-white/80">
-                                <Sparkles size={14} className="text-[#f5c842]" />
+                                <Sparkles size={14} className="text-[#bca7ff]" />
                                 Nueva temporada 2026
                             </div>
 
@@ -104,7 +104,7 @@ export default async function HomePage() {
                         {heroProduct && (
                             <div className="hidden lg:block animate-float">
                                 <div className="relative">
-                                    <div className="absolute -inset-4 bg-gradient-to-br from-[#ff6b35]/20 to-[#f5c842]/10 rounded-[2rem] blur-2xl" />
+                                    <div className="absolute -inset-4 bg-gradient-to-br from-[#c8f31d]/20 to-[#bca7ff]/10 rounded-[2rem] blur-2xl" />
                                     <div className="relative bg-white/10 backdrop-blur-xl border border-white/15 rounded-[2rem] p-8 shadow-2xl">
                                         <div className="relative aspect-square rounded-2xl overflow-hidden bg-white/5 mb-5">
                                             <Image
@@ -116,7 +116,7 @@ export default async function HomePage() {
                                                 sizes="(max-width: 1024px) 0px, 45vw"
                                             />
                                         </div>
-                                        <div className="flex items-center gap-1 text-[#f5c842] mb-2">
+                                        <div className="flex items-center gap-1 text-[#bca7ff] mb-2">
                                             {[...Array(5)].map((_, i) => (
                                                 <Star key={i} size={12} fill="currentColor" />
                                             ))}
@@ -125,7 +125,7 @@ export default async function HomePage() {
                                         <h2 className="text-lg font-semibold text-white mb-2 truncate-2" style={{ fontFamily: "var(--font-display)" }}>
                                             {heroProduct.name}
                                         </h2>
-                                        <p className="text-2xl font-bold text-[#ff6b35]" style={{ fontFamily: "var(--font-display)" }}>
+                                        <p className="text-2xl font-bold text-[#c8f31d]" style={{ fontFamily: "var(--font-display)" }}>
                                             ${heroProduct.price.toLocaleString("es-AR")}
                                         </p>
                                         <Link
@@ -143,9 +143,9 @@ export default async function HomePage() {
             </section>
 
             {/* TRUST BAR */}
-            <section className="bg-white border-b border-[#e8e4df] py-5">
+            <section className="bg-white border-b border-[#deded4] py-5">
                 <div className="container-shop">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs md:text-sm text-[#64748b]">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs md:text-sm text-[#6d726a]">
                         {[
                             { icon: Truck, text: settings.isFreeShippingEnabled ? "Envío gratis" : "Envío según zona" },
                             { icon: Shield, text: "Atención personalizada" },
@@ -153,7 +153,7 @@ export default async function HomePage() {
                             { icon: RefreshCw, text: "Condiciones claras" },
                         ].map(({ icon: Icon, text }) => (
                             <div key={text} className="flex items-center justify-center gap-2">
-                                <Icon size={16} className="text-[#ff6b35] flex-shrink-0" />
+                                <Icon size={16} className="text-[#c8f31d] flex-shrink-0" />
                                 <span>{text}</span>
                             </div>
                         ))}
@@ -166,12 +166,12 @@ export default async function HomePage() {
                 <div className="container-shop">
                     <div className="flex items-end justify-between mb-10">
                         <div>
-                            <p className="text-xs uppercase tracking-widest text-[#94a3b8] mb-2">Explorá</p>
+                            <p className="text-xs uppercase tracking-widest text-[#8d9388] mb-2">Explorá</p>
                             <h2 className="text-2xl md:text-3xl font-semibold" style={{ fontFamily: "var(--font-display)" }}>
                                 Por <span className="text-gradient">categoría</span>
                             </h2>
                         </div>
-                        <Link href="/productos" className="text-sm font-semibold text-[#0a1628] hover:text-[#ff6b35] flex items-center gap-1 transition-colors">
+                        <Link href="/productos" className="text-sm font-semibold text-[#11110f] hover:text-[#c8f31d] flex items-center gap-1 transition-colors">
                             Ver todo <ArrowRight size={14} />
                         </Link>
                     </div>
@@ -185,16 +185,16 @@ export default async function HomePage() {
                                 href={cat.slug ? `/categoria/${cat.slug}` : "/productos"}
                                 className={`group text-center p-6 rounded-2xl border transition-all hover:-translate-y-1 ${
                                     i === 0
-                                        ? "bg-[#0a1628] text-white border-[#0a1628] shadow-lg"
-                                        : "bg-white border-[#e8e4df] hover:border-[#ff6b35]/30 hover:shadow-md"
+                                        ? "bg-[#11110f] text-white border-[#11110f] shadow-lg"
+                                        : "bg-white border-[#deded4] hover:border-[#c8f31d]/30 hover:shadow-md"
                                 }`}
                             >
                                 <div className={`mx-auto mb-3 w-12 h-12 rounded-xl flex items-center justify-center ${
-                                    i === 0 ? "bg-white/10 text-[#ff6b35]" : "bg-[#faf9f7] text-[#0a1628]"
+                                    i === 0 ? "bg-white/10 text-[#c8f31d]" : "bg-[#f4f4ed] text-[#11110f]"
                                 }`}>
                                     {getCategoryIcon(cat.slug)}
                                 </div>
-                                <span className={`text-sm font-medium ${i === 0 ? "text-white" : "text-[#0a1628]"}`}>
+                                <span className={`text-sm font-medium ${i === 0 ? "text-white" : "text-[#11110f]"}`}>
                                     {cat.name}
                                 </span>
                             </Link>
@@ -208,12 +208,12 @@ export default async function HomePage() {
                 <div className="container-shop">
                     <div className="flex items-end justify-between mb-10">
                         <div>
-                            <p className="text-xs uppercase tracking-widest text-[#94a3b8] mb-2">Selección</p>
+                            <p className="text-xs uppercase tracking-widest text-[#8d9388] mb-2">Selección</p>
                             <h2 className="text-2xl md:text-3xl font-semibold" style={{ fontFamily: "var(--font-display)" }}>
                                 Más vendidos <span className="text-gradient">esta semana</span>
                             </h2>
                         </div>
-                        <Link href="/productos" className="text-sm font-semibold text-[#0a1628] hover:text-[#ff6b35] flex items-center gap-1">
+                        <Link href="/productos" className="text-sm font-semibold text-[#11110f] hover:text-[#c8f31d] flex items-center gap-1">
                             Catálogo <ArrowRight size={14} />
                         </Link>
                     </div>
@@ -227,11 +227,11 @@ export default async function HomePage() {
 
             {/* ML SECTION */}
             {mlProducts.length > 0 && (
-                <section className="section-padding bg-[#fff8e6] border-y border-[#f0c040]/40">
+                <section className="section-padding bg-[#f1efff] border-y border-[#bca7ff]/40">
                     <div className="container-shop">
                         <div className="mb-8">
                             <div className="flex items-center gap-3 mb-3">
-                                <h2 className="text-2xl font-semibold text-[#0a1628]" style={{ fontFamily: "var(--font-display)" }}>
+                                <h2 className="text-2xl font-semibold text-[#11110f]" style={{ fontFamily: "var(--font-display)" }}>
                                     Recomendados en
                                 </h2>
                                 <span className="badge-ml text-xs font-bold px-3 py-1">Mercado Libre</span>
@@ -247,13 +247,13 @@ export default async function HomePage() {
                                     href={product.mlAffiliateUrl}
                                     target="_blank"
                                     rel="noopener noreferrer sponsored"
-                                    className="group block bg-white rounded-2xl border border-[#f0c040]/50 p-6 hover:shadow-lg transition-all hover:-translate-y-1"
+                                    className="group block bg-white rounded-2xl border border-[#bca7ff]/50 p-6 hover:shadow-lg transition-all hover:-translate-y-1"
                                 >
                                     <span className="badge-ml text-[10px] mb-3 inline-block">Selección ML</span>
-                                    <h3 className="font-semibold text-[#0a1628] truncate-2 mb-3" style={{ fontFamily: "var(--font-display)" }}>
+                                    <h3 className="font-semibold text-[#11110f] truncate-2 mb-3" style={{ fontFamily: "var(--font-display)" }}>
                                         {product.name}
                                     </h3>
-                                    <p className="text-xl font-bold text-[#0a1628] mb-2">
+                                    <p className="text-xl font-bold text-[#11110f] mb-2">
                                         ${product.price.toLocaleString("es-AR")}
                                     </p>
                                     <span className="text-sm text-[#9a6b00] font-medium group-hover:underline">
@@ -272,12 +272,12 @@ export default async function HomePage() {
                     <div className="container-shop">
                         <div className="flex items-end justify-between mb-10">
                             <div>
-                                <p className="text-xs uppercase tracking-widest text-[#94a3b8] mb-2">Blog</p>
+                                <p className="text-xs uppercase tracking-widest text-[#8d9388] mb-2">Blog</p>
                                 <h2 className="text-2xl md:text-3xl font-semibold" style={{ fontFamily: "var(--font-display)" }}>
                                     Guías y <span className="text-gradient">recomendaciones</span>
                                 </h2>
                             </div>
-                            <Link href="/blog" className="text-sm font-semibold text-[#0a1628] hover:text-[#ff6b35] flex items-center gap-1">
+                            <Link href="/blog" className="text-sm font-semibold text-[#11110f] hover:text-[#c8f31d] flex items-center gap-1">
                                 Ver blog <ArrowRight size={14} />
                             </Link>
                         </div>
@@ -301,14 +301,14 @@ export default async function HomePage() {
                                     </div>
                                     <div className="p-5">
                                         {post.category && (
-                                            <span className="text-[10px] font-bold uppercase tracking-wider text-[#ff6b35] mb-2 block">
+                                            <span className="text-[10px] font-bold uppercase tracking-wider text-[#c8f31d] mb-2 block">
                                                 {post.category}
                                             </span>
                                         )}
-                                        <h3 className="font-semibold text-[#0a1628] truncate-2 mb-2" style={{ fontFamily: "var(--font-display)" }}>
+                                        <h3 className="font-semibold text-[#11110f] truncate-2 mb-2" style={{ fontFamily: "var(--font-display)" }}>
                                             {post.title}
                                         </h3>
-                                        <p className="text-xs text-[#94a3b8]">{post.author || "BoluShop"}</p>
+                                        <p className="text-xs text-[#8d9388]">{post.author || "BoluShop"}</p>
                                     </div>
                                 </Link>
                             ))}

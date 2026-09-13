@@ -20,7 +20,7 @@ export default async function BlogPage() {
 
     return (
         <>
-            <main className="min-h-screen bg-[#faf9f7]">
+            <main className="min-h-screen bg-[#f4f4ed]">
                 <section className="hero-mesh text-white py-16 md:py-20">
                     <div className="container-shop">
                         <div className="flex items-center gap-2 mb-4 text-xs text-white/70">
@@ -37,11 +37,11 @@ export default async function BlogPage() {
 
                 <section className="container-shop py-12 md:py-16">
                     <div className="flex flex-wrap gap-3 mb-8">
-                        <span className="inline-flex items-center rounded-full bg-[#0f2044] px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.35em] text-white">
+                        <span className="inline-flex items-center rounded-full bg-[#11110f] px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.35em] text-white">
                             Todos
                         </span>
                         {categories.map(category => (
-                            <span key={category} className="inline-flex items-center rounded-full bg-[#eef3fb] px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.35em] text-[#185fa5]">
+                            <span key={category} className="inline-flex items-center rounded-full bg-[#ecebfd] px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.35em] text-[#185fa5]">
                                 {category}
                             </span>
                         ))}
@@ -50,23 +50,23 @@ export default async function BlogPage() {
                     {featuredPost && (
                         <Link href={`/blog/${featuredPost.slug}`} className="group block mb-8">
                             <div className="grid gap-6 lg:grid-cols-[1.3fr_0.9fr] items-stretch">
-                                <div className="rounded-[1.75rem] bg-white border border-[#e2e8f0] p-8 shadow-sm hover:shadow-lg transition">
-                                    <div className="inline-flex items-center rounded-full bg-[#eef3fb] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.35em] text-[#185fa5] mb-4">
+                                <div className="rounded-[1.75rem] bg-white border border-[#deded4] p-8 shadow-sm hover:shadow-lg transition">
+                                    <div className="inline-flex items-center rounded-full bg-[#ecebfd] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.35em] text-[#185fa5] mb-4">
                                         {featuredPost.category || 'Destacado'}
                                     </div>
-                                    <h2 className="text-2xl font-semibold text-[#0f2044] mb-4 md:text-3xl" style={{ fontFamily: "var(--font-display)" }}>
+                                    <h2 className="text-2xl font-semibold text-[#11110f] mb-4 md:text-3xl" style={{ fontFamily: "var(--font-display)" }}>
                                         {featuredPost.title}
                                     </h2>
-                                    <p className="text-sm text-[#64748b] leading-relaxed mb-6">
+                                    <p className="text-sm text-[#6d726a] leading-relaxed mb-6">
                                         {featuredPost.excerpt}
                                     </p>
-                                    <div className="flex flex-wrap gap-4 text-[11px] text-[#64748b]">
+                                    <div className="flex flex-wrap gap-4 text-[11px] text-[#6d726a]">
                                         <span>{featuredPost.author || 'BoluShop'}</span>
                                         <span>{new Date(featuredPost.createdAt).toLocaleDateString('es-AR')}</span>
                                         <span>5 min de lectura</span>
                                     </div>
                                 </div>
-                                <div className="rounded-[1.75rem] overflow-hidden bg-[#eef3fb] border border-[#e2e8f0] shadow-sm">
+                                <div className="rounded-[1.75rem] overflow-hidden bg-[#ecebfd] border border-[#deded4] shadow-sm">
                                     {featuredPost.image ? (
                                         <div className="relative h-full min-h-[280px]">
                                             <Image
@@ -77,7 +77,7 @@ export default async function BlogPage() {
                                             />
                                         </div>
                                     ) : (
-                                        <div className="h-full min-h-[280px] flex items-center justify-center text-4xl text-[#0f2044]">
+                                        <div className="h-full min-h-[280px] flex items-center justify-center text-4xl text-[#11110f]">
                                             📰
                                         </div>
                                     )}
@@ -94,7 +94,7 @@ export default async function BlogPage() {
                                 className="group"
                             >
                                 <div className="card overflow-hidden h-full flex flex-col hover:shadow-lg transition">
-                                    <div className="relative bg-[#f8f9fb] overflow-hidden h-44">
+                                    <div className="relative bg-[#eef0e8] overflow-hidden h-44">
                                         {post.image ? (
                                             <Image
                                                 src={transformImageUrl(post.image)}
@@ -103,7 +103,7 @@ export default async function BlogPage() {
                                                 className="object-cover group-hover:scale-105 transition-transform"
                                             />
                                         ) : (
-                                            <div className="w-full h-full bg-gradient-to-br from-[#eef3fb] to-[#dde8f5] flex items-center justify-center text-3xl">
+                                            <div className="w-full h-full bg-gradient-to-br from-[#ecebfd] to-[#dfddf5] flex items-center justify-center text-3xl">
                                                 📰
                                             </div>
                                         )}
@@ -114,15 +114,15 @@ export default async function BlogPage() {
                                         )}
                                     </div>
                                     <div className="p-5 flex-1 flex flex-col">
-                                        <h3 className="text-lg font-bold text-[#0f2044] mb-3 line-clamp-2 group-hover:text-[#e8630a] transition-colors">
+                                        <h3 className="text-lg font-bold text-[#11110f] mb-3 line-clamp-2 group-hover:text-[#6f58d9] transition-colors">
                                             {post.title}
                                         </h3>
-                                        <p className="text-sm text-[#64748b] line-clamp-3 flex-1 mb-4">
+                                        <p className="text-sm text-[#6d726a] line-clamp-3 flex-1 mb-4">
                                             {post.excerpt}
                                         </p>
-                                        <div className="flex items-center justify-between text-[11px] text-[#64748b]">
+                                        <div className="flex items-center justify-between text-[11px] text-[#6d726a]">
                                             <span>{new Date(post.createdAt).toLocaleDateString('es-AR')}</span>
-                                            <span className="font-semibold text-[#0f2044]">Leer →</span>
+                                            <span className="font-semibold text-[#11110f]">Leer →</span>
                                         </div>
                                     </div>
                                 </div>
@@ -131,9 +131,9 @@ export default async function BlogPage() {
                     </div>
                 </section>
 
-                <section className="border-t border-[#e8e4df] bg-white py-8">
+                <section className="border-t border-[#deded4] bg-white py-8">
                     <div className="container-shop flex flex-col items-center justify-between gap-4 sm:flex-row">
-                        <span className="text-sm text-[#64748b]">Mostrando {publishedPosts.length} artículos publicados</span>
+                        <span className="text-sm text-[#6d726a]">Mostrando {publishedPosts.length} artículos publicados</span>
                     </div>
                 </section>
             </main>        </>

@@ -59,10 +59,10 @@ function ExitoContent() {
                 <div className="w-24 h-24 bg-[#f0fdf4] text-[#10b981] rounded-lg flex items-center justify-center mx-auto mb-8 shadow-lg">
                     <CheckCircle2 size={48} />
                 </div>
-                <h1 className="text-3xl md:text-4xl font-bold text-[#0f2044] tracking-tight mb-4">
+                <h1 className="text-3xl md:text-4xl font-bold text-[#11110f] tracking-tight mb-4">
                     {title}
                 </h1>
-                <p className="text-[#64748b] text-sm md:text-base font-medium max-w-lg mx-auto">
+                <p className="text-[#6d726a] text-sm md:text-base font-medium max-w-lg mx-auto">
                     {subtitle}
                 </p>
                 {isPaymentPending && (
@@ -76,18 +76,18 @@ function ExitoContent() {
                 <div className="card p-6 md:p-8 mb-8">
                     <div className="grid grid-cols-2 gap-4 mb-8">
                         <div className="text-left">
-                            <p className="text-xs text-[#64748b] font-bold uppercase tracking-wider mb-1">Número de Orden</p>
-                            <p className="text-xl md:text-2xl font-bold text-[#0f2044]">#{orderData.id.slice(-8).toUpperCase()}</p>
+                            <p className="text-xs text-[#6d726a] font-bold uppercase tracking-wider mb-1">Número de Orden</p>
+                            <p className="text-xl md:text-2xl font-bold text-[#11110f]">#{orderData.id.slice(-8).toUpperCase()}</p>
                         </div>
                         <div className="text-right">
-                            <p className="text-xs text-[#64748b] font-bold uppercase tracking-wider mb-1">Fecha</p>
-                            <p className="text-lg md:text-xl font-bold text-[#0f2044]">{new Date(orderData.date).toLocaleDateString('es-AR')}</p>
+                            <p className="text-xs text-[#6d726a] font-bold uppercase tracking-wider mb-1">Fecha</p>
+                            <p className="text-lg md:text-xl font-bold text-[#11110f]">{new Date(orderData.date).toLocaleDateString('es-AR')}</p>
                         </div>
                     </div>
 
-                    <div className="py-4 border-t border-[#e2e8f0] border-b mb-8">
-                        <span className="text-xs text-[#64748b] font-bold uppercase tracking-wider">Total Abonado</span>
-                        <p className="text-2xl md:text-3xl font-bold text-[#0f2044]">${orderData.total.toLocaleString('es-AR')}</p>
+                    <div className="py-4 border-t border-[#deded4] border-b mb-8">
+                        <span className="text-xs text-[#6d726a] font-bold uppercase tracking-wider">Total Abonado</span>
+                        <p className="text-2xl md:text-3xl font-bold text-[#11110f]">${orderData.total.toLocaleString('es-AR')}</p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -113,7 +113,7 @@ function ExitoContent() {
 
             {!orderData && !isLoadingOrder && (
                 <div className="space-y-8">
-                    <p className="text-[#64748b] font-bold uppercase tracking-widest text-xs">¿Perdiste tu número de orden?</p>
+                    <p className="text-[#6d726a] font-bold uppercase tracking-widest text-xs">¿Perdiste tu número de orden?</p>
                     <Link
                         href="/productos"
                         className="inline-block btn btn-outline"
@@ -129,7 +129,7 @@ function ExitoContent() {
 export default function ExitoPage() {
     return (
         <>            <main className="min-h-screen bg-white">
-                <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-8 md:py-12 px-4 md:px-6 flex items-center justify-center min-h-[30vh]">
+                <section className="bg-gradient-to-br from-[#11110f] to-[#302f28] text-white py-8 md:py-12 px-4 md:px-6 flex items-center justify-center min-h-[30vh]">
                     <div className="max-w-7xl mx-auto text-center">
                         <h1 className="text-3xl md:text-4xl font-bold mb-2">Pedido Confirmado</h1>
                         <p className="text-sm md:text-base text-gray-300">
@@ -141,8 +141,8 @@ export default function ExitoPage() {
                     <Suspense fallback={
                         <div className="min-h-[40vh] flex items-center justify-center text-center">
                             <div>
-                                <div className="w-12 h-12 border-4 border-[#e8630a] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                                <p className="text-xs font-bold uppercase tracking-widest text-[#64748b]">Verificando pedido...</p>
+                                <div className="w-12 h-12 border-4 border-[#6f58d9] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                                <p className="text-xs font-bold uppercase tracking-widest text-[#6d726a]">Verificando pedido...</p>
                             </div>
                         </div>
                     }>

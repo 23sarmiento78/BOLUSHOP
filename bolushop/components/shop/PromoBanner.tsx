@@ -28,18 +28,18 @@ export default function PromoBanner() {
     const Icon = current.icon;
 
     return (
-        <div className="relative z-50 overflow-hidden bg-[#0a1628] text-white">
-            <div className="absolute inset-0 bg-gradient-to-r from-[#ff6b35]/20 via-transparent to-[#f5c842]/10" />
+        <div className="relative z-50 overflow-hidden bg-[#11110f] text-white">
+            <div className="absolute inset-0 bg-gradient-to-r from-[#c8f31d]/20 via-transparent to-[#bca7ff]/10" />
 
             <div className="container-shop relative flex items-center justify-between gap-3 py-2.5">
                 <div className="flex min-w-0 flex-1 items-center justify-center gap-2 overflow-hidden sm:justify-start sm:gap-3">
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#ff6b35]/20">
-                        <Icon size={14} className="text-[#ff6b35]" />
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#c8f31d]/20">
+                        <Icon size={14} className="text-[#c8f31d]" />
                     </div>
                     <p className="truncate text-xs font-medium text-white/85 sm:text-sm">
                         <span className="hidden sm:inline">{current.text}</span>
                         <span className="sm:hidden">
-                            <span className="font-bold text-[#ff8c5a]">{current.highlight}</span>
+                            <span className="font-bold text-[#e0ff69]">{current.highlight}</span>
                             {" — "}BoluShop
                         </span>
                     </p>
@@ -48,7 +48,7 @@ export default function PromoBanner() {
                 <div className="hidden items-center gap-4 sm:flex">
                     <Link
                         href="/ofertas"
-                        className="shrink-0 text-[11px] font-bold uppercase tracking-wider text-[#ff6b35] hover:text-[#ff8c5a] transition-colors"
+                        className="shrink-0 text-[11px] font-bold uppercase tracking-wider text-[#c8f31d] hover:text-[#e0ff69] transition-colors"
                     >
                         Ver ofertas →
                     </Link>
@@ -76,7 +76,7 @@ export default function PromoBanner() {
                     <span
                         key={i}
                         className={`h-0.5 w-4 rounded-full transition-all ${
-                            i === activeIndex ? "bg-[#ff6b35]" : "bg-white/20"
+                            i === activeIndex ? "bg-[#c8f31d]" : "bg-white/20"
                         }`}
                     />
                 ))}

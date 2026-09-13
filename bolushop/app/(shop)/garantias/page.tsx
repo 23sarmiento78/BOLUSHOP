@@ -16,7 +16,7 @@ export default function GarantiasPage() {
     return (
         <>
             <JsonLd data={buildFaqJsonLd(SHOP_FAQ)} />
-            <main className="min-h-screen bg-[#faf9f7]">
+            <main className="min-h-screen bg-[#f4f4ed]">
                 <section className="hero-mesh text-white py-10 md:py-14">
                     <div className="container-shop">
                         <nav aria-label="Breadcrumb" className="flex items-center gap-2 mb-6 text-xs text-white/60">
@@ -62,21 +62,21 @@ export default function GarantiasPage() {
                         ].map(({ icon: Icon, title, desc }) => (
                             <div key={title} className="card p-6">
                                 <div className="w-11 h-11 rounded-xl bg-[#fff4ee] flex items-center justify-center mb-4">
-                                    <Icon size={20} className="text-[#ff6b35]" />
+                                    <Icon size={20} className="text-[#c8f31d]" />
                                 </div>
-                                <h2 className="text-base font-semibold text-[#0a1628] mb-2">{title}</h2>
-                                <p className="text-sm text-[#64748b] leading-relaxed">{desc}</p>
+                                <h2 className="text-base font-semibold text-[#11110f] mb-2">{title}</h2>
+                                <p className="text-sm text-[#6d726a] leading-relaxed">{desc}</p>
                             </div>
                         ))}
                     </div>
 
                     <div className="card p-6 md:p-8">
-                        <h2 className="text-lg font-semibold text-[#0a1628] mb-4" style={{ fontFamily: "var(--font-display)" }}>
+                        <h2 className="text-lg font-semibold text-[#11110f] mb-4" style={{ fontFamily: "var(--font-display)" }}>
                             Condiciones de devolución
                         </h2>
-                        <ul className="space-y-3 text-sm text-[#64748b] leading-relaxed list-disc pl-5">
-                            <li>Las devoluciones deben ser <strong className="text-[#0a1628]">completas, no parciales</strong>.</li>
-                            <li>El producto debe estar <strong className="text-[#0a1628]">completo y sin uso</strong>, con su caja, accesorios y packaging original.</li>
+                        <ul className="space-y-3 text-sm text-[#6d726a] leading-relaxed list-disc pl-5">
+                            <li>Las devoluciones deben ser <strong className="text-[#11110f]">completas, no parciales</strong>.</li>
+                            <li>El producto debe estar <strong className="text-[#11110f]">completo y sin uso</strong>, con su caja, accesorios y packaging original.</li>
                             <li>Durante los 10 días de devolución exprés, el reintegro incluye el envío de ida y el de la devolución.</li>
                             <li>Una vez finalizado ese plazo, la garantía en curso no cubre gastos de flete hacia nuestro depósito.</li>
                             <li>Para productos de Mercado Libre, la devolución y el proceso de compra se gestionan directamente desde Mercado Libre.</li>
@@ -84,10 +84,10 @@ export default function GarantiasPage() {
                     </div>
 
                     <div className="card p-6 md:p-8">
-                        <h2 className="text-lg font-semibold text-[#0a1628] mb-3" style={{ fontFamily: "var(--font-display)" }}>
+                        <h2 className="text-lg font-semibold text-[#11110f] mb-3" style={{ fontFamily: "var(--font-display)" }}>
                             Productos de Mercado Libre
                         </h2>
-                        <p className="text-sm text-[#64748b] leading-relaxed">
+                        <p className="text-sm text-[#6d726a] leading-relaxed">
                             Nuestra tienda incluye productos seleccionados de Mercado Libre bajo modalidad de afiliado. 
                             Al tratarse de productos pertenecientes a esa plataforma, las transacciones, devoluciones 
                             y la Compra Protegida se gestionan directamente desde Mercado Libre, bajo sus propios términos y condiciones.

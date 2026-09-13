@@ -10,17 +10,17 @@ export default async function Footer() {
     const whatsappHref = whatsappPhone ? `https://wa.me/${whatsappPhone}` : "#";
 
     return (
-        <footer className="bg-[#0a1628] text-white mt-auto">
+        <footer className="bg-[#11110f] text-white mt-auto">
             <div className="container-shop py-16 md:py-20">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-16">
                     <div className="lg:col-span-5 space-y-6">
                         <div className="flex items-center gap-3">
                             <div className="w-11 h-11 bg-white rounded-xl flex items-center justify-center">
-                                <span className="text-[#0a1628] font-bold text-lg" style={{ fontFamily: "var(--font-display)" }}>B</span>
+                                <span className="text-[#11110f] font-bold text-lg" style={{ fontFamily: "var(--font-display)" }}>B</span>
                             </div>
                             <div>
                                 <div className="text-lg font-semibold" style={{ fontFamily: "var(--font-display)" }}>BoluShop</div>
-                                <div className="text-xs text-[#ff6b35] font-medium">Regalos & Hogar · Argentina</div>
+                                <div className="text-xs text-[#c8f31d] font-medium">Regalos & Hogar · Argentina</div>
                             </div>
                         </div>
                         <p className="text-sm leading-relaxed text-white/55 max-w-sm">
@@ -28,13 +28,13 @@ export default async function Footer() {
                             Selección experta desde Villa Carlos Paz, Córdoba.
                         </p>
                         <div className="flex gap-3">
-                            <a href="https://instagram.com/bolushop.arg" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-10 h-10 bg-white/8 rounded-xl flex items-center justify-center hover:bg-[#ff6b35] transition-colors">
+                            <a href="https://instagram.com/bolushop.arg" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-10 h-10 bg-white/8 rounded-xl flex items-center justify-center hover:bg-[#c8f31d] transition-colors">
                                 <Instagram size={18} />
                             </a>
                             <a href={whatsappHref} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="w-10 h-10 bg-white/8 rounded-xl flex items-center justify-center hover:bg-[#25D366] transition-colors">
                                 <Phone size={18} />
                             </a>
-                            <a href="mailto:contacto@bolushop.com" aria-label="Email" className="w-10 h-10 bg-white/8 rounded-xl flex items-center justify-center hover:bg-[#ff6b35] transition-colors">
+                            <a href="mailto:contacto@bolushop.com" aria-label="Email" className="w-10 h-10 bg-white/8 rounded-xl flex items-center justify-center hover:bg-[#c8f31d] transition-colors">
                                 <Mail size={18} />
                             </a>
                         </div>
@@ -52,7 +52,7 @@ export default async function Footer() {
                                 { label: "Blog", href: "/blog" },
                             ].map((link) => (
                                 <li key={link.href}>
-                                    <Link href={link.href} className="hover:text-[#ff6b35] transition-colors inline-flex items-center gap-1 group">
+                                    <Link href={link.href} className="hover:text-[#c8f31d] transition-colors inline-flex items-center gap-1 group">
                                         {link.label}
                                         <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                                     </Link>
@@ -74,7 +74,7 @@ export default async function Footer() {
                                 { label: "Política de Privacidad", href: "/politica-de-privacidad" },
                             ].map((link) => (
                                 <li key={link.href}>
-                                    <Link href={link.href} className="hover:text-[#ff6b35] transition-colors">{link.label}</Link>
+                                    <Link href={link.href} className="hover:text-[#c8f31d] transition-colors">{link.label}</Link>
                                 </li>
                             ))}
                         </ul>
@@ -85,11 +85,11 @@ export default async function Footer() {
                         <div className="space-y-3 text-sm text-white/60">
                             <p className="text-xs text-white/40 uppercase tracking-widest mb-2 font-bold">Tienda 100% Online</p>
                             <div className="flex gap-2.5">
-                                <Mail size={15} className="flex-shrink-0 mt-0.5 text-[#ff6b35]" />
+                                <Mail size={15} className="flex-shrink-0 mt-0.5 text-[#c8f31d]" />
                                 <a href="mailto:23sarmiento@gmail.com" className="hover:text-white transition-colors">23sarmiento@gmail.com</a>
                             </div>
                             <div className="flex gap-2.5">
-                                <Phone size={15} className="flex-shrink-0 mt-0.5 text-[#ff6b35]" />
+                                <Phone size={15} className="flex-shrink-0 mt-0.5 text-[#c8f31d]" />
                                 <a href={whatsappHref} className="hover:text-white transition-colors">+54 9 3541 237972</a>
                             </div>
                         </div>
@@ -98,9 +98,9 @@ export default async function Footer() {
 
                 <div className="border-t border-white/8 pt-10">
                     <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10 mb-8 text-xs text-white/45">
-                        <span className="flex items-center gap-2"><Truck size={14} className="text-[#ff6b35]" /> Envíos según zona</span>
-                        <span className="flex items-center gap-2"><ShieldCheck size={14} className="text-[#ff6b35]" /> Atención personalizada</span>
-                        <span className="flex items-center gap-2"><CreditCard size={14} className="text-[#ff6b35]" /> Pago online</span>
+                        <span className="flex items-center gap-2"><Truck size={14} className="text-[#c8f31d]" /> Envíos según zona</span>
+                        <span className="flex items-center gap-2"><ShieldCheck size={14} className="text-[#c8f31d]" /> Atención personalizada</span>
+                        <span className="flex items-center gap-2"><CreditCard size={14} className="text-[#c8f31d]" /> Pago online</span>
                     </div>
 
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">

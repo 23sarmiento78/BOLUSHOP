@@ -52,7 +52,7 @@ export default function NewsletterForm() {
                     <div className="relative min-w-0 flex-1">
                         <Mail
                             size={16}
-                            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#94a3b8]"
+                            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#8d9388]"
                             aria-hidden
                         />
                         <input
@@ -65,13 +65,13 @@ export default function NewsletterForm() {
                             placeholder="tu@email.com"
                             required
                             disabled={status === "loading" || status === "success"}
-                            className="w-full min-w-0 rounded-xl border border-[#e8e4df] bg-white py-3.5 pl-11 pr-4 text-sm text-[#0a1628] outline-none transition placeholder:text-[#94a3b8] focus:border-[#ff6b35] focus:ring-2 focus:ring-[#ff6b35]/20 disabled:opacity-60"
+                            className="w-full min-w-0 rounded-xl border border-[#deded4] bg-white py-3.5 pl-11 pr-4 text-sm text-[#11110f] outline-none transition placeholder:text-[#8d9388] focus:border-[#c8f31d] focus:ring-2 focus:ring-[#c8f31d]/20 disabled:opacity-60"
                         />
                     </div>
                     <button
                         type="submit"
                         disabled={status === "loading" || status === "success"}
-                        className="flex w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-[#0a1628] px-6 py-3.5 text-sm font-bold text-white transition hover:bg-[#152238] disabled:opacity-60 sm:w-auto"
+                        className="flex w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-[#11110f] px-6 py-3.5 text-sm font-bold text-white transition hover:bg-[#25251f] disabled:opacity-60 sm:w-auto"
                     >
                         {status === "loading" ? (
                             "Enviando..."

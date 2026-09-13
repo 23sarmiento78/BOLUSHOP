@@ -132,7 +132,7 @@ export default async function ProductosPage({ searchParams }: Props) {
         categoryPath(resolveCategorySlug(categoryName, dbCategories));
 
     return (
-        <>            <main className="min-h-screen bg-[#faf9f7]">
+        <>            <main className="min-h-screen bg-[#f4f4ed]">
                 <section className="hero-mesh text-white py-16 md:py-20">
                     <div className="container-shop">
                         <div className="max-w-3xl">
@@ -150,21 +150,21 @@ export default async function ProductosPage({ searchParams }: Props) {
                         <div className="flex flex-wrap gap-3">
                             <Link
                                 href={buildProductLink({ sort, price })}
-                                className={`rounded-full px-5 py-3 text-xs font-black uppercase tracking-[0.35em] transition ${!seccion && !coleccion ? 'bg-white text-[#0f2044]' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
+                                className={`rounded-full px-5 py-3 text-xs font-black uppercase tracking-[0.35em] transition ${!seccion && !coleccion ? 'bg-white text-[#11110f]' : 'bg-[#eef0e8] text-[#6d726a] hover:bg-white'}`}
                             >
                                 Tienda Local
                             </Link>
                             {hasMlProducts && (
                                 <Link
                                     href={buildProductLink({ seccion: 'mercado-libre', sort, price })}
-                                    className={`rounded-full px-5 py-3 text-xs font-black uppercase tracking-[0.35em] transition ${seccion === 'mercado-libre' ? 'bg-[#3483FA] text-white' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
+                                    className={`rounded-full px-5 py-3 text-xs font-black uppercase tracking-[0.35em] transition ${seccion === 'mercado-libre' ? 'bg-[#3483FA] text-white' : 'bg-[#eef0e8] text-[#6d726a] hover:bg-white'}`}
                                 >
                                     Imperdibles ML
                                 </Link>
                             )}
                         </div>
                         <div className="flex items-center gap-4">
-                            <div className="text-xs font-bold uppercase tracking-[0.25em] text-[#64748b]">Ordenar por</div>
+                            <div className="text-xs font-bold uppercase tracking-[0.25em] text-[#6d726a]">Ordenar por</div>
                             <ProductSorter />
                         </div>
                     </div>
@@ -172,7 +172,7 @@ export default async function ProductosPage({ searchParams }: Props) {
                     <div className="flex flex-wrap gap-3 mb-6">
                         <Link
                             href={buildProductLink({ seccion, sort, price })}
-                            className={`inline-flex rounded-full border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.35em] transition ${!coleccion ? 'bg-[#0f2044] text-white border-[#0f2044]' : 'bg-white text-[#64748b] border-[#e2e8f0] hover:border-[#0f2044]'}`}
+                            className={`inline-flex rounded-full border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.35em] transition ${!coleccion ? 'bg-[#11110f] text-white border-[#11110f]' : 'bg-white text-[#6d726a] border-[#deded4] hover:border-[#11110f]'}`}
                         >
                             Todos
                         </Link>
@@ -180,7 +180,7 @@ export default async function ProductosPage({ searchParams }: Props) {
                             <Link
                                 key={category}
                                 href={getCategoryHref(category)}
-                                className="inline-flex rounded-full border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.35em] transition bg-white text-[#64748b] border-[#e2e8f0] hover:border-[#0f2044]"
+                                className="inline-flex rounded-full border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.35em] transition bg-white text-[#6d726a] border-[#deded4] hover:border-[#11110f]"
                             >
                                 {category}
                             </Link>
@@ -189,38 +189,38 @@ export default async function ProductosPage({ searchParams }: Props) {
 
                     <div className="grid grid-cols-1 gap-8 lg:grid-cols-[240px_1fr]">
                         <aside className="space-y-5">
-                            <div className="rounded-[1.5rem] bg-white border border-[#e8e4df] p-5 shadow-sm">
-                                <h2 className="text-xs font-bold uppercase tracking-[0.25em] text-[#0f2044] mb-4">Precio</h2>
-                                <div className="space-y-3 text-sm text-[#64748b]">
+                            <div className="rounded-[1.5rem] bg-white border border-[#deded4] p-5 shadow-sm">
+                                <h2 className="text-xs font-bold uppercase tracking-[0.25em] text-[#11110f] mb-4">Precio</h2>
+                                <div className="space-y-3 text-sm text-[#6d726a]">
                                     <Link
                                         href={buildProductLink({ seccion, sort, price: 'under_50000' })}
-                                        className={`flex items-center gap-3 rounded-full px-4 py-3 transition ${price === 'under_50000' ? 'bg-[#0f2044] text-white' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
+                                        className={`flex items-center gap-3 rounded-full px-4 py-3 transition ${price === 'under_50000' ? 'bg-[#11110f] text-white' : 'bg-[#eef0e8] text-[#6d726a] hover:bg-white'}`}
                                     >
                                         <span>Hasta $50.000</span>
                                     </Link>
                                     <Link
                                         href={buildProductLink({ seccion, sort, price: '50000_100000' })}
-                                        className={`flex items-center gap-3 rounded-full px-4 py-3 transition ${price === '50000_100000' ? 'bg-[#0f2044] text-white' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
+                                        className={`flex items-center gap-3 rounded-full px-4 py-3 transition ${price === '50000_100000' ? 'bg-[#11110f] text-white' : 'bg-[#eef0e8] text-[#6d726a] hover:bg-white'}`}
                                     >
                                         <span>$50k – $100k</span>
                                     </Link>
                                     <Link
                                         href={buildProductLink({ seccion, sort, price: 'over_100000' })}
-                                        className={`flex items-center gap-3 rounded-full px-4 py-3 transition ${price === 'over_100000' ? 'bg-[#0f2044] text-white' : 'bg-[#f8fafb] text-[#64748b] hover:bg-white'}`}
+                                        className={`flex items-center gap-3 rounded-full px-4 py-3 transition ${price === 'over_100000' ? 'bg-[#11110f] text-white' : 'bg-[#eef0e8] text-[#6d726a] hover:bg-white'}`}
                                     >
                                         <span>Más de $100k</span>
                                     </Link>
                                 </div>
                             </div>
 
-                            <div className="rounded-[1.5rem] bg-white border border-[#e8e4df] p-5 shadow-sm">
-                                <h2 className="text-xs font-bold uppercase tracking-[0.25em] text-[#0f2044] mb-4">Categoría</h2>
-                                <div className="space-y-2 text-sm text-[#64748b]">
+                            <div className="rounded-[1.5rem] bg-white border border-[#deded4] p-5 shadow-sm">
+                                <h2 className="text-xs font-bold uppercase tracking-[0.25em] text-[#11110f] mb-4">Categoría</h2>
+                                <div className="space-y-2 text-sm text-[#6d726a]">
                                     {categories.map(category => (
                                         <Link
                                             key={category}
                                             href={getCategoryHref(category)}
-                                            className="flex items-center gap-3 rounded-full px-4 py-3 transition bg-[#f8fafb] text-[#64748b] hover:bg-white"
+                                            className="flex items-center gap-3 rounded-full px-4 py-3 transition bg-[#eef0e8] text-[#6d726a] hover:bg-white"
                                         >
                                             <span>{category}</span>
                                         </Link>
@@ -228,21 +228,21 @@ export default async function ProductosPage({ searchParams }: Props) {
                                 </div>
                             </div>
 
-                            <div className="rounded-[1.5rem] bg-white border border-[#e8e4df] p-5 shadow-sm">
-                                <h2 className="text-xs font-bold uppercase tracking-[0.25em] text-[#0f2044] mb-4">Envío</h2>
-                                <p className="text-sm text-[#64748b]">El costo final de envío se calcula en el checkout según tu provincia y ciudad.</p>
+                            <div className="rounded-[1.5rem] bg-white border border-[#deded4] p-5 shadow-sm">
+                                <h2 className="text-xs font-bold uppercase tracking-[0.25em] text-[#11110f] mb-4">Envío</h2>
+                                <p className="text-sm text-[#6d726a]">El costo final de envío se calcula en el checkout según tu provincia y ciudad.</p>
                             </div>
                         </aside>
 
                         <div>
                             <div className="mb-6 flex flex-wrap gap-3">
                                 {seccion === 'mercado-libre' && (
-                                    <span className="inline-flex items-center rounded-full bg-[#fff9e6] border border-[#f0c040] px-3 py-2 text-[10px] font-semibold text-[#c47a00]">
+                                    <span className="inline-flex items-center rounded-full bg-[#f1efff] border border-[#bca7ff] px-3 py-2 text-[10px] font-semibold text-[#5d48c7]">
                                         Imperdibles ML
                                     </span>
                                 )}
                                 {(coleccion || seccion === 'mercado-libre') && (
-                                    <Link href="/productos" className="inline-flex items-center rounded-full bg-[#0f2044] px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.35em] text-white">
+                                    <Link href="/productos" className="inline-flex items-center rounded-full bg-[#11110f] px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.35em] text-white">
                                         Limpiar filtros
                                     </Link>
                                 )}
@@ -255,11 +255,11 @@ export default async function ProductosPage({ searchParams }: Props) {
                                     ))}
                                 </div>
                             ) : (
-                                <div className="rounded-[1.75rem] border border-dashed border-[#e8e4df] bg-white p-10 text-center shadow-sm">
+                                <div className="rounded-[1.75rem] border border-dashed border-[#deded4] bg-white p-10 text-center shadow-sm">
                                     <div className="text-6xl mb-6">🔍</div>
-                                    <h2 className="text-2xl font-semibold text-[#0f2044] mb-4" style={{ fontFamily: "var(--font-display)" }}>No encontramos productos</h2>
-                                    <p className="text-[#64748b] mb-8">Intentá con otra categoría o restablecé los filtros para ver nuestra selección completa.</p>
-                                    <Link href="/productos" className="inline-flex items-center justify-center rounded-3xl bg-[#0f2044] px-8 py-4 text-white text-sm font-black uppercase tracking-[0.35em] hover:bg-[#0b1938]">
+                                    <h2 className="text-2xl font-semibold text-[#11110f] mb-4" style={{ fontFamily: "var(--font-display)" }}>No encontramos productos</h2>
+                                    <p className="text-[#6d726a] mb-8">Intentá con otra categoría o restablecé los filtros para ver nuestra selección completa.</p>
+                                    <Link href="/productos" className="inline-flex items-center justify-center rounded-3xl bg-[#11110f] px-8 py-4 text-white text-sm font-black uppercase tracking-[0.35em] hover:bg-[#0b1938]">
                                         Ver todo el catálogo
                                     </Link>
                                 </div>

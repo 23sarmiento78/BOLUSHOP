@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function RastreoPage() {
     return (
-        <>            <main className="min-h-screen bg-[#faf9f7]">
+        <>            <main className="min-h-screen bg-[#f4f4ed]">
                 <section className="hero-mesh text-white py-12 md:py-16">
                     <div className="container-shop">
                         <div className="flex items-center gap-2 mb-4 text-xs text-gray-300">
@@ -26,8 +26,8 @@ export default function RastreoPage() {
                 </section>
 
                 <section className="container-shop py-10 md:py-14">
-                    <div className="rounded-[1.75rem] border border-[#e8e4df] bg-white p-5 shadow-sm md:p-8">
-                        <h2 className="text-2xl font-semibold text-[#0f2044] mb-6">Ingresá tu número de pedido</h2>
+                    <div className="rounded-[1.75rem] border border-[#deded4] bg-white p-5 shadow-sm md:p-8">
+                        <h2 className="text-2xl font-semibold text-[#11110f] mb-6">Ingresá tu número de pedido</h2>
                         <TrackingPageClient />
                     </div>
                 </section>

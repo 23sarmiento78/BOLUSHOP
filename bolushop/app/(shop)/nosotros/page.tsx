@@ -11,8 +11,8 @@ export const metadata = buildPageMetadata({
 
 export default function NosotrosPage() {
     return (
-            <main className="min-h-screen bg-[#faf9f7]">
-                <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-10 md:py-14 px-4 md:px-6">
+            <main className="min-h-screen bg-[#f4f4ed]">
+                <section className="bg-gradient-to-br from-[#11110f] to-[#302f28] text-white py-10 md:py-14 px-4 md:px-6">
                     <div className="max-w-7xl mx-auto">
                         <div className="flex items-center gap-2 mb-4 text-xs text-white/70">
                             <Link href="/" className="hover:text-white">Inicio</Link>
@@ -32,16 +32,16 @@ export default function NosotrosPage() {
                             <span className="inline-flex items-center rounded-full bg-white/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.35em] text-white">
                                 Nuestra historia
                             </span>
-                            <h2 className="text-3xl md:text-4xl font-black text-[#0f2044]">Nacimos para hacer los regalos más fáciles.</h2>
-                            <p className="text-[#64748b] leading-relaxed text-base md:text-lg">
+                            <h2 className="text-3xl md:text-4xl font-black text-[#11110f]">Nacimos para hacer los regalos más fáciles.</h2>
+                            <p className="text-[#6d726a] leading-relaxed text-base md:text-lg">
                                 BoluShop es una tienda 100% online especializada en regalos originales y accesorios para el hogar, con envíos a todo el país.
                             </p>
-                            <p className="text-[#64748b] leading-relaxed text-base md:text-lg">
+                            <p className="text-[#6d726a] leading-relaxed text-base md:text-lg">
                                 Trabajamos bajo un modelo de comercio electrónico que nos permite ofrecerte una amplia variedad de productos seleccionados, con la comodidad de recibirlos en tu hogar sin trámites complicados.
                             </p>
                         </div>
 
-                        <div className="rounded-[2rem] bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] p-8 text-white shadow-lg">
+                        <div className="rounded-[2rem] bg-gradient-to-br from-[#11110f] to-[#302f28] p-8 text-white shadow-lg">
                             <div className="grid gap-4">
                                 <div className="rounded-[1.5rem] bg-white/10 p-5">
                                     <p className="text-xs uppercase tracking-[0.35em] text-white/70 mb-3">Estadísticas</p>
@@ -65,77 +65,77 @@ export default function NosotrosPage() {
                     </div>
 
                     <div className="space-y-4">
-                        <h2 className="text-2xl font-black text-[#0f2044]">Nuestros valores</h2>
+                        <h2 className="text-2xl font-black text-[#11110f]">Nuestros valores</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="rounded-[1.5rem] bg-white border border-[#e2e8f0] p-6 shadow-sm">
-                                <div className="inline-flex items-center rounded-full bg-[#f0f9ff] px-3 py-1 text-[10px] font-semibold text-[#185fa5] uppercase tracking-[0.35em] mb-4">
+                            <div className="rounded-[1.5rem] bg-white border border-[#deded4] p-6 shadow-sm">
+                                <div className="inline-flex items-center rounded-full bg-[#ecebfd] px-3 py-1 text-[10px] font-semibold text-[#185fa5] uppercase tracking-[0.35em] mb-4">
                                     Compra protegida
                                 </div>
-                                <p className="text-sm text-[#64748b] leading-relaxed">
+                                <p className="text-sm text-[#6d726a] leading-relaxed">
                                     Si el producto no es lo que esperabas, te devolvemos el dinero. Sin preguntas.
                                 </p>
                             </div>
-                            <div className="rounded-[1.5rem] bg-white border border-[#e2e8f0] p-6 shadow-sm">
-                                <div className="inline-flex items-center rounded-full bg-[#eef3fb] px-3 py-1 text-[10px] font-semibold text-[#0f2044] uppercase tracking-[0.35em] mb-4">
+                            <div className="rounded-[1.5rem] bg-white border border-[#deded4] p-6 shadow-sm">
+                                <div className="inline-flex items-center rounded-full bg-[#ecebfd] px-3 py-1 text-[10px] font-semibold text-[#11110f] uppercase tracking-[0.35em] mb-4">
                                     Envío a todo el país
                                 </div>
-                                <p className="text-sm text-[#64748b] leading-relaxed">
+                                <p className="text-sm text-[#6d726a] leading-relaxed">
                                     A toda la República Argentina, coordinamos el método más conveniente para tu zona.
                                 </p>
                             </div>
-                            <div className="rounded-[1.5rem] bg-white border border-[#e2e8f0] p-6 shadow-sm">
+                            <div className="rounded-[1.5rem] bg-white border border-[#deded4] p-6 shadow-sm">
                                 <div className="inline-flex items-center rounded-full bg-[#fff7ed] px-3 py-1 text-[10px] font-semibold text-[#b45309] uppercase tracking-[0.35em] mb-4">
                                     Curaduría de calidad
                                 </div>
-                                <p className="text-sm text-[#64748b] leading-relaxed">
+                                <p className="text-sm text-[#6d726a] leading-relaxed">
                                     Cada producto fue elegido por nosotros. No vendemos cualquier cosa.
                                 </p>
                             </div>
-                            <div className="rounded-[1.5rem] bg-white border border-[#e2e8f0] p-6 shadow-sm">
-                                <div className="inline-flex items-center rounded-full bg-[#f8fafc] px-3 py-1 text-[10px] font-semibold text-[#0f2044] uppercase tracking-[0.35em] mb-4">
+                            <div className="rounded-[1.5rem] bg-white border border-[#deded4] p-6 shadow-sm">
+                                <div className="inline-flex items-center rounded-full bg-[#f8fafc] px-3 py-1 text-[10px] font-semibold text-[#11110f] uppercase tracking-[0.35em] mb-4">
                                     Atención por WhatsApp
                                 </div>
-                                <p className="text-sm text-[#64748b] leading-relaxed">
+                                <p className="text-sm text-[#6d726a] leading-relaxed">
                                     Respondemos rápido. Estamos disponibles para resolver cualquier duda sobre tu compra.
                                 </p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="rounded-[2rem] bg-white border border-[#e2e8f0] p-8 shadow-sm">
+                    <div className="rounded-[2rem] bg-white border border-[#deded4] p-8 shadow-sm">
                         <div className="grid gap-6 lg:grid-cols-[0.9fr_0.7fr] items-center">
                             <div>
-                                <p className="text-sm uppercase tracking-[0.35em] text-[#64748b] font-bold mb-3">Cómo llegamos hasta acá</p>
-                                <p className="text-lg md:text-xl font-black text-[#0f2044] mb-4">Una historia de crecimiento desde Córdoba hacia todo el país.</p>
-                                <p className="text-[#64748b] leading-relaxed">
+                                <p className="text-sm uppercase tracking-[0.35em] text-[#6d726a] font-bold mb-3">Cómo llegamos hasta acá</p>
+                                <p className="text-lg md:text-xl font-black text-[#11110f] mb-4">Una historia de crecimiento desde Córdoba hacia todo el país.</p>
+                                <p className="text-[#6d726a] leading-relaxed">
                                     Empezamos con una pequeña curaduría de regalos y hoy entregamos experiencia, confianza y productos seleccionados con criterio, siempre desde la comodidad de tu casa.
                                 </p>
                             </div>
                             <div className="space-y-4">
-                                <div className="rounded-[1.5rem] bg-[#f8fafb] border border-[#e2e8f0] p-4">
+                                <div className="rounded-[1.5rem] bg-[#eef0e8] border border-[#deded4] p-4">
                                     <div className="flex items-center gap-3 mb-2">
-                                        <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#0f2044] text-white">2024</span>
+                                        <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#11110f] text-white">2024</span>
                                         <div>
-                                            <p className="font-bold text-[#0f2044]">Fundación de BoluShop</p>
-                                            <p className="text-sm text-[#64748b]">Creación de la tienda online con foco en regalos originales y envíos a todo el país.</p>
+                                            <p className="font-bold text-[#11110f]">Fundación de BoluShop</p>
+                                            <p className="text-sm text-[#6d726a]">Creación de la tienda online con foco en regalos originales y envíos a todo el país.</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="rounded-[1.5rem] bg-[#f8fafb] border border-[#e2e8f0] p-4">
+                                <div className="rounded-[1.5rem] bg-[#eef0e8] border border-[#deded4] p-4">
                                     <div className="flex items-center gap-3 mb-2">
-                                        <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#0f2044] text-white">2025</span>
+                                        <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#11110f] text-white">2025</span>
                                         <div>
-                                            <p className="font-bold text-[#0f2044]">Expansión del catálogo</p>
-                                            <p className="text-sm text-[#64748b]">Ampliación de la variedad de productos y mejora de la experiencia de compra.</p>
+                                            <p className="font-bold text-[#11110f]">Expansión del catálogo</p>
+                                            <p className="text-sm text-[#6d726a]">Ampliación de la variedad de productos y mejora de la experiencia de compra.</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="rounded-[1.5rem] bg-[#fff7ed] border border-[#f0c040] p-4">
+                                <div className="rounded-[1.5rem] bg-[#fff7ed] border border-[#bca7ff] p-4">
                                     <div className="flex items-center gap-3 mb-2">
-                                        <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#e8630a] text-white">2026</span>
+                                        <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#6f58d9] text-white">2026</span>
                                         <div>
-                                            <p className="font-bold text-[#0f2044]">Nueva colección y rediseño</p>
-                                            <p className="text-sm text-[#64748b]">Lanzamiento de colecciones temáticas, blog editorial y experiencia de compra mejorada.</p>
+                                            <p className="font-bold text-[#11110f]">Nueva colección y rediseño</p>
+                                            <p className="text-sm text-[#6d726a]">Lanzamiento de colecciones temáticas, blog editorial y experiencia de compra mejorada.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -143,7 +143,7 @@ export default function NosotrosPage() {
                         </div>
                     </div>
 
-                    <div className="rounded-[2rem] bg-[#0f2044] p-8 md:p-10 text-white">
+                    <div className="rounded-[2rem] bg-[#11110f] p-8 md:p-10 text-white">
                         <div className="grid gap-6 lg:grid-cols-[1fr_0.9fr] items-center">
                             <div>
                                 <p className="text-base font-semibold text-[#f8fafc] mb-2">¿Tenés alguna pregunta?</p>
@@ -153,7 +153,7 @@ export default function NosotrosPage() {
                                 <Link href="https://wa.me/543541237972" className="inline-flex items-center justify-center rounded-xl bg-white/10 border border-white/20 px-5 py-3 text-sm font-semibold text-white hover:bg-white/20 transition">
                                     WhatsApp
                                 </Link>
-                                <Link href="mailto:23sarmiento@gmail.com" className="inline-flex items-center justify-center rounded-xl bg-[#e8630a] px-5 py-3 text-sm font-semibold text-white hover:bg-[#d65a05] transition">
+                                <Link href="mailto:23sarmiento@gmail.com" className="inline-flex items-center justify-center rounded-xl bg-[#6f58d9] px-5 py-3 text-sm font-semibold text-white hover:bg-[#d65a05] transition">
                                     Email
                                 </Link>
                             </div>

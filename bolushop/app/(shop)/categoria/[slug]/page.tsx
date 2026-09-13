@@ -105,7 +105,7 @@ export default async function CategoryPage({ params }: Props) {
     return (
         <>
             <JsonLd data={structuredData} />
-            <main className="min-h-screen bg-[#faf9f7]">
+            <main className="min-h-screen bg-[#f4f4ed]">
                 <section className="hero-mesh text-white py-10 md:py-14">
                     <div className="container-shop">
                         <nav aria-label="Breadcrumb" className="flex items-center gap-2 mb-6 text-xs text-white/60">
@@ -116,7 +116,7 @@ export default async function CategoryPage({ params }: Props) {
                             <span className="text-white/90">{category.name}</span>
                         </nav>
 
-                        <p className="text-xs uppercase tracking-[0.3em] text-[#cbd5e1] mb-3">Categoría</p>
+                        <p className="text-xs uppercase tracking-[0.3em] text-[#d7d9cf] mb-3">Categoría</p>
                         <h1
                             className="text-3xl md:text-5xl font-semibold leading-tight mb-4"
                             style={{ fontFamily: "var(--font-display)" }}
@@ -137,7 +137,7 @@ export default async function CategoryPage({ params }: Props) {
                 <section className="container-shop py-12 md:py-16">
                     {categoryProducts.length === 0 ? (
                         <div className="card text-center py-16">
-                            <p className="text-[#64748b] mb-6">
+                            <p className="text-[#6d726a] mb-6">
                                 No hay productos en esta categoría por el momento.
                             </p>
                             <Link href="/productos" className="btn btn-primary">
@@ -153,13 +153,13 @@ export default async function CategoryPage({ params }: Props) {
                     )}
                 </section>
 
-                <section className="bg-white border-t border-[#e8e4df]">
+                <section className="bg-white border-t border-[#deded4]">
                     <div className="container-shop py-12 md:py-16">
                         <div className="max-w-3xl">
-                            <h2 className="text-xl md:text-2xl font-semibold text-[#0a1628] mb-6" style={{ fontFamily: "var(--font-display)" }}>
+                            <h2 className="text-xl md:text-2xl font-semibold text-[#11110f] mb-6" style={{ fontFamily: "var(--font-display)" }}>
                                 Comprar {category.name.toLowerCase()} online en BoluShop
                             </h2>
-                            <div className="space-y-4 text-sm md:text-base text-[#64748b] leading-relaxed">
+                            <div className="space-y-4 text-sm md:text-base text-[#6d726a] leading-relaxed">
                                 {longContent.map((paragraph, i) => (
                                     <p key={i}>{paragraph}</p>
                                 ))}
@@ -172,11 +172,11 @@ export default async function CategoryPage({ params }: Props) {
                                 { icon: CreditCard, label: "Pago online", desc: "Durante el checkout" },
                                 { icon: ShieldCheck, label: "Atención", desc: "Te ayudamos con tu compra" },
                             ].map(({ icon: Icon, label, desc }) => (
-                                <div key={label} className="flex items-center gap-3 p-4 rounded-2xl bg-[#faf9f7] border border-[#e8e4df]">
-                                    <Icon size={20} className="text-[#ff6b35] shrink-0" />
+                                <div key={label} className="flex items-center gap-3 p-4 rounded-2xl bg-[#f4f4ed] border border-[#deded4]">
+                                    <Icon size={20} className="text-[#c8f31d] shrink-0" />
                                     <div>
-                                        <p className="text-sm font-semibold text-[#0a1628]">{label}</p>
-                                        <p className="text-xs text-[#94a3b8]">{desc}</p>
+                                        <p className="text-sm font-semibold text-[#11110f]">{label}</p>
+                                        <p className="text-xs text-[#8d9388]">{desc}</p>
                                     </div>
                                 </div>
                             ))}
@@ -184,7 +184,7 @@ export default async function CategoryPage({ params }: Props) {
 
                         {relatedCategories.length > 0 && (
                             <div className="mt-12">
-                                <h3 className="text-sm font-bold uppercase tracking-widest text-[#94a3b8] mb-4">
+                                <h3 className="text-sm font-bold uppercase tracking-widest text-[#8d9388] mb-4">
                                     Otras categorías
                                 </h3>
                                 <div className="flex flex-wrap gap-2">
@@ -192,7 +192,7 @@ export default async function CategoryPage({ params }: Props) {
                                         <Link
                                             key={cat.id}
                                             href={categoryPath(cat.slug)}
-                                            className="inline-flex px-4 py-2 rounded-full text-sm font-medium bg-[#faf9f7] border border-[#e8e4df] text-[#0a1628] hover:border-[#ff6b35]/40 hover:text-[#ff6b35] transition-colors"
+                                            className="inline-flex px-4 py-2 rounded-full text-sm font-medium bg-[#f4f4ed] border border-[#deded4] text-[#11110f] hover:border-[#c8f31d]/40 hover:text-[#c8f31d] transition-colors"
                                         >
                                             {cat.name}
                                         </Link>

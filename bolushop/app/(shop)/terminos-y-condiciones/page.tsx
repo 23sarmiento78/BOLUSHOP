@@ -33,7 +33,7 @@ export default function TerminosPage() {
 
                                 <section>
                                     <h2 className="text-xl font-black text-gray-900 uppercase tracking-widest mb-4">4. Devoluciones y garantías</h2>
-                                    <p>Contamos con políticas de devolución y garantía aplicables a todos los productos. Para más detalles sobre plazos, condiciones y procedimientos, consultá nuestra página de <Link href="/garantias" className="text-[#e8630a] hover:underline">Garantías y Devoluciones</Link>.</p>
+                                    <p>Contamos con políticas de devolución y garantía aplicables a todos los productos. Para más detalles sobre plazos, condiciones y procedimientos, consultá nuestra página de <Link href="/garantias" className="text-[#6f58d9] hover:underline">Garantías y Devoluciones</Link>.</p>
                                 </section>
 
                                 <section>

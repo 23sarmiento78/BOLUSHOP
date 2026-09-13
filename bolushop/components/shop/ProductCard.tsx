@@ -47,14 +47,14 @@ export default function ProductCard({ product }: Props) {
                 </div>
 
                 <div className="flex flex-1 flex-col p-4 md:p-5">
-                    <span className="mb-2 text-[10px] uppercase tracking-widest text-[#94a3b8]">
+                    <span className="mb-2 text-[10px] uppercase tracking-widest text-[#8d9388]">
                         {product.category}
                     </span>
-                    <h3 className="truncate-2 mb-3 text-sm font-semibold leading-snug text-[#0a1628] md:text-[15px]" style={{ fontFamily: "var(--font-display)" }}>
+                    <h3 className="truncate-2 mb-3 text-sm font-semibold leading-snug text-[#11110f] md:text-[15px]" style={{ fontFamily: "var(--font-display)" }}>
                         {product.name}
                     </h3>
                     <div className="mt-auto flex items-baseline gap-1">
-                        <span className="text-xl font-bold text-[#0a1628]" style={{ fontFamily: "var(--font-display)" }}>
+                        <span className="text-xl font-bold text-[#11110f]" style={{ fontFamily: "var(--font-display)" }}>
                             ${product.price.toLocaleString("es-AR")}
                         </span>
                     </div>
@@ -66,10 +66,10 @@ export default function ProductCard({ product }: Props) {
                     type="button"
                     onClick={handleAddToCart}
                     disabled={product.isMlReferral && !product.mlAffiliateUrl}
-                    className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold uppercase tracking-wider transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff6b35] focus-visible:ring-offset-2 ${
+                    className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold uppercase tracking-wider transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c8f31d] focus-visible:ring-offset-2 ${
                         product.isMlReferral
-                            ? "border border-[#f0c040] bg-[#fff8e6] text-[#9a6b00] hover:bg-[#f0c040] disabled:cursor-not-allowed disabled:opacity-50"
-                            : "bg-[#0a1628] text-white hover:bg-[#152238]"
+                            ? "border border-[#bca7ff] bg-[#f1efff] text-[#9a6b00] hover:bg-[#bca7ff] disabled:cursor-not-allowed disabled:opacity-50"
+                            : "bg-[#11110f] text-white hover:bg-[#25251f]"
                     }`}
                 >
                     {product.isMlReferral ? (

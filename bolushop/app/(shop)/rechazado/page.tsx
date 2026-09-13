@@ -26,26 +26,26 @@ function RechazadoContent() {
 
     return (
         <div className="max-w-2xl w-full text-center px-4 py-8 md:py-12">
-            <div className="rounded-[2rem] bg-white border border-[#e2e8f0] p-8 shadow-card">
+            <div className="rounded-[2rem] bg-white border border-[#deded4] p-8 shadow-card">
                 <div className="w-24 h-24 bg-[#fef2f2] text-red-500 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-lg">
                     <AlertCircle size={48} />
                 </div>
-                <h1 className="text-3xl md:text-4xl font-black text-[#0f2044] tracking-tight mb-4">Pago No Procesado</h1>
+                <h1 className="text-3xl md:text-4xl font-black text-[#11110f] tracking-tight mb-4">Pago No Procesado</h1>
                 <p className="text-lg text-[#1e293b] mb-4 font-bold">{mensajeError}</p>
-                <p className="text-base text-[#64748b] mb-8">{sugerencia}</p>
+                <p className="text-base text-[#6d726a] mb-8">{sugerencia}</p>
                 {orderId && (
-                    <div className="bg-[#f8f9fb] rounded-3xl p-4 mb-8 border border-[#e2e8f0]">
-                        <p className="text-xs font-bold uppercase tracking-widest text-[#64748b] mb-1">Referencia de Intento</p>
-                        <p className="text-sm font-bold text-[#0f2044] font-mono">{orderId}</p>
+                    <div className="bg-[#eef0e8] rounded-3xl p-4 mb-8 border border-[#deded4]">
+                        <p className="text-xs font-bold uppercase tracking-widest text-[#6d726a] mb-1">Referencia de Intento</p>
+                        <p className="text-sm font-bold text-[#11110f] font-mono">{orderId}</p>
                     </div>
                 )}
                 <div className="space-y-3 mb-8">
-                    <Link href="/checkout" className="inline-flex w-full justify-center rounded-3xl bg-[#0f2044] px-6 py-4 text-sm font-black text-white hover:bg-[#0b1938] transition">🔄 Intentar de Nuevo</Link>
-                    <Link href="/productos" className="inline-flex w-full justify-center rounded-3xl border border-[#e2e8f0] bg-white px-6 py-4 text-sm font-black text-[#0f2044] hover:bg-[#f8fafb] transition">Volver a la Tienda</Link>
+                    <Link href="/checkout" className="inline-flex w-full justify-center rounded-3xl bg-[#11110f] px-6 py-4 text-sm font-black text-white hover:bg-[#0b1938] transition">🔄 Intentar de Nuevo</Link>
+                    <Link href="/productos" className="inline-flex w-full justify-center rounded-3xl border border-[#deded4] bg-white px-6 py-4 text-sm font-black text-[#11110f] hover:bg-[#eef0e8] transition">Volver a la Tienda</Link>
                 </div>
-                <div className="pt-6 border-t border-[#e2e8f0]">
-                    <h3 className="font-bold text-base mb-3 text-[#64748b]">¿Necesitas Ayuda?</h3>
-                    <p className="text-sm text-[#64748b] mb-4">Si crees que esto es un error, contáctanos para asistirte.</p>
+                <div className="pt-6 border-t border-[#deded4]">
+                    <h3 className="font-bold text-base mb-3 text-[#6d726a]">¿Necesitas Ayuda?</h3>
+                    <p className="text-sm text-[#6d726a] mb-4">Si crees que esto es un error, contáctanos para asistirte.</p>
                     <a
                         href={`https://wa.me/3541237972?text=${encodeURIComponent(`Hola, tuve un problema con mi pago. Mi referencia es: ${orderId}`)}`}
                         target="_blank"
@@ -63,7 +63,7 @@ function RechazadoContent() {
 export default function RechazadoPage() {
     return (
         <>            <main className="min-h-screen bg-white">
-                <section className="bg-gradient-to-br from-[#0f2044] to-[#1a3a6b] text-white py-10 md:py-16 px-4 md:px-6 text-center">
+                <section className="bg-gradient-to-br from-[#11110f] to-[#302f28] text-white py-10 md:py-16 px-4 md:px-6 text-center">
                     <div className="max-w-3xl mx-auto">
                         <h1 className="text-3xl md:text-5xl font-black mb-4">Pago Rechazado</h1>
                         <p className="text-sm md:text-base text-white/80">No se pudo completar tu compra. Revisá los detalles y volvé a intentarlo.</p>
@@ -74,7 +74,7 @@ export default function RechazadoPage() {
                         <div className="min-h-[40vh] flex items-center justify-center text-center">
                             <div>
                                 <div className="w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                                <p className="text-xs font-bold uppercase tracking-widest text-[#64748b]">Cargando...</p>
+                                <p className="text-xs font-bold uppercase tracking-widest text-[#6d726a]">Cargando...</p>
                             </div>
                         </div>
                     }>

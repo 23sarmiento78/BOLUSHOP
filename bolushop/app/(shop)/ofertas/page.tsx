@@ -12,7 +12,7 @@ export const metadata = buildPageMetadata({
 export const dynamic = "force-dynamic";
 
 const gradients = [
-    "from-[#0f2044] to-[#1a3a6b]",
+    "from-[#11110f] to-[#302f28]",
     "from-[#4a1b0c] to-[#993c1d]",
     "from-[#173404] to-[#3b6d11]",
     "from-[#26215c] to-[#534ab7]",
@@ -22,7 +22,7 @@ export default async function OfertasPage() {
     const collections = await getAllCollections();
 
     return (
-        <main className="min-h-screen bg-[#faf9f7]">
+        <main className="min-h-screen bg-[#f4f4ed]">
             <section className="hero-mesh text-white py-16 md:py-20">
                 <div className="container-shop">
                     <div className="flex items-center gap-2 mb-4 text-xs text-white/70">
@@ -39,14 +39,14 @@ export default async function OfertasPage() {
 
             <section className="container-shop py-12 md:py-16">
                 {collections.length === 0 ? (
-                    <div className="text-center py-16 rounded-[1.5rem] bg-white border border-[#e2e8f0]">
-                        <p className="text-[#64748b] font-medium">Próximamente nuevas ofertas.</p>
+                    <div className="text-center py-16 rounded-[1.5rem] bg-white border border-[#deded4]">
+                        <p className="text-[#6d726a] font-medium">Próximamente nuevas ofertas.</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                         {collections.map((coll, index) => (
                             <Link key={coll.id} href={`/oferta/${coll.slug}`} className="group">
-                                <article className="h-full rounded-[1.75rem] overflow-hidden border border-[#e8e4df] bg-white shadow-sm transition hover:shadow-lg">
+                                <article className="h-full rounded-[1.75rem] overflow-hidden border border-[#deded4] bg-white shadow-sm transition hover:shadow-lg">
                                     <div className="flex h-full flex-col">
                                         <div
                                             className={`min-h-[220px] p-8 flex flex-col justify-end gap-4 bg-gradient-to-br ${gradients[index % gradients.length]}`}
@@ -75,12 +75,12 @@ export default async function OfertasPage() {
                                             </div>
                                         </div>
 
-                                        <div className="bg-white px-6 py-5 border-t border-[#eef2f7] flex items-center justify-between gap-4">
-                                            <span className="text-xs text-[#64748b] flex items-center gap-2">
-                                                <span className="inline-flex h-2 w-2 rounded-full bg-[#0f2044]" />
+                                        <div className="bg-white px-6 py-5 border-t border-[#e5e6dd] flex items-center justify-between gap-4">
+                                            <span className="text-xs text-[#6d726a] flex items-center gap-2">
+                                                <span className="inline-flex h-2 w-2 rounded-full bg-[#11110f]" />
                                                 {(coll.productIds || []).length} productos
                                             </span>
-                                            <span className="text-xs font-bold text-[#e8630a]">Ver oferta →</span>
+                                            <span className="text-xs font-bold text-[#6f58d9]">Ver oferta →</span>
                                         </div>
                                     </div>
                                 </article>

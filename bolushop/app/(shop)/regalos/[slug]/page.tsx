@@ -79,7 +79,7 @@ export default async function LandingPage({ params }: Props) {
     return (
         <>
             <JsonLd data={structuredData} />
-            <main className="min-h-screen bg-[#faf9f7]">
+            <main className="min-h-screen bg-[#f4f4ed]">
                 <section className="hero-mesh text-white py-10 md:py-14">
                     <div className="container-shop">
                         <nav aria-label="Breadcrumb" className="flex items-center gap-2 mb-6 text-xs text-white/60">
@@ -101,7 +101,7 @@ export default async function LandingPage({ params }: Props) {
                 </section>
 
                 <section className="container-shop py-12 md:py-16">
-                    <div className="max-w-3xl mb-10 space-y-4 text-sm md:text-base text-[#64748b] leading-relaxed">
+                    <div className="max-w-3xl mb-10 space-y-4 text-sm md:text-base text-[#6d726a] leading-relaxed">
                         {landing.paragraphs.map((p, i) => (
                             <p key={i}>{p}</p>
                         ))}
@@ -115,13 +115,13 @@ export default async function LandingPage({ params }: Props) {
                         </div>
                     ) : (
                         <div className="card text-center py-12">
-                            <p className="text-[#64748b] mb-4">Estamos actualizando la selección.</p>
+                            <p className="text-[#6d726a] mb-4">Estamos actualizando la selección.</p>
                             <Link href="/productos" className="btn btn-primary">Ver todos los productos</Link>
                         </div>
                     )}
                 </section>
 
-                <section className="bg-white border-t border-[#e8e4df]">
+                <section className="bg-white border-t border-[#deded4]">
                     <div className="container-shop py-12 md:py-16 max-w-3xl">
                         <FaqSection faqs={landing.faq} />
 
